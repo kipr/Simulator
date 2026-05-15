@@ -57,7 +57,7 @@ export interface ClassroomLeaderboardPublicProps extends StyleProps, ThemeProps 
 
   view?: string;
   currentStudentDisplayName?: string;
-  currentClassroom?: Classroom;
+  currentClassroom?: AsyncClassroom;
   tourRegistry?: TourRegistry;
 }
 
@@ -101,8 +101,6 @@ const PageContainer = styled('div', (props: ThemeProps) => ({
 
 const ClassroomLeaderboardContainer = styled("div", (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
-  width: 'calc(100vw - 2px)',
-  height: 'calc(100vh - 48px)',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'auto',
@@ -386,7 +384,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       this.setState({ shownClassroom: classroom }, () => { void this.onLog(); });
     } else {
       if (this.props.currentClassroom) {
-        this.setState({ shownClassroom: { docId: this.props.currentClassroom.docId, classroom: this.props.currentClassroom } }, () => { void this.onLog(); });
+        this.setState({ shownClassroom: { docId: Async.latestValue(this.props.currentClassroom).docId, classroom: Async.latestValue(this.props.currentClassroom) } }, () => { void this.onLog(); });
       }
     }
   }
@@ -405,7 +403,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     }
 
     if (prevProps.currentClassroom !== this.props.currentClassroom && this.props.currentClassroom) {
-      this.setState({ shownClassroom: { docId: this.props.currentClassroom.docId, classroom: this.props.currentClassroom } }, () => { void this.onLog(); });
+      this.setState({ shownClassroom: { docId: Async.latestValue(this.props.currentClassroom).docId, classroom: Async.latestValue(this.props.currentClassroom) } }, () => { void this.onLog(); });
 
     }
   }
@@ -552,8 +550,8 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   // Logs classroom users and their challenge completions
   private onLog = async () => {
 
-    const { params } = this.props;
-    const result = await getAllStudentsClassroomChallenges(this.state.shownClassroom?.classroom);
+    const { params, currentClassroom } = this.props;
+    const result = await getAllStudentsClassroomChallenges(currentClassroom ? Async.latestValue(currentClassroom) : this.state.shownClassroom?.classroom);
 
     const users: Record<string, User> = {};
     const challenges: Record<string, Challenge> = {};
@@ -963,31 +961,40 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, locale, view, currentStudentDisplayName } = props;
+    const { style, locale, view, currentStudentDisplayName, tourRegistry } = props;
     const { selected, showBadgeDialog, users } = state;
     const theme = DARK;
     const currentUser = this.getCurrentUser();
     const currentUserEmail = this.getCurrentUserEmail();
 
-    // Render the Classroom Leaderboard dependent on what view you're using: studentView vs teacherView
+    const tourContent_ = (<ButtonContainer>
+
+      <TourTarget registry={this.props.tourRegistry} targetKey='export-button'>
+        <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr("Export My Scores!"), locale)}</Button>
+      </TourTarget>
+      <TourTarget registry={this.props.tourRegistry} targetKey='scroll-to-my-scores-button'>
+        <Button theme={DARK} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr("Scroll to My Scores!"), locale)}</Button>
+      </TourTarget>
+      <TourTarget registry={this.props.tourRegistry} targetKey='see-my-badges-button'>
+        <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> {LocalizedString.lookup(tr("See My Badges!"), locale)}</Button>
+      </TourTarget>
+    </ButtonContainer>);
+
+    const normalContent_ = (
+      <ButtonContainer>
+        <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr("Export My Scores!"), locale)}</Button>
+        <Button theme={DARK} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr("Scroll to My Scores!"), locale)}</Button>
+        <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> {LocalizedString.lookup(tr("See My Badges!"), locale)}</Button>
+      </ButtonContainer>
+    );
     return (
       <>
         {view === 'studentView'
           ? < div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
             <ClassroomLeaderboardTitleContainer>
               <h1>{LocalizedString.lookup(tr("Classroom Leaderboard"), locale)}</h1>
-              <ButtonContainer>
-                <TourTarget registry={this.props.tourRegistry} targetKey='export-button'>
-                  <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr("Export My Scores!"), locale)}</Button>
-                </TourTarget>
-                <TourTarget registry={this.props.tourRegistry} targetKey='scroll-to-my-scores-button'>
-                  <Button theme={DARK} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr("Scroll to My Scores!"), locale)}</Button>
-                </TourTarget>
-                <TourTarget registry={this.props.tourRegistry} targetKey='see-my-badges-button'>
-                  <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> {LocalizedString.lookup(tr("See My Badges!"), locale)}</Button>
-                </TourTarget>
-              </ButtonContainer>
 
+              {tourRegistry ? tourContent_ : normalContent_}
             </ClassroomLeaderboardTitleContainer>
             {this.renderClassroomLeaderboardNew()}
             {showBadgeDialog && <MyBadgesDialog
@@ -998,23 +1005,20 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
               theme={theme} />}
 
           </div >
-          : <PageContainer style={style} theme={theme}>
-            <MainMenu theme={theme} />
-            <ClassroomLeaderboardContainer style={style} theme={theme}>
-              < div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
-                <ClassroomLeaderboardTitleContainer>
-                  <h1>{LocalizedString.lookup(tr("Classroom Leaderboard"), locale)}</h1>
+          :          <ClassroomLeaderboardContainer style={style} theme={theme}>
+            < div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+              <ClassroomLeaderboardTitleContainer>
+                <h1>{LocalizedString.lookup(tr("Classroom Leaderboard"), locale)}</h1>
 
-                  <ButtonContainer>
-                    <Button theme={DARK} onClick={() => this.exportClassroomScores()}> {LocalizedString.lookup(tr("Export All General Scores"), locale)}</Button>
-                    <Button theme={DARK} onClick={() => this.exportDetailedClassroomScores()}> {LocalizedString.lookup(tr("Export All Detailed Scores"), locale)}</Button>
-                  </ButtonContainer>
+                <ButtonContainer>
+                  <Button theme={DARK} onClick={() => this.exportClassroomScores()}> {LocalizedString.lookup(tr("Export All General Scores"), locale)}</Button>
+                  <Button theme={DARK} onClick={() => this.exportDetailedClassroomScores()}> {LocalizedString.lookup(tr("Export All Detailed Scores"), locale)}</Button>
+                </ButtonContainer>
 
-                </ClassroomLeaderboardTitleContainer>
-                {this.renderClassroomLeaderboardNew()}
-              </div>
-            </ClassroomLeaderboardContainer>
-          </PageContainer>
+              </ClassroomLeaderboardTitleContainer>
+              {this.renderClassroomLeaderboardNew()}
+            </div>
+          </ClassroomLeaderboardContainer>
         }
 
 

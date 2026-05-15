@@ -326,7 +326,7 @@ msgid "Can B Upright"
 msgstr "罐头 B 直立式"
 
 msgid "Can B upright on circle 9"
-msgstr "B 可以直立在圆圈 9 上"
+msgstr "圆圈 9 上的 B 可以直立"
 
 msgid "Can C Upright"
 msgstr "罐头 C 直立式"
@@ -1346,7 +1346,7 @@ msgid "Container"
 msgstr "集装箱"
 
 msgid "Space Bot Guy"
-msgstr "太空机器人家伙"
+msgstr "太空机器人"
 
 msgid "Solar Panel"
 msgstr "太阳能电池板"
@@ -1478,7 +1478,7 @@ msgid "MatA"
 msgstr "MatA"
 
 msgid "Communication Tower"
-msgstr "通讯塔"
+msgstr "通信塔"
 
 msgid "Hab"
 msgstr "巴布"
@@ -1573,7 +1573,7 @@ msgstr "阳起石是一种辉长岩、侵入性火成岩，其成分特点是：
 msgid ""
 "Breccia is a rock composed of large angular broken fragments of minerals or "
 "rocks cemented together by a fine-grained matrix."
-msgstr "角砾岩是由矿物或岩石的大块角状碎屑组成的岩石，由细粒基质胶结在一起。"
+msgstr "碎屑岩是由矿物或岩石的大块角状碎屑组成的岩石，由细粒基质胶结在一起。"
 
 msgid ""
 "Meteorite is a solid piece of debris from an object, such as a comet, "
@@ -1783,7 +1783,7 @@ msgid "Robot Over Circle"
 msgstr "机器人越过圆圈"
 
 msgid "Robot over selected circle"
-msgstr "选定圆上的机器人"
+msgstr "机器人越过选定的圆"
 
 msgid "Robot not in Start Box"
 msgstr "机器人不在启动框中"
@@ -1894,7 +1894,7 @@ msgid "Base G Covered"
 msgstr "基地 G 覆盖范围"
 
 msgid "Base G covered by a can"
-msgstr "由罐体覆盖的底座 G"
+msgstr "由罐体覆盖的基座 G"
 
 msgid "Can 1 Upright"
 msgstr "罐 1 直立式"
@@ -2064,7 +2064,7 @@ msgid "Can A touched"
 msgstr "A 能否触动"
 
 msgid "Can 9 Intersects"
-msgstr "9 号罐相交"
+msgstr "Can 9 相交"
 
 msgid "Can 9 intersects circle 9"
 msgstr "Can 9 与圆 9 相交"
@@ -2334,7 +2334,7 @@ msgid "Complete a figure eight"
 msgstr "完成八字形"
 
 msgid "Can 4 not upright in circle 4"
-msgstr "第 4 个圆圈中的第 4 个不能直立"
+msgstr "第 4 个圆圈不能直立"
 
 msgid "Can 9 not upright in circle 9"
 msgstr "圈 9 不能直立"
@@ -2352,7 +2352,7 @@ msgid "Can 2 upright"
 msgstr "罐 2 直立式"
 
 msgid "Can 9 upright"
-msgstr "9 号罐直立式"
+msgstr "罐 9 直立式"
 
 msgid "Can 10 Upright"
 msgstr "罐头 10 直立式"
@@ -2400,7 +2400,7 @@ msgid "Can 9 not upright in blue garage"
 msgstr "蓝色车库中不直立的 9 号罐"
 
 msgid "Can 10 not upright in yellow garage"
-msgstr "黄色车库中不直立的 10 号罐"
+msgstr "黄色车库中不能直立的 10 号罐"
 
 msgid "JBC Challenge 8"
 msgstr "联合边境委员会挑战赛 8"
@@ -2511,7 +2511,7 @@ msgid "Circle 9 touched"
 msgstr "圈 9 感动"
 
 msgid "Circle 12 Touched"
-msgstr "第 12 个圆圈"
+msgstr "第 12 圆圈 感动"
 
 msgid "Circle 12 touched"
 msgstr "圈 12 感动"
@@ -2535,7 +2535,7 @@ msgid "Can 11 Upright"
 msgstr "罐头 11 直立式"
 
 msgid "Can 11 upright"
-msgstr "罐头 11 直立式"
+msgstr "罐 11 直立式"
 
 msgid "Bring can to Start Box"
 msgstr "将罐子带到起始箱"
@@ -2763,7 +2763,7 @@ msgid "Can D Not Upright"
 msgstr "罐头 D 不直立"
 
 msgid "Can E Not Upright"
-msgstr "罐头 E 不直立"
+msgstr "罐头 E 不能直立"
 
 msgid "Can F Not Upright"
 msgstr "罐头 F 不直立"
@@ -3185,10 +3185,10 @@ msgstr "JBC 沙盒"
 msgid ""
 "Junior Botball Challenge Sandbox. Starting Mat is A but B can also be shown "
 "instead. All cans 1-12 are available by default."
-msgstr "青少年机器人足球挑战沙盘。起始垫为 A，但也可以显示 B。默认提供所有 1-12 号罐。"
+msgstr "青少年机器人足球挑战沙盘。起始垫为 A，但也可以显示 B。默认情况下，所有 1-12 号罐都可用。"
 
 msgid "2026 Botball Fall Game Table"
-msgstr "2026 机器人球秋季游戏桌"
+msgstr "2026 机器人秋季游戏桌"
 
 msgid "2026 Botball Spring Game Table"
 msgstr "2026 年机器人足球春季比赛表"
@@ -3527,7 +3527,7 @@ msgid "Retake Tour"
 msgstr "重拍之旅"
 
 msgid "New to the simulator? Take a tour to get familiar with the interface."
-msgstr "模拟器新手？参观一下，熟悉一下界面。"
+msgstr "模拟器新手？先参观一下，熟悉一下界面。"
 
 msgid "Classroom Invite Code"
 msgstr "课堂邀请代码"
@@ -3544,7 +3544,7 @@ msgid ""
 msgstr "将显示给老师和同学的姓名。请务必只使用您的名字。"
 
 msgid "Retaking the tour will change your current scene to the JBC Sandbox."
-msgstr "重新开始游览会将当前场景更改为 JBC 沙盒。"
+msgstr "重新开始游览会将您当前的场景更改为 JBC 沙盒。"
 
 msgid "Do you want to retake the tour?"
 msgstr "您想重游吗？"
@@ -3568,7 +3568,7 @@ msgid ""
 msgstr "这是教师控制面板，您可以在这里查看和管理自己拥有的教室。"
 
 msgid "To create a classroom, select this drop down..."
-msgstr "要创建教室，请选择下拉菜单..."
+msgstr "要创建教室，请选择下拉菜单中的..."
 
 msgid "...then click this button to create a new classroom."
 msgstr "...然后单击此按钮创建新教室。"
@@ -3622,7 +3622,7 @@ msgid "Click this button to export your challenge scores as a PDF file."
 msgstr "单击此按钮可将挑战成绩导出为 PDF 文件。"
 
 msgid "Click this button to scroll to your scores on the leaderboard."
-msgstr "点击此按钮，滚动查看您在排行榜上的分数。"
+msgstr "单击此按钮，滚动查看您在排行榜上的分数。"
 
 msgid ""
 "Click this button to see the badges you have earned from completing "
@@ -3820,7 +3820,7 @@ msgid ""
 "This is the motor positions section, where you can see the current "
 "positions of the robot's motors. You can also click each "
 "get_motor_position_counter() row to see a graph."
-msgstr "这是电机位置部分，您可以在此查看机器人电机的当前位置。您还可以点击每行 get_motor_position_counter()，查看图表。"
+msgstr "这是电机位置部分，您可以在此查看机器人电机的当前位置。您还可以点击每一行 get_motor_position_counter()，查看图表。"
 
 msgid ""
 "This is the analog sensors section, where you can see the current readings "
@@ -3870,7 +3870,7 @@ msgid ""
 "Each object added to the Simulator can be moved using the x, y, z, and "
 "rotation controls. This can be useful for testing your code with different "
 "object placements."
-msgstr "添加到模拟器中的每个对象都可以使用 x、y、z 和旋转控制来移动。这对使用不同的对象位置测试代码非常有用。"
+msgstr "添加到模拟器中的每个对象都可以使用 x、y、z 和旋转控制来移动。这对于使用不同的对象位置测试代码非常有用。"
 
 msgid ""
 "To move an object, first we need to add the object to the simulator using "
@@ -3902,7 +3902,7 @@ msgid ""
 "The red arrow is the x-axis, the green arrow is the y-axis, and the blue "
 "arrow is the z-axis. Try dragging the arrows to move the object around in "
 "the simulator!"
-msgstr "红色箭头为 x 轴，绿色箭头为 y 轴，蓝色箭头为 z 轴。尝试拖动箭头在模拟器中移动物体！"
+msgstr "红色箭头是 x 轴，绿色箭头是 y 轴，蓝色箭头是 z 轴。尝试拖动箭头在模拟器中移动物体！"
 
 msgid ""
 "Welcome to KIPR's 3D Simulator, where you can test your code in a virtual "
@@ -4067,7 +4067,7 @@ msgid "Overlay Tab Bar Robot Tab"
 msgstr "叠加选项卡栏 机器人选项卡"
 
 msgid "Robot Starting Location"
-msgstr "机器人起始位置"
+msgstr "机器人启动位置"
 
 msgid "Robot Servos"
 msgstr "机器人伺服器"
@@ -4251,6 +4251,1061 @@ msgstr "邀请码"
 
 msgid "Code students can use to join the classroom"
 msgstr "学生可使用代码加入课堂"
+
+msgid "The selected file is already included in the project."
+msgstr "挑战进展"
+
+msgid "The selected file does not match the expected language ${currentLanguage}."
+msgstr "所选文件已包含在项目中。"
+
+msgid "The selected file must have a .h extension."
+msgstr "所选文件与预期语言 ${currentLanguage} 不匹配。"
+
+msgid "The selected file does not match the expected language."
+msgstr "所选文件的扩展名必须是 .h。"
+
+msgid "The selected file must have a .txt extension."
+msgstr "所选文件与预期语言不符。"
+
+msgid "Some files have errors"
+msgstr "所选文件的扩展名必须是 .txt。"
+
+msgid "Upload File"
+msgstr "某些文件有错误"
+
+msgid "Selected File Upload Language: "
+msgstr "上传文件"
+
+msgid "Select a file from your computer to upload"
+msgstr "所选文件上传语言："
+
+msgid "Upload Include File"
+msgstr "从电脑中选择要上传的文件"
+
+msgid "Upload Source File"
+msgstr "上传包含文件"
+
+msgid "Upload User Data File"
+msgstr "上传源文件"
+
+msgid "No file selected"
+msgstr "上传用户数据文件"
+
+msgid "Project with name already exists. Please choose a different name."
+msgstr "未选择文件"
+
+msgid "File uploaded does not match selected project language."
+msgstr "项目名称已存在。请选择其他名称。"
+
+msgid "Folder name does not match project name in config file."
+msgstr "上传的文件与所选项目语言不匹配。"
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the selected project language."
+msgstr "文件夹名称与配置文件中的项目名称不匹配。"
+
+msgid "Please remove all spaces in the name."
+msgstr "检测到文件语言与项目语言不同。请确保所有源文件与所选项目语言一致。"
+
+msgid "Please remove all special characters in the name."
+msgstr "请删除姓名中的所有空格。"
+
+msgid "File name exceeds maximum length of 50 characters."
+msgstr "请删除姓名中的所有特殊字符。"
+
+msgid "Select a Project from your computer to upload\n"
+msgstr "文件名超过 50 个字符的最大长度。"
+
+msgid "Be sure the heirarchy format follows:\n"
+msgstr "从电脑中选择一个项目上传"
+
+msgid "Project Name"
+msgstr "请务必按照以下格式编写： \\\\n"
+
+msgid "include"
+msgstr "项目名称"
+
+msgid "includeFile1.h (optional)"
+msgstr "包括"
+
+msgid "includeFile2.h (optional)"
+msgstr "includeFile1.h （可选）"
+
+msgid "src"
+msgstr "includeFile2.h （可选）"
+
+msgid "NOTE: file extension must match project language"
+msgstr "来源"
+
+msgid "srcFile1.*"
+msgstr "注意：文件扩展名必须与项目语言匹配"
+
+msgid "srcFile2.*"
+msgstr "srcFile1.*"
+
+msgid "data"
+msgstr "srcFile2.*"
+
+msgid "dataFile1.txt (optional)"
+msgstr "数据"
+
+msgid "dataFile2.txt (optional)"
+msgstr "dataFile1.txt（可选）"
+
+msgid "bin"
+msgstr "dataFile2.txt（可选）"
+
+msgid "Select Project Language:"
+msgstr "箱柜"
+
+msgid "Choose Folder"
+msgstr "选择项目语言："
+
+msgid "Config File"
+msgstr "选择文件夹"
+
+msgid "No files selected."
+msgstr "配置文件"
+
+msgid "Include Files"
+msgstr "未选择文件。"
+
+msgid "Source Files"
+msgstr "包含文件"
+
+msgid "User Data Files"
+msgstr "源文件"
+
+msgid "Selected Project Folder: "
+msgstr "用户数据文件"
+
+msgid "Selected Project Language: "
+msgstr "选定项目文件夹："
+
+msgid "Choose a different project"
+msgstr "选定的项目语言："
+
+msgid "Upload Project"
+msgstr "选择不同的项目"
+
+msgid "The selected project already exists for this user."
+msgstr "上传项目"
+
+msgid "Please choose a different project."
+msgstr "该用户已存在所选项目。"
+
+msgid "+"
+msgstr "请选择其他项目。"
+
+msgid "Create Project"
+msgstr "+"
+
+msgid "Create File"
+msgstr "创建项目"
+
+msgid "Create Classroom"
+msgstr "创建文件"
+
+msgid "Create User"
+msgstr "创建教室"
+
+msgid "Upload User"
+msgstr "创建用户"
+
+msgid ""
+"A user with that name already exists in this classroom. Please rename your "
+"folder and try again."
+msgstr "上传用户"
+
+msgid "Folder name does not match user name in config file."
+msgstr "该教室中已经存在使用该名称的用户。请重命名您的文件夹并重试。"
+
+msgid "File detected with interface mode does not match project interface mode."
+msgstr "文件夹名称与配置文件中的用户名不匹配。"
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the project language."
+msgstr "检测到的文件界面模式与项目界面模式不匹配。"
+
+msgid "Unknown file type, defaulting to plaintext."
+msgstr "检测到文件语言与项目语言不同。请确保所有源文件与项目语言一致。"
+
+msgid "Project must contain a main file"
+msgstr "未知文件类型，默认为纯文本。"
+
+msgid "Select a User from your computer to upload\n"
+msgstr "项目必须包含一个主文件"
+
+msgid "User Name"
+msgstr "从电脑中选择一个用户上传"
+
+msgid "(At least 1 project must be in the User folder)"
+msgstr "用户名"
+
+msgid "Project Name 1"
+msgstr "(用户文件夹中必须至少有一个项目）"
+
+msgid "Project Name 2"
+msgstr "项目名称 1"
+
+msgid "Select User Interface Mode:"
+msgstr "项目名称 2"
+
+msgid "Selected User Folder: "
+msgstr "选择用户界面模式："
+
+msgid "Selected User Interface Mode: "
+msgstr "选定的用户文件夹："
+
+msgid "Choose a different User"
+msgstr "选定的用户界面模式："
+
+msgid "The selected user already exists in this classroom."
+msgstr "选择不同的用户"
+
+msgid "Please choose a different user."
+msgstr "所选用户已存在于该教室。"
+
+msgid "Choose a different user"
+msgstr "请选择其他用户。"
+
+msgid "Delete Classroom"
+msgstr "选择不同的用户"
+
+msgid "Rename Classroom"
+msgstr "删除教室"
+
+msgid "Delete User"
+msgstr "重新命名教室"
+
+msgid "Download User"
+msgstr "删除用户"
+
+msgid "Rename User"
+msgstr "下载用户"
+
+msgid "Remove User from Classroom"
+msgstr "重命名用户"
+
+msgid "Move User to Classroom"
+msgstr "从教室删除用户"
+
+msgid "Paste Project"
+msgstr "将用户移至教室"
+
+msgid "Delete Project"
+msgstr "粘贴项目"
+
+msgid "Download Project"
+msgstr "删除项目"
+
+msgid "Rename Project"
+msgstr "下载项目"
+
+msgid "Move Project"
+msgstr "重新命名项目"
+
+msgid "Copy Project"
+msgstr "移动项目"
+
+msgid "Paste File"
+msgstr "复制项目"
+
+msgid "Delete File"
+msgstr "粘贴文件"
+
+msgid "Download File"
+msgstr "删除文件"
+
+msgid "Rename File"
+msgstr "下载文件"
+
+msgid "Copy File"
+msgstr "重命名文件"
+
+msgid "Users"
+msgstr "复制文件"
+
+msgid "Classroom Invitation Code:"
+msgstr "用户"
+
+msgid "Projects"
+msgstr "教室邀请码："
+
+msgid "Explorer - Classrooms"
+msgstr "项目"
+
+msgid "Explorer - Users"
+msgstr "探索者 - 教室"
+
+msgid "Users without Classrooms"
+msgstr "资源管理器 - 用户"
+
+msgid "Motor 0"
+msgstr "无教室用户"
+
+msgid "Motor 1"
+msgstr "电机 0"
+
+msgid "Motor 2"
+msgstr "电机 1"
+
+msgid "Motor 3"
+msgstr "电机 2"
+
+msgid "Velocity"
+msgstr "电机 3"
+
+msgid "Power"
+msgstr "速度"
+
+msgid "Servo 0"
+msgstr "电源"
+
+msgid "Servo 1"
+msgstr "伺服 0"
+
+msgid "Servo 2"
+msgstr "伺服 1"
+
+msgid "Servo 3"
+msgstr "伺服器 2"
+
+msgid "analog(0)"
+msgstr "伺服 3"
+
+msgid "analog(1)"
+msgstr "模拟(0)"
+
+msgid "analog(2)"
+msgstr "模拟(1)"
+
+msgid "analog(3)"
+msgstr "模拟(2)"
+
+msgid "analog(4)"
+msgstr "模拟(3)"
+
+msgid "analog(5)"
+msgstr "模拟(4)"
+
+msgid "digital(0)"
+msgstr "模拟(5)"
+
+msgid "digital(1)"
+msgstr "数字(0)"
+
+msgid "digital(2)"
+msgstr "数字(1)"
+
+msgid "digital(3)"
+msgstr "数字(2)"
+
+msgid "digital(4)"
+msgstr "数字(3)"
+
+msgid "digital(5)"
+msgstr "数字(4)"
+
+msgid "digital(6)"
+msgstr "数字(5)"
+
+msgid "digital(7)"
+msgstr "数字(6)"
+
+msgid "digital(8)"
+msgstr "数字(7)"
+
+msgid "digital(9)"
+msgstr "数字(8)"
+
+msgid "accel_x()"
+msgstr "数字(9)"
+
+msgid "accel_y()"
+msgstr "accel_x()"
+
+msgid "accel_z()"
+msgstr "accel_y()"
+
+msgid "gyro_x()"
+msgstr "accel_z()"
+
+msgid "gyro_y()"
+msgstr "gyro_x()"
+
+msgid "gyro_z()"
+msgstr "gyro_y()"
+
+msgid "magneto_x()"
+msgstr "gyro_z()"
+
+msgid "magneto_y()"
+msgstr "magneto_x()"
+
+msgid "magneto_z()"
+msgstr "magneto_y()"
+
+msgid "right_button()"
+msgstr "magneto_z()"
+
+msgid "Reverse"
+msgstr "right_button()"
+
+msgid "Forward"
+msgstr "逆向"
+
+msgid "Warning! Could damage servo in this range"
+msgstr "转发"
+
+msgid "Servo Position Plot"
+msgstr "警告！在此范围内可能会损坏伺服器"
+
+msgid "View:"
+msgstr "伺服位置图"
+
+msgid "Motor Port:"
+msgstr "查看："
+
+msgid "Clear Motor Position"
+msgstr "电机端口："
+
+msgid "Stop All Motors"
+msgstr "清除电机位置"
+
+msgid "Stop Current Motor"
+msgstr "停止所有电机"
+
+msgid "Servo Port:"
+msgstr "停止电流 电机"
+
+msgid "Enable All Servos"
+msgstr "伺服端口："
+
+msgid "Disable All Servos"
+msgstr "启用所有伺服器"
+
+msgid "Disable Servo"
+msgstr "禁用所有伺服系统"
+
+msgid "Enable Servo"
+msgstr "禁用伺服"
+
+msgid "Servo Positions"
+msgstr "启用伺服功能"
+
+msgid "Accelerometers"
+msgstr "伺服位置"
+
+msgid "Gyroscopes"
+msgstr "加速度计"
+
+msgid "Magnetometers"
+msgstr "陀螺仪"
+
+msgid "Buttons"
+msgstr "磁力计"
+
+msgid "Motors, Servos, and Sensors"
+msgstr "按钮"
+
+msgid "Motor"
+msgstr "电机、伺服和传感器"
+
+msgid "Servo"
+msgstr "电机"
+
+msgid "Sensor"
+msgstr "伺服"
+
+msgid "Common Functions"
+msgstr "传感器"
+
+msgid "Full Documentation"
+msgstr "常用功能"
+
+msgid "Challenge Progress"
+msgstr "完整文档"
+
+msgid ""
+"Use the classroom cards along the top to create a class or open one you "
+"already teach. After you pick a class, use the Home, Assignments, People, "
+"Grades, and Leaderboard tabs for day-to-day work."
+msgstr "使用顶部的教室卡片创建一个班级或打开一个你已经教过的班级。选好班级后，使用 \\\"主页\\\"、\\\"作业\\\"、\\\"人员\\\"、\\\"成绩 \\\"和 \\\"排行榜 \\\"选项卡进行日常工作。"
+
+msgid "Classroom cards"
+msgstr "教室卡片"
+
+msgid ""
+"This scrollable row holds every class you own. The first card creates a new "
+"classroom; each card after that opens that class into the workspace below "
+"when you click it."
+msgstr "这一行可滚动，包含你拥有的每一个班级。第一张卡片会创建一个新教室；之后的每张卡片都会在点击后将该教室打开到下面的工作区中。"
+
+msgid ""
+"Click the Create New Classroom card to open the setup dialog and continue "
+"the tour."
+msgstr "单击 \\\"创建新教室 \\\"卡打开设置对话框，继续参观。"
+
+msgid ""
+"After you tap Create, your new class shows up as another card in this row "
+"next to Create New Classroom."
+msgstr "点击 \\\"创建 \\\"后，您的新班级就会显示为这一行中 \\\"创建新教室 \\\"旁边的另一张卡片。"
+
+msgid ""
+"Click your classroom's card in this row to load it. The roster and tabs "
+"below update for that class—open People when you want to review enrollments."
+msgstr "单击此行中的教室卡片以加载它。花名册和下面的选项卡会为该班级更新--当你想查看注册情况时，请打开 \\\"人\\\"。"
+
+msgid "Home tab"
+msgstr "主页选项卡"
+
+msgid ""
+"See class information, copy the invite code for students, and quick "
+"classroom context."
+msgstr "查看班级信息，为学生复制邀请码，并快速了解教室情况。"
+
+msgid "Assignments tab"
+msgstr "任务选项卡"
+
+msgid ""
+"Open **Assignments** to manage this class’s work. The list below groups "
+"posts by topic; use the row menu on each assignment to edit or delete. "
+"Press Next to spotlight that list, then you will walk through creating a "
+"new assignment."
+msgstr "打开**作业**，管理本班作业。下面的列表按主题对帖子进行分组；使用每个作业上的行菜单可以编辑或删除。按 \\\"下一步 \\\"点亮该列表，然后您将看到创建新作业的过程。"
+
+msgid "Assignments workspace"
+msgstr "作业工作区"
+
+msgid ""
+"This panel is where posted assignments appear. When the class is new it may "
+"be empty—**Create Assignment** (top right) opens the editor; the tour goes "
+"through title, challenges, roster, due date, and publishing next."
+msgstr "该面板显示已发布的作业。当班级是新班级时，它可能是空的-***创建作业**（右上角）打开编辑器；浏览标题、挑战、花名册、截止日期和下一步发布。"
+
+msgid "Create an assignment"
+msgstr "创建任务"
+
+msgid ""
+"Tap **Create Assignment** to open the editor. You will name the work, pick "
+"simulator challenges, choose who receives it, set topic and due date, then "
+"publish with Assign."
+msgstr "点击 **创建作业**打开编辑器。您将为作业命名、选择模拟器挑战、选择接收人、设置主题和截止日期，然后用 \\\"分配 \\\"发布作业。"
+
+msgid "Assignment details"
+msgstr "任务详情"
+
+msgid ""
+"Enter a required title and optional description, then tick the JBC "
+"challenges students must complete. Points roll up on the right as you add "
+"scenes."
+msgstr "输入必填标题和可选描述，然后勾选学生必须完成的 JBC 挑战。当您添加场景时，积分会在右侧滚动。"
+
+msgid "Class, roster, and topic"
+msgstr "班级、名册和主题"
+
+msgid ""
+"Confirm **For Class**, open **Assign to** in the next steps to pick who "
+"receives this post, and choose a **Topic** bucket. After the roster dialog "
+"you will return here to adjust per-challenge points and the due date before "
+"publishing."
+msgstr "确认**为班级**，在接下来的步骤中打开**分配给**以选择接收此帖子的人，并选择一个**主题**桶。花名册对话框结束后，您将返回此处，在发布前调整每个挑战的积分和截止日期。"
+
+msgid "Open Assign to"
+msgstr "打开指定到"
+
+msgid ""
+"Tap **Assign to** to open the roster dialog. Use **All Students** or "
+"individual checkboxes, then **Done** to save— the tour highlights those "
+"controls next."
+msgstr "点**分配给**打开名册对话框。使用**所有学生**或单个复选框，然后**完成**保存--接下来导览会突出显示这些控件。"
+
+msgid "Choose who receives this assignment"
+msgstr "选择谁接受这项任务"
+
+msgid ""
+"This dialog lists the class roster for this post. Toggle **All Students** "
+"or pick individuals—you need at least one student before you can publish. "
+"Tap **Done** to save your picks and advance the tour. **Next** moves on "
+"without applying changes you only made here."
+msgstr "此对话框列出此文章的班级名册。切换 ** 所有学生** 或选择个人--您需要至少有一名学生才能发布。点**完成**保存您的选择并继续浏览。 **下一步**不会应用您在此所做的更改。"
+
+msgid "Points and due date"
+msgstr "积分和到期日"
+
+msgid ""
+"The total updates automatically from the challenges you checked on the "
+"left. Expand the table to set **points per challenge** if you need "
+"different weights, then pick a **Due date** for the class. When you are "
+"satisfied, continue to **Assign** to publish (or Next to skip publishing "
+"while finishing the tour)."
+msgstr "总分会根据您在左侧选中的挑战自动更新。如果需要不同的权重，可展开表格设置每项挑战的**点数**，然后选择班级的**截止日期**。满意后，继续**\\\"分配**\\\"进行发布（或 \\\"下一步 \\\"跳过发布，同时完成导览）。"
+
+msgid "Publish the assignment"
+msgstr "发布任务"
+
+msgid ""
+"Tap **Assign** to save the assignment to the class. Use the X on the left "
+"to close without saving, or press Next to leave the tour on this screen "
+"without publishing."
+msgstr "点击 **Assign** 将作业保存到班级。使用左侧的 \\\"X \\\"关闭而不保存，或按 \\\"下一步 \\\"将游览留在此屏幕而不发布。"
+
+msgid "Find it in the list"
+msgstr "在列表中查找"
+
+msgid ""
+"Published work lands in the Assignments tab under its topic. The "
+"highlighted row is the one you just added—open the row menu (**⋯**) to edit "
+"or delete, or tap the row to expand details."
+msgstr "已发布的作品会出现在其主题下的 \\\"作业 \\\"选项卡中。高亮显示的行就是你刚刚添加的行--打开行菜单 (**⋯**) 编辑或删除，或轻点该行展开详细信息。"
+
+msgid "People tab"
+msgstr "人员选项卡"
+
+msgid ""
+"Review who is enrolled, open student details, and remove a student from the "
+"class when needed."
+msgstr "查看注册学生、打开学生详细信息，并在需要时将学生从班级中删除。"
+
+msgid "Grades tab"
+msgstr "成绩选项卡"
+
+msgid ""
+"Open the gradebook: filter assignments by due or posted dates, filter which "
+"students and challenges appear, use Export filters next to Export CSV for "
+"scoped downloads, and open See Details to adjust per-challenge scores or "
+"overrides."
+msgstr "打开成绩簿：按到期或发布日期筛选作业，筛选哪些学生和挑战会出现，使用 \\\"导出 CSV \\\"旁边的 \\\"导出筛选器 \\\"进行有范围的下载，打开 \\\"查看详情 \\\"调整每个挑战的分数或重写。"
+
+msgid "Leaderboard tab"
+msgstr "排行榜选项卡"
+
+msgid ""
+"Switch between Default JBC Challenges and Limited Challenges to see how the "
+"class is performing on simulator scenes and timed challenges."
+msgstr "在 \\\"默认 JBC 挑战 \\\"和 \\\"有限挑战 \\\"之间切换，查看全班在模拟器场景和计时挑战中的表现。"
+
+msgid ""
+"This is your student classroom hub. Join a class with the button below; "
+"once you are inside a class, the guided tour walks through each top tab and "
+"the assignment details window."
+msgstr "这是您的学生教室中心。使用下面的按钮加入一个班级；进入班级后，导游会引导您浏览每个顶部选项卡和作业详情窗口。"
+
+msgid ""
+"Tap Join Class, enter the invite code from your teacher, choose a display "
+"name, and you will land in that classroom with full access to assignments "
+"and leaderboards."
+msgstr "轻点 \\\"加入课堂\\\"，输入老师的邀请码，选择一个显示名称，然后你就可以进入该课堂，完全访问作业和排行榜。"
+
+msgid ""
+"Type the classroom invite code, add the name your teacher should see, then "
+"press Join to finish enrolling."
+msgstr "输入教室邀请代码，添加老师应该看到的姓名，然后按加入完成注册。"
+
+msgid ""
+"From the Leaderboard tab you explore class challenge boards. Inside, switch "
+"between Default JBC Challenges (always-on simulator scenes) and Limited "
+"Challenges (timed or attempt-limited events)."
+msgstr "在 \\\"排行榜 \\\"选项卡中，您可以探索班级挑战板。您可以在 \\\"默认 JBC 挑战赛\\\"（始终打开的模拟器场景）和 \\\"限制挑战赛\\\"（计时或尝试限制的活动）之间切换。"
+
+msgid ""
+"This board lists the standard Botball challenges everyone can practice. "
+"Compare your progress with classmates, export a PDF summary, jump to your "
+"row, or review badges you have earned."
+msgstr "这个板块列出了每个人都可以练习的标准 Botball 挑战。您可以与同学比较进度、导出 PDF 摘要、跳转到自己的行或查看已获得的徽章。"
+
+msgid ""
+"Download a PDF snapshot of how you are doing on the visible "
+"challenges—great for sharing progress at home or with a mentor."
+msgstr "下载 PDF 格式的快照，了解自己在可见挑战方面的进展情况--非常适合在家里或与导师分享进展。"
+
+msgid ""
+"Long leaderboard? Use this control to scroll straight to your entry so you "
+"can see placement and points at a glance."
+msgstr "排行榜很长？使用此控件可直接滚动到您的参赛作品，这样您就可以一目了然地看到名次和积分。"
+
+msgid ""
+"Open the badge gallery to celebrate milestones you unlocked by finishing "
+"challenges successfully."
+msgstr "打开徽章图库，庆祝成功完成挑战后解锁的里程碑。"
+
+msgid ""
+"Select Limited Challenges to open any special contests your teacher "
+"enabled—watch the countdowns and attempt limits shown there."
+msgstr "选择 \\\"有限挑战\\\"，打开老师启用的任何特殊竞赛--注意其中显示的倒计时和尝试限制。"
+
+msgid ""
+"Each card explains the rules for that limited run. Stay inside the allowed "
+"window so your submissions count toward the class leaderboard."
+msgstr "每张卡片都解释了该限量版的规则。请在允许的时间内提交作品，这样您提交的作品才能计入班级排行榜。"
+
+msgid ""
+"Use the menu icon for shortcuts such as leaving the classroom or jumping to "
+"other tools."
+msgstr "使用菜单图标可获得离开教室或跳转到其他工具等快捷方式。"
+
+msgid ""
+"This panel surfaces helpful links and the Leave Classroom action when you "
+"need to step out while keeping your past scores saved."
+msgstr "当您需要离开时，该面板会显示有用的链接和 \\\"离开教室 \\\"操作，同时保存您过去的分数。"
+
+msgid ""
+"Choose Leave Classroom only when you are done with the class. Your "
+"completed work stays on record, but you will need a fresh invite to rejoin "
+"later."
+msgstr "只有在完成课程后才可选择离开教室。您已完成的作业将保留在记录中，但您需要重新获得邀请才能重新加入。"
+
+msgid "Enter a classroom name."
+msgstr "输入教室名称。"
+
+msgid "A classroom with that name already exists."
+msgstr "已经有一个叫这个名字的教室了。"
+
+msgid "Choose a different name than the current one."
+msgstr "选择与当前名称不同的名称。"
+
+msgid "Could not rename this classroom (missing record)."
+msgstr "无法重命名此教室（缺少记录）。"
+
+msgid "Could not save. Try again."
+msgstr "无法保存。再试一次。"
+
+msgid "Something went wrong."
+msgstr "出问题了"
+
+msgid "Rename classroom"
+msgstr "重新命名教室"
+
+msgid "Classroom name"
+msgstr "教室名称"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Saving…"
+msgstr "节约..."
+
+msgid "Yes"
+msgstr "是"
+
+msgid "No"
+msgstr "没有"
+
+msgid "Teachers"
+msgstr "教师"
+
+msgid "Students"
+msgstr "学生"
+
+msgid "Assigned To"
+msgstr "分配给"
+
+msgid "Not started"
+msgstr "未启动"
+
+msgid "Not completed"
+msgstr "未完成"
+
+msgid "Completed at"
+msgstr "在"
+
+msgid "On time"
+msgstr "准时"
+
+msgid "Late"
+msgstr "迟到"
+
+msgid "No deadline"
+msgstr "无截止日期"
+
+msgid "Go to Challenge"
+msgstr "前往挑战"
+
+msgid "No challenges added to this assignment."
+msgstr "这项任务没有增加任何挑战。"
+
+msgid "Close"
+msgstr "关闭"
+
+msgid "Assignment Details"
+msgstr "任务详情"
+
+msgid "See Assigned Challenges"
+msgstr "查看分配的挑战"
+
+msgid "Challenges completed"
+msgstr "完成的挑战"
+
+msgid "Edit"
+msgstr "编辑"
+
+msgid "Create Assignment"
+msgstr "创建任务"
+
+msgid "You have no assignments in this class yet."
+msgstr "这门课还没有作业。"
+
+msgid "Assignments you publish will appear in the lists below, grouped by topic."
+msgstr "您发布的作业将出现在下面按主题分组的列表中。"
+
+msgid "Classroom Code"
+msgstr "课堂守则"
+
+msgid "Override"
+msgstr "覆盖"
+
+msgid "Submission Details"
+msgstr "提交详情"
+
+msgid "Default"
+msgstr "默认值"
+
+msgid "Filter by due or posted date"
+msgstr "按到期或发布日期筛选"
+
+msgid "From"
+msgstr "来自"
+
+msgid "To"
+msgstr "至"
+
+msgid "Clear date filter"
+msgstr "清除日期过滤器"
+
+msgid "Export filters"
+msgstr "导出过滤器"
+
+msgid ""
+"Hold Ctrl or Cmd while clicking to select. Leave unselected to include all "
+"students."
+msgstr "单击时按住 Ctrl 或 Cmd 键进行选择。不选择则包括所有学生。"
+
+msgid "Challenges"
+msgstr "挑战"
+
+msgid ""
+"Shown for assignments in the date range. Leave unselected to include all "
+"challenges."
+msgstr "显示日期范围内的任务。不选则包括所有挑战。"
+
+msgid "Clear student and challenge filters"
+msgstr "清晰的学生和挑战筛选器"
+
+msgid "Export CSV"
+msgstr "导出 CSV"
+
+msgid "No assignment columns match the current date and challenge filters."
+msgstr "没有符合当前日期和挑战筛选条件的任务列。"
+
+msgid "Student Name"
+msgstr "学生姓名"
+
+msgid "Home"
+msgstr "首页"
+
+msgid "Assignments"
+msgstr "作业"
+
+msgid "People"
+msgstr "人"
+
+msgid "Grades"
+msgstr "年级"
+
+msgid "Select a classroom to view details"
+msgstr "选择教室查看详情"
+
+msgid "Assign To"
+msgstr "指派给"
+
+msgid "All Students"
+msgstr "所有学生"
+
+msgid "No Subject"
+msgstr "无主题"
+
+msgid "Create Subject"
+msgstr "创建主题"
+
+msgid "Untitled assignment"
+msgstr "无标题任务"
+
+msgid "Edit Assignment"
+msgstr "编辑任务"
+
+msgid "Save Changes"
+msgstr "保存更改"
+
+msgid "Assign"
+msgstr "分配"
+
+msgid "Assignment Title*"
+msgstr "作业标题*"
+
+msgid "*Required"
+msgstr "*需要"
+
+msgid "Assignment Description"
+msgstr "任务描述"
+
+msgid "Optional"
+msgstr "可选"
+
+msgid "Choose JBC Challenges to Assign"
+msgstr "选择要分配的 JBC 挑战"
+
+msgid "For Class"
+msgstr "班级"
+
+msgid "Assign to"
+msgstr "分配给"
+
+msgid "Topic"
+msgstr "主题"
+
+msgid "Points"
+msgstr "积分"
+
+msgid "Due Date"
+msgstr "到期日"
+
+msgid "Delete classroom"
+msgstr "删除教室"
+
+msgid "Assigned Challenges"
+msgstr "分配的挑战"
+
+msgid "Can 7 Chopped"
+msgstr "罐头 7 切碎"
+
+msgid "Can 7 chopped"
+msgstr "罐头 7 切碎"
+
+msgid "Can 11 not upright"
+msgstr "11 号罐不能直立"
+
+msgid "Can 1 Rescued"
+msgstr "Can 1 救援"
+
+msgid "Can 1 rescued"
+msgstr "Can 1 获救"
+
+msgid "Can 2 Rescued"
+msgstr "Can 2 救援"
+
+msgid "Can 2 rescued"
+msgstr "2 号罐获救"
+
+msgid "Can 3 Rescued"
+msgstr "Can 3 救援"
+
+msgid "Can 3 rescued"
+msgstr "Can 3 获救"
+
+msgid "Touch the ream"
+msgstr "触摸卷轴"
+
+msgid "Can A not upright in a circle"
+msgstr "A 不能在圆圈内直立"
+
+msgid "Can B not upright in a circle"
+msgstr "B 不能绕圈直立"
+
+msgid "Can C not upright in a circle"
+msgstr "C 不能在圆圈内直立"
+
+msgid "Can D not upright in a circle"
+msgstr "D 不能绕圈直立"
+
+msgid "Can E not upright in a circle"
+msgstr "E 不能绕圈直立"
+
+msgid "Proximity of can5"
+msgstr "罐头附近5"
+
+msgid "Proximity of can7"
+msgstr "Can7 附近"
+
+msgid "Not Set"
+msgstr "未设置"
+
+msgid "Posted"
+msgstr "已发布"
+
+msgid "No Due Date"
+msgstr "无到期日"
+
+msgid "See Assigned Students"
+msgstr "查看分配的学生"
+
+msgid "Due"
+msgstr "到期"
+
+msgid "New Assignment Posted"
+msgstr "发布新任务"
+
+msgid "Created at"
+msgstr "创建于"
+
+msgid "No assignments yet"
+msgstr "尚无任务"
+
+msgid "Upcoming Assignment"
+msgstr "近期任务"
+
+msgid "No upcoming assignments"
+msgstr "没有即将到来的任务"
+
+msgid "Title"
+msgstr "标题"
+
+msgid "Final Score"
+msgstr "最终得分"
+
+msgid "Not Completed"
+msgstr "未完成"
+
+msgid "See Details"
+msgstr "查看详情"
+
+msgid "See Classroom Cards"
+msgstr "查看教室卡片"
+
+msgid ""
+"Published work lands in the Assignments tab under its topic. The "
+"highlighted row is the one you just added. Press Next, then you will open "
+"that row to see details and reach your challenges."
+msgstr "已发表的作业会出现在其主题下的 \\\"作业 \\\"选项卡中。高亮显示的行就是你刚刚添加的那一行。按下 \\\"下一步 \\\"后，您将打开该行查看详细信息，并迎接挑战。"
+
+msgid "Select your new assignment"
+msgstr "选择新任务"
+
+msgid ""
+"Click the highlighted assignment row once. That selects it and opens the "
+"details panel below the row so you can open **See Assigned Challenges** "
+"next."
+msgstr "单击突出显示的任务行一次。这样就选中了该行，并打开该行下方的详细信息面板，这样您就可以打开**查看已分配的挑战**。"
+
+msgid "See assigned challenges"
+msgstr "查看分配的挑战"
+
+msgid ""
+"In the details panel, tap **See Assigned Challenges** to open the list of "
+"simulator scenes for this post. You will use **Go to Challenge** there to "
+"jump into a scene."
+msgstr "在详细信息面板中，点击**查看分配的挑战**，打开本职位的模拟器场景列表。您将使用**转到挑战**跳转到某个场景。"
+
+msgid "Open a challenge from here"
+msgstr "从这里开始挑战"
+
+msgid ""
+"Each row lists one assigned scene. Use **Go to Challenge** to open that "
+"simulator challenge in a new flow—handy for previewing what students will "
+"see. Close the dialog when you are done, then continue the tour."
+msgstr "每行列出一个指定场景。使用 \\\"转到挑战 \\\"** 在新流程中打开该模拟器挑战，便于预览学生将看到的内容。完成后关闭对话框，然后继续参观。"
 
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
@@ -4436,534 +5491,6 @@ msgctxt "RotationwUnits order"
 msgid "ZYX"
 msgstr "ZYX"
 
-msgid ""
-msgstr ""
-
-msgid "The selected file is already included in the project."
-msgstr "所选文件已包含在项目中。"
-
-msgid "The selected file does not match the expected language ${currentLanguage}."
-msgstr "所选文件与预期语言 ${currentLanguage} 不匹配。"
-
-msgid "The selected file must have a .h extension."
-msgstr "所选文件的扩展名必须是 .h。"
-
-msgid "The selected file does not match the expected language."
-msgstr "所选文件与预期语言不符。"
-
-msgid "The selected file must have a .txt extension."
-msgstr "所选文件的扩展名必须是 .txt。"
-
-msgid "Some files have errors"
-msgstr "某些文件有错误"
-
-msgid "Upload File"
-msgstr "上传文件"
-
-msgid "Selected File Upload Language: "
-msgstr "所选文件上传语言："
-
-msgid "Select a file from your computer to upload"
-msgstr "从电脑中选择要上传的文件"
-
-msgid "Upload Include File"
-msgstr "上传包含文件"
-
-msgid "Upload Source File"
-msgstr "上传源文件"
-
-msgid "Upload User Data File"
-msgstr "上传用户数据文件"
-
-msgid "No file selected"
-msgstr "未选择文件"
-
-msgid "Project with name already exists. Please choose a different name."
-msgstr "项目名称已存在。请选择其他名称。"
-
-msgid "File uploaded does not match selected project language."
-msgstr "上传的文件与所选项目语言不匹配。"
-
-msgid "Folder name does not match project name in config file."
-msgstr "文件夹名称与配置文件中的项目名称不匹配。"
-
-msgid ""
-"File detected as different language than project language. Please ensure "
-"all source files match the selected project language."
-msgstr "检测到文件语言与项目语言不同。请确保所有源文件与所选项目语言一致。"
-
-msgid "Please remove all spaces in the name."
-msgstr "请删除姓名中的所有空格。"
-
-msgid "Please remove all special characters in the name."
-msgstr "请删除姓名中的所有特殊字符。"
-
-msgid "File name exceeds maximum length of 50 characters."
-msgstr "文件名超过 50 个字符的最大长度。"
-
-msgid "Select a Project from your computer to upload\n"
-msgstr "从电脑中选择一个项目上传"
-
-msgid "Be sure the heirarchy format follows:\n"
-msgstr "请务必按照以下格式编写： \\\\n"
-
-msgid "Project Name"
-msgstr "项目名称"
-
-msgid "include"
-msgstr "包括"
-
-msgid "includeFile1.h (optional)"
-msgstr "includeFile1.h （可选）"
-
-msgid "includeFile2.h (optional)"
-msgstr "includeFile2.h （可选）"
-
-msgid "src"
-msgstr "来源"
-
-msgid "NOTE: file extension must match project language"
-msgstr "注意：文件扩展名必须与项目语言匹配"
-
-msgid "srcFile1.*"
-msgstr "srcFile1.*"
-
-msgid "srcFile2.*"
-msgstr "srcFile2.*"
-
-msgid "data"
-msgstr "数据"
-
-msgid "dataFile1.txt (optional)"
-msgstr "dataFile1.txt（可选）"
-
-msgid "dataFile2.txt (optional)"
-msgstr "dataFile2.txt（可选）"
-
-msgid "bin"
-msgstr "箱柜"
-
-msgid "Select Project Language:"
-msgstr "选择项目语言："
-
-msgid "Choose Folder"
-msgstr "选择文件夹"
-
-msgid "Config File"
-msgstr "配置文件"
-
-msgid "No files selected."
-msgstr "未选择文件。"
-
-msgid "Include Files"
-msgstr "包含文件"
-
-msgid "Source Files"
-msgstr "源文件"
-
-msgid "User Data Files"
-msgstr "用户数据文件"
-
-msgid "Selected Project Folder: "
-msgstr "选定项目文件夹："
-
-msgid "Selected Project Language: "
-msgstr "选定的项目语言："
-
-msgid "Choose a different project"
-msgstr "选择不同的项目"
-
-msgid "Upload Project"
-msgstr "上传项目"
-
-msgid "The selected project already exists for this user."
-msgstr "该用户已存在所选项目。"
-
-msgid "Please choose a different project."
-msgstr "请选择其他项目。"
-
-msgid "+"
-msgstr "+"
-
-msgid "Create Project"
-msgstr "创建项目"
-
-msgid "Create File"
-msgstr "创建文件"
-
-msgid "Create Classroom"
-msgstr "创建教室"
-
-msgid "Create User"
-msgstr "创建用户"
-
-msgid "Upload User"
-msgstr "上传用户"
-
-msgid ""
-"A user with that name already exists in this classroom. Please rename your "
-"folder and try again."
-msgstr "该教室中已经存在使用该名称的用户。请重命名您的文件夹并重试。"
-
-msgid "Folder name does not match user name in config file."
-msgstr "文件夹名称与配置文件中的用户名不匹配。"
-
-msgid "File detected with interface mode does not match project interface mode."
-msgstr "检测到的文件界面模式与项目界面模式不匹配。"
-
-msgid ""
-"File detected as different language than project language. Please ensure "
-"all source files match the project language."
-msgstr "检测到文件语言与项目语言不同。请确保所有源文件与项目语言一致。"
-
-msgid "Unknown file type, defaulting to plaintext."
-msgstr "未知文件类型，默认为纯文本。"
-
-msgid "Project must contain a main file"
-msgstr "项目必须包含一个主文件"
-
-msgid "Select a User from your computer to upload\n"
-msgstr "从电脑中选择一个用户上传"
-
-msgid "User Name"
-msgstr "用户名"
-
-msgid "(At least 1 project must be in the User folder)"
-msgstr "(用户文件夹中必须至少有一个项目）"
-
-msgid "Project Name 1"
-msgstr "项目名称 1"
-
-msgid "Project Name 2"
-msgstr "项目名称 2"
-
-msgid "Select User Interface Mode:"
-msgstr "选择用户界面模式："
-
-msgid "Selected User Folder: "
-msgstr "选定的用户文件夹："
-
-msgid "Selected User Interface Mode: "
-msgstr "选定的用户界面模式："
-
-msgid "Choose a different User"
-msgstr "选择不同的用户"
-
-msgid "The selected user already exists in this classroom."
-msgstr "所选用户已存在于该教室中。"
-
-msgid "Please choose a different user."
-msgstr "请选择其他用户。"
-
-msgid "Choose a different user"
-msgstr "选择不同的用户"
-
-msgid "Delete Classroom"
-msgstr "删除教室"
-
-msgid "Rename Classroom"
-msgstr "重新命名教室"
-
-msgid "Delete User"
-msgstr "删除用户"
-
-msgid "Download User"
-msgstr "下载用户"
-
-msgid "Rename User"
-msgstr "重命名用户"
-
-msgid "Remove User from Classroom"
-msgstr "从教室删除用户"
-
-msgid "Move User to Classroom"
-msgstr "将用户移至教室"
-
-msgid "Paste Project"
-msgstr "粘贴项目"
-
-msgid "Delete Project"
-msgstr "删除项目"
-
-msgid "Download Project"
-msgstr "下载项目"
-
-msgid "Rename Project"
-msgstr "重新命名项目"
-
-msgid "Move Project"
-msgstr "移动项目"
-
-msgid "Copy Project"
-msgstr "复制项目"
-
-msgid "Paste File"
-msgstr "粘贴文件"
-
-msgid "Delete File"
-msgstr "删除文件"
-
-msgid "Download File"
-msgstr "下载文件"
-
-msgid "Rename File"
-msgstr "重命名文件"
-
-msgid "Copy File"
-msgstr "复制文件"
-
-msgid "Users"
-msgstr "用户"
-
-msgid "Classroom Invitation Code:"
-msgstr "教室邀请码："
-
-msgid "Projects"
-msgstr "项目"
-
-msgid "Explorer - Classrooms"
-msgstr "探索者 - 教室"
-
-msgid "Explorer - Users"
-msgstr "资源管理器 - 用户"
-
-msgid "Users without Classrooms"
-msgstr "无教室用户"
-
-msgid "Motor 0"
-msgstr "电机 0"
-
-msgid "Motor 1"
-msgstr "电机 1"
-
-msgid "Motor 2"
-msgstr "电机 2"
-
-msgid "Motor 3"
-msgstr "电机 3"
-
-msgid "Velocity"
-msgstr "速度"
-
-msgid "Power"
-msgstr "电源"
-
-msgid "Servo 0"
-msgstr "伺服 0"
-
-msgid "Servo 1"
-msgstr "伺服 1"
-
-msgid "Servo 2"
-msgstr "伺服器 2"
-
-msgid "Servo 3"
-msgstr "伺服 3"
-
-msgid "analog(0)"
-msgstr "模拟(0)"
-
-msgid "analog(1)"
-msgstr "模拟(1)"
-
-msgid "analog(2)"
-msgstr "模拟(2)"
-
-msgid "analog(3)"
-msgstr "模拟(3)"
-
-msgid "analog(4)"
-msgstr "模拟(4)"
-
-msgid "analog(5)"
-msgstr "模拟(5)"
-
-msgid "digital(0)"
-msgstr "数字(0)"
-
-msgid "digital(1)"
-msgstr "数字(1)"
-
-msgid "digital(2)"
-msgstr "数字(2)"
-
-msgid "digital(3)"
-msgstr "数字(3)"
-
-msgid "digital(4)"
-msgstr "数字(4)"
-
-msgid "digital(5)"
-msgstr "数字(5)"
-
-msgid "digital(6)"
-msgstr "数字(6)"
-
-msgid "digital(7)"
-msgstr "数字(7)"
-
-msgid "digital(8)"
-msgstr "数字(8)"
-
-msgid "digital(9)"
-msgstr "数字(9)"
-
-msgid "accel_x()"
-msgstr "accel_x()"
-
-msgid "accel_y()"
-msgstr "accel_y()"
-
-msgid "accel_z()"
-msgstr "accel_z()"
-
-msgid "gyro_x()"
-msgstr "gyro_x()"
-
-msgid "gyro_y()"
-msgstr "gyro_y()"
-
-msgid "gyro_z()"
-msgstr "gyro_z()"
-
-msgid "magneto_x()"
-msgstr "magneto_x()"
-
-msgid "magneto_y()"
-msgstr "magneto_y()"
-
-msgid "magneto_z()"
-msgstr "magneto_z()"
-
-msgid "right_button()"
-msgstr "right_button()"
-
-msgid "Reverse"
-msgstr "反向"
-
-msgid "Forward"
-msgstr "转发"
-
-msgid "Warning! Could damage servo in this range"
-msgstr "警告！在此范围内可能会损坏伺服器"
-
-msgid "Motor Velocity Plot"
-msgstr "电机速度曲线图"
-
-msgid "Motor Position Plot"
-msgstr "电机位置图"
-
-msgid "Servo Position Plot"
-msgstr "伺服位置图"
-
-msgid "View:"
-msgstr "查看："
-
-msgid "Motor Port:"
-msgstr "电机端口："
-
-msgid "Clear Motor Position"
-msgstr "清除电机位置"
-
-msgid "Stop All Motors"
-msgstr "停止所有电机"
-
-msgid "Stop Current Motor"
-msgstr "停止电流 电机"
-
-msgid "Motor Velocities"
-msgstr "电机速度"
-
-msgid "Motor Positions"
-msgstr "电机位置"
-
-msgid "Servo Port:"
-msgstr "伺服端口："
-
-msgid "Enable All Servos"
-msgstr "启用所有伺服器"
-
-msgid "Disable All Servos"
-msgstr "禁用所有伺服系统"
-
-msgid "Disable Servo"
-msgstr "禁用伺服"
-
-msgid "Enable Servo"
-msgstr "启用伺服功能"
-
-msgid "Servo Positions"
-msgstr "伺服位置"
-
-msgid "Analog Sensors"
-msgstr "模拟传感器"
-
-msgid "Digital Sensors"
-msgstr "数字传感器"
-
-msgid "Accelerometers"
-msgstr "加速度计"
-
-msgid "Gyroscopes"
-msgstr "陀螺仪"
-
-msgid "Magnetometers"
-msgstr "磁力计"
-
-msgid "Buttons"
-msgstr "按钮"
-
-msgid "Motors, Servos, and Sensors"
-msgstr "电机、伺服和传感器"
-
-msgid "Motor"
-msgstr "电机"
-
-msgid "Servo"
-msgstr "伺服"
-
-msgid "Sensor"
-msgstr "传感器"
-
-msgid "Modules"
-msgstr "模块"
-
-msgid "Functions"
-msgstr "功能"
-
-msgid "Structures"
-msgstr "结构"
-
-msgid "Enumerations"
-msgstr "枚举"
-
-msgid "Files"
-msgstr "文件"
-
-msgid "Search..."
-msgstr "搜索..."
-
-msgid "Detailed Description"
-msgstr "详细说明"
-
-msgid "Parameters"
-msgstr "参数"
-
-msgid "Return Value"
-msgstr "返回值"
-
-msgid "Fields"
-msgstr "字段"
-
-msgid "Common Functions"
-msgstr "常用功能"
-
-msgid "Full Documentation"
-msgstr "完整文档"
-
-msgid "Challenge Progress"
-msgstr "挑战进展"
-
 msgctxt "func:a_button:detailed"
 msgid "Gets the A button's state (pressed or not pressed.)"
 msgstr "获取 A 按钮的状态（按下或未按下）。"
@@ -5036,7 +5563,7 @@ msgstr "获取 A 按钮的状态（按下或未按下）。"
 
 msgctxt "func:baasbennaguui:brief"
 msgid "Moves a motor at a percent velocity."
-msgstr "以一定的速度移动电机。"
+msgstr "以百分比速度移动电机"
 
 msgctxt "func:baasbennaguui:param:motor:description"
 msgid "The motor port."
@@ -5326,7 +5853,7 @@ msgstr "目标速度为 -1500 至 1500 点/秒"
 
 msgctxt "func:motor:brief"
 msgid "Moves a motor at a percent velocity."
-msgstr "以百分比速度移动电机。"
+msgstr "以百分比速度移动电机"
 
 msgctxt "func:motor:param:motor:description"
 msgid "The motor port."
@@ -5802,7 +6329,7 @@ msgstr "当两个程序或线程需要访问同一个变量时，互斥用来防
 
 msgctxt "struct:mutex:member:data:brief"
 msgid "a C++ Mutex object cast to a void*. Not intended to be accessed."
-msgstr "一个 C++ Mutex 对象被转换为 void*。不用于访问。"
+msgstr "一个 C++ Mutex 对象，被转换为 void*。不用于访问。"
 
 msgctxt "struct:point2:brief"
 msgid "A 2D point; has x and y."

@@ -19,6 +19,30 @@ import { ReferenceFramewUnits } from '../../util/math/unitMath';
 
 import ProgrammingLanguage from '../../programming/compiler/ProgrammingLanguage';
 
+function predicateSuccessComplete(success?: PredicateCompletion): boolean {
+  return !!(success?.exprStates?.completion);
+}
+
+function maybeStampLimitedBestCompletionTime(
+  completion: LimitedChallengeCompletion,
+  previousSuccess: PredicateCompletion | undefined,
+  nextSuccess: PredicateCompletion | undefined
+): void {
+  if (
+    predicateSuccessComplete(nextSuccess) &&
+    !predicateSuccessComplete(previousSuccess) &&
+    completion.bestCompletionTime === undefined
+  ) {
+    completion.bestCompletionTime = new Date().toISOString();
+  }
+}
+
+function clearBestCompletionTimeIfFailureActive(completion: LimitedChallengeCompletion): void {
+  if (PredicateCompletion.isFailureRootSatisfied(completion.failure)) {
+    completion.bestCompletionTime = undefined;
+  }
+}
+
 export namespace LimitedChallengeCompletionsAction {
   export interface LoadLimitedChallengeCompletion {
     type: 'limited-challenge-completions/load-challenge-completion';
@@ -346,10 +370,14 @@ export const reduceLimitedChallengeCompletions = (state: LimitedChallengeComplet
       [action.challengeId]: action.challengeCompletion,
     };
     case 'limited-challenge-completions/set-success-predicate-completion': return mutate(state, action.challengeId, completion => {
+      const prev = completion.success;
       completion.success = action.success;
+      maybeStampLimitedBestCompletionTime(completion, prev, action.success);
+      clearBestCompletionTimeIfFailureActive(completion);
     });
     case 'limited-challenge-completions/set-failure-predicate-completion': return mutate(state, action.challengeId, completion => {
       completion.failure = action.failure;
+      clearBestCompletionTimeIfFailureActive(completion);
     });
     case 'limited-challenge-completions/remove-event-state': return mutate(state, action.challengeId, completion => {
       delete completion.eventStates[action.eventId];
@@ -361,9 +389,12 @@ export const reduceLimitedChallengeCompletions = (state: LimitedChallengeComplet
       completion.eventStates = action.eventStates;
     });
     case 'limited-challenge-completions/set-event-states-and-predicate-completions': return mutate(state, action.challengeId, completion => {
+      const prev = completion.success;
       completion.eventStates = action.eventStates;
       completion.success = action.success;
       completion.failure = action.failure;
+      maybeStampLimitedBestCompletionTime(completion, prev, action.success);
+      clearBestCompletionTimeIfFailureActive(completion);
     });
     case 'limited-challenge-completions/set-scene-diff': return mutate(state, action.challengeId, completion => {
       completion.serializedSceneDiff = JSON.stringify(action.sceneDiff);
@@ -384,12 +415,16 @@ export const reduceLimitedChallengeCompletions = (state: LimitedChallengeComplet
       completion.robotLinkOrigins = action.robotLinkOrigins;
     });
     case 'limited-challenge-completions/record-best-completion': return mutate(state, action.challengeId, completion => {
+      const failed = PredicateCompletion.isFailureRootSatisfied(completion.failure);
+      if (failed) {
+        completion.bestCompletionTime = undefined;
+      }
       // Only update best runtime if this is a better time (or first completion)
       if (completion.bestRuntimeMs === undefined || action.runtimeMs < completion.bestRuntimeMs) {
         completion.bestRuntimeMs = action.runtimeMs;
       }
       // Only record completion time the first time the user successfully completes
-      if (completion.bestCompletionTime === undefined) {
+      if (!failed && completion.bestCompletionTime === undefined) {
         completion.bestCompletionTime = new Date().toISOString();
       }
     });

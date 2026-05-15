@@ -17,6 +17,30 @@ import { ReferenceFramewUnits } from '../../util/math/unitMath';
 
 import ProgrammingLanguage from '../../programming/compiler/ProgrammingLanguage';
 
+function predicateSuccessComplete(success?: PredicateCompletion): boolean {
+  return !!(success?.exprStates?.completion);
+}
+
+function maybeStampChallengeCompletedAt(
+  challenge: ChallengeCompletion,
+  previousSuccess: PredicateCompletion | undefined,
+  nextSuccess: PredicateCompletion | undefined
+): void {
+  if (
+    predicateSuccessComplete(nextSuccess) &&
+    !predicateSuccessComplete(previousSuccess) &&
+    challenge.completedAt === undefined
+  ) {
+    challenge.completedAt = new Date().toISOString();
+  }
+}
+
+function clearCompletedAtIfFailureActive(challenge: ChallengeCompletion): void {
+  if (PredicateCompletion.isFailureRootSatisfied(challenge.failure)) {
+    challenge.completedAt = undefined;
+  }
+}
+
 export namespace ChallengeCompletionsAction {
   export interface LoadChallengeCompletion {
     type: 'challenge-completions/load-challenge-completion';
@@ -303,10 +327,14 @@ export const reduceChallengeCompletions = (state: ChallengeCompletions = DEFAULT
       [action.challengeId]: action.challengeCompletion,
     };
     case 'challenge-completions/set-success-predicate-completion': return mutate(state, action.challengeId, challenge => {
+      const prev = challenge.success;
       challenge.success = action.success;
+      maybeStampChallengeCompletedAt(challenge, prev, action.success);
+      clearCompletedAtIfFailureActive(challenge);
     });
     case 'challenge-completions/set-failure-predicate-completion': return mutate(state, action.challengeId, challenge => {
       challenge.failure = action.failure;
+      clearCompletedAtIfFailureActive(challenge);
     });
     case 'challenge-completions/remove-event-state': return mutate(state, action.challengeId, challenge => {
       delete challenge.eventStates[action.eventId];
@@ -318,9 +346,12 @@ export const reduceChallengeCompletions = (state: ChallengeCompletions = DEFAULT
       challenge.eventStates = action.eventStates;
     });
     case 'challenge-completions/set-event-states-and-predicate-completions': return mutate(state, action.challengeId, challenge => {
+      const prev = challenge.success;
       challenge.eventStates = action.eventStates;
       challenge.success = action.success;
       challenge.failure = action.failure;
+      maybeStampChallengeCompletedAt(challenge, prev, action.success);
+      clearCompletedAtIfFailureActive(challenge);
     });
     case 'challenge-completions/set-scene-diff': return mutate(state, action.challengeId, challenge => {
       challenge.serializedSceneDiff = JSON.stringify(action.sceneDiff);
@@ -329,6 +360,7 @@ export const reduceChallengeCompletions = (state: ChallengeCompletions = DEFAULT
       challenge.eventStates = {};
       challenge.success = undefined;
       challenge.failure = undefined;
+      challenge.completedAt = undefined;
       challenge.serializedSceneDiff = JSON.stringify({ t: "o" });
     });
     case 'challenge-completions/set-code': return mutate(state, action.challengeId, challenge => {

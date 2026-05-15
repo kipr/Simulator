@@ -1,6 +1,6 @@
 /* eslint-env node */
-const express = require("express");
-const admin = require("firebase-admin");
+const express = require('express');
+const admin = require('firebase-admin');
 
 // You already have FirebaseTokenManager; we’ll use it to verify the ID token.
 module.exports = function createClassroomsRouter(firebaseTokenManager) {
@@ -11,35 +11,34 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     // If you already init admin elsewhere, remove this init block.
     admin.initializeApp({
       credential: admin.credential.cert(
-        firebaseTokenManager.serviceAccountKey || {}
+        firebaseTokenManager.serviceAccountKey || {},
       ),
     });
   }
 
   router.use((req, res, next) => {
-    console.log("Incoming Authorization header:", req.headers.authorization);
     next();
   });
 
   // Auth middleware: decode Firebase token into req.user
   router.use(async (req, res, next) => {
     try {
-      const auth = req.headers.authorization || "";
-      const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
-      if (!token) return res.status(401).json({ message: "Missing bearer token" });
+      const auth = req.headers.authorization || '';
+      const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+      if (!token) return res.status(401).json({ message: 'Missing bearer token' });
 
       const decoded = await firebaseTokenManager.verifyIdToken(token);
       req.user = { uid: decoded.uid };
       next();
     } catch (e) {
-      res.status(401).json({ message: "Invalid token" });
+      res.status(401).json({ message: 'Invalid token' });
     }
   });
 
-  const colPath = () => admin.firestore().collection("classrooms");
+  const colPath = () => admin.firestore().collection('classrooms');
 
   // CREATE classroom
-  router.post("/:id", async (req, res) => {
+  router.post('/:id', async (req, res) => {
     try {
       const { uid } = req.user;
       const { id } = req.params;
@@ -52,27 +51,25 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       };
 
-      await firestore.collection("classrooms").doc(id)
+      await firestore.collection('classrooms').doc(id)
         .set(classroomData);
 
-      console.log("Created classroom:", id, classroomData);
       return res.status(204).json({ id, ...classroomData });
     } catch (err) {
-      console.error("POST /classrooms/ error:", err);
+      console.error('POST /classrooms/ error:', err);
       return res.status(500).json({ message: err.message });
     }
   });
 
   // GET student in classroom challenges
-  router.get("/:id/challenges", async (req, res) => {
+  router.get('/:id/challenges', async (req, res) => {
     try {
-      console.log("GET /:id/challenges called");
       const { id } = req.params;
       const qsnap = await admin
         .firestore()
-        .collection("user")
+        .collection('user')
         .doc(id)
-        .collection("challenge_completion")
+        .collection('challenge_completion')
         .get();
       const result = {};
       qsnap.forEach((doc) => {
@@ -80,28 +77,98 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
       });
       return res.status(200).json(result);
     } catch (err) {
-      console.error("GET /classrooms list error:", err);
+      console.error('GET /classrooms list error:', err);
+      return res.status(500).json({ message: err.message });
+    }
+  });
+  router.get('/debug/all-challenge-completions', async (req, res) => {
+    try {
+      const qsnap = await admin
+        .firestore()
+        .collectionGroup('challenge_completion')
+        .get();
+
+      const result = [];
+
+      qsnap.forEach((doc) => {
+        result.push({
+          id: doc.id,
+          data: doc.data(),
+          path: doc.ref.path,
+        });
+      });
+
+      return res.status(200).json(result);
+    } catch (err) {
+      console.error('Debug collectionGroup error:', err);
+      return res.status(500).json({ message: err.message });
+    }
+  });
+  router.get('/:classroomId/gradebook/challenges', async (req, res) => {
+    try {
+      const { classroomId } = req.params;
+
+      const classroomDoc = await admin
+        .firestore()
+        .collection('classrooms')
+        .doc(classroomId)
+        .get();
+
+      if (!classroomDoc.exists) {
+        return res.status(404).json({ message: 'Classroom not found' });
+      }
+
+      const classroom = classroomDoc.data();
+      const studentIds = Object.keys(classroom.studentIds || {});
+
+      if (studentIds.length === 0) {
+        return res.status(200).json({});
+      }
+
+      const snapshots = await Promise.all(
+        studentIds.map((studentId) =>
+          admin
+            .firestore()
+            .collection('user')
+            .doc(studentId)
+            .collection('challenge_completion')
+            .get()
+            .then((snap) => ({ studentId, snap })),
+        ),
+      );
+
+      const result = {};
+
+      snapshots.forEach(({ studentId, snap }) => {
+        result[studentId] = {};
+
+        snap.forEach((doc) => {
+          result[studentId][doc.id] = doc.data();
+        });
+      });
+
+      return res.status(200).json(result);
+    } catch (err) {
+      console.error('GET /:classroomId/gradebook/challenges error:', err);
       return res.status(500).json({ message: err.message });
     }
   });
 
   // GET all students in classroom challenges
-  router.get("/challenges", async (req, res) => {
+  router.get('/challenges', async (req, res) => {
     try {
       let studentIds = req.query.studentId || [];
-      console.log("studentIds:", studentIds);
       if (!Array.isArray(studentIds)) {
         studentIds = [studentIds];
       }
       const result = {};
-      console.log("GET /classroom/challenges called");
 
       for (const studentId of studentIds) {
         const qsnap = await admin
           .firestore()
-          .collection("user")
+          .collection('user')
           .doc(studentId)
-          .collection("challenge_completion")
+          .collection('challenge_completion')
           .get();
 
         result[studentId] = qsnap.docs.map((doc) => ({
@@ -110,22 +177,20 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
         }));
       }
 
-      console.log("GET /classroom/challenges result:", result);
       return res.status(200).json(result);
     } catch (err) {
-      console.error("GET /classrooms list error:", err);
+      console.error('GET /classrooms list error:', err);
       return res.status(500).json({ message: err.message });
     }
   });
-  router.get("/myClassroom", async (req, res) => {
+  router.get('/myClassroom', async (req, res) => {
     try {
-      console.log("GET /classrooms/myClassroom called");
       const { uid } = req.user;
 
       const qsnap = await admin
         .firestore()
-        .collection("classrooms")
-        .where(`studentIds.${uid}`, "!=", null)
+        .collection('classrooms')
+        .where(`studentIds.${uid}`, '!=', null)
         .get();
 
       const result = {};
@@ -133,17 +198,17 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
 
       return res.status(200).json(result);
     } catch (err) {
-      console.error("GET /classrooms/myClassroom error:", err);
+      console.error('GET /classrooms/myClassroom error:', err);
       return res.status(500).json({ message: err.message });
     }
   });
   // READ one classroom
-  router.get("/:id", async (req, res) => {
+  router.get('/:id', async (req, res) => {
     try {
       const { id } = req.params;
       const doc = await admin
         .firestore()
-        .collection("classrooms")
+        .collection('classrooms')
         .doc(id)
         .get();
 
@@ -153,28 +218,33 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
 
       return res.status(200).json({ [id]: doc.data() });
     } catch (err) {
-      console.error("GET /classrooms/:id error:", err);
+      console.error('GET /classrooms/:id error:', err);
       return res.status(500).json({ message: err.message });
     }
   });
 
   // LIST classrooms (owned by this user)
-  router.get("/", async (req, res) => {
+  router.get('/', async (req, res) => {
     try {
       const inviteCode = req.query.inviteCode;
       if (inviteCode) {
-        console.log("GET /classrooms called with inviteCode:", inviteCode);
-
-        const qsnap = await admin.firestore().collection("classrooms")
+        const qsnap = await admin.firestore().collection('classrooms')
           .get();
+        const want = String(inviteCode).trim();
         for (const doc of qsnap.docs) {
           const classroom = doc.data();
           const codeValue =
-            typeof classroom.code === "string"
+            typeof classroom.code === 'string'
               ? classroom.code
-              : classroom.code?.["en-US"];
+              : classroom.code?.['en-US'];
 
-          if (codeValue === inviteCode) {
+          if (
+            codeValue &&
+            want &&
+            codeValue.localeCompare(want, undefined, {
+              sensitivity: 'base',
+            }) === 0
+          ) {
             // return in db.list format:  { docId: classroomData }
             return res.status(200).json({
               [doc.id]: classroom,
@@ -187,8 +257,8 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
       const { uid } = req.user;
       const qsnap = await admin
         .firestore()
-        .collection("classrooms")
-        .where("teacherId", "==", uid)
+        .collection('classrooms')
+        .where('teacherId', '==', uid)
         .get();
 
       const result = {};
@@ -197,67 +267,79 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
       });
       return res.status(200).json(result);
     } catch (err) {
-      console.error("GET /classrooms list error:", err);
+      console.error('GET /classrooms list error:', err);
       return res.status(500).json({ message: err.message });
     }
   });
 
   // FIND classroom by invite code
-  router.get("/byInviteCode", async (req, res) => {
+  router.get('/byInviteCode', async (req, res) => {
     try {
-      console.log("GET /byInviteCode called with code:", req.query.code);
       const inviteCode = req.query.code;
       if (!inviteCode) {
-        return res.status(400).json({ message: "Missing invite code" });
+        return res.status(400).json({ message: 'Missing invite code' });
       }
 
-      const qsnap = await admin.firestore().collection("classrooms")
+      const qsnap = await admin.firestore().collection('classrooms')
         .get();
 
+      const want = String(inviteCode).trim();
       for (const doc of qsnap.docs) {
         const classroom = doc.data();
 
         const codeValue =
-          typeof classroom.code === "string"
+          typeof classroom.code === 'string'
             ? classroom.code
-            : classroom.code?.["en-US"];
+            : classroom.code?.['en-US'];
 
-        if (codeValue === inviteCode) {
+        if (
+          codeValue &&
+          want &&
+          codeValue.localeCompare(want, undefined, { sensitivity: 'base' }) ===
+            0
+        ) {
           return res.status(200).json({ id: doc.id, ...classroom });
         }
       }
 
-      return res.status(404).json({ message: "Invalid invite code" });
+      return res.status(404).json({ message: 'Invalid invite code' });
     } catch (err) {
       return res.status(500).json({ message: err.message });
     }
   });
 
-  // PATCH (partial update)
-  router.patch("/:id", async (req, res) => {
+  // PATCH (classroom update)
+  // Firestore merge:true recursively merges maps, so nested fields like
+  // classroomAssignments.*.assignedTo and studentIds.*.assignments never drop
+  // removed keys when the client sends a smaller object. Teachers send the full
+  // classroom from the client after edits, so we replace the document for them.
+  router.patch('/:id', async (req, res) => {
     try {
       const { uid } = req.user;
       const { id } = req.params;
       const data = req.body || {};
-      await colPath(uid)
-        .doc(id)
-        .set(
-          {
-            ...data,
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-          },
-          { merge: true }
-        );
+      const docRef = admin.firestore().collection('classrooms')
+        .doc(id);
+      const snap = await docRef.get();
+      if (!snap.exists) {
+        return res.status(404).json({ message: 'Classroom not found' });
+      }
+      const existing = snap.data();
+      const payload = {
+        ...data,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      };
+      const isOwner = existing.teacherId === uid;
+      await docRef.set(payload, { merge: !isOwner });
       return res.sendStatus(204);
     } catch (err) {
-      console.error("PATCH /classrooms error:", err);
+      console.error('PATCH /classrooms error:', err);
       return res.status(500).json({ message: err.message });
     }
   });
 
   // DELETE
-  router.delete("/:id", async (req, res) => {
-    console.log("DELETE /:id called");
+  router.delete('/:id', async (req, res) => {
     try {
       const { uid } = req.user;
       const { id } = req.params;
@@ -265,7 +347,30 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
         .delete();
       return res.sendStatus(204);
     } catch (err) {
-      console.error("DELETE /classrooms error:", err);
+      console.error('DELETE /classrooms error:', err);
+      return res.status(500).json({ message: err.message });
+    }
+  });
+
+  // Assign assignment to students
+  router.post('/:id/assign', async (req, res) => {
+    try {
+      void req.user;
+      void req.params;
+      void req.body;
+      return res.status(501).json({ message: 'Not implemented' });
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+  });
+
+  // Delete assignment from classroom
+  router.delete('/', async (req, res) => {
+    try {
+      void req.user;
+      void req.query;
+      return res.status(501).json({ message: 'Not implemented' });
+    } catch (err) {
       return res.status(500).json({ message: err.message });
     }
   });

@@ -505,7 +505,7 @@ msgid "Size Z"
 msgstr "Größe Z"
 
 msgid "Sphere Options"
-msgstr "Kugel-Optionen"
+msgstr "Sphäre Optionen"
 
 msgid "Radius"
 msgstr "Radius"
@@ -749,7 +749,7 @@ msgid "one or more of"
 msgstr "eine oder mehrere von"
 
 msgid "exactly one of"
-msgstr "genau einer von"
+msgstr "genau eine von"
 
 msgid "once"
 msgstr "einmal"
@@ -1247,7 +1247,7 @@ msgid "Top of can7"
 msgstr "Oben auf can7"
 
 msgid "Bottom of can7"
-msgstr "Boden der Dose7"
+msgstr "Unterseite der Dose7"
 
 msgid "Top of can5"
 msgstr "Oben auf can5"
@@ -1319,7 +1319,7 @@ msgid "Moon Sandbox"
 msgstr "Mond-Sandkasten"
 
 msgid "Lunar sandbox. Currently supports 4 types of rocks. Demo Ready."
-msgstr "Sandkasten auf dem Mond. Unterstützt derzeit 4 Arten von Gestein. Demo bereit."
+msgstr "Lunar Sandbox. Unterstützt derzeit 4 Arten von Gestein. Demo bereit."
 
 msgid "Basalt Rock"
 msgstr "Basaltfelsen"
@@ -1469,7 +1469,7 @@ msgid "The Challenge System"
 msgstr "Das Herausforderungssystem"
 
 msgid "Learn how to use the challenge system"
-msgstr "Lerne, wie du das Herausforderungssystem nutzen kannst"
+msgstr "Lerne, wie man das Herausforderungssystem benutzt"
 
 msgid "MatB"
 msgstr "MatB"
@@ -1532,7 +1532,7 @@ msgid "Living Habitat"
 msgstr "Lebendiger Lebensraum"
 
 msgid "Research Habitat"
-msgstr "Forschung Habitat"
+msgstr "Forschung Lebensraum"
 
 msgid "Controls Habitat"
 msgstr "Kontrollen Lebensraum"
@@ -1740,7 +1740,7 @@ msgstr "GCER 2025: Die besondere Soße"
 msgid ""
 "GCER 2025 special event. Mix the ketchup (red), mustard (yellow), and hot "
 "sauce (orange) in the garages to create your own special blend!"
-msgstr "GCER 2025 Spezialevent. Mische den Ketchup (rot), den Senf (gelb) und die scharfe Soße (orange) in den Garagen, um deine eigene Spezialmischung zu kreieren!"
+msgstr "GCER 2025 Spezialevent. Mische Ketchup (rot), Senf (gelb) und scharfe Soße (orange) in den Garagen, um deine eigene Spezialmischung herzustellen!"
 
 msgid "Orange Garage"
 msgstr "Orange Garage"
@@ -1864,7 +1864,7 @@ msgid "Base B Covered"
 msgstr "Basis B Abgedeckt"
 
 msgid "Base B covered by a can"
-msgstr "Basis B mit einer Dose abgedeckt"
+msgstr "Basis B mit einer Dose bedeckt"
 
 msgid "Base C Covered"
 msgstr "Basis C abgedeckt"
@@ -2130,7 +2130,7 @@ msgid "Pass the right side of can 6"
 msgstr "Gehe an der rechten Seite von Dose 6 vorbei"
 
 msgid "Pass the top side of can 6"
-msgstr "An der Oberseite der Dose 6 vorbeigehen"
+msgstr "Die Oberseite der Dose 6 passieren"
 
 msgid "Pass the left side of can 6"
 msgstr "Gehe an der linken Seite von Dose 6 vorbei"
@@ -2442,7 +2442,7 @@ msgid "Cover base A"
 msgstr "Abdeckung Basis A"
 
 msgid "Cover base B"
-msgstr "Abdeckung Basis B"
+msgstr "Sockel B abdecken"
 
 msgid "Cover base C"
 msgstr "Abdeckung Boden C"
@@ -2859,7 +2859,7 @@ msgid "Can 10 upright in chosen garage"
 msgstr "Kann 10 aufrecht in der gewählten Garage"
 
 msgid "Can 11 upright in chosen garage"
-msgstr "Kann 11 aufrecht in der gewählten Garage"
+msgstr "Kann 11 aufrecht in der gewählten Garage stehen"
 
 msgid "JBC Challenge 15B"
 msgstr "JBC Herausforderung 15B"
@@ -2868,7 +2868,7 @@ msgid "Robot Backward Touch"
 msgstr "Roboter rückwärts berühren"
 
 msgid "Robot drove backward and touched ream of paper"
-msgstr "Roboter fuhr rückwärts und berührte Papierstapel"
+msgstr "Der Roboter fuhr rückwärts und berührte einen Stapel Papier"
 
 msgid "Robot Forward Circle 2"
 msgstr "Roboter Vorwärtskreis 2"
@@ -2901,7 +2901,7 @@ msgid "Can 2 rescued intersecting paper ream"
 msgstr "Kann 2 gerettete, sich überschneidende Papierriesen"
 
 msgid "Can 10 rescued intersecting paper ream"
-msgstr "Kann 10 gerettete, sich überschneidende Papierstapel"
+msgstr "Kann 10 gerettete, sich überschneidende Papierriesen"
 
 msgid "Can 12 Intersects"
 msgstr "Dose 12 Überschneidungen"
@@ -2985,7 +2985,7 @@ msgid "Robot Rentered Start 2"
 msgstr "Robot Rentered Start 2"
 
 msgid "Robot reentered starting box after going backwards"
-msgstr "Roboter ist nach einem Rückwärtsgang wieder in die Startbox gefahren"
+msgstr "Roboter ist nach Rückwärtsfahrt wieder in die Startbox gefahren"
 
 msgid "Robot Driving Forwards"
 msgstr "Roboter fährt vorwärts"
@@ -3203,7 +3203,7 @@ msgid "Sliding Door #2"
 msgstr "Schiebetür #2"
 
 msgid "Low Blue Pom #%d"
-msgstr "Low Blue Pom #%d"
+msgstr "Niedriger blauer Pom #%d"
 
 msgid "Low Orange Pom #%d"
 msgstr "Niedriger Orange Pom #%d"
@@ -3428,7 +3428,7 @@ msgid "Completion invalidated - failure condition triggered\n"
 msgstr "Abschluss ungültig - Fehlerbedingung ausgelöst\\\\n"
 
 msgid "This challenge is closed and no longer accepting submissions.\n"
-msgstr "Diese Challenge ist geschlossen und nimmt keine Anmeldungen mehr an.\\\\n"
+msgstr "Diese Herausforderung ist geschlossen und nimmt keine Anmeldungen mehr an.\\\\n"
 
 msgid "This challenge has not opened yet.\n"
 msgstr "Diese Herausforderung ist noch nicht eröffnet.\\\\n"
@@ -3533,7 +3533,7 @@ msgid "Classroom Invite Code"
 msgstr "Klassenzimmer Einladungscode"
 
 msgid "Enter the invite code provided by your teacher to join a classroom"
-msgstr "Gib den Einladungscode ein, den du von deiner Lehrkraft erhalten hast, um einem Klassenzimmer beizutreten"
+msgstr "Gib den Einladungscode deiner Lehrkraft ein, um einem Klassenzimmer beizutreten"
 
 msgid "Display Name"
 msgstr "Name anzeigen"
@@ -4252,6 +4252,1061 @@ msgstr "Code einladen"
 msgid "Code students can use to join the classroom"
 msgstr "Code, mit dem die Schüler dem Klassenzimmer beitreten können"
 
+msgid "The selected file is already included in the project."
+msgstr "Herausforderung Fortschritt"
+
+msgid "The selected file does not match the expected language ${currentLanguage}."
+msgstr "Die ausgewählte Datei ist bereits im Projekt enthalten."
+
+msgid "The selected file must have a .h extension."
+msgstr "Die ausgewählte Datei stimmt nicht mit der erwarteten Sprache ${currentLanguage} überein."
+
+msgid "The selected file does not match the expected language."
+msgstr "Die ausgewählte Datei muss eine .h-Erweiterung haben."
+
+msgid "The selected file must have a .txt extension."
+msgstr "Die ausgewählte Datei stimmt nicht mit der erwarteten Sprache überein."
+
+msgid "Some files have errors"
+msgstr "Die ausgewählte Datei muss eine .txt-Erweiterung haben."
+
+msgid "Upload File"
+msgstr "Einige Dateien haben Fehler"
+
+msgid "Selected File Upload Language: "
+msgstr "Datei hochladen"
+
+msgid "Select a file from your computer to upload"
+msgstr "Ausgewählte Sprache für den Datei-Upload:"
+
+msgid "Upload Include File"
+msgstr "Wähle eine Datei von deinem Computer zum Hochladen aus"
+
+msgid "Upload Source File"
+msgstr "Include-Datei hochladen"
+
+msgid "Upload User Data File"
+msgstr "Quelldatei hochladen"
+
+msgid "No file selected"
+msgstr "Benutzerdaten-Datei hochladen"
+
+msgid "Project with name already exists. Please choose a different name."
+msgstr "Keine Datei ausgewählt"
+
+msgid "File uploaded does not match selected project language."
+msgstr "Das Projekt mit dem Namen existiert bereits. Bitte wähle einen anderen Namen."
+
+msgid "Folder name does not match project name in config file."
+msgstr "Die hochgeladene Datei entspricht nicht der ausgewählten Projektsprache."
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the selected project language."
+msgstr "Der Ordnername stimmt nicht mit dem Projektnamen in der Konfigurationsdatei überein."
+
+msgid "Please remove all spaces in the name."
+msgstr "Die Datei wurde in einer anderen Sprache als der Projektsprache erkannt. Bitte stelle sicher, dass alle Quelldateien mit der ausgewählten Projektsprache übereinstimmen."
+
+msgid "Please remove all special characters in the name."
+msgstr "Bitte entferne alle Leerzeichen im Namen."
+
+msgid "File name exceeds maximum length of 50 characters."
+msgstr "Bitte entferne alle Sonderzeichen im Namen."
+
+msgid "Select a Project from your computer to upload\n"
+msgstr "Der Dateiname überschreitet die maximale Länge von 50 Zeichen."
+
+msgid "Be sure the heirarchy format follows:\n"
+msgstr "Wähle ein Projekt von deinem Computer zum Hochladen aus\\\\n"
+
+msgid "Project Name"
+msgstr "Achte darauf, dass das Format der Hierarchie wie folgt aussieht:\\\\n"
+
+msgid "include"
+msgstr "Projektname"
+
+msgid "includeFile1.h (optional)"
+msgstr "einschließen"
+
+msgid "includeFile2.h (optional)"
+msgstr "includeFile1.h (optional)"
+
+msgid "src"
+msgstr "includeFile2.h (optional)"
+
+msgid "NOTE: file extension must match project language"
+msgstr "src"
+
+msgid "srcFile1.*"
+msgstr "HINWEIS: Die Dateierweiterung muss der Projektsprache entsprechen"
+
+msgid "srcFile2.*"
+msgstr "srcFile1.*"
+
+msgid "data"
+msgstr "srcFile2.*"
+
+msgid "dataFile1.txt (optional)"
+msgstr "daten"
+
+msgid "dataFile2.txt (optional)"
+msgstr "dataFile1.txt (optional)"
+
+msgid "bin"
+msgstr "dataFile2.txt (optional)"
+
+msgid "Select Project Language:"
+msgstr "bin"
+
+msgid "Choose Folder"
+msgstr "Wähle die Projektsprache aus:"
+
+msgid "Config File"
+msgstr "Ordner wählen"
+
+msgid "No files selected."
+msgstr "Config File"
+
+msgid "Include Files"
+msgstr "Keine Dateien ausgewählt."
+
+msgid "Source Files"
+msgstr "Dateien einbeziehen"
+
+msgid "User Data Files"
+msgstr "Quelldateien"
+
+msgid "Selected Project Folder: "
+msgstr "Benutzerdaten-Dateien"
+
+msgid "Selected Project Language: "
+msgstr "Ausgewählte Projektmappe:"
+
+msgid "Choose a different project"
+msgstr "Ausgewählte Projektsprache:"
+
+msgid "Upload Project"
+msgstr "Wähle ein anderes Projekt"
+
+msgid "The selected project already exists for this user."
+msgstr "Projekt hochladen"
+
+msgid "Please choose a different project."
+msgstr "Das ausgewählte Projekt existiert bereits für diesen Benutzer."
+
+msgid "+"
+msgstr "Bitte wähle ein anderes Projekt."
+
+msgid "Create Project"
+msgstr "+"
+
+msgid "Create File"
+msgstr "Projekt erstellen"
+
+msgid "Create Classroom"
+msgstr "Datei erstellen"
+
+msgid "Create User"
+msgstr "Klassenzimmer erstellen"
+
+msgid "Upload User"
+msgstr "Benutzer erstellen"
+
+msgid ""
+"A user with that name already exists in this classroom. Please rename your "
+"folder and try again."
+msgstr "Benutzer hochladen"
+
+msgid "Folder name does not match user name in config file."
+msgstr "Ein Benutzer mit diesem Namen existiert bereits in diesem Klassenzimmer. Bitte benenne deinen Ordner um und versuche es erneut."
+
+msgid "File detected with interface mode does not match project interface mode."
+msgstr "Der Ordnername stimmt nicht mit dem Benutzernamen in der Konfigurationsdatei überein."
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the project language."
+msgstr "Die mit dem Schnittstellenmodus erkannte Datei stimmt nicht mit dem Schnittstellenmodus des Projekts überein."
+
+msgid "Unknown file type, defaulting to plaintext."
+msgstr "Die Datei wurde in einer anderen Sprache als der Projektsprache erkannt. Bitte stelle sicher, dass alle Quelldateien mit der Projektsprache übereinstimmen."
+
+msgid "Project must contain a main file"
+msgstr "Unbekannter Dateityp, Standardeinstellung ist Klartext."
+
+msgid "Select a User from your computer to upload\n"
+msgstr "Das Projekt muss eine Hauptdatei enthalten"
+
+msgid "User Name"
+msgstr "Wähle einen Benutzer von deinem Computer zum Hochladen aus\\\\n"
+
+msgid "(At least 1 project must be in the User folder)"
+msgstr "Benutzer Name"
+
+msgid "Project Name 1"
+msgstr "(Mindestens 1 Projekt muss sich im Benutzerordner befinden)"
+
+msgid "Project Name 2"
+msgstr "Projektname 1"
+
+msgid "Select User Interface Mode:"
+msgstr "Projektname 2"
+
+msgid "Selected User Folder: "
+msgstr "Wähle den Benutzeroberflächenmodus aus:"
+
+msgid "Selected User Interface Mode: "
+msgstr "Ausgewählter Benutzerordner:"
+
+msgid "Choose a different User"
+msgstr "Ausgewählter Modus der Benutzeroberfläche:"
+
+msgid "The selected user already exists in this classroom."
+msgstr "Wähle einen anderen Benutzer"
+
+msgid "Please choose a different user."
+msgstr "Der ausgewählte Benutzer existiert bereits in diesem Klassenzimmer."
+
+msgid "Choose a different user"
+msgstr "Bitte wähle einen anderen Benutzer."
+
+msgid "Delete Classroom"
+msgstr "Wähle einen anderen Benutzer"
+
+msgid "Rename Classroom"
+msgstr "Klassenzimmer löschen"
+
+msgid "Delete User"
+msgstr "Klassenzimmer umbenennen"
+
+msgid "Download User"
+msgstr "Benutzer löschen"
+
+msgid "Rename User"
+msgstr "Benutzer herunterladen"
+
+msgid "Remove User from Classroom"
+msgstr "Benutzer umbenennen"
+
+msgid "Move User to Classroom"
+msgstr "Benutzer aus dem Klassenzimmer entfernen"
+
+msgid "Paste Project"
+msgstr "Benutzer ins Klassenzimmer bringen"
+
+msgid "Delete Project"
+msgstr "Projekt einfügen"
+
+msgid "Download Project"
+msgstr "Projekt löschen"
+
+msgid "Rename Project"
+msgstr "Projekt herunterladen"
+
+msgid "Move Project"
+msgstr "Projekt umbenennen"
+
+msgid "Copy Project"
+msgstr "Projekt verschieben"
+
+msgid "Paste File"
+msgstr "Projekt kopieren"
+
+msgid "Delete File"
+msgstr "Datei einfügen"
+
+msgid "Download File"
+msgstr "Datei löschen"
+
+msgid "Rename File"
+msgstr "Datei herunterladen"
+
+msgid "Copy File"
+msgstr "Datei umbenennen"
+
+msgid "Users"
+msgstr "Datei kopieren"
+
+msgid "Classroom Invitation Code:"
+msgstr "Benutzer"
+
+msgid "Projects"
+msgstr "Klassenzimmer Einladungscode:"
+
+msgid "Explorer - Classrooms"
+msgstr "Projekte"
+
+msgid "Explorer - Users"
+msgstr "Explorer - Klassenzimmer"
+
+msgid "Users without Classrooms"
+msgstr "Explorer - Benutzer"
+
+msgid "Motor 0"
+msgstr "Nutzer ohne Klassenzimmer"
+
+msgid "Motor 1"
+msgstr "Motor 0"
+
+msgid "Motor 2"
+msgstr "Motor 1"
+
+msgid "Motor 3"
+msgstr "Motor 2"
+
+msgid "Velocity"
+msgstr "Motor 3"
+
+msgid "Power"
+msgstr "Geschwindigkeit"
+
+msgid "Servo 0"
+msgstr "Macht"
+
+msgid "Servo 1"
+msgstr "Servo 0"
+
+msgid "Servo 2"
+msgstr "Servo 1"
+
+msgid "Servo 3"
+msgstr "Servo 2"
+
+msgid "analog(0)"
+msgstr "Servo 3"
+
+msgid "analog(1)"
+msgstr "analog(0)"
+
+msgid "analog(2)"
+msgstr "analog(1)"
+
+msgid "analog(3)"
+msgstr "analog(2)"
+
+msgid "analog(4)"
+msgstr "analog(3)"
+
+msgid "analog(5)"
+msgstr "analog(4)"
+
+msgid "digital(0)"
+msgstr "analog(5)"
+
+msgid "digital(1)"
+msgstr "digital(0)"
+
+msgid "digital(2)"
+msgstr "digital(1)"
+
+msgid "digital(3)"
+msgstr "digital(2)"
+
+msgid "digital(4)"
+msgstr "digital(3)"
+
+msgid "digital(5)"
+msgstr "digital(4)"
+
+msgid "digital(6)"
+msgstr "digital(5)"
+
+msgid "digital(7)"
+msgstr "digital(6)"
+
+msgid "digital(8)"
+msgstr "digital(7)"
+
+msgid "digital(9)"
+msgstr "digital(8)"
+
+msgid "accel_x()"
+msgstr "digital(9)"
+
+msgid "accel_y()"
+msgstr "accel_x()"
+
+msgid "accel_z()"
+msgstr "accel_y()"
+
+msgid "gyro_x()"
+msgstr "accel_z()"
+
+msgid "gyro_y()"
+msgstr "gyro_x()"
+
+msgid "gyro_z()"
+msgstr "gyro_y()"
+
+msgid "magneto_x()"
+msgstr "gyro_z()"
+
+msgid "magneto_y()"
+msgstr "magneto_x()"
+
+msgid "magneto_z()"
+msgstr "magneto_y()"
+
+msgid "right_button()"
+msgstr "magneto_z()"
+
+msgid "Reverse"
+msgstr "right_button()"
+
+msgid "Forward"
+msgstr "Umgekehrt"
+
+msgid "Warning! Could damage servo in this range"
+msgstr "Weiter"
+
+msgid "Servo Position Plot"
+msgstr "Warnung! Könnte das Servo in diesem Bereich beschädigen"
+
+msgid "View:"
+msgstr "Servo Position Plot"
+
+msgid "Motor Port:"
+msgstr "Ansicht:"
+
+msgid "Clear Motor Position"
+msgstr "Motorhafen:"
+
+msgid "Stop All Motors"
+msgstr "Motorposition löschen"
+
+msgid "Stop Current Motor"
+msgstr "Alle Motoren anhalten"
+
+msgid "Servo Port:"
+msgstr "Stoppstrom Motor"
+
+msgid "Enable All Servos"
+msgstr "Servo-Anschluss:"
+
+msgid "Disable All Servos"
+msgstr "Alle Servos einschalten"
+
+msgid "Disable Servo"
+msgstr "Alle Servos deaktivieren"
+
+msgid "Enable Servo"
+msgstr "Servo deaktivieren"
+
+msgid "Servo Positions"
+msgstr "Servo freigeben"
+
+msgid "Accelerometers"
+msgstr "Servo Positionen"
+
+msgid "Gyroscopes"
+msgstr "Beschleunigungssensoren"
+
+msgid "Magnetometers"
+msgstr "Gyroskope"
+
+msgid "Buttons"
+msgstr "Magnetometer"
+
+msgid "Motors, Servos, and Sensors"
+msgstr "Buttons"
+
+msgid "Motor"
+msgstr "Motoren, Servos und Sensoren"
+
+msgid "Servo"
+msgstr "Motor"
+
+msgid "Sensor"
+msgstr "Servo"
+
+msgid "Common Functions"
+msgstr "Sensor"
+
+msgid "Full Documentation"
+msgstr "Gemeinsame Funktionen"
+
+msgid "Challenge Progress"
+msgstr "Vollständige Dokumentation"
+
+msgid ""
+"Use the classroom cards along the top to create a class or open one you "
+"already teach. After you pick a class, use the Home, Assignments, People, "
+"Grades, and Leaderboard tabs for day-to-day work."
+msgstr "Verwende die Klassenraumkarten oben, um eine Klasse zu erstellen oder eine Klasse zu öffnen, die du bereits unterrichtest. Nachdem du eine Klasse ausgewählt hast, kannst du die Registerkarten \\\"Home\\\", \\\"Aufgaben\\\", \\\"Personen\\\", \\\"Noten\\\" und \\\"Rangliste\\\" für deine tägliche Arbeit nutzen."
+
+msgid "Classroom cards"
+msgstr "Karten für das Klassenzimmer"
+
+msgid ""
+"This scrollable row holds every class you own. The first card creates a new "
+"classroom; each card after that opens that class into the workspace below "
+"when you click it."
+msgstr "Diese scrollbare Reihe enthält alle Klassen, die du besitzt. Die erste Karte erstellt ein neues Klassenzimmer; jede weitere Karte öffnet die Klasse im Arbeitsbereich darunter, wenn du darauf klickst."
+
+msgid ""
+"Click the Create New Classroom card to open the setup dialog and continue "
+"the tour."
+msgstr "Klicke auf die Karte Neues Klassenzimmer erstellen, um den Einrichtungsdialog zu öffnen und die Tour fortzusetzen."
+
+msgid ""
+"After you tap Create, your new class shows up as another card in this row "
+"next to Create New Classroom."
+msgstr "Nachdem du auf \\\"Erstellen\\\" getippt hast, wird deine neue Klasse als weitere Karte in dieser Reihe neben \\\"Neues Klassenzimmer erstellen\\\" angezeigt."
+
+msgid ""
+"Click your classroom's card in this row to load it. The roster and tabs "
+"below update for that class—open People when you want to review enrollments."
+msgstr "Klicke auf die Karte deines Klassenzimmers in dieser Zeile, um sie zu laden. Der Dienstplan und die Registerkarten unten werden für diese Klasse aktualisiert - öffne die Leute, wenn du die Anmeldungen überprüfen willst."
+
+msgid "Home tab"
+msgstr "Registerkarte \\\"Home"
+
+msgid ""
+"See class information, copy the invite code for students, and quick "
+"classroom context."
+msgstr "Sieh dir die Klasseninformationen an, kopiere den Einladungscode für die Schüler/innen und den schnellen Kontext im Klassenzimmer."
+
+msgid "Assignments tab"
+msgstr "Registerkarte \\\"Zuweisungen"
+
+msgid ""
+"Open **Assignments** to manage this class’s work. The list below groups "
+"posts by topic; use the row menu on each assignment to edit or delete. "
+"Press Next to spotlight that list, then you will walk through creating a "
+"new assignment."
+msgstr "Öffne **Aufgaben**, um die Arbeit dieser Klasse zu verwalten. In der Liste unten sind die Beiträge nach Themen geordnet; benutze das Zeilenmenü jeder Aufgabe, um sie zu bearbeiten oder zu löschen. Drücke auf \\\"Weiter\\\", um die Liste zu sehen, dann wirst du durch die Erstellung einer neuen Aufgabe geführt."
+
+msgid "Assignments workspace"
+msgstr "Arbeitsbereich Zuweisungen"
+
+msgid ""
+"This panel is where posted assignments appear. When the class is new it may "
+"be empty—**Create Assignment** (top right) opens the editor; the tour goes "
+"through title, challenges, roster, due date, and publishing next."
+msgstr "In diesem Bereich werden die veröffentlichten Aufgaben angezeigt. Wenn die Klasse neu ist, kann es leer sein -**Aufgabe erstellen** (oben rechts) öffnet den Editor; die Tour geht durch Titel, Herausforderungen, Dienstplan, Fälligkeitsdatum und Veröffentlichung weiter."
+
+msgid "Create an assignment"
+msgstr "Eine Aufgabe erstellen"
+
+msgid ""
+"Tap **Create Assignment** to open the editor. You will name the work, pick "
+"simulator challenges, choose who receives it, set topic and due date, then "
+"publish with Assign."
+msgstr "Tippe auf **Zuweisung erstellen**, um den Editor zu öffnen. Du gibst der Arbeit einen Namen, wählst die Simulatorherausforderungen aus, bestimmst, wer sie erhält, legst das Thema und das Fälligkeitsdatum fest und veröffentlichst sie dann mit Zuweisen."
+
+msgid "Assignment details"
+msgstr "Details zur Zuweisung"
+
+msgid ""
+"Enter a required title and optional description, then tick the JBC "
+"challenges students must complete. Points roll up on the right as you add "
+"scenes."
+msgstr "Gib einen erforderlichen Titel und eine optionale Beschreibung ein und kreuze dann die JBC-Herausforderungen an, die die Schüler/innen erfüllen müssen. Wenn du Szenen hinzufügst, steigen die Punkte auf der rechten Seite."
+
+msgid "Class, roster, and topic"
+msgstr "Klasse, Dienstplan und Thema"
+
+msgid ""
+"Confirm **For Class**, open **Assign to** in the next steps to pick who "
+"receives this post, and choose a **Topic** bucket. After the roster dialog "
+"you will return here to adjust per-challenge points and the due date before "
+"publishing."
+msgstr "Bestätige **Für Klasse**, öffne **Zuweisen an** in den nächsten Schritten, um festzulegen, wer diesen Beitrag erhält, und wähle einen **Themenbereich**. Nach dem Dienstplan-Dialog kehrst du hierher zurück, um die Punkte pro Herausforderung und das Fälligkeitsdatum vor der Veröffentlichung anzupassen."
+
+msgid "Open Assign to"
+msgstr "Öffnen Sie Zuweisen an"
+
+msgid ""
+"Tap **Assign to** to open the roster dialog. Use **All Students** or "
+"individual checkboxes, then **Done** to save— the tour highlights those "
+"controls next."
+msgstr "Tippe auf **Zuweisen an**, um den Dienstplan-Dialog zu öffnen. Verwende **Alle Schüler** oder einzelne Kontrollkästchen und dann **Fertig**, um zu speichern - die Tour hebt diese Kontrollen als nächstes hervor."
+
+msgid "Choose who receives this assignment"
+msgstr "Wähle, wer diese Aufgabe erhält"
+
+msgid ""
+"This dialog lists the class roster for this post. Toggle **All Students** "
+"or pick individuals—you need at least one student before you can publish. "
+"Tap **Done** to save your picks and advance the tour. **Next** moves on "
+"without applying changes you only made here."
+msgstr "In diesem Dialogfeld wird der Klassenplan für diesen Beitrag angezeigt. Schalte **Alle Schüler** ein oder wähle einzelne Schüler aus - du brauchst mindestens einen Schüler, bevor du veröffentlichen kannst. Tippe auf **Erledigt**, um deine Auswahl zu speichern und die Tour fortzusetzen. *mit **Weiter** gehst du weiter, ohne die Änderungen zu übernehmen, die du nur hier vorgenommen hast."
+
+msgid "Points and due date"
+msgstr "Punkte und Fälligkeitsdatum"
+
+msgid ""
+"The total updates automatically from the challenges you checked on the "
+"left. Expand the table to set **points per challenge** if you need "
+"different weights, then pick a **Due date** for the class. When you are "
+"satisfied, continue to **Assign** to publish (or Next to skip publishing "
+"while finishing the tour)."
+msgstr "Die Gesamtsumme aktualisiert sich automatisch aus den Herausforderungen, die du links angekreuzt hast. Erweitere die Tabelle, um **Punkte pro Herausforderung** festzulegen, wenn du unterschiedliche Gewichtungen brauchst, und wähle dann ein **Fälligkeitsdatum** für die Klasse. Wenn du zufrieden bist, fahre mit **Zuweisen** fort, um zu veröffentlichen (oder mit Weiter, um die Veröffentlichung zu überspringen, während du die Tour beendest)."
+
+msgid "Publish the assignment"
+msgstr "Veröffentliche die Aufgabe"
+
+msgid ""
+"Tap **Assign** to save the assignment to the class. Use the X on the left "
+"to close without saving, or press Next to leave the tour on this screen "
+"without publishing."
+msgstr "Tippe auf **Zuweisen**, um die Aufgabe in der Klasse zu speichern. Benutze das X auf der linken Seite, um die Tour zu schließen, ohne sie zu speichern, oder drücke auf Weiter, um die Tour auf diesem Bildschirm zu lassen, ohne sie zu veröffentlichen."
+
+msgid "Find it in the list"
+msgstr "Finde es in der Liste"
+
+msgid ""
+"Published work lands in the Assignments tab under its topic. The "
+"highlighted row is the one you just added—open the row menu (**⋯**) to edit "
+"or delete, or tap the row to expand details."
+msgstr "Die veröffentlichte Arbeit landet auf der Registerkarte \\\"Aufgaben\\\" unter ihrem Thema. Die hervorgehobene Zeile ist die, die du gerade hinzugefügt hast - öffne das Zeilenmenü (**⋯**), um sie zu bearbeiten oder zu löschen, oder tippe auf die Zeile, um die Details zu erweitern."
+
+msgid "People tab"
+msgstr "Registerkarte \\\"Menschen"
+
+msgid ""
+"Review who is enrolled, open student details, and remove a student from the "
+"class when needed."
+msgstr "Überprüfe, wer eingeschrieben ist, öffne die Schülerdetails und entferne bei Bedarf einen Schüler aus der Klasse."
+
+msgid "Grades tab"
+msgstr "Registerkarte \\\"Noten"
+
+msgid ""
+"Open the gradebook: filter assignments by due or posted dates, filter which "
+"students and challenges appear, use Export filters next to Export CSV for "
+"scoped downloads, and open See Details to adjust per-challenge scores or "
+"overrides."
+msgstr "Öffne das Notenbuch: Filtere die Aufgaben nach Fälligkeits- oder Veröffentlichungsdatum, filtere, welche Schüler/innen und Herausforderungen angezeigt werden, verwende die Exportfilter neben CSV exportieren für eingeschränkte Downloads und öffne Details, um die Noten für die einzelnen Herausforderungen oder Überschreibungen anzupassen."
+
+msgid "Leaderboard tab"
+msgstr "Registerkarte \\\"Rangliste"
+
+msgid ""
+"Switch between Default JBC Challenges and Limited Challenges to see how the "
+"class is performing on simulator scenes and timed challenges."
+msgstr "Wechsle zwischen den Standard-JBC-Herausforderungen und den begrenzten Herausforderungen, um zu sehen, wie die Klasse in den Simulatorszenen und den zeitlich begrenzten Herausforderungen abschneidet."
+
+msgid ""
+"This is your student classroom hub. Join a class with the button below; "
+"once you are inside a class, the guided tour walks through each top tab and "
+"the assignment details window."
+msgstr "Dies ist dein Klassenzimmer für Schüler. Sobald du dich in einer Klasse befindest, führt dich die Führung durch die einzelnen Registerkarten und das Fenster mit den Aufgabendetails."
+
+msgid ""
+"Tap Join Class, enter the invite code from your teacher, choose a display "
+"name, and you will land in that classroom with full access to assignments "
+"and leaderboards."
+msgstr "Tippe auf Klasse beitreten, gib den Einladungscode deiner Lehrerin/ deines Lehrers ein, wähle einen Anzeigenamen und schon landest du in diesem Klassenzimmer mit vollem Zugriff auf Aufgaben und Bestenlisten."
+
+msgid ""
+"Type the classroom invite code, add the name your teacher should see, then "
+"press Join to finish enrolling."
+msgstr "Gib den Einladungscode für das Klassenzimmer ein, füge den Namen hinzu, den deine Lehrkraft sehen soll, und drücke dann auf Beitreten, um die Anmeldung abzuschließen."
+
+msgid ""
+"From the Leaderboard tab you explore class challenge boards. Inside, switch "
+"between Default JBC Challenges (always-on simulator scenes) and Limited "
+"Challenges (timed or attempt-limited events)."
+msgstr "Auf der Registerkarte \\\"Rangliste\\\" kannst du die Klassenherausforderungen erkunden. Dort kannst du zwischen den Standard-JBC-Herausforderungen (immer aktive Simulator-Szenen) und den begrenzten Herausforderungen (zeitlich begrenzte oder versuchsbegrenzte Ereignisse) wechseln."
+
+msgid ""
+"This board lists the standard Botball challenges everyone can practice. "
+"Compare your progress with classmates, export a PDF summary, jump to your "
+"row, or review badges you have earned."
+msgstr "Dieses Board listet die Standard-Botball-Herausforderungen auf, die jeder üben kann. Vergleiche deinen Fortschritt mit Klassenkameraden, exportiere eine PDF-Zusammenfassung, springe zu deiner Reihe oder sieh dir verdiente Abzeichen an."
+
+msgid ""
+"Download a PDF snapshot of how you are doing on the visible "
+"challenges—great for sharing progress at home or with a mentor."
+msgstr "Lade dir eine PDF-Datei herunter, die zeigt, wie du bei den sichtbaren Herausforderungen abschneidest - ideal, um deine Fortschritte zu Hause oder mit einem Mentor zu teilen."
+
+msgid ""
+"Long leaderboard? Use this control to scroll straight to your entry so you "
+"can see placement and points at a glance."
+msgstr "Lange Rangliste? Benutze dieses Steuerelement, um direkt zu deinem Eintrag zu blättern, damit du die Platzierung und die Punkte auf einen Blick sehen kannst."
+
+msgid ""
+"Open the badge gallery to celebrate milestones you unlocked by finishing "
+"challenges successfully."
+msgstr "Öffne die Abzeichengalerie, um Meilensteine zu feiern, die du durch das erfolgreiche Abschließen von Herausforderungen freigeschaltet hast."
+
+msgid ""
+"Select Limited Challenges to open any special contests your teacher "
+"enabled—watch the countdowns and attempt limits shown there."
+msgstr "Wähle \\\"Begrenzte Herausforderungen\\\", um spezielle Wettbewerbe zu öffnen, die deine Lehrkraft aktiviert hat."
+
+msgid ""
+"Each card explains the rules for that limited run. Stay inside the allowed "
+"window so your submissions count toward the class leaderboard."
+msgstr "Auf jeder Karte werden die Regeln für diese begrenzte Auflage erklärt. Bleib innerhalb des erlaubten Zeitfensters, damit deine Einsendungen für die Klassenrangliste zählen."
+
+msgid ""
+"Use the menu icon for shortcuts such as leaving the classroom or jumping to "
+"other tools."
+msgstr "Verwende das Menüsymbol für Abkürzungen, z. B. um das Klassenzimmer zu verlassen oder zu anderen Tools zu springen."
+
+msgid ""
+"This panel surfaces helpful links and the Leave Classroom action when you "
+"need to step out while keeping your past scores saved."
+msgstr "Dieses Panel zeigt hilfreiche Links und die Aktion \\\"Klassenzimmer verlassen\\\" an, wenn du das Klassenzimmer verlassen musst, während deine bisherigen Ergebnisse gespeichert bleiben."
+
+msgid ""
+"Choose Leave Classroom only when you are done with the class. Your "
+"completed work stays on record, but you will need a fresh invite to rejoin "
+"later."
+msgstr "Wähle \\\"Klassenzimmer verlassen\\\" nur, wenn du mit der Klasse fertig bist. Deine abgeschlossenen Arbeiten bleiben gespeichert, aber du brauchst eine neue Einladung, um später wieder einzusteigen."
+
+msgid "Enter a classroom name."
+msgstr "Gib einen Klassenzimmernamen ein."
+
+msgid "A classroom with that name already exists."
+msgstr "Es gibt bereits ein Klassenzimmer mit diesem Namen."
+
+msgid "Choose a different name than the current one."
+msgstr "Wähle einen anderen Namen als den aktuellen."
+
+msgid "Could not rename this classroom (missing record)."
+msgstr "Dieses Klassenzimmer konnte nicht umbenannt werden (fehlender Datensatz)."
+
+msgid "Could not save. Try again."
+msgstr "Konnte nicht speichern. Versuche es noch einmal."
+
+msgid "Something went wrong."
+msgstr "Etwas ist schief gelaufen."
+
+msgid "Rename classroom"
+msgstr "Klassenzimmer umbenennen"
+
+msgid "Classroom name"
+msgstr "Name des Klassenzimmers"
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+msgid "Saving…"
+msgstr "Sparen.."
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nein"
+
+msgid "Teachers"
+msgstr "Lehrerinnen und Lehrer"
+
+msgid "Students"
+msgstr "Studierende"
+
+msgid "Assigned To"
+msgstr "Zugewiesen an"
+
+msgid "Not started"
+msgstr "Nicht gestartet"
+
+msgid "Not completed"
+msgstr "Nicht abgeschlossen"
+
+msgid "Completed at"
+msgstr "Abgeschlossen am"
+
+msgid "On time"
+msgstr "Pünktlich"
+
+msgid "Late"
+msgstr "Später"
+
+msgid "No deadline"
+msgstr "Keine Frist"
+
+msgid "Go to Challenge"
+msgstr "Zur Herausforderung gehen"
+
+msgid "No challenges added to this assignment."
+msgstr "Es gibt keine zusätzlichen Herausforderungen für diese Aufgabe."
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "Assignment Details"
+msgstr "Zuweisung Details"
+
+msgid "See Assigned Challenges"
+msgstr "Siehe Zugewiesene Herausforderungen"
+
+msgid "Challenges completed"
+msgstr "Herausforderungen abgeschlossen"
+
+msgid "Edit"
+msgstr "Bearbeiten"
+
+msgid "Create Assignment"
+msgstr "Zuweisung erstellen"
+
+msgid "You have no assignments in this class yet."
+msgstr "Du hast noch keine Aufgaben in dieser Klasse."
+
+msgid "Assignments you publish will appear in the lists below, grouped by topic."
+msgstr "Die Aufgaben, die du veröffentlichst, erscheinen in den Listen unten, gruppiert nach Themen."
+
+msgid "Classroom Code"
+msgstr "Klassenzimmer Code"
+
+msgid "Override"
+msgstr "Überschreiben Sie"
+
+msgid "Submission Details"
+msgstr "Details zur Einreichung"
+
+msgid "Default"
+msgstr "Standard"
+
+msgid "Filter by due or posted date"
+msgstr "Filter nach Fälligkeits- oder Buchungsdatum"
+
+msgid "From"
+msgstr "Von"
+
+msgid "To"
+msgstr "An"
+
+msgid "Clear date filter"
+msgstr "Datumsfilter löschen"
+
+msgid "Export filters"
+msgstr "Filter exportieren"
+
+msgid ""
+"Hold Ctrl or Cmd while clicking to select. Leave unselected to include all "
+"students."
+msgstr "Halte Strg oder Cmd beim Klicken gedrückt, um auszuwählen. Lass die Auswahl offen, um alle Schüler/innen einzubeziehen."
+
+msgid "Challenges"
+msgstr "Herausforderungen"
+
+msgid ""
+"Shown for assignments in the date range. Leave unselected to include all "
+"challenges."
+msgstr "Wird für Aufgaben im Datumsbereich angezeigt. Lass das Feld unmarkiert, um alle Aufgaben anzuzeigen."
+
+msgid "Clear student and challenge filters"
+msgstr "Klare Schüler- und Herausforderungsfilter"
+
+msgid "Export CSV"
+msgstr "CSV exportieren"
+
+msgid "No assignment columns match the current date and challenge filters."
+msgstr "Keine Zuordnungsspalten passen zu den aktuellen Datums- und Herausforderungsfiltern."
+
+msgid "Student Name"
+msgstr "Schüler Name"
+
+msgid "Home"
+msgstr "Zuhause"
+
+msgid "Assignments"
+msgstr "Zuweisungen"
+
+msgid "People"
+msgstr "Menschen"
+
+msgid "Grades"
+msgstr "Klassen"
+
+msgid "Select a classroom to view details"
+msgstr "Wähle ein Klassenzimmer aus, um Details zu sehen"
+
+msgid "Assign To"
+msgstr "Zuweisen an"
+
+msgid "All Students"
+msgstr "Alle Schüler"
+
+msgid "No Subject"
+msgstr "Kein Thema"
+
+msgid "Create Subject"
+msgstr "Thema erstellen"
+
+msgid "Untitled assignment"
+msgstr "Unbenannte Aufgabe"
+
+msgid "Edit Assignment"
+msgstr "Zuweisung bearbeiten"
+
+msgid "Save Changes"
+msgstr "Änderungen speichern"
+
+msgid "Assign"
+msgstr "Zuweisen"
+
+msgid "Assignment Title*"
+msgstr "Titel der Aufgabe*"
+
+msgid "*Required"
+msgstr "*Erforderlich"
+
+msgid "Assignment Description"
+msgstr "Aufgabe Beschreibung"
+
+msgid "Optional"
+msgstr "Optional"
+
+msgid "Choose JBC Challenges to Assign"
+msgstr "Wähle JBC-Herausforderungen zum Zuweisen"
+
+msgid "For Class"
+msgstr "Für Klasse"
+
+msgid "Assign to"
+msgstr "Zuweisen an"
+
+msgid "Topic"
+msgstr "Thema"
+
+msgid "Points"
+msgstr "Punkte"
+
+msgid "Due Date"
+msgstr "Fälligkeitsdatum"
+
+msgid "Delete classroom"
+msgstr "Klassenzimmer löschen"
+
+msgid "Assigned Challenges"
+msgstr "Zugewiesene Herausforderungen"
+
+msgid "Can 7 Chopped"
+msgstr "Dose 7 Gehackt"
+
+msgid "Can 7 chopped"
+msgstr "Dose 7 gehackt"
+
+msgid "Can 11 not upright"
+msgstr "Dose 11 nicht aufrecht"
+
+msgid "Can 1 Rescued"
+msgstr "Dose 1 Gerettet"
+
+msgid "Can 1 rescued"
+msgstr "Kann 1 gerettet werden"
+
+msgid "Can 2 Rescued"
+msgstr "Dose 2 Gerettet"
+
+msgid "Can 2 rescued"
+msgstr "Kann 2 gerettet werden"
+
+msgid "Can 3 Rescued"
+msgstr "Dose 3 Gerettet"
+
+msgid "Can 3 rescued"
+msgstr "Kann 3 gerettet werden"
+
+msgid "Touch the ream"
+msgstr "Berühre den Riese"
+
+msgid "Can A not upright in a circle"
+msgstr "Kann A nicht aufrecht in einem Kreis stehen"
+
+msgid "Can B not upright in a circle"
+msgstr "Kann B nicht aufrecht im Kreis stehen"
+
+msgid "Can C not upright in a circle"
+msgstr "Kann C nicht aufrecht im Kreis stehen"
+
+msgid "Can D not upright in a circle"
+msgstr "Kann D nicht aufrecht in einem Kreis stehen"
+
+msgid "Can E not upright in a circle"
+msgstr "Kann E nicht aufrecht im Kreis stehen"
+
+msgid "Proximity of can5"
+msgstr "Die Nähe von can5"
+
+msgid "Proximity of can7"
+msgstr "Die Nähe von can7"
+
+msgid "Not Set"
+msgstr "Nicht gesetzt"
+
+msgid "Posted"
+msgstr "Gepostet"
+
+msgid "No Due Date"
+msgstr "Kein Fälligkeitsdatum"
+
+msgid "See Assigned Students"
+msgstr "Siehe Zugewiesene Schüler"
+
+msgid "Due"
+msgstr "Due"
+
+msgid "New Assignment Posted"
+msgstr "Neue Aufgabe veröffentlicht"
+
+msgid "Created at"
+msgstr "Erstellt am"
+
+msgid "No assignments yet"
+msgstr "Noch keine Einsätze"
+
+msgid "Upcoming Assignment"
+msgstr "Kommende Aufgabe"
+
+msgid "No upcoming assignments"
+msgstr "Keine anstehenden Aufgaben"
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Final Score"
+msgstr "Endstand"
+
+msgid "Not Completed"
+msgstr "Nicht vollendet"
+
+msgid "See Details"
+msgstr "Siehe Details"
+
+msgid "See Classroom Cards"
+msgstr "Siehe Klassenzimmerkarten"
+
+msgid ""
+"Published work lands in the Assignments tab under its topic. The "
+"highlighted row is the one you just added. Press Next, then you will open "
+"that row to see details and reach your challenges."
+msgstr "Die veröffentlichte Arbeit landet auf der Registerkarte \\\"Aufgaben\\\" unter ihrem Thema. Die hervorgehobene Zeile ist die, die du gerade hinzugefügt hast. Drücke auf Weiter, dann öffnest du die Zeile, um die Details zu sehen und deine Herausforderungen zu erreichen."
+
+msgid "Select your new assignment"
+msgstr "Wähle deine neue Aufgabe"
+
+msgid ""
+"Click the highlighted assignment row once. That selects it and opens the "
+"details panel below the row so you can open **See Assigned Challenges** "
+"next."
+msgstr "Klicke einmal auf die markierte Aufgabenzeile. Dadurch wird sie ausgewählt und das Detailfenster unter der Zeile geöffnet, sodass du als Nächstes **Zugeordnete Herausforderungen** öffnen kannst."
+
+msgid "See assigned challenges"
+msgstr "Siehe zugewiesene Herausforderungen"
+
+msgid ""
+"In the details panel, tap **See Assigned Challenges** to open the list of "
+"simulator scenes for this post. You will use **Go to Challenge** there to "
+"jump into a scene."
+msgstr "Tippe in der Detailansicht auf **Zugeordnete Herausforderungen**, um die Liste der Simulatorszenen für diesen Beitrag zu öffnen. Dort kannst du mit **Zur Herausforderung gehen** in eine Szene springen."
+
+msgid "Open a challenge from here"
+msgstr "Öffne eine Herausforderung von hier aus"
+
+msgid ""
+"Each row lists one assigned scene. Use **Go to Challenge** to open that "
+"simulator challenge in a new flow—handy for previewing what students will "
+"see. Close the dialog when you are done, then continue the tour."
+msgstr "Jede Zeile enthält eine zugewiesene Szene. Mit **Zur Herausforderung** öffnest du die Simulatorherausforderung in einem neuen Durchlauf - praktisch, um eine Vorschau auf das zu bekommen, was die Schüler sehen werden. Schließe den Dialog, wenn du fertig bist, und setze dann die Tour fort."
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr "Band"
@@ -4436,552 +5491,6 @@ msgctxt "RotationwUnits order"
 msgid "ZYX"
 msgstr "ZYX"
 
-msgid ""
-msgstr ""
-
-msgid "The selected file is already included in the project."
-msgstr "Die ausgewählte Datei ist bereits im Projekt enthalten."
-
-msgid "The selected file does not match the expected language ${currentLanguage}."
-msgstr "Die ausgewählte Datei stimmt nicht mit der erwarteten Sprache ${currentLanguage} überein."
-"Die ausgewählte Datei stimmt nicht mit der erwarteten Sprache "
-"${currentLanguage} überein."
-
-msgid "The selected file must have a .h extension."
-msgstr "Die ausgewählte Datei muss eine .h-Erweiterung haben."
-
-msgid "The selected file does not match the expected language."
-msgstr "Die ausgewählte Datei stimmt nicht mit der erwarteten Sprache überein."
-
-msgid "The selected file must have a .txt extension."
-msgstr "Die ausgewählte Datei muss eine .txt-Erweiterung haben."
-
-msgid "Some files have errors"
-msgstr "Einige Dateien haben Fehler"
-
-msgid "Upload File"
-msgstr "Datei hochladen"
-
-msgid "Selected File Upload Language: "
-msgstr "Ausgewählte Sprache für den Datei-Upload:"
-
-msgid "Select a file from your computer to upload"
-msgstr "Wähle eine Datei von deinem Computer zum Hochladen aus"
-
-msgid "Upload Include File"
-msgstr "Include-Datei hochladen"
-
-msgid "Upload Source File"
-msgstr "Quelldatei hochladen"
-
-msgid "Upload User Data File"
-msgstr "Benutzerdaten-Datei hochladen"
-
-msgid "No file selected"
-msgstr "Keine Datei ausgewählt"
-
-msgid "Project with name already exists. Please choose a different name."
-msgstr "Das Projekt mit dem Namen existiert bereits. Bitte wähle einen anderen Namen."
-"Das Projekt mit dem Namen existiert bereits. Bitte wähle einen anderen "
-"Namen."
-
-msgid "File uploaded does not match selected project language."
-msgstr "Die hochgeladene Datei entspricht nicht der ausgewählten Projektsprache."
-
-msgid "Folder name does not match project name in config file."
-msgstr "Der Ordnername stimmt nicht mit dem Projektnamen in der Konfigurationsdatei überein."
-"Der Ordnername stimmt nicht mit dem Projektnamen in der Konfigurationsdatei "
-"überein."
-
-msgid ""
-"File detected as different language than project language. Please ensure "
-"all source files match the selected project language."
-msgstr "Die Datei wurde in einer anderen Sprache als der Projektsprache erkannt. Bitte stelle sicher, dass alle Quelldateien mit der ausgewählten Projektsprache übereinstimmen."
-"Die Datei wurde in einer anderen Sprache als der Projektsprache erkannt. "
-"Bitte stelle sicher, dass alle Quelldateien mit der ausgewählten "
-"Projektsprache übereinstimmen."
-
-msgid "Please remove all spaces in the name."
-msgstr "Bitte entferne alle Leerzeichen im Namen."
-
-msgid "Please remove all special characters in the name."
-msgstr "Bitte entferne alle Sonderzeichen im Namen."
-
-msgid "File name exceeds maximum length of 50 characters."
-msgstr "Der Dateiname überschreitet die maximale Länge von 50 Zeichen."
-
-msgid "Select a Project from your computer to upload\n"
-msgstr "Wähle ein Projekt von deinem Computer zum Hochladen aus\\\\n"
-
-msgid "Be sure the heirarchy format follows:\n"
-msgstr "Achte darauf, dass das Format der Hierarchie wie folgt aussieht:\\\\n"
-
-msgid "Project Name"
-msgstr "Projektname"
-
-msgid "include"
-msgstr "einschließen"
-
-msgid "includeFile1.h (optional)"
-msgstr "includeFile1.h (optional)"
-
-msgid "includeFile2.h (optional)"
-msgstr "includeFile2.h (optional)"
-
-msgid "src"
-msgstr "src"
-
-msgid "NOTE: file extension must match project language"
-msgstr "HINWEIS: Die Dateierweiterung muss der Projektsprache entsprechen"
-
-msgid "srcFile1.*"
-msgstr "srcFile1.*"
-
-msgid "srcFile2.*"
-msgstr "srcFile2.*"
-
-msgid "data"
-msgstr "daten"
-
-msgid "dataFile1.txt (optional)"
-msgstr "dataFile1.txt (optional)"
-
-msgid "dataFile2.txt (optional)"
-msgstr "dataFile2.txt (optional)"
-
-msgid "bin"
-msgstr "bin"
-
-msgid "Select Project Language:"
-msgstr "Wähle die Projektsprache aus:"
-
-msgid "Choose Folder"
-msgstr "Ordner wählen"
-
-msgid "Config File"
-msgstr "Config File"
-
-msgid "No files selected."
-msgstr "Keine Dateien ausgewählt."
-
-msgid "Include Files"
-msgstr "Dateien einbeziehen"
-
-msgid "Source Files"
-msgstr "Quelldateien"
-
-msgid "User Data Files"
-msgstr "Benutzerdaten-Dateien"
-
-msgid "Selected Project Folder: "
-msgstr "Ausgewählte Projektmappe:"
-
-msgid "Selected Project Language: "
-msgstr "Ausgewählte Projektsprache:"
-
-msgid "Choose a different project"
-msgstr "Wähle ein anderes Projekt"
-
-msgid "Upload Project"
-msgstr "Projekt hochladen"
-
-msgid "The selected project already exists for this user."
-msgstr "Das ausgewählte Projekt existiert bereits für diesen Benutzer."
-
-msgid "Please choose a different project."
-msgstr "Bitte wähle ein anderes Projekt."
-
-msgid "+"
-msgstr "+"
-
-msgid "Create Project"
-msgstr "Projekt erstellen"
-
-msgid "Create File"
-msgstr "Datei erstellen"
-
-msgid "Create Classroom"
-msgstr "Klassenzimmer erstellen"
-
-msgid "Create User"
-msgstr "Benutzer erstellen"
-
-msgid "Upload User"
-msgstr "Benutzer hochladen"
-
-msgid ""
-"A user with that name already exists in this classroom. Please rename your "
-"folder and try again."
-msgstr "Ein Benutzer mit diesem Namen existiert bereits in diesem Klassenzimmer. Bitte benenne deinen Ordner um und versuche es erneut."
-"Ein Benutzer mit diesem Namen existiert bereits in diesem Klassenzimmer. "
-"Bitte benenne deinen Ordner um und versuche es erneut."
-
-msgid "Folder name does not match user name in config file."
-msgstr "Der Ordnername stimmt nicht mit dem Benutzernamen in der Konfigurationsdatei überein."
-"Der Ordnername stimmt nicht mit dem Benutzernamen in der "
-"Konfigurationsdatei überein."
-
-msgid "File detected with interface mode does not match project interface mode."
-msgstr "Die mit dem Schnittstellenmodus erkannte Datei stimmt nicht mit dem Schnittstellenmodus des Projekts überein."
-"Die mit dem Schnittstellenmodus erkannte Datei stimmt nicht mit dem "
-"Schnittstellenmodus des Projekts überein."
-
-msgid ""
-"File detected as different language than project language. Please ensure "
-"all source files match the project language."
-msgstr "Die Datei wurde in einer anderen Sprache als der Projektsprache erkannt. Bitte stelle sicher, dass alle Quelldateien mit der Projektsprache übereinstimmen."
-"Die Datei wurde in einer anderen Sprache als der Projektsprache erkannt. "
-"Bitte stelle sicher, dass alle Quelldateien mit der Projektsprache "
-"übereinstimmen."
-
-msgid "Unknown file type, defaulting to plaintext."
-msgstr "Unbekannter Dateityp, Standardeinstellung ist Klartext."
-
-msgid "Project must contain a main file"
-msgstr "Das Projekt muss eine Hauptdatei enthalten"
-
-msgid "Select a User from your computer to upload\n"
-msgstr "Wähle einen Benutzer von deinem Computer zum Hochladen aus\\\\n"
-
-msgid "User Name"
-msgstr "Benutzer Name"
-
-msgid "(At least 1 project must be in the User folder)"
-msgstr "(Mindestens 1 Projekt muss sich im Benutzerordner befinden)"
-
-msgid "Project Name 1"
-msgstr "Projektname 1"
-
-msgid "Project Name 2"
-msgstr "Projektname 2"
-
-msgid "Select User Interface Mode:"
-msgstr "Wähle den Benutzeroberflächenmodus aus:"
-
-msgid "Selected User Folder: "
-msgstr "Ausgewählter Benutzerordner:"
-
-msgid "Selected User Interface Mode: "
-msgstr "Ausgewählter Modus der Benutzeroberfläche:"
-
-msgid "Choose a different User"
-msgstr "Wähle einen anderen Benutzer"
-
-msgid "The selected user already exists in this classroom."
-msgstr "Der ausgewählte Benutzer existiert bereits in diesem Klassenzimmer."
-
-msgid "Please choose a different user."
-msgstr "Bitte wähle einen anderen Benutzer."
-
-msgid "Choose a different user"
-msgstr "Wähle einen anderen Benutzer"
-
-msgid "Delete Classroom"
-msgstr "Klassenzimmer löschen"
-
-msgid "Rename Classroom"
-msgstr "Klassenzimmer umbenennen"
-
-msgid "Delete User"
-msgstr "Benutzer löschen"
-
-msgid "Download User"
-msgstr "Benutzer herunterladen"
-
-msgid "Rename User"
-msgstr "Benutzer umbenennen"
-
-msgid "Remove User from Classroom"
-msgstr "Benutzer aus dem Klassenzimmer entfernen"
-
-msgid "Move User to Classroom"
-msgstr "Benutzer ins Klassenzimmer bringen"
-
-msgid "Paste Project"
-msgstr "Projekt einfügen"
-
-msgid "Delete Project"
-msgstr "Projekt löschen"
-
-msgid "Download Project"
-msgstr "Projekt herunterladen"
-
-msgid "Rename Project"
-msgstr "Projekt umbenennen"
-
-msgid "Move Project"
-msgstr "Projekt verschieben"
-
-msgid "Copy Project"
-msgstr "Projekt kopieren"
-
-msgid "Paste File"
-msgstr "Datei einfügen"
-
-msgid "Delete File"
-msgstr "Datei löschen"
-
-msgid "Download File"
-msgstr "Datei herunterladen"
-
-msgid "Rename File"
-msgstr "Datei umbenennen"
-
-msgid "Copy File"
-msgstr "Datei kopieren"
-
-msgid "Users"
-msgstr "Benutzer"
-
-msgid "Classroom Invitation Code:"
-msgstr "Klassenzimmer Einladungscode:"
-
-msgid "Projects"
-msgstr "Projekte"
-
-msgid "Explorer - Classrooms"
-msgstr "Explorer - Klassenzimmer"
-
-msgid "Explorer - Users"
-msgstr "Explorer - Benutzer"
-
-msgid "Users without Classrooms"
-msgstr "Nutzer ohne Klassenzimmer"
-
-msgid "Motor 0"
-msgstr "Motor 0"
-
-msgid "Motor 1"
-msgstr "Motor 1"
-
-msgid "Motor 2"
-msgstr "Motor 2"
-
-msgid "Motor 3"
-msgstr "Motor 3"
-
-msgid "Velocity"
-msgstr "Geschwindigkeit"
-
-msgid "Power"
-msgstr "Macht"
-
-msgid "Servo 0"
-msgstr "Servo 0"
-
-msgid "Servo 1"
-msgstr "Servo 1"
-
-msgid "Servo 2"
-msgstr "Servo 2"
-
-msgid "Servo 3"
-msgstr "Servo 3"
-
-msgid "analog(0)"
-msgstr "analog(0)"
-
-msgid "analog(1)"
-msgstr "analog(1)"
-
-msgid "analog(2)"
-msgstr "analog(2)"
-
-msgid "analog(3)"
-msgstr "analog(3)"
-
-msgid "analog(4)"
-msgstr "analog(4)"
-
-msgid "analog(5)"
-msgstr "analog(5)"
-
-msgid "digital(0)"
-msgstr "digital(0)"
-
-msgid "digital(1)"
-msgstr "digital(1)"
-
-msgid "digital(2)"
-msgstr "digital(2)"
-
-msgid "digital(3)"
-msgstr "digital(3)"
-
-msgid "digital(4)"
-msgstr "digital(4)"
-
-msgid "digital(5)"
-msgstr "digital(5)"
-
-msgid "digital(6)"
-msgstr "digital(6)"
-
-msgid "digital(7)"
-msgstr "digital(7)"
-
-msgid "digital(8)"
-msgstr "digital(8)"
-
-msgid "digital(9)"
-msgstr "digital(9)"
-
-msgid "accel_x()"
-msgstr "accel_x()"
-
-msgid "accel_y()"
-msgstr "accel_y()"
-
-msgid "accel_z()"
-msgstr "accel_z()"
-
-msgid "gyro_x()"
-msgstr "gyro_x()"
-
-msgid "gyro_y()"
-msgstr "gyro_y()"
-
-msgid "gyro_z()"
-msgstr "gyro_z()"
-
-msgid "magneto_x()"
-msgstr "magneto_x()"
-
-msgid "magneto_y()"
-msgstr "magneto_y()"
-
-msgid "magneto_z()"
-msgstr "magneto_z()"
-
-msgid "right_button()"
-msgstr "right_button()"
-
-msgid "Reverse"
-msgstr "Umgekehrt"
-
-msgid "Forward"
-msgstr "Weiter"
-
-msgid "Warning! Could damage servo in this range"
-msgstr "Warnung! Könnte das Servo in diesem Bereich beschädigen"
-
-msgid "Motor Velocity Plot"
-msgstr "Motorgeschwindigkeitsdiagramm"
-
-msgid "Motor Position Plot"
-msgstr "Plot der Motorposition"
-
-msgid "Servo Position Plot"
-msgstr "Servo Position Plot"
-
-msgid "View:"
-msgstr "Ansicht:"
-
-msgid "Motor Port:"
-msgstr "Motorhafen:"
-
-msgid "Clear Motor Position"
-msgstr "Motorposition löschen"
-
-msgid "Stop All Motors"
-msgstr "Alle Motoren anhalten"
-
-msgid "Stop Current Motor"
-msgstr "Stoppstrom Motor"
-
-msgid "Motor Velocities"
-msgstr "Motorgeschwindigkeiten"
-
-msgid "Motor Positions"
-msgstr "Motorpositionen"
-
-msgid "Servo Port:"
-msgstr "Servo-Anschluss:"
-
-msgid "Enable All Servos"
-msgstr "Alle Servos einschalten"
-
-msgid "Disable All Servos"
-msgstr "Alle Servos deaktivieren"
-
-msgid "Disable Servo"
-msgstr "Servo deaktivieren"
-
-msgid "Enable Servo"
-msgstr "Servo freigeben"
-
-msgid "Servo Positions"
-msgstr "Servo Positionen"
-
-msgid "Analog Sensors"
-msgstr "Analoge Sensoren"
-
-msgid "Digital Sensors"
-msgstr "Digitale Sensoren"
-
-msgid "Accelerometers"
-msgstr "Beschleunigungssensoren"
-
-msgid "Gyroscopes"
-msgstr "Gyroskope"
-
-msgid "Magnetometers"
-msgstr "Magnetometer"
-
-msgid "Buttons"
-msgstr "Buttons"
-
-msgid "Motors, Servos, and Sensors"
-msgstr "Motoren, Servos und Sensoren"
-
-msgid "Motor"
-msgstr "Motor"
-
-msgid "Servo"
-msgstr "Servo"
-
-msgid "Sensor"
-msgstr "Sensor"
-
-msgid "Modules"
-msgstr "Module"
-
-msgid "Functions"
-msgstr "Funktionen"
-
-msgid "Structures"
-msgstr "Strukturen"
-
-msgid "Enumerations"
-msgstr "Aufzählungen"
-
-msgid "Files"
-msgstr "Dateien"
-
-msgid "Search..."
-msgstr "Suche..."
-
-msgid "Detailed Description"
-msgstr "Detaillierte Beschreibung"
-
-msgid "Parameters"
-msgstr "Parameter"
-
-msgid "Return Value"
-msgstr "Rückgabewert"
-
-msgid "Fields"
-msgstr "Felder"
-
-msgid "Common Functions"
-msgstr "Gemeinsame Funktionen"
-
-msgid "Full Documentation"
-msgstr "Vollständige Dokumentation"
-
-msgid "Challenge Progress"
-msgstr "Herausforderung Fortschritt"
-
 msgctxt "func:a_button:detailed"
 msgid "Gets the A button's state (pressed or not pressed.)"
 msgstr "Ermittelt den Zustand der Schaltfläche A (gedrückt oder nicht gedrückt)"
@@ -5001,8 +5510,6 @@ msgstr "Ermittelt den 10-Bit-Analogwert eines Ports."
 msgctxt "func:analog10:param:port:description"
 msgid "A value between 0 and 5 specifying the sensor to read from."
 msgstr "Ein Wert zwischen 0 und 5, der angibt, von welchem Sensor gelesen werden soll."
-"Ein Wert zwischen 0 und 5, der angibt, von welchem Sensor gelesen werden "
-"soll."
 
 msgctxt "func:analog12:detailed"
 msgid "Gets the 12-bit analog value of a port."
@@ -5011,8 +5518,6 @@ msgstr "Ermittelt den 12-Bit-Analogwert eines Ports."
 msgctxt "func:analog12:param:port:description"
 msgid "A value between 0 and 5 specifying the sensor to read from."
 msgstr "Ein Wert zwischen 0 und 5, der angibt, von welchem Sensor gelesen werden soll."
-"Ein Wert zwischen 0 und 5, der angibt, von welchem Sensor gelesen werden "
-"soll."
 
 msgctxt "func:analog8:detailed"
 msgid "Gets the 8-bit analog value of a port."
@@ -5021,8 +5526,6 @@ msgstr "Ermittelt den 8-Bit-Analogwert eines Ports."
 msgctxt "func:analog8:param:port:description"
 msgid "A value between 0 and 5 specifying the sensor to read from."
 msgstr "Ein Wert zwischen 0 und 5, der angibt, von welchem Sensor gelesen werden soll."
-"Ein Wert zwischen 0 und 5, der angibt, von welchem Sensor gelesen werden "
-"soll."
 
 msgctxt "func:analog:detailed"
 msgid "Gets the 12-bit analog value of a port."
@@ -5031,22 +5534,16 @@ msgstr "Ermittelt den 12-Bit-Analogwert eines Ports."
 msgctxt "func:analog:param:port:description"
 msgid "A value between 0 and 5 specifying the sensor to read from."
 msgstr "Ein Wert zwischen 0 und 5, der angibt, von welchem Sensor gelesen werden soll."
-"Ein Wert zwischen 0 und 5, der angibt, von welchem Sensor gelesen werden "
-"soll."
 
 msgctxt "func:analog_et:detailed"
 msgid ""
 "Gets the 10-bit analog value of an ET sensor on the given port. "
 "Deprecateddefaulting to analog() on the Wallaby"
 msgstr "Ermittelt den 10-Bit-Analogwert eines ET-Sensors am angegebenen Port. VeraltetAbweichend von analog() auf dem Wallaby"
-"Ermittelt den 10-Bit-Analogwert eines ET-Sensors am angegebenen Port. "
-"VeraltetAbweichend von analog() auf dem Wallaby"
 
 msgctxt "func:analog_et:param:port:description"
 msgid "A value between 0 and 7 specifying the ET sensor to read from."
 msgstr "Ein Wert zwischen 0 und 7, der angibt, von welchem ET-Sensor gelesen werden soll."
-"Ein Wert zwischen 0 und 7, der angibt, von welchem ET-Sensor gelesen werden "
-"soll."
 
 msgctxt "func:any_button:detailed"
 msgid "Determines whether or not any of the buttons are pressed."
@@ -5089,8 +5586,6 @@ msgid ""
 "Gets the black button's state (pressed or not pressed.) DeprecatedNot "
 "present on the Wallaby"
 msgstr "Ermittelt den Zustand der schwarzen Taste (gedrückt oder nicht gedrückt). VeraltetNicht vorhanden im Wallaby"
-"Ermittelt den Zustand der schwarzen Taste (gedrückt oder nicht gedrückt). "
-"VeraltetNicht vorhanden im Wallaby"
 
 msgctxt "func:block_motor_done:brief"
 msgid "Wait until the motor is at it's goal."
@@ -5237,14 +5732,10 @@ msgid ""
 "Gets the analog pullup status for one portt. Deprecatedno effect on the "
 "Wallaby"
 msgstr "Ermittelt den analogen Pullup-Status für einen Portt. VeraltetKeine Auswirkung auf das Wallaby"
-"Ermittelt den analogen Pullup-Status für einen Portt. VeraltetKeine "
-"Auswirkung auf das Wallaby"
 
 msgctxt "func:get_analog_pullup:param:port:description"
 msgid "A value between 0 and 7 specifying the analog sensor to read from."
 msgstr "Ein Wert zwischen 0 und 7, der angibt, von welchem analogen Sensor gelesen werden soll."
-"Ein Wert zwischen 0 und 7, der angibt, von welchem analogen Sensor gelesen "
-"werden soll."
 
 msgctxt "func:get_digital_output:detailed"
 msgid "Gets the current digital mode"
@@ -5254,9 +5745,7 @@ msgctxt "func:get_digital_pullup:detailed"
 msgid ""
 "Gets the current digital pullup state Deprecatednot applicable on the "
 "Wallaby"
-msgstr "Liefert den aktuellen digitalen Pullup-Status Veraltet - nicht anwendbar auf dem Wallaby"
-"Ermittelt den aktuellen digitalen Pullup-Zustand Veraltet - nicht anwendbar "
-"auf dem Wallaby"
+msgstr "Ermittelt den aktuellen digitalen Pullup-Zustand Veraltet - nicht anwendbar auf dem Wallaby"
 
 msgctxt "func:get_digital_value:detailed"
 msgid "Gets the current value of the digital port."
@@ -5285,8 +5774,6 @@ msgstr "Der Motoranschluss."
 msgctxt "func:get_pid_gains:brief"
 msgid "Set the motor PID gains, represented as fractions."
 msgstr "Lege die PID-Verstärkungen für den Motor fest, die als Brüche dargestellt werden."
-"Lege die PID-Verstärkungen für den Motor fest, die als Brüche dargestellt "
-"werden."
 
 msgctxt "func:get_pid_gains:param:d:description"
 msgid "The D (derivative) gain numerator"
@@ -5314,7 +5801,7 @@ msgstr "Der Zähler der P (proportionalen) Verstärkung"
 
 msgctxt "func:get_pid_gains:param:pd:description"
 msgid "The P (proportional) gain denominator"
-msgstr "Der Nenner der P-Verstärkung (proportional)"
+msgstr "Der Nenner der P (proportionalen) Verstärkung"
 
 msgctxt "func:get_servo_enabled:brief"
 msgid "Check if a servo is enabled."
@@ -5397,8 +5884,6 @@ msgid ""
 "The range is -1500 to 1500, though motor position accuracy may be decreased "
 "outside of -1000 to 1000"
 msgstr "Der Bereich liegt zwischen -1500 und 1500, wobei die Genauigkeit der Motorposition außerhalb von -1000 bis 1000 abnehmen kann"
-"Der Bereich liegt zwischen -1500 und 1500, wobei die Genauigkeit der "
-"Motorposition außerhalb von -1000 bis 1000 abnehmen kann"
 
 msgctxt "func:move_at_velocity:param:motor:description"
 msgid "The motor port."
@@ -5413,8 +5898,6 @@ msgid ""
 "Set a goal position (in ticks) for the motor to move to, relative to the "
 "current position."
 msgstr "Lege eine Zielposition (in Ticks) fest, zu der sich der Motor im Verhältnis zur aktuellen Position bewegen soll."
-"Lege eine Zielposition (in Ticks) fest, zu der sich der Motor im Verhältnis "
-"zur aktuellen Position bewegen soll."
 
 msgctxt "func:move_relative_position:param:delta_pos:description"
 msgid "The position to move to (in ticks) given the current position"
@@ -5427,8 +5910,6 @@ msgstr "Der Motoranschluss."
 msgctxt "func:move_relative_position:param:speed:description"
 msgid "The speed to move at, between -1500 and 1500 ticks / second"
 msgstr "Die Geschwindigkeit, mit der du dich bewegst, zwischen -1500 und 1500 Ticks / Sekunde"
-"Die Geschwindigkeit, mit der du dich bewegst, zwischen -1500 und 1500 Ticks "
-"/ Sekunde"
 
 msgctxt "func:move_to_position:brief"
 msgid "Set a goal position (in ticks) for the motor to move to."
@@ -5439,8 +5920,6 @@ msgid ""
 "There are approximately 1500 ticks per motor revolution.This function is "
 "more accurate if speeds between -1000 and 1000 are used."
 msgstr "Es gibt ungefähr 1500 Ticks pro Motorumdrehung. Diese Funktion ist genauer, wenn Geschwindigkeiten zwischen -1000 und 1000 verwendet werden."
-"Es gibt ungefähr 1500 Ticks pro Motorumdrehung. Diese Funktion ist genauer, "
-"wenn Geschwindigkeiten zwischen -1000 und 1000 verwendet werden."
 
 msgctxt "func:move_to_position:param:goal_pos:description"
 msgid "The position to move to (in ticks)"
@@ -5453,16 +5932,12 @@ msgstr "Der Motoranschluss."
 msgctxt "func:move_to_position:param:speed:description"
 msgid "The speed to move at, between -1500 and 1500 ticks / second"
 msgstr "Die Geschwindigkeit, mit der du dich bewegst, zwischen -1500 und 1500 Ticks / Sekunde"
-"Die Geschwindigkeit, mit der du dich bewegst, zwischen -1500 und 1500 Ticks "
-"/ Sekunde"
 
 msgctxt "func:mrp:brief"
 msgid ""
 "Set a goal position (in ticks) for the motor to move to, relative to the "
 "current position."
 msgstr "Lege eine Zielposition (in Ticks) fest, zu der sich der Motor im Verhältnis zur aktuellen Position bewegen soll."
-"Lege eine Zielposition (in Ticks) fest, zu der sich der Motor im Verhältnis "
-"zur aktuellen Position bewegen soll."
 
 msgctxt "func:mrp:param:delta_pos:description"
 msgid "The position to move to (in ticks) given the current position"
@@ -5475,8 +5950,6 @@ msgstr "Der Motoranschluss."
 msgctxt "func:mrp:param:speed:description"
 msgid "The speed to move at, between -1500 and 1500 ticks / second"
 msgstr "Die Geschwindigkeit, mit der du dich bewegst, zwischen -1500 und 1500 Ticks / Sekunde"
-"Die Geschwindigkeit, mit der du dich bewegst, zwischen -1500 und 1500 Ticks "
-"/ Sekunde"
 
 msgctxt "func:mtp:brief"
 msgid "Set a goal position (in ticks) for the motor to move to."
@@ -5493,8 +5966,6 @@ msgstr "Der Motoranschluss."
 msgctxt "func:mtp:param:speed:description"
 msgid "The speed to move at, between -1500 and 1500 ticks / second"
 msgstr "Die Geschwindigkeit, mit der du dich bewegst, zwischen -1500 und 1500 Ticks / Sekunde"
-"Die Geschwindigkeit, mit der du dich bewegst, zwischen -1500 und 1500 Ticks "
-"/ Sekunde"
 
 msgctxt "func:off:brief"
 msgid "Turns the specified motor off."
@@ -5515,8 +5986,6 @@ msgstr "Ermittelt den Zustand der rechten Taste (gedrückt oder nicht gedrückt)
 msgctxt "func:set_a_button_text:detailed"
 msgid "Updates the A button's text. Deprecatednot planned for the Wallaby"
 msgstr "Aktualisiert den Text der Schaltfläche A. VeraltetNicht geplant für das Wallaby"
-"Aktualisiert den Text der Schaltfläche A. VeraltetNicht geplant für das "
-"Wallaby"
 
 msgctxt "func:set_a_button_text:param:text:description"
 msgid "The text to display. Limit of 16 characters."
@@ -5525,14 +5994,10 @@ msgstr "Der anzuzeigende Text. Die Anzahl der Zeichen ist auf 16 begrenzt."
 msgctxt "func:set_analog_pullup:detailed"
 msgid "Sets analog pullup status for one port. Deprecatedno effect on the Wallaby"
 msgstr "Setzt den analogen Pullup-Status für einen Port. VeraltetKeine Auswirkung auf das Wallaby"
-"Setzt den analogen Pullup-Status für einen Port. VeraltetKeine Auswirkung "
-"auf das Wallaby"
 
 msgctxt "func:set_analog_pullup:param:port:description"
 msgid "A value between 0 and 5 specifying the analog sensor to read from."
 msgstr "Ein Wert zwischen 0 und 5, der angibt, von welchem analogen Sensor gelesen werden soll."
-"Ein Wert zwischen 0 und 5, der angibt, von welchem analogen Sensor gelesen "
-"werden soll."
 
 msgctxt "func:set_analog_pullup:param:pullup:description"
 msgid "A value of 0 (inactive) or 1 (active)."
@@ -5541,8 +6006,6 @@ msgstr "Ein Wert von 0 (inaktiv) oder 1 (aktiv)."
 msgctxt "func:set_b_button_text:detailed"
 msgid "Updates the B button's text. Deprecatednot planned for the Wallaby"
 msgstr "Aktualisiert den Text der Schaltfläche B. VeraltetNicht geplant für das Wallaby"
-"Aktualisiert den Text der Schaltfläche B. VeraltetNicht geplant für das "
-"Wallaby"
 
 msgctxt "func:set_b_button_text:param:text:description"
 msgid "The text to display. Limit of 16 characters."
@@ -5551,8 +6014,6 @@ msgstr "Der anzuzeigende Text. Die Anzahl der Zeichen ist auf 16 begrenzt."
 msgctxt "func:set_c_button_text:detailed"
 msgid "Updates the C button's text. Deprecatednot planned for the Wallaby"
 msgstr "Aktualisiert den Text der Schaltfläche C. VeraltetNicht geplant für das Wallaby"
-"Aktualisiert den Text der Schaltfläche C. VeraltetNicht geplant für das "
-"Wallaby"
 
 msgctxt "func:set_c_button_text:param:text:description"
 msgid "The text to display. Limit of 16 characters."
@@ -5575,8 +6036,6 @@ msgid ""
 "Sets the current digital pullup state Deprecatednot applicable on the "
 "Wallaby"
 msgstr "Legt den aktuellen digitalen Pullup-Zustand fest Veraltet - nicht anwendbar auf dem Wallaby"
-"Legt den aktuellen digitalen Pullup-Zustand fest Veraltet - nicht anwendbar "
-"auf dem Wallaby"
 
 msgctxt "func:set_digital_pullup:param:port:description"
 msgid "The port to modify"
@@ -5597,8 +6056,6 @@ msgstr "Legt fest, ob die X-, Y- und Z-Tasten sichtbar sind oder nicht."
 msgctxt "func:set_pid_gains:brief"
 msgid "Set the motor PID gains, represented as fractions."
 msgstr "Lege die PID-Verstärkungen für den Motor fest, die als Brüche dargestellt werden."
-"Lege die PID-Verstärkungen für den Motor fest, die als Brüche dargestellt "
-"werden."
 
 msgctxt "func:set_pid_gains:param:d:description"
 msgid "The D (derivative) gain numerator"
@@ -5626,7 +6083,7 @@ msgstr "Der Zähler der P (proportionalen) Verstärkung"
 
 msgctxt "func:set_pid_gains:param:pd:description"
 msgid "The P (proportional) gain denominator"
-msgstr "Der Nenner der P-Verstärkung (proportional)"
+msgstr "Der Nenner der P (proportionalen) Verstärkung"
 
 msgctxt "func:set_servo_enabled:brief"
 msgid "Enable or disable a specific servo."
@@ -5655,8 +6112,6 @@ msgstr "Die neue Servoposition, zwischen 0 und 2047"
 msgctxt "func:set_x_button_text:detailed"
 msgid "Updates the X button's text. Deprecatednot planned for the Wallaby"
 msgstr "Aktualisiert den Text der X-Schaltfläche. VeraltetNicht geplant für das Wallaby"
-"Aktualisiert den Text der X-Schaltfläche. VeraltetNicht geplant für das "
-"Wallaby"
 
 msgctxt "func:set_x_button_text:param:text:description"
 msgid "The text to display. Limit of 16 characters."
@@ -5664,7 +6119,7 @@ msgstr "Der anzuzeigende Text. Die Anzahl der Zeichen ist auf 16 begrenzt."
 
 msgctxt "func:set_y_button_text:detailed"
 msgid "Updates the Y button's text. Deprecatednot planned for the Wallaby"
-msgstr "Aktualisiert den Text der Y-Taste. VeraltetNicht geplant für das Wallaby"
+msgstr "Aktualisiert den Text der Y-Schaltfläche. VeraltetNicht geplant für das Wallaby"
 
 msgctxt "func:set_y_button_text:param:text:description"
 msgid "The text to display. Limit of 16 characters."
@@ -5692,21 +6147,17 @@ msgstr "Ein neuer Motor-PWM-Befehl zwischen 0 und 100"
 
 msgctxt "func:shut_down_in:detailed"
 msgid "Register an event to stop the user program after s seconds"
-msgstr "Registriere ein Ereignis, um das Benutzerprogramm nach s Sekunden zu stoppen"
+msgstr "Registriere ein Ereignis, um das Benutzerprogramm nach s Sekunden anzuhalten"
 
 msgctxt "func:shut_down_in:param:s:description"
 msgid "The number of seconds to wait before the end of program"
 msgstr "Die Anzahl der Sekunden, die vor dem Ende des Programms gewartet werden sollen"
-"Die Anzahl der Sekunden, die vor dem Ende des Programms gewartet werden "
-"sollen"
 
 msgctxt "func:side_button:detailed"
 msgid ""
 "Gets the side button's state (pressed or not pressed.) DeprecatedNot "
 "present on the Wallaby"
 msgstr "Ermittelt den Zustand der Seitentaste (gedrückt oder nicht gedrückt). VeraltetNicht vorhanden im Wallaby"
-"Ermittelt den Zustand der Seitentaste (gedrückt oder nicht gedrückt). "
-"VeraltetNicht vorhanden im Wallaby"
 
 msgctxt "func:side_button_clicked:detailed"
 msgid "Gets the Z button's state (pressed or not pressed.)"
@@ -5721,8 +6172,6 @@ msgid ""
 "Waits (blocks) until the a button has been pressed and then subsequently "
 "released."
 msgstr "Wartet (blockiert), bis die Taste a gedrückt und anschließend losgelassen wird."
-"Wartet (blockiert), bis die Taste a gedrückt und anschließend losgelassen "
-"wird."
 
 msgctxt "func:wait_for_any_button:detailed"
 msgid "Waits (blocks) until any system button has been pressed."
@@ -5737,8 +6186,6 @@ msgid ""
 "Waits (blocks) until the b button has been pressed and then subsequently "
 "released."
 msgstr "Wartet (blockiert), bis die Taste b gedrückt und anschließend losgelassen wird."
-"Wartet (blockiert), bis die Taste b gedrückt und anschließend losgelassen "
-"wird."
 
 msgctxt "func:wait_for_c_button:detailed"
 msgid "Waits (blocks) until the c button has been pressed."
@@ -5749,16 +6196,12 @@ msgid ""
 "Waits (blocks) until the c button has been pressed and then subsequently "
 "released."
 msgstr "Wartet (blockiert), bis die Taste c gedrückt und anschließend losgelassen wird."
-"Wartet (blockiert), bis die Taste c gedrückt und anschließend losgelassen "
-"wird."
 
 msgctxt "func:wait_for_light:detailed"
 msgid ""
 "Initiate a calibration and wait for light sequence which is a normal early "
 "step in Botball programs"
 msgstr "Initiiere eine Kalibrierung und warte auf eine Lichtsequenz, was ein normaler früher Schritt in Botball-Programmen ist"
-"Initiiere eine Kalibrierung und warte auf eine Lichtsequenz, was ein "
-"normaler früher Schritt in Botball-Programmen ist"
 
 msgctxt "func:wait_for_light:param:light_port_:description"
 msgid "The analog port and light sensor to use."
@@ -5780,17 +6223,13 @@ msgctxt "func:wait_for_side_button_clicked:detailed"
 msgid ""
 "Waits (blocks) until the side button has been pressed and then subsequently "
 "released."
-msgstr "Wartet (blockiert), bis die Seitentaste gedrückt und anschließend losgelassen wurde."
-"Wartet (blockiert), bis die Seitentaste gedrückt und anschließend "
-"losgelassen wurde."
+msgstr "Wartet (blockiert), bis die Seitentaste gedrückt und anschließend losgelassen wird."
 
 msgctxt "func:wait_for_touch:detailed"
 msgid ""
 "Waits (blocks) until the digital sensor on the given port has been "
 "activated."
 msgstr "Wartet (blockiert), bis der digitale Sensor an dem angegebenen Anschluss aktiviert wurde."
-"Wartet (blockiert), bis der digitale Sensor an dem angegebenen Anschluss "
-"aktiviert wurde."
 
 msgctxt "func:wait_for_touch:param:port:description"
 msgid "The port to wait for activation on"
@@ -5805,8 +6244,6 @@ msgid ""
 "Waits (blocks) until the x button has been pressed and then subsequently "
 "released."
 msgstr "Wartet (blockiert), bis die x-Taste gedrückt und anschließend losgelassen wurde."
-"Wartet (blockiert), bis die x-Taste gedrückt und anschließend losgelassen "
-"wurde."
 
 msgctxt "func:wait_for_y_button:detailed"
 msgid "Waits (blocks) until the y button has been pressed."
@@ -5817,8 +6254,6 @@ msgid ""
 "Waits (blocks) until the y button has been pressed and then subsequently "
 "released."
 msgstr "Wartet (blockiert), bis die Taste y gedrückt und anschließend losgelassen wird."
-"Wartet (blockiert), bis die Taste y gedrückt und anschließend losgelassen "
-"wurde."
 
 msgctxt "func:wait_for_z_button:detailed"
 msgid "Waits (blocks) until the z button has been pressed."
@@ -5829,8 +6264,6 @@ msgid ""
 "Waits (blocks) until the z button has been pressed and then subsequently "
 "released."
 msgstr "Wartet (blockiert), bis die z-Taste gedrückt und anschließend losgelassen wird."
-"Wartet (blockiert), bis die z-Taste gedrückt und anschließend losgelassen "
-"wird."
 
 msgctxt "func:x_button:detailed"
 msgid "Gets the C button's state (pressed or not pressed.)"
@@ -5846,7 +6279,7 @@ msgstr "Ermittelt den Zustand der Y-Taste (gedrückt oder nicht gedrückt)"
 
 msgctxt "func:y_button_clicked:detailed"
 msgid "Gets the X button's state (pressed or not pressed.)"
-msgstr "Ermittelt den Zustand der X-Taste (gedrückt oder nicht gedrückt)"
+msgstr "Ermittelt den Status der X-Taste (gedrückt oder nicht gedrückt)"
 
 msgctxt "func:z_button:detailed"
 msgid "Gets the Z button's state (pressed or not pressed.)"
@@ -5893,14 +6326,10 @@ msgid ""
 "mutexes are used to prevent memory errors when two programs or threads need "
 "to access the same variable."
 msgstr "mutexe werden verwendet, um Speicherfehler zu verhindern, wenn zwei Programme oder Threads auf dieselbe Variable zugreifen müssen."
-"mutexe werden verwendet, um Speicherfehler zu verhindern, wenn zwei "
-"Programme oder Threads auf dieselbe Variable zugreifen müssen."
 
 msgctxt "struct:mutex:member:data:brief"
 msgid "a C++ Mutex object cast to a void*. Not intended to be accessed."
 msgstr "ein C++ Mutex-Objekt, das in ein void* umgewandelt wurde. Es ist nicht für den Zugriff vorgesehen."
-"ein C++ Mutex-Objekt, das in ein void* umgewandelt wurde. Es ist nicht für "
-"den Zugriff vorgesehen."
 
 msgctxt "struct:point2:brief"
 msgid "A 2D point; has x and y."
@@ -5963,5 +6392,3 @@ msgstr "ein Thread führt eine Funktion aus)."
 msgctxt "struct:thread:member:data:brief"
 msgid "a C++ Thread object cast to a void*. Not intended to be accessed."
 msgstr "ein C++ Thread-Objekt, das in ein void* umgewandelt wurde. Es ist nicht für den Zugriff vorgesehen."
-"ein C++ Thread-Objekt, das in ein void* umgewandelt wurde. Es ist nicht für "
-"den Zugriff vorgesehen."

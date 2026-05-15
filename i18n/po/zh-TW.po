@@ -83,7 +83,7 @@ msgid "JBC 2D"
 msgstr "JBC 2D"
 
 msgid "Junior Botball Challenge 2D: Ring Around the Can and Back It Up"
-msgstr "青少年樽球挑戰賽 2D：環繞罐子並將它倒回去"
+msgstr "青少年 Botball 挑戰賽 2D：環繞罐子並將它倒回去"
 
 msgid "JBC 3"
 msgstr "JBC 3"
@@ -179,7 +179,7 @@ msgid "JBC 8"
 msgstr "JBC 8"
 
 msgid "Junior Botball Challenge 8: Serpentine"
-msgstr "青少年 Botball 挑戰賽 8：蛇形"
+msgstr "青少年 Botball 挑戰賽 8：蛇形線"
 
 msgid "JBC 8B"
 msgstr "JBC 8B"
@@ -215,7 +215,7 @@ msgid "JBC 12"
 msgstr "JBC 12"
 
 msgid "Junior Botball Challenge 12: Unload 'Em"
-msgstr "初級 Botball 挑戰賽 12：卸下他們"
+msgstr "青少年 Botball 挑戰賽 12：卸下他們"
 
 msgid "JBC 13"
 msgstr "JBC 13"
@@ -299,7 +299,7 @@ msgid "Can C picked up"
 msgstr "C 可以拾取"
 
 msgid "Can A Placed"
-msgstr "可以放置"
+msgstr "能否放置"
 
 msgid "Can A placed on circle 2"
 msgstr "A 可以放在圈 2 上嗎？"
@@ -358,7 +358,7 @@ msgstr "關於"
 msgid ""
 "KIPR is a 501(c) 3 organization started to make the long-term educational "
 "benefits of robotics accessible to students."
-msgstr "KIPR 是一個 501(c) 3 組織，成立的目的是為了讓學生能長期享受機器人教育的好處。"
+msgstr "KIPR 是一個 501(c) 3 組織，成立的目的是為了讓學生們能夠享受機器人所帶來的長期教育效益。"
 
 msgid "Quick Start"
 msgstr "快速啟動"
@@ -610,7 +610,7 @@ msgid "Metalness"
 msgstr "金屬性"
 
 msgid "Metalness Texture URI"
-msgstr "金屬度紋理 URI"
+msgstr "金屬感紋理 URI"
 
 msgid "Position"
 msgstr "職位"
@@ -855,7 +855,7 @@ msgstr "我們很樂意幫助您開始！"
 msgid ""
 "Give a helpful description of a problem you're facing, or a feature you'd "
 "like to request"
-msgstr "對您面臨的問題或您想要求的功能提供有用的描述"
+msgstr "就您面臨的問題，或您想要求的功能，提供有用的說明"
 
 msgid ""
 "Thanks for using the KIPR Simulator! Find a bug? Have a feature request? "
@@ -1094,7 +1094,7 @@ msgid "Click Instruction Box"
 msgstr "按一下指示方塊"
 
 msgid "Click Instruction 1 Box"
-msgstr "按一下說明 1 方塊"
+msgstr "按一下指示 1 方塊"
 
 msgid "Click Instruction 2 Box"
 msgstr "按一下指示 2 方塊"
@@ -1175,7 +1175,7 @@ msgid "Green Garage Marker 2"
 msgstr "綠色車庫標記 2"
 
 msgid "Junior Botball Challenge 4: Serpentine"
-msgstr "青少年 Botball 挑戰賽 4：蛇形線"
+msgstr "青少年樽球挑戰賽 4：蛇形線"
 
 msgid "Junior Botball Challenge 5: Odd Numbers"
 msgstr "青少年 Botball 挑戰賽 5：奇數"
@@ -1205,7 +1205,7 @@ msgid "JBC 11"
 msgstr "JBC 11"
 
 msgid "Junior Botball Challenge 11: Making Waves"
-msgstr "青少年 Botball 挑戰賽 11：製造浪潮"
+msgstr "青少年 Botball 挑戰賽 11：製造波浪"
 
 msgid "Junior Botball Challenge 12: Add it Up"
 msgstr "青少年 Botball 挑戰賽 12：加起來"
@@ -1481,7 +1481,7 @@ msgid "Communication Tower"
 msgstr "通訊塔"
 
 msgid "Hab"
-msgstr "Hab"
+msgstr "帽子"
 
 msgid "Radiation Science Pack"
 msgstr "輻射科學套件"
@@ -1704,7 +1704,7 @@ msgid "Blue pom #%d"
 msgstr "藍色絨球 #%d"
 
 msgid "GCER 2025: Ice Ice Botguy"
-msgstr "GCER 2025：Ice Ice Botguy"
+msgstr "GCER 2025：冰冰壺壺"
 
 msgid ""
 "GCER 2025 special event. Botguy is overheating! Collect the ice and dump it "
@@ -1757,7 +1757,7 @@ msgstr "GCER 2025：奇數"
 msgid ""
 "GCER 2025 special event. Drive over the odd numbered circles in order, but "
 "make sure to avoid the evens!"
-msgstr "GCER 2025 特別活動。依序駛過奇數圓圈，但務必避開偶數圓圈！"
+msgstr "GCER 2025 特別活動。依序駛過奇數的圓圈，但一定要避開偶數的圓圈！"
 
 msgid "GCER 2025: Bulldozer Mania"
 msgstr "GCER 2025：推土機狂熱"
@@ -1765,13 +1765,13 @@ msgstr "GCER 2025：推土機狂熱"
 msgid ""
 "GCER 2025 special event. Bring as many cans behind the starting line as you "
 "can. Make sure they stay upright!"
-msgstr "GCER 2025 特別活動。將盡可能多的易拉罐帶到起跑線後方。確保它們保持直立！"
+msgstr "GCER 2025 特別活動。將盡可能多的易拉罐帶到起跑線後。確保它們保持直立！"
 
 msgid "GCER 2025: Mountain Rescue"
 msgstr "GCER 2025：山地救援"
 
 msgid "GCER 2025 special event. Now with three more cans to rescue!"
-msgstr "GCER 2025 特別活動。現在還有三罐要拯救！"
+msgstr "GCER 2025 特別活動。現在還有三罐要救援！"
 
 msgid "Robot Stops at Black Line"
 msgstr "機器人停在黑線"
@@ -1819,10 +1819,10 @@ msgid "Taco placed"
 msgstr "放置的 Taco"
 
 msgid "Taco placed in tray"
-msgstr "玉米捲放入托盤"
+msgstr "玉米卷放入托盤"
 
 msgid "Can A upright in a circle"
-msgstr "A 能否在圓圈內直立"
+msgstr "A 能否在圓圈中直立"
 
 msgid "Can B upright in a circle"
 msgstr "可以在圓圈中直立"
@@ -1834,7 +1834,7 @@ msgid "Can D Upright"
 msgstr "罐頭 D 直立式"
 
 msgid "Can D upright in a circle"
-msgstr "能在圓圈內直立"
+msgstr "可以在圓圈內直立"
 
 msgid "Can E Upright"
 msgstr "Can E 直立式"
@@ -2043,7 +2043,7 @@ msgid "Robot left the mat"
 msgstr "機器人離開墊子"
 
 msgid "Start in the Start Box"
-msgstr "在「開始方塊」中開始"
+msgstr "在開始方塊中開始"
 
 msgid "Reach the end of the mat"
 msgstr "到達墊子的盡頭"
@@ -2106,7 +2106,7 @@ msgid "Can 6 Upright"
 msgstr "Can 6 直立式"
 
 msgid "Can 6 upright on circle 6"
-msgstr "可在圓圈 6 上直立 6"
+msgstr "可在圓圈 6 上直立"
 
 msgid "Robot Passed Right Side"
 msgstr "機器人通過右側"
@@ -2220,13 +2220,13 @@ msgid "Robot Touched Circle 6"
 msgstr "機器人觸摸圓圈 6"
 
 msgid "Robot touched circle 6"
-msgstr "機器人觸碰圓 6"
+msgstr "機器人觸摸圓 6"
 
 msgid "Robot Touched Circle 7"
 msgstr "機器人觸摸圓圈 7"
 
 msgid "Robot touched circle 7"
-msgstr "機器人觸碰圓 7"
+msgstr "機器人觸摸圈 7"
 
 msgid "Robot Touched Circle 8"
 msgstr "機器人觸摸圓圈 8"
@@ -2388,7 +2388,7 @@ msgid "Place can 2 in green garage"
 msgstr "將 2 號罐放入綠色車庫"
 
 msgid "Place can 9 in blue garage"
-msgstr "將 CAN 9 置於藍色車庫"
+msgstr "將 Can 9 置於藍色車庫"
 
 msgid "Place can 10 in yellow garage"
 msgstr "在黃色車庫中放置 10 號罐子"
@@ -2520,7 +2520,7 @@ msgid "Wave at circle 3"
 msgstr "在圓圈 3 揮手"
 
 msgid "Wave at circle 6"
-msgstr "在圓 6 上揮手"
+msgstr "在圓 6 揮手"
 
 msgid "Wave at circle 9"
 msgstr "在圓圈 9 揮手"
@@ -2586,7 +2586,7 @@ msgid "Rescue can 1 to start box"
 msgstr "救援罐 1 至啟動盒"
 
 msgid "Rescue can 2 to start box"
-msgstr "救援罐 2 至啟動箱"
+msgstr "救援罐 2 啟動箱"
 
 msgid "Rescue can 3 to start box"
 msgstr "救援罐 3 至啟動盒"
@@ -2811,7 +2811,7 @@ msgid "Can from green garage intersects circle 2"
 msgstr "來自綠色車庫的 Can 與 Circle 2 相交"
 
 msgid "Can from blue garage intersects circle 9"
-msgstr "藍色車庫的 Can 與 Circle 9 相交"
+msgstr "來自藍色車庫的 Can 與 Circle 9 相交"
 
 msgid "Can 10 Intersects"
 msgstr "Can 10 相交"
@@ -2832,7 +2832,7 @@ msgid "Can 8 Intersects"
 msgstr "Can 8 相交"
 
 msgid "Can 8 intersects chosen garage"
-msgstr "可選擇 8 個相交的車庫"
+msgstr "可選擇 8 個相交車庫"
 
 msgid "Can 10 intersects chosen garage"
 msgstr "可以選擇 10 個相交的車庫"
@@ -2859,7 +2859,7 @@ msgid "Can 10 upright in chosen garage"
 msgstr "可在所選的車庫中直立 10"
 
 msgid "Can 11 upright in chosen garage"
-msgstr "可在所選的車庫中直立 11"
+msgstr "可在選定的車庫中直立 11"
 
 msgid "JBC Challenge 15B"
 msgstr "JBC 挑戰賽 15B"
@@ -2949,7 +2949,7 @@ msgid "Can 10 upright on circle 10"
 msgstr "可在圓圈 10 上直立"
 
 msgid "Can 11 upright on circle 11"
-msgstr "圓 11 可以直立"
+msgstr "可在圓圈 11 上直立 11"
 
 msgid "Can 12 upright on circle 12"
 msgstr "可在 12 圓上直立"
@@ -3150,7 +3150,7 @@ msgid "Right Stack Cube #%d"
 msgstr "右方堆疊方塊 #%d"
 
 msgid "Red Cube (4 inch)"
-msgstr "紅色方塊（4 英寸）"
+msgstr "紅色立方體（4 英寸）"
 
 msgid "Brown Cube (4 inch)"
 msgstr "棕色方塊（4 英寸）"
@@ -3266,7 +3266,7 @@ msgid "Dropper Gate"
 msgstr "下拉式閘門"
 
 msgid "2026 Botball Game Table Sandbox"
-msgstr "2026 Botball 遊戲桌 沙盤"
+msgstr "2026 Botball 遊戲桌沙箱"
 
 msgid ""
 "2026 Botball game table sandbox. One robot and one side of the table are "
@@ -3446,7 +3446,7 @@ msgid "This challenge has not opened yet."
 msgstr "這項挑戰尚未開放。"
 
 msgid "This challenge is closed and no longer accepting submissions."
-msgstr "此挑戰賽已結束，不再接受投稿。"
+msgstr "此挑戰已結束，不再接受提交。"
 
 msgid "No completions yet. Be the first to complete this challenge!"
 msgstr "尚未完成。成為第一個完成此挑戰的人！"
@@ -3814,7 +3814,7 @@ msgid ""
 "This is the motor velocities section, where you can see the current "
 "velocities of the robot's motors. You can also click each motor row to see "
 "a graph."
-msgstr "這是馬達速度部分，您可以在這裡看到機器人馬達的目前速度。您也可以按一下每一行的馬達，以查看圖表。"
+msgstr "這是馬達速度部分，您可以在此查看機器人馬達的目前速度。您也可以按一下每一行的馬達，以查看圖表。"
 
 msgid ""
 "This is the motor positions section, where you can see the current "
@@ -3838,7 +3838,7 @@ msgid ""
 "This is the World tab, where you can see information about the world such "
 "as the positions of objects and the light level. Select the \"World\" tab "
 "to continue the tour!"
-msgstr "這是「世界」標籤，在這裡您可以看到有關世界的資訊，例如物件的位置和光度。選擇 （）繼續瀏覽！"
+msgstr "這是「世界」標籤，在這裡您可以看到有關世界的資訊，例如物件的位置和光度。選取 （）繼續瀏覽！"
 
 msgid ""
 "This is the world's objects section where you can customize the JBC Sandbox "
@@ -4103,7 +4103,7 @@ msgid "World Tab Object Settings Option"
 msgstr "世界頁籤物件設定選項"
 
 msgid "World Tab Object Remove Option"
-msgstr "世界頁籤物件移除選項"
+msgstr "世界標籤物件移除選項"
 
 msgid "Move Object Tool Overview"
 msgstr "移動物件工具概觀"
@@ -4251,6 +4251,1061 @@ msgstr "邀請代碼"
 
 msgid "Code students can use to join the classroom"
 msgstr "學生可使用代碼加入教室"
+
+msgid "The selected file is already included in the project."
+msgstr "挑戰進度"
+
+msgid "The selected file does not match the expected language ${currentLanguage}."
+msgstr "選取的檔案已包含在專案中。"
+
+msgid "The selected file must have a .h extension."
+msgstr "所選檔案與預期語言 ${currentLanguage} 不相符。"
+
+msgid "The selected file does not match the expected language."
+msgstr "選取的檔案副檔名必須是 .h。"
+
+msgid "The selected file must have a .txt extension."
+msgstr "選取的檔案與預期的語言不符。"
+
+msgid "Some files have errors"
+msgstr "選取的檔案副檔名必須是 .txt。"
+
+msgid "Upload File"
+msgstr "某些檔案有錯誤"
+
+msgid "Selected File Upload Language: "
+msgstr "上傳檔案"
+
+msgid "Select a file from your computer to upload"
+msgstr "選取的檔案上傳語言："
+
+msgid "Upload Include File"
+msgstr "從電腦中選取要上傳的檔案"
+
+msgid "Upload Source File"
+msgstr "上傳包含檔案"
+
+msgid "Upload User Data File"
+msgstr "上傳源檔案"
+
+msgid "No file selected"
+msgstr "上傳使用者資料檔案"
+
+msgid "Project with name already exists. Please choose a different name."
+msgstr "未選擇檔案"
+
+msgid "File uploaded does not match selected project language."
+msgstr "名稱的專案已存在。請選擇其他名稱。"
+
+msgid "Folder name does not match project name in config file."
+msgstr "上傳的檔案與選取的專案語言不符。"
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the selected project language."
+msgstr "資料夾名稱與設定檔中的專案名稱不符。"
+
+msgid "Please remove all spaces in the name."
+msgstr "偵測到檔案的語言與專案語言不同。請確保所有原始碼檔案符合所選的專案語言。"
+
+msgid "Please remove all special characters in the name."
+msgstr "請刪除姓名中的所有空格。"
+
+msgid "File name exceeds maximum length of 50 characters."
+msgstr "請刪除名稱中的所有特殊字符。"
+
+msgid "Select a Project from your computer to upload\n"
+msgstr "檔案名稱超過 50 個字元的最大長度。"
+
+msgid "Be sure the heirarchy format follows:\n"
+msgstr "從您的電腦選擇一個專案上傳"
+
+msgid "Project Name"
+msgstr "請確保系統結構格式如下：\\\\n"
+
+msgid "include"
+msgstr "專案名稱"
+
+msgid "includeFile1.h (optional)"
+msgstr "包括"
+
+msgid "includeFile2.h (optional)"
+msgstr "includeFile1.h （可選）"
+
+msgid "src"
+msgstr "includeFile2.h （可選）"
+
+msgid "NOTE: file extension must match project language"
+msgstr "來源"
+
+msgid "srcFile1.*"
+msgstr "注意：檔案副檔名必須與專案語言相符"
+
+msgid "srcFile2.*"
+msgstr "srcFile1.*"
+
+msgid "data"
+msgstr "srcFile2.*"
+
+msgid "dataFile1.txt (optional)"
+msgstr "資料"
+
+msgid "dataFile2.txt (optional)"
+msgstr "dataFile1.txt (選用)"
+
+msgid "bin"
+msgstr "dataFile2.txt (選用)"
+
+msgid "Select Project Language:"
+msgstr "箱"
+
+msgid "Choose Folder"
+msgstr "選擇專案語言："
+
+msgid "Config File"
+msgstr "選擇資料夾"
+
+msgid "No files selected."
+msgstr "組態檔案"
+
+msgid "Include Files"
+msgstr "未選取任何檔案。"
+
+msgid "Source Files"
+msgstr "包含檔案"
+
+msgid "User Data Files"
+msgstr "原始檔案"
+
+msgid "Selected Project Folder: "
+msgstr "使用者資料檔案"
+
+msgid "Selected Project Language: "
+msgstr "精選專案資料夾："
+
+msgid "Choose a different project"
+msgstr "精選專案語言："
+
+msgid "Upload Project"
+msgstr "選擇不同的專案"
+
+msgid "The selected project already exists for this user."
+msgstr "上傳專案"
+
+msgid "Please choose a different project."
+msgstr "此使用者已存在選取的專案。"
+
+msgid "+"
+msgstr "請選擇其他專案。"
+
+msgid "Create Project"
+msgstr "+"
+
+msgid "Create File"
+msgstr "建立專案"
+
+msgid "Create Classroom"
+msgstr "建立檔案"
+
+msgid "Create User"
+msgstr "建立教室"
+
+msgid "Upload User"
+msgstr "建立使用者"
+
+msgid ""
+"A user with that name already exists in this classroom. Please rename your "
+"folder and try again."
+msgstr "上傳使用者"
+
+msgid "Folder name does not match user name in config file."
+msgstr "此教室中已有使用該名稱的使用者。請重新命名您的資料夾，然後再試一次。"
+
+msgid "File detected with interface mode does not match project interface mode."
+msgstr "資料夾名稱與設定檔中的使用者名稱不符。"
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the project language."
+msgstr "偵測到的檔案介面模式與專案介面模式不符。"
+
+msgid "Unknown file type, defaulting to plaintext."
+msgstr "偵測到檔案的語言與專案語言不同。請確保所有原始碼檔案符合專案語言。"
+
+msgid "Project must contain a main file"
+msgstr "未知檔案類型，預設為純文字。"
+
+msgid "Select a User from your computer to upload\n"
+msgstr "專案必須包含一個主檔案"
+
+msgid "User Name"
+msgstr "從您的電腦選擇使用者上傳（upload/n"
+
+msgid "(At least 1 project must be in the User folder)"
+msgstr "使用者名稱"
+
+msgid "Project Name 1"
+msgstr "(使用者資料夾中必須至少有 1 個專案）"
+
+msgid "Project Name 2"
+msgstr "專案名稱 1"
+
+msgid "Select User Interface Mode:"
+msgstr "專案名稱 2"
+
+msgid "Selected User Folder: "
+msgstr "選擇使用者介面模式："
+
+msgid "Selected User Interface Mode: "
+msgstr "選取的使用者資料夾："
+
+msgid "Choose a different User"
+msgstr "Selected User Interface Mode（選取的使用者介面模式）："
+
+msgid "The selected user already exists in this classroom."
+msgstr "選擇不同的使用者"
+
+msgid "Please choose a different user."
+msgstr "所選使用者已存在於此教室中。"
+
+msgid "Choose a different user"
+msgstr "請選擇其他使用者。"
+
+msgid "Delete Classroom"
+msgstr "選擇不同的使用者"
+
+msgid "Rename Classroom"
+msgstr "刪除教室"
+
+msgid "Delete User"
+msgstr "重新命名教室"
+
+msgid "Download User"
+msgstr "刪除使用者"
+
+msgid "Rename User"
+msgstr "下載使用者"
+
+msgid "Remove User from Classroom"
+msgstr "重新命名使用者"
+
+msgid "Move User to Classroom"
+msgstr "從教室移除使用者"
+
+msgid "Paste Project"
+msgstr "將使用者移至教室"
+
+msgid "Delete Project"
+msgstr "貼上專案"
+
+msgid "Download Project"
+msgstr "刪除專案"
+
+msgid "Rename Project"
+msgstr "下載專案"
+
+msgid "Move Project"
+msgstr "重新命名專案"
+
+msgid "Copy Project"
+msgstr "移動專案"
+
+msgid "Paste File"
+msgstr "複製專案"
+
+msgid "Delete File"
+msgstr "貼上檔案"
+
+msgid "Download File"
+msgstr "刪除檔案"
+
+msgid "Rename File"
+msgstr "下載檔案"
+
+msgid "Copy File"
+msgstr "重新命名檔案"
+
+msgid "Users"
+msgstr "複製檔案"
+
+msgid "Classroom Invitation Code:"
+msgstr "使用者"
+
+msgid "Projects"
+msgstr "教室邀請碼："
+
+msgid "Explorer - Classrooms"
+msgstr "專案"
+
+msgid "Explorer - Users"
+msgstr "探索者 - 教室"
+
+msgid "Users without Classrooms"
+msgstr "探索者 - 使用者"
+
+msgid "Motor 0"
+msgstr "沒有教室的使用者"
+
+msgid "Motor 1"
+msgstr "馬達 0"
+
+msgid "Motor 2"
+msgstr "馬達 1"
+
+msgid "Motor 3"
+msgstr "馬達 2"
+
+msgid "Velocity"
+msgstr "馬達 3"
+
+msgid "Power"
+msgstr "速度"
+
+msgid "Servo 0"
+msgstr "電源"
+
+msgid "Servo 1"
+msgstr "伺服器 0"
+
+msgid "Servo 2"
+msgstr "伺服器 1"
+
+msgid "Servo 3"
+msgstr "伺服器 2"
+
+msgid "analog(0)"
+msgstr "伺服器 3"
+
+msgid "analog(1)"
+msgstr "類比(0)"
+
+msgid "analog(2)"
+msgstr "類比(1)"
+
+msgid "analog(3)"
+msgstr "類比(2)"
+
+msgid "analog(4)"
+msgstr "類比(3)"
+
+msgid "analog(5)"
+msgstr "類比(4)"
+
+msgid "digital(0)"
+msgstr "類比(5)"
+
+msgid "digital(1)"
+msgstr "數位(0)"
+
+msgid "digital(2)"
+msgstr "數位(1)"
+
+msgid "digital(3)"
+msgstr "數位(2)"
+
+msgid "digital(4)"
+msgstr "數位(3)"
+
+msgid "digital(5)"
+msgstr "數位(4)"
+
+msgid "digital(6)"
+msgstr "數位(5)"
+
+msgid "digital(7)"
+msgstr "數位(6)"
+
+msgid "digital(8)"
+msgstr "數位(7)"
+
+msgid "digital(9)"
+msgstr "數位(8)"
+
+msgid "accel_x()"
+msgstr "數位(9)"
+
+msgid "accel_y()"
+msgstr "accel_x()"
+
+msgid "accel_z()"
+msgstr "accel_y()"
+
+msgid "gyro_x()"
+msgstr "accel_z()"
+
+msgid "gyro_y()"
+msgstr "gyro_x()"
+
+msgid "gyro_z()"
+msgstr "gyro_y()"
+
+msgid "magneto_x()"
+msgstr "gyro_z()"
+
+msgid "magneto_y()"
+msgstr "magneto_x()"
+
+msgid "magneto_z()"
+msgstr "magneto_y()"
+
+msgid "right_button()"
+msgstr "magneto_z()"
+
+msgid "Reverse"
+msgstr "right_button()"
+
+msgid "Forward"
+msgstr "反向"
+
+msgid "Warning! Could damage servo in this range"
+msgstr "前進"
+
+msgid "Servo Position Plot"
+msgstr "警告！在此範圍內可能會損壞伺服器"
+
+msgid "View:"
+msgstr "伺服位置圖"
+
+msgid "Motor Port:"
+msgstr "查看："
+
+msgid "Clear Motor Position"
+msgstr "馬達埠："
+
+msgid "Stop All Motors"
+msgstr "清除馬達位置"
+
+msgid "Stop Current Motor"
+msgstr "停止所有馬達"
+
+msgid "Servo Port:"
+msgstr "停止電流 馬達"
+
+msgid "Enable All Servos"
+msgstr "伺服連接埠："
+
+msgid "Disable All Servos"
+msgstr "啟用所有伺服器"
+
+msgid "Disable Servo"
+msgstr "停用所有伺服器"
+
+msgid "Enable Servo"
+msgstr "停用伺服功能"
+
+msgid "Servo Positions"
+msgstr "啟用伺服"
+
+msgid "Accelerometers"
+msgstr "伺服器位置"
+
+msgid "Gyroscopes"
+msgstr "加速度計"
+
+msgid "Magnetometers"
+msgstr "陀螺儀"
+
+msgid "Buttons"
+msgstr "磁力計"
+
+msgid "Motors, Servos, and Sensors"
+msgstr "按鈕"
+
+msgid "Motor"
+msgstr "馬達、伺服器和感測器"
+
+msgid "Servo"
+msgstr "馬達"
+
+msgid "Sensor"
+msgstr "伺服器"
+
+msgid "Common Functions"
+msgstr "感測器"
+
+msgid "Full Documentation"
+msgstr "常用功能"
+
+msgid "Challenge Progress"
+msgstr "完整文件"
+
+msgid ""
+"Use the classroom cards along the top to create a class or open one you "
+"already teach. After you pick a class, use the Home, Assignments, People, "
+"Grades, and Leaderboard tabs for day-to-day work."
+msgstr "使用上方的教室卡片來建立一個班級或開啟一個您已經教過的班級。選好班級後，使用「首頁」、「作業」、「人員」、「成績」和「排行榜」標籤進行日常工作。"
+
+msgid "Classroom cards"
+msgstr "教室卡片"
+
+msgid ""
+"This scrollable row holds every class you own. The first card creates a new "
+"classroom; each card after that opens that class into the workspace below "
+"when you click it."
+msgstr "這個可捲動的行包含您擁有的每個班級。第一張卡片會建立一個新教室；之後的每張卡片都會在您按一下時將該教室開啟到下方的工作區。"
+
+msgid ""
+"Click the Create New Classroom card to open the setup dialog and continue "
+"the tour."
+msgstr "按一下「建立新教室」卡開啟設定對話方塊，繼續導覽。"
+
+msgid ""
+"After you tap Create, your new class shows up as another card in this row "
+"next to Create New Classroom."
+msgstr "點選「建立」後，您的新班級會顯示為「建立新教室」旁的另一張卡片。"
+
+msgid ""
+"Click your classroom's card in this row to load it. The roster and tabs "
+"below update for that class—open People when you want to review enrollments."
+msgstr "按一下此行中您教室的卡片來載入。當您要檢視註冊人數時，花名冊和下方的標籤就會更新。"
+
+msgid "Home tab"
+msgstr "首頁索引標籤"
+
+msgid ""
+"See class information, copy the invite code for students, and quick "
+"classroom context."
+msgstr "查看班級資訊、複製邀請代碼給學生，以及快速的教室情境。"
+
+msgid "Assignments tab"
+msgstr "任務索引標籤"
+
+msgid ""
+"Open **Assignments** to manage this class’s work. The list below groups "
+"posts by topic; use the row menu on each assignment to edit or delete. "
+"Press Next to spotlight that list, then you will walk through creating a "
+"new assignment."
+msgstr "開啟 ** 作業** 以管理本班的作業。下面的清單依主題將作業分類；使用每個作業上的列選單編輯或刪除作業。按「下一步」點選該清單，接著您就可以建立新作業。"
+
+msgid "Assignments workspace"
+msgstr "作業工作區"
+
+msgid ""
+"This panel is where posted assignments appear. When the class is new it may "
+"be empty—**Create Assignment** (top right) opens the editor; the tour goes "
+"through title, challenges, roster, due date, and publishing next."
+msgstr "這個面板顯示已張貼的作業。當課堂是新開時，它可能是空的-***建立作業** (右上方) 會開啟編輯器；導覽過程包括標題、挑戰、花名冊、到期日，以及下一步的發佈。"
+
+msgid "Create an assignment"
+msgstr "建立任務"
+
+msgid ""
+"Tap **Create Assignment** to open the editor. You will name the work, pick "
+"simulator challenges, choose who receives it, set topic and due date, then "
+"publish with Assign."
+msgstr "點選 **Create Assignment** 開啟編輯器。您要為工作命名、挑選模擬器挑戰、選擇接收者、設定主題和到期日，然後用 Assign 發佈。"
+
+msgid "Assignment details"
+msgstr "任務詳情"
+
+msgid ""
+"Enter a required title and optional description, then tick the JBC "
+"challenges students must complete. Points roll up on the right as you add "
+"scenes."
+msgstr "輸入必填標題和選填說明，然後勾選學生必須完成的 JBC 挑戰。當您新增場景時，點數會在右邊滾動。"
+
+msgid "Class, roster, and topic"
+msgstr "班級、輪值表和主題"
+
+msgid ""
+"Confirm **For Class**, open **Assign to** in the next steps to pick who "
+"receives this post, and choose a **Topic** bucket. After the roster dialog "
+"you will return here to adjust per-challenge points and the due date before "
+"publishing."
+msgstr "確認**為班級**，在接下來的步驟中開啟**指派給**，以選擇接收此文章的人，並選擇**主題**桶。輪值對話後，您會回到這裡，在發表前調整每個挑戰的點數和到期日。"
+
+msgid "Open Assign to"
+msgstr "開啟指派給"
+
+msgid ""
+"Tap **Assign to** to open the roster dialog. Use **All Students** or "
+"individual checkboxes, then **Done** to save— the tour highlights those "
+"controls next."
+msgstr "點選 ** 指派給**，開啟花名冊對話框。使用 ** 所有學生** 或個別核取方塊，然後點選 ** 完成**儲存 - 導覽會高亮顯示這些控制項。"
+
+msgid "Choose who receives this assignment"
+msgstr "選擇接受這項任務的人"
+
+msgid ""
+"This dialog lists the class roster for this post. Toggle **All Students** "
+"or pick individuals—you need at least one student before you can publish. "
+"Tap **Done** to save your picks and advance the tour. **Next** moves on "
+"without applying changes you only made here."
+msgstr "此對話方塊列出此文章的班級名單。切換 ** 所有學生** 或選取個人 - 您需要至少有一位學生才能發佈。點選 **完成**以儲存您的選項，並進入巡迴。 **Next** 不套用您在此處所做的變更，繼續前進。"
+
+msgid "Points and due date"
+msgstr "分數與到期日"
+
+msgid ""
+"The total updates automatically from the challenges you checked on the "
+"left. Expand the table to set **points per challenge** if you need "
+"different weights, then pick a **Due date** for the class. When you are "
+"satisfied, continue to **Assign** to publish (or Next to skip publishing "
+"while finishing the tour)."
+msgstr "總計會根據您在左側勾選的挑戰自動更新。如果您需要不同的權重，請展開表格設定每個挑戰的**點數**，然後選擇班級的**截止日期**。當您滿意後，繼續到 **Assign** 發表（或下一步跳過發表，同時完成導覽）。"
+
+msgid "Publish the assignment"
+msgstr "發佈作業"
+
+msgid ""
+"Tap **Assign** to save the assignment to the class. Use the X on the left "
+"to close without saving, or press Next to leave the tour on this screen "
+"without publishing."
+msgstr "點選 **Assign** 將作業儲存到班級。使用左邊的 X 關閉而不儲存，或按下一步讓導覽留在此畫面而不發表。"
+
+msgid "Find it in the list"
+msgstr "在清單中尋找"
+
+msgid ""
+"Published work lands in the Assignments tab under its topic. The "
+"highlighted row is the one you just added—open the row menu (**⋯**) to edit "
+"or delete, or tap the row to expand details."
+msgstr "已發表的工作會出現在其主題下的 Assignments 標籤中。反白顯示的行就是您剛加進的那一行 - 開啟該行功能表 (**⋯**) 來編輯或刪除，或點選該行來展開詳細資料。"
+
+msgid "People tab"
+msgstr "人員索引標籤"
+
+msgid ""
+"Review who is enrolled, open student details, and remove a student from the "
+"class when needed."
+msgstr "檢視註冊人員、開啟學生詳細資料，並在需要時將學生從班上刪除。"
+
+msgid "Grades tab"
+msgstr "等級索引標籤"
+
+msgid ""
+"Open the gradebook: filter assignments by due or posted dates, filter which "
+"students and challenges appear, use Export filters next to Export CSV for "
+"scoped downloads, and open See Details to adjust per-challenge scores or "
+"overrides."
+msgstr "開啟成績簿：依到期日或公佈日期篩選作業、篩選會出現哪些學生和挑戰、使用匯出 CSV 旁邊的匯出篩選器進行範圍下載，以及開啟「檢視詳細資料」以調整每項挑戰的分數或覆寫。"
+
+msgid "Leaderboard tab"
+msgstr "排行榜標籤"
+
+msgid ""
+"Switch between Default JBC Challenges and Limited Challenges to see how the "
+"class is performing on simulator scenes and timed challenges."
+msgstr "在 Default JBC Challenges（預設 JBC 挑戰）和 Limited Challenges（有限挑戰）之間切換，查看班級在模擬器場景和計時挑戰上的表現。"
+
+msgid ""
+"This is your student classroom hub. Join a class with the button below; "
+"once you are inside a class, the guided tour walks through each top tab and "
+"the assignment details window."
+msgstr "這是您的學生教室中心。使用下面的按鈕加入課堂；當您進入課堂後，導覽會帶您瀏覽每個頂部標籤和作業詳細資料視窗。"
+
+msgid ""
+"Tap Join Class, enter the invite code from your teacher, choose a display "
+"name, and you will land in that classroom with full access to assignments "
+"and leaderboards."
+msgstr "點選加入班級，輸入老師的邀請代碼，選擇顯示名稱，您就會進入該教室，並可完全存取作業和排行榜。"
+
+msgid ""
+"Type the classroom invite code, add the name your teacher should see, then "
+"press Join to finish enrolling."
+msgstr "輸入教室邀請代碼，加入老師應該看到的姓名，然後按「加入」完成註冊。"
+
+msgid ""
+"From the Leaderboard tab you explore class challenge boards. Inside, switch "
+"between Default JBC Challenges (always-on simulator scenes) and Limited "
+"Challenges (timed or attempt-limited events)."
+msgstr "您可從排行榜標籤探索類別挑戰板。您可以在 Default JBC Challenges（一直開啟的模擬器場景）和 Limited Challenges（計時或嘗試受限的活動）之間切換。"
+
+msgid ""
+"This board lists the standard Botball challenges everyone can practice. "
+"Compare your progress with classmates, export a PDF summary, jump to your "
+"row, or review badges you have earned."
+msgstr "這個板子列出每個人都可以練習的標準 Botball 挑戰。與同學比較您的進度、匯出 PDF 摘要、跳至您的行列或檢視您所獲得的徽章。"
+
+msgid ""
+"Download a PDF snapshot of how you are doing on the visible "
+"challenges—great for sharing progress at home or with a mentor."
+msgstr "下載 PDF 簡報，瞭解您在可視挑戰方面的進度 - 非常適合在家或與指導老師分享進度。"
+
+msgid ""
+"Long leaderboard? Use this control to scroll straight to your entry so you "
+"can see placement and points at a glance."
+msgstr "排行榜太長？使用此控制鈕可直接捲動到您的參賽作品，讓您可以一目了然地看到名次和分數。"
+
+msgid ""
+"Open the badge gallery to celebrate milestones you unlocked by finishing "
+"challenges successfully."
+msgstr "開啟徽章圖庫，慶祝您成功完成挑戰所解鎖的里程碑。"
+
+msgid ""
+"Select Limited Challenges to open any special contests your teacher "
+"enabled—watch the countdowns and attempt limits shown there."
+msgstr "選取「有限挑戰」開啟您的老師啟用的任何特殊比賽 - 觀看那裡顯示的倒數計時和嘗試限制。"
+
+msgid ""
+"Each card explains the rules for that limited run. Stay inside the allowed "
+"window so your submissions count toward the class leaderboard."
+msgstr "每張卡片都解釋了該限量版的規則。請在允許的時間內提交作品，以便計入班級排行榜。"
+
+msgid ""
+"Use the menu icon for shortcuts such as leaving the classroom or jumping to "
+"other tools."
+msgstr "使用功能表圖示來取得捷徑，例如離開教室或跳到其他工具。"
+
+msgid ""
+"This panel surfaces helpful links and the Leave Classroom action when you "
+"need to step out while keeping your past scores saved."
+msgstr "當您需要離開時，此面板會顯示有用的連結和離開教室動作，同時保留您過去的分數。"
+
+msgid ""
+"Choose Leave Classroom only when you are done with the class. Your "
+"completed work stays on record, but you will need a fresh invite to rejoin "
+"later."
+msgstr "只有當您完成課堂後，才選擇離開教室。您已完成的作業會保留在記錄中，但稍後您需要重新邀請才能再參加。"
+
+msgid "Enter a classroom name."
+msgstr "輸入教室名稱。"
+
+msgid "A classroom with that name already exists."
+msgstr "這個名字的教室已經存在。"
+
+msgid "Choose a different name than the current one."
+msgstr "選擇與目前名稱不同的名稱。"
+
+msgid "Could not rename this classroom (missing record)."
+msgstr "無法重新命名此教室 (遺失記錄)。"
+
+msgid "Could not save. Try again."
+msgstr "無法儲存。請再試一次。"
+
+msgid "Something went wrong."
+msgstr "出問題了"
+
+msgid "Rename classroom"
+msgstr "重新命名教室"
+
+msgid "Classroom name"
+msgstr "教室名稱"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Saving…"
+msgstr "節省..."
+
+msgid "Yes"
+msgstr "是"
+
+msgid "No"
+msgstr "沒有"
+
+msgid "Teachers"
+msgstr "教師"
+
+msgid "Students"
+msgstr "學生"
+
+msgid "Assigned To"
+msgstr "指派給"
+
+msgid "Not started"
+msgstr "尚未開始"
+
+msgid "Not completed"
+msgstr "未完成"
+
+msgid "Completed at"
+msgstr "於"
+
+msgid "On time"
+msgstr "準時"
+
+msgid "Late"
+msgstr "遲到"
+
+msgid "No deadline"
+msgstr "無截止日期"
+
+msgid "Go to Challenge"
+msgstr "前往挑戰"
+
+msgid "No challenges added to this assignment."
+msgstr "這項任務沒有增加任何挑戰。"
+
+msgid "Close"
+msgstr "關閉"
+
+msgid "Assignment Details"
+msgstr "任務詳情"
+
+msgid "See Assigned Challenges"
+msgstr "請參閱指派的挑戰"
+
+msgid "Challenges completed"
+msgstr "完成的挑戰"
+
+msgid "Edit"
+msgstr "編輯"
+
+msgid "Create Assignment"
+msgstr "建立作業"
+
+msgid "You have no assignments in this class yet."
+msgstr "您在這堂課上還沒有任何作業。"
+
+msgid "Assignments you publish will appear in the lists below, grouped by topic."
+msgstr "您發表的作業會出現在下面的清單中，依主題分類。"
+
+msgid "Classroom Code"
+msgstr "課堂守則"
+
+msgid "Override"
+msgstr "覆寫"
+
+msgid "Submission Details"
+msgstr "提交詳情"
+
+msgid "Default"
+msgstr "預設"
+
+msgid "Filter by due or posted date"
+msgstr "依到期日或張貼日期篩選"
+
+msgid "From"
+msgstr "來自"
+
+msgid "To"
+msgstr "至"
+
+msgid "Clear date filter"
+msgstr "清除日期篩選器"
+
+msgid "Export filters"
+msgstr "匯出篩選器"
+
+msgid ""
+"Hold Ctrl or Cmd while clicking to select. Leave unselected to include all "
+"students."
+msgstr "按住 Ctrl 或 Cmd 的同時按一下以選取。不選取以包括所有學生。"
+
+msgid "Challenges"
+msgstr "挑戰"
+
+msgid ""
+"Shown for assignments in the date range. Leave unselected to include all "
+"challenges."
+msgstr "顯示日期範圍內的作業。不選取表示包含所有挑戰。"
+
+msgid "Clear student and challenge filters"
+msgstr "清晰的學生和挑戰篩選器"
+
+msgid "Export CSV"
+msgstr "匯出 CSV"
+
+msgid "No assignment columns match the current date and challenge filters."
+msgstr "沒有任務列符合目前的日期和挑戰篩選條件。"
+
+msgid "Student Name"
+msgstr "學生姓名"
+
+msgid "Home"
+msgstr "首頁"
+
+msgid "Assignments"
+msgstr "作業"
+
+msgid "People"
+msgstr "人類"
+
+msgid "Grades"
+msgstr "等級"
+
+msgid "Select a classroom to view details"
+msgstr "選擇教室以檢視詳細資訊"
+
+msgid "Assign To"
+msgstr "指派給"
+
+msgid "All Students"
+msgstr "所有學生"
+
+msgid "No Subject"
+msgstr "無標題"
+
+msgid "Create Subject"
+msgstr "建立主題"
+
+msgid "Untitled assignment"
+msgstr "無題任務"
+
+msgid "Edit Assignment"
+msgstr "編輯任務"
+
+msgid "Save Changes"
+msgstr "儲存變更"
+
+msgid "Assign"
+msgstr "指派"
+
+msgid "Assignment Title*"
+msgstr "作業名稱*"
+
+msgid "*Required"
+msgstr "*必須"
+
+msgid "Assignment Description"
+msgstr "任務說明"
+
+msgid "Optional"
+msgstr "選購"
+
+msgid "Choose JBC Challenges to Assign"
+msgstr "選擇要指派的 JBC 挑戰"
+
+msgid "For Class"
+msgstr "適用於班級"
+
+msgid "Assign to"
+msgstr "指派給"
+
+msgid "Topic"
+msgstr "主題"
+
+msgid "Points"
+msgstr "點數"
+
+msgid "Due Date"
+msgstr "到期日"
+
+msgid "Delete classroom"
+msgstr "刪除教室"
+
+msgid "Assigned Challenges"
+msgstr "指派的挑戰"
+
+msgid "Can 7 Chopped"
+msgstr "罐頭 7 剁碎"
+
+msgid "Can 7 chopped"
+msgstr "罐頭 7 切碎"
+
+msgid "Can 11 not upright"
+msgstr "Can 11 不能直立"
+
+msgid "Can 1 Rescued"
+msgstr "Can 1 救援"
+
+msgid "Can 1 rescued"
+msgstr "Can 1 獲救"
+
+msgid "Can 2 Rescued"
+msgstr "Can 2 救援"
+
+msgid "Can 2 rescued"
+msgstr "Can 2 獲救"
+
+msgid "Can 3 Rescued"
+msgstr "Can 3 救援"
+
+msgid "Can 3 rescued"
+msgstr "Can 3 獲救"
+
+msgid "Touch the ream"
+msgstr "觸控捲取"
+
+msgid "Can A not upright in a circle"
+msgstr "A 不能直立在圓圈中"
+
+msgid "Can B not upright in a circle"
+msgstr "B 不能在圓圈中直立"
+
+msgid "Can C not upright in a circle"
+msgstr "C 不能在圓圈中直立"
+
+msgid "Can D not upright in a circle"
+msgstr "D 不能在圓圈中直立"
+
+msgid "Can E not upright in a circle"
+msgstr "E 不能在圓圈中直立"
+
+msgid "Proximity of can5"
+msgstr "鄰近 Can5"
+
+msgid "Proximity of can7"
+msgstr "鄰近 Can7"
+
+msgid "Not Set"
+msgstr "未設定"
+
+msgid "Posted"
+msgstr "已發佈"
+
+msgid "No Due Date"
+msgstr "無到期日"
+
+msgid "See Assigned Students"
+msgstr "請參閱指派學生"
+
+msgid "Due"
+msgstr "到期"
+
+msgid "New Assignment Posted"
+msgstr "新任務發佈"
+
+msgid "Created at"
+msgstr "建立於"
+
+msgid "No assignments yet"
+msgstr "尚未有任務"
+
+msgid "Upcoming Assignment"
+msgstr "近期任務"
+
+msgid "No upcoming assignments"
+msgstr "沒有即將進行的任務"
+
+msgid "Title"
+msgstr "標題"
+
+msgid "Final Score"
+msgstr "最終得分"
+
+msgid "Not Completed"
+msgstr "未完成"
+
+msgid "See Details"
+msgstr "查看詳細資訊"
+
+msgid "See Classroom Cards"
+msgstr "查看教室卡片"
+
+msgid ""
+"Published work lands in the Assignments tab under its topic. The "
+"highlighted row is the one you just added. Press Next, then you will open "
+"that row to see details and reach your challenges."
+msgstr "已發表的工作會出現在其主題下的作業標籤中。高亮顯示的那一行就是您剛剛新增的那一行。按下 [下一步]，然後您就可以開啟該行查看詳細資訊，並達到您的挑戰。"
+
+msgid "Select your new assignment"
+msgstr "選擇您的新任務"
+
+msgid ""
+"Click the highlighted assignment row once. That selects it and opens the "
+"details panel below the row so you can open **See Assigned Challenges** "
+"next."
+msgstr "按一下反白顯示的作業行。這會選取該行，並開啟該行下方的詳細資料面板，讓您可以開啟 **See Assigned Challenges** 下一步。"
+
+msgid "See assigned challenges"
+msgstr "查看指派的挑戰"
+
+msgid ""
+"In the details panel, tap **See Assigned Challenges** to open the list of "
+"simulator scenes for this post. You will use **Go to Challenge** there to "
+"jump into a scene."
+msgstr "在詳細資料面板中，點選 **See Assigned Challenges** 開啟此職位的模擬器場景清單。您將在那裡使用 **Go to Challenge** 跳到一個場景。"
+
+msgid "Open a challenge from here"
+msgstr "從這裡開啟挑戰"
+
+msgid ""
+"Each row lists one assigned scene. Use **Go to Challenge** to open that "
+"simulator challenge in a new flow—handy for previewing what students will "
+"see. Close the dialog when you are done, then continue the tour."
+msgstr "每一行列出一個指定的場景。使用 ** 轉到挑戰** 在新流程中開啟模擬器挑戰，方便預覽學生將會看到的內容。完成後關閉對話框，然後繼續導覽。"
 
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
@@ -4435,534 +5490,6 @@ msgstr "YXZ"
 msgctxt "RotationwUnits order"
 msgid "ZYX"
 msgstr "ZYX"
-
-msgid ""
-msgstr ""
-
-msgid "The selected file is already included in the project."
-msgstr "選取的檔案已包含在專案中。"
-
-msgid "The selected file does not match the expected language ${currentLanguage}."
-msgstr "所選檔案與預期語言 ${currentLanguage} 不相符。"
-
-msgid "The selected file must have a .h extension."
-msgstr "選取的檔案副檔名必須是 .h。"
-
-msgid "The selected file does not match the expected language."
-msgstr "選取的檔案與預期的語言不符。"
-
-msgid "The selected file must have a .txt extension."
-msgstr "選取的檔案副檔名必須是 .txt。"
-
-msgid "Some files have errors"
-msgstr "某些檔案有錯誤"
-
-msgid "Upload File"
-msgstr "上傳檔案"
-
-msgid "Selected File Upload Language: "
-msgstr "選取的檔案上傳語言："
-
-msgid "Select a file from your computer to upload"
-msgstr "從電腦中選取要上傳的檔案"
-
-msgid "Upload Include File"
-msgstr "上傳包含檔案"
-
-msgid "Upload Source File"
-msgstr "上傳源檔案"
-
-msgid "Upload User Data File"
-msgstr "上傳使用者資料檔案"
-
-msgid "No file selected"
-msgstr "未選擇檔案"
-
-msgid "Project with name already exists. Please choose a different name."
-msgstr "名稱的專案已存在。請選擇其他名稱。"
-
-msgid "File uploaded does not match selected project language."
-msgstr "上傳的檔案與選取的專案語言不符。"
-
-msgid "Folder name does not match project name in config file."
-msgstr "資料夾名稱與設定檔中的專案名稱不符。"
-
-msgid ""
-"File detected as different language than project language. Please ensure "
-"all source files match the selected project language."
-msgstr "偵測到檔案的語言與專案語言不同。請確保所有原始碼檔案符合所選的專案語言。"
-
-msgid "Please remove all spaces in the name."
-msgstr "請刪除姓名中的所有空格。"
-
-msgid "Please remove all special characters in the name."
-msgstr "請刪除名稱中的所有特殊字符。"
-
-msgid "File name exceeds maximum length of 50 characters."
-msgstr "檔案名稱超過 50 個字元的最大長度。"
-
-msgid "Select a Project from your computer to upload\n"
-msgstr "從您的電腦選擇一個專案上傳"
-
-msgid "Be sure the heirarchy format follows:\n"
-msgstr "請確保系統結構格式如下：\\\\n"
-
-msgid "Project Name"
-msgstr "專案名稱"
-
-msgid "include"
-msgstr "包括"
-
-msgid "includeFile1.h (optional)"
-msgstr "includeFile1.h （可選）"
-
-msgid "includeFile2.h (optional)"
-msgstr "includeFile2.h （可選）"
-
-msgid "src"
-msgstr "來源"
-
-msgid "NOTE: file extension must match project language"
-msgstr "注意：檔案副檔名必須與專案語言相符"
-
-msgid "srcFile1.*"
-msgstr "srcFile1.*"
-
-msgid "srcFile2.*"
-msgstr "srcFile2.*"
-
-msgid "data"
-msgstr "資料"
-
-msgid "dataFile1.txt (optional)"
-msgstr "dataFile1.txt (選用)"
-
-msgid "dataFile2.txt (optional)"
-msgstr "dataFile2.txt (選用)"
-
-msgid "bin"
-msgstr "箱"
-
-msgid "Select Project Language:"
-msgstr "選擇專案語言："
-
-msgid "Choose Folder"
-msgstr "選擇資料夾"
-
-msgid "Config File"
-msgstr "組態檔案"
-
-msgid "No files selected."
-msgstr "未選取任何檔案。"
-
-msgid "Include Files"
-msgstr "包含檔案"
-
-msgid "Source Files"
-msgstr "原始檔案"
-
-msgid "User Data Files"
-msgstr "使用者資料檔案"
-
-msgid "Selected Project Folder: "
-msgstr "精選專案資料夾："
-
-msgid "Selected Project Language: "
-msgstr "精選專案語言："
-
-msgid "Choose a different project"
-msgstr "選擇不同的專案"
-
-msgid "Upload Project"
-msgstr "上傳專案"
-
-msgid "The selected project already exists for this user."
-msgstr "此使用者已存在選取的專案。"
-
-msgid "Please choose a different project."
-msgstr "請選擇其他專案。"
-
-msgid "+"
-msgstr "+"
-
-msgid "Create Project"
-msgstr "建立專案"
-
-msgid "Create File"
-msgstr "建立檔案"
-
-msgid "Create Classroom"
-msgstr "建立教室"
-
-msgid "Create User"
-msgstr "建立使用者"
-
-msgid "Upload User"
-msgstr "上傳使用者"
-
-msgid ""
-"A user with that name already exists in this classroom. Please rename your "
-"folder and try again."
-msgstr "此教室中已有使用該名稱的使用者。請重新命名您的資料夾，然後再試一次。"
-
-msgid "Folder name does not match user name in config file."
-msgstr "資料夾名稱與設定檔中的使用者名稱不符。"
-
-msgid "File detected with interface mode does not match project interface mode."
-msgstr "偵測到的檔案介面模式與專案介面模式不符。"
-
-msgid ""
-"File detected as different language than project language. Please ensure "
-"all source files match the project language."
-msgstr "偵測到檔案的語言與專案語言不同。請確保所有原始碼檔案符合專案語言。"
-
-msgid "Unknown file type, defaulting to plaintext."
-msgstr "未知檔案類型，預設為純文字。"
-
-msgid "Project must contain a main file"
-msgstr "專案必須包含一個主檔案"
-
-msgid "Select a User from your computer to upload\n"
-msgstr "從您的電腦選擇使用者上傳（upload/n"
-
-msgid "User Name"
-msgstr "使用者名稱"
-
-msgid "(At least 1 project must be in the User folder)"
-msgstr "(使用者資料夾中必須至少有 1 個專案）"
-
-msgid "Project Name 1"
-msgstr "專案名稱 1"
-
-msgid "Project Name 2"
-msgstr "專案名稱 2"
-
-msgid "Select User Interface Mode:"
-msgstr "選擇使用者介面模式："
-
-msgid "Selected User Folder: "
-msgstr "選取的使用者資料夾："
-
-msgid "Selected User Interface Mode: "
-msgstr "Selected User Interface Mode（選取的使用者介面模式）："
-
-msgid "Choose a different User"
-msgstr "選擇不同的使用者"
-
-msgid "The selected user already exists in this classroom."
-msgstr "所選使用者已存在於此教室中。"
-
-msgid "Please choose a different user."
-msgstr "請選擇其他使用者。"
-
-msgid "Choose a different user"
-msgstr "選擇不同的使用者"
-
-msgid "Delete Classroom"
-msgstr "刪除教室"
-
-msgid "Rename Classroom"
-msgstr "重新命名教室"
-
-msgid "Delete User"
-msgstr "刪除使用者"
-
-msgid "Download User"
-msgstr "下載使用者"
-
-msgid "Rename User"
-msgstr "重新命名使用者"
-
-msgid "Remove User from Classroom"
-msgstr "從教室移除使用者"
-
-msgid "Move User to Classroom"
-msgstr "將使用者移至教室"
-
-msgid "Paste Project"
-msgstr "貼上專案"
-
-msgid "Delete Project"
-msgstr "刪除專案"
-
-msgid "Download Project"
-msgstr "下載專案"
-
-msgid "Rename Project"
-msgstr "重新命名專案"
-
-msgid "Move Project"
-msgstr "移動專案"
-
-msgid "Copy Project"
-msgstr "複製專案"
-
-msgid "Paste File"
-msgstr "貼上檔案"
-
-msgid "Delete File"
-msgstr "刪除檔案"
-
-msgid "Download File"
-msgstr "下載檔案"
-
-msgid "Rename File"
-msgstr "重新命名檔案"
-
-msgid "Copy File"
-msgstr "複製檔案"
-
-msgid "Users"
-msgstr "使用者"
-
-msgid "Classroom Invitation Code:"
-msgstr "教室邀請碼："
-
-msgid "Projects"
-msgstr "專案"
-
-msgid "Explorer - Classrooms"
-msgstr "探索者 - 教室"
-
-msgid "Explorer - Users"
-msgstr "探索者 - 使用者"
-
-msgid "Users without Classrooms"
-msgstr "沒有教室的使用者"
-
-msgid "Motor 0"
-msgstr "馬達 0"
-
-msgid "Motor 1"
-msgstr "馬達 1"
-
-msgid "Motor 2"
-msgstr "馬達 2"
-
-msgid "Motor 3"
-msgstr "馬達 3"
-
-msgid "Velocity"
-msgstr "速度"
-
-msgid "Power"
-msgstr "電源"
-
-msgid "Servo 0"
-msgstr "伺服器 0"
-
-msgid "Servo 1"
-msgstr "伺服器 1"
-
-msgid "Servo 2"
-msgstr "伺服器 2"
-
-msgid "Servo 3"
-msgstr "伺服器 3"
-
-msgid "analog(0)"
-msgstr "類比(0)"
-
-msgid "analog(1)"
-msgstr "類比(1)"
-
-msgid "analog(2)"
-msgstr "類比(2)"
-
-msgid "analog(3)"
-msgstr "類比(3)"
-
-msgid "analog(4)"
-msgstr "類比(4)"
-
-msgid "analog(5)"
-msgstr "類比(5)"
-
-msgid "digital(0)"
-msgstr "數位(0)"
-
-msgid "digital(1)"
-msgstr "數位(1)"
-
-msgid "digital(2)"
-msgstr "數位(2)"
-
-msgid "digital(3)"
-msgstr "數位(3)"
-
-msgid "digital(4)"
-msgstr "數位(4)"
-
-msgid "digital(5)"
-msgstr "數位(5)"
-
-msgid "digital(6)"
-msgstr "數位(6)"
-
-msgid "digital(7)"
-msgstr "數位(7)"
-
-msgid "digital(8)"
-msgstr "數位(8)"
-
-msgid "digital(9)"
-msgstr "數位(9)"
-
-msgid "accel_x()"
-msgstr "accel_x()"
-
-msgid "accel_y()"
-msgstr "accel_y()"
-
-msgid "accel_z()"
-msgstr "accel_z()"
-
-msgid "gyro_x()"
-msgstr "gyro_x()"
-
-msgid "gyro_y()"
-msgstr "gyro_y()"
-
-msgid "gyro_z()"
-msgstr "gyro_z()"
-
-msgid "magneto_x()"
-msgstr "magneto_x()"
-
-msgid "magneto_y()"
-msgstr "magneto_y()"
-
-msgid "magneto_z()"
-msgstr "magneto_z()"
-
-msgid "right_button()"
-msgstr "right_button()"
-
-msgid "Reverse"
-msgstr "反向"
-
-msgid "Forward"
-msgstr "前進"
-
-msgid "Warning! Could damage servo in this range"
-msgstr "警告！在此範圍內可能會損壞伺服器"
-
-msgid "Motor Velocity Plot"
-msgstr "馬達速度圖"
-
-msgid "Motor Position Plot"
-msgstr "馬達位置圖"
-
-msgid "Servo Position Plot"
-msgstr "伺服位置圖"
-
-msgid "View:"
-msgstr "查看："
-
-msgid "Motor Port:"
-msgstr "馬達埠："
-
-msgid "Clear Motor Position"
-msgstr "清除馬達位置"
-
-msgid "Stop All Motors"
-msgstr "停止所有馬達"
-
-msgid "Stop Current Motor"
-msgstr "停止電流 馬達"
-
-msgid "Motor Velocities"
-msgstr "馬達速度"
-
-msgid "Motor Positions"
-msgstr "馬達位置"
-
-msgid "Servo Port:"
-msgstr "伺服連接埠："
-
-msgid "Enable All Servos"
-msgstr "啟用所有伺服器"
-
-msgid "Disable All Servos"
-msgstr "停用所有伺服器"
-
-msgid "Disable Servo"
-msgstr "停用伺服功能"
-
-msgid "Enable Servo"
-msgstr "啟用伺服"
-
-msgid "Servo Positions"
-msgstr "伺服器位置"
-
-msgid "Analog Sensors"
-msgstr "類比傳感器"
-
-msgid "Digital Sensors"
-msgstr "數位感測器"
-
-msgid "Accelerometers"
-msgstr "加速度計"
-
-msgid "Gyroscopes"
-msgstr "陀螺儀"
-
-msgid "Magnetometers"
-msgstr "磁力計"
-
-msgid "Buttons"
-msgstr "按鈕"
-
-msgid "Motors, Servos, and Sensors"
-msgstr "馬達、伺服器和感測器"
-
-msgid "Motor"
-msgstr "馬達"
-
-msgid "Servo"
-msgstr "伺服器"
-
-msgid "Sensor"
-msgstr "感測器"
-
-msgid "Modules"
-msgstr "模組"
-
-msgid "Functions"
-msgstr "功能"
-
-msgid "Structures"
-msgstr "結構"
-
-msgid "Enumerations"
-msgstr "枚舉"
-
-msgid "Files"
-msgstr "檔案"
-
-msgid "Search..."
-msgstr "搜尋..."
-
-msgid "Detailed Description"
-msgstr "詳細說明"
-
-msgid "Parameters"
-msgstr "參數"
-
-msgid "Return Value"
-msgstr "回傳值"
-
-msgid "Fields"
-msgstr "字段"
-
-msgid "Common Functions"
-msgstr "常用功能"
-
-msgid "Full Documentation"
-msgstr "完整文件"
-
-msgid "Challenge Progress"
-msgstr "挑戰進度"
 
 msgctxt "func:a_button:detailed"
 msgid "Gets the A button's state (pressed or not pressed.)"
@@ -5392,7 +5919,7 @@ msgctxt "func:move_to_position:detailed"
 msgid ""
 "There are approximately 1500 ticks per motor revolution.This function is "
 "more accurate if speeds between -1000 and 1000 are used."
-msgstr "馬達每轉一圈約有 1500 個刻度。如果使用 -1000 到 1000 之間的速度，此功能會更精確。"
+msgstr "馬達每轉一圈大約有 1500 個刻度。如果使用 -1000 到 1000 之間的速度，此功能會更精確。"
 
 msgctxt "func:move_to_position:param:goal_pos:description"
 msgid "The position to move to (in ticks)"
@@ -5674,7 +6201,7 @@ msgctxt "func:wait_for_light:detailed"
 msgid ""
 "Initiate a calibration and wait for light sequence which is a normal early "
 "step in Botball programs"
-msgstr "啟動校正並等待亮燈順序，這是 Botball 程式的正常早期步驟"
+msgstr "啟動校正並等待亮燈順序，這是 Botball 程式的正常早期步驟。"
 
 msgctxt "func:wait_for_light:param:light_port_:description"
 msgid "The analog port and light sensor to use."

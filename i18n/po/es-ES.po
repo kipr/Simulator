@@ -520,7 +520,7 @@ msgid ""
 "This is the World tab, where you can see information about the world such "
 "as the positions of objects and the light level. Select the \"World\" tab "
 "to continue the tour!"
-msgstr "Esta es la pestaña Mundo, donde puedes ver información sobre el mundo, como las posiciones de los objetos y el nivel de luz. ¡Selecciona el \\\\ para continuar el recorrido!"
+msgstr "Esta es la pestaña Mundo, donde puedes ver información sobre el mundo, como la posición de los objetos y el nivel de luz. ¡Selecciona el \\\\ para continuar el recorrido!"
 
 msgid "World Tab Objects Section"
 msgstr "Pestaña Mundo Sección Objetos"
@@ -609,7 +609,7 @@ msgid "Click Object in Simulator Area"
 msgstr "Haz clic en el Objeto en el Área del Simulador"
 
 msgid "Click the object in the simulator area to open the move object tool."
-msgstr "Haz clic en el objeto del área del simulador para abrir la herramienta Mover objeto."
+msgstr "Haz clic en el objeto en el área del simulador para abrir la herramienta Mover objeto."
 
 msgid ""
 "This is the move object tool, where you can move the object by dragging the "
@@ -639,7 +639,7 @@ msgstr "Elige tu circuito"
 msgid ""
 "Use this dropdown to select different tours of the simulator interface or "
 "just click Next to take the full tour!"
-msgstr "Utiliza este desplegable para seleccionar diferentes recorridos de la interfaz del simulador o simplemente haz clic en Siguiente para hacer el recorrido completo"
+msgstr "Utiliza este desplegable para seleccionar diferentes recorridos por la interfaz del simulador o simplemente haz clic en Siguiente para hacer el recorrido completo"
 
 msgid ""
 "This is the student view of the dashboard, where you can access your "
@@ -778,7 +778,7 @@ msgid "No closed challenges yet."
 msgstr "Aún no hay retos cerrados."
 
 msgid "Failed to load challenge"
-msgstr "No se ha podido cargar el desafío"
+msgstr "No se ha podido cargar el reto"
 
 msgid "CHALLENGE"
 msgstr "DESAFÍO"
@@ -1019,7 +1019,7 @@ msgid "Loading Python...\n"
 msgstr "Cargando Python...\\\\n"
 
 msgid "Please help me understand what's wrong."
-msgstr "Por favor, ayúdame a entender qué es lo que va mal."
+msgstr "Por favor, ayúdame a entender qué va mal."
 
 msgid "Search"
 msgstr "Busca en"
@@ -1529,7 +1529,7 @@ msgstr "La anortosita es una roca ígnea intrusiva fanerítica caracterizada por
 msgid ""
 "Breccia is a rock composed of large angular broken fragments of minerals or "
 "rocks cemented together by a fine-grained matrix."
-msgstr "La brecha es una roca compuesta por grandes fragmentos angulares rotos de minerales o rocas cementados entre sí por una matriz de grano fino."
+msgstr "La brecha es una roca compuesta por grandes fragmentos angulares rotos de minerales o rocas cementados por una matriz de grano fino."
 
 msgid ""
 "Meteorite is a solid piece of debris from an object, such as a comet, "
@@ -1859,7 +1859,7 @@ msgid "Can 11 intersects chosen garage"
 msgstr "Can 11 intersecta el garaje elegido"
 
 msgid "Can 2 upright in chosen garage"
-msgstr "Lata 2 vertical en garaje elegido"
+msgstr "Can 2 vertical en garaje elegido"
 
 msgid "Can 5 Upright"
 msgstr "Lata 5 Vertical"
@@ -2625,7 +2625,7 @@ msgid ""
 msgstr "Evento especial GCER 2025. Mezcla el ketchup (rojo), la mostaza (amarillo) y la salsa picante (naranja) en los garajes ¡para crear tu propia mezcla especial!"
 
 msgid "GCER 2025: Thirst Quencher"
-msgstr "GCER 2025: Apaga la sed"
+msgstr "GCER 2025: Calma la sed"
 
 msgid ""
 "GCER 2025 special event. Don't let the summer heat get you down. Bring the "
@@ -2693,7 +2693,7 @@ msgid "Waited to Chop"
 msgstr "Esperar para picar"
 
 msgid "Robot waited to chop"
-msgstr "El robot esperó para picar"
+msgstr "El robot esperó para cortar"
 
 msgid "Can 7 Upright"
 msgstr "Lata 7 Vertical"
@@ -2798,7 +2798,7 @@ msgid "Turn 360° clockwise"
 msgstr "Gira 360° en el sentido de las agujas del reloj"
 
 msgid "Turn 360° counter clockwise"
-msgstr "Gira 360° en el sentido contrario a las agujas del reloj"
+msgstr "Gira 360° en sentido contrario a las agujas del reloj"
 
 msgid "Drive forward"
 msgstr "Conduce hacia delante"
@@ -3116,7 +3116,7 @@ msgid "Robot touched circle 8"
 msgstr "El robot tocó el círculo 8"
 
 msgid "Touch circle 2"
-msgstr "Círculo táctil 2"
+msgstr "Toca el círculo 2"
 
 msgid "Touch circle 4"
 msgstr "Toca el círculo 4"
@@ -3213,7 +3213,7 @@ msgstr "Carrera de velocidad: Tag, ¡Eres tú!"
 msgid ""
 "Complete the Tag, You're it! challenge as fast as possible! Limited time "
 "event."
-msgstr "¡Completa el desafío Etiqueta, ¡te toca! lo más rápido posible! Evento por tiempo limitado."
+msgstr "¡Completa el desafío Etiqueta, ¡ya está! lo más rápido posible! Evento por tiempo limitado."
 
 msgid "Demobot"
 msgstr "Demobot"
@@ -3959,169 +3959,6 @@ msgstr "Código de invitación"
 msgid "Code students can use to join the classroom"
 msgstr "Código que los alumnos pueden utilizar para unirse al aula"
 
-msgctxt "Part of copyright notice, after KIPR is listed"
-msgid "and External Contributors"
-msgstr "y colaboradores externos"
-
-msgctxt "URL link to github repository follows"
-msgid "Visit our"
-msgstr "Visita nuestro"
-
-msgctxt "Terminate program execution"
-msgid "Stop"
-msgstr "Para"
-
-msgctxt "Begin program execution"
-msgid "Run"
-msgstr "Ejecuta"
-
-msgctxt "Computer text command line (e.g., DOS)"
-msgid "Console"
-msgstr "Consola"
-
-msgctxt "A predefined task for the user to complete"
-msgid "Challenge"
-msgstr "Desafío"
-
-msgctxt "RotationwUnits order"
-msgid "XYZ"
-msgstr "XYZ"
-
-msgctxt "RotationwUnits order"
-msgid "YZX"
-msgstr "YZX"
-
-msgctxt "RotationwUnits order"
-msgid "ZXY"
-msgstr "ZXY"
-
-msgctxt "RotationwUnits order"
-msgid "XZY"
-msgstr "XZY"
-
-msgctxt "RotationwUnits order"
-msgid "YXZ"
-msgstr "YXZ"
-
-msgctxt "RotationwUnits order"
-msgid "ZYX"
-msgstr "ZYX"
-
-msgctxt "Red, Green, Blue"
-msgid "RGB"
-msgstr "RGB"
-
-msgctxt "Volume (box) in the 3D scene"
-msgid "Volume"
-msgstr "Volumen"
-
-msgctxt "Student grade level"
-msgid "Kindergarten"
-msgstr "Jardín de infancia"
-
-msgctxt "Student grade level"
-msgid "1st grade"
-msgstr "1er grado"
-
-msgctxt "Student grade level"
-msgid "2nd grade"
-msgstr "2º curso"
-
-msgctxt "Student grade level"
-msgid "3rd grade"
-msgstr "3er grado"
-
-msgctxt "Student grade level"
-msgid "4th grade"
-msgstr "4º curso"
-
-msgctxt "Student grade level"
-msgid "5th grade"
-msgstr "5º curso"
-
-msgctxt "Student grade level"
-msgid "6th grade"
-msgstr "6º curso"
-
-msgctxt "Student grade level"
-msgid "7th grade"
-msgstr "7º curso"
-
-msgctxt "Student grade level"
-msgid "8th grade"
-msgstr "8º curso"
-
-msgctxt "Student grade level"
-msgid "9th grade"
-msgstr "9º curso"
-
-msgctxt "Student grade level"
-msgid "10th grade"
-msgstr "10º curso"
-
-msgctxt "Student grade level"
-msgid "11th grade"
-msgstr "11º curso"
-
-msgctxt "Student grade level"
-msgid "12th grade"
-msgstr "12º curso"
-
-msgctxt "Student grade level"
-msgid "1st"
-msgstr "1º"
-
-msgctxt "Student grade level"
-msgid "2nd"
-msgstr "2ª"
-
-msgctxt "Student grade level"
-msgid "3rd"
-msgstr "3ª"
-
-msgctxt "Student grade level"
-msgid "4th"
-msgstr "4ª"
-
-msgctxt "Student grade level"
-msgid "5th"
-msgstr "5.º"
-
-msgctxt "Student grade level"
-msgid "6th"
-msgstr "6.º"
-
-msgctxt "Student grade level"
-msgid "7th"
-msgstr "7"
-
-msgctxt "Student grade level"
-msgid "8th"
-msgstr "8"
-
-msgctxt "Student grade level"
-msgid "9th"
-msgstr "noveno"
-
-msgctxt "Student grade level"
-msgid "10th"
-msgstr "10.º"
-
-msgctxt "Student grade level"
-msgid "11th"
-msgstr "undécimo"
-
-msgctxt "Student grade level"
-msgid "12th"
-msgstr "12"
-
-msgctxt "Student grade level; Kingergarten"
-msgid "K"
-msgstr "K"
-
-msgid ""
-msgstr "Content-Type: text/plain\n"
-
 msgid "The selected file is already included in the project."
 msgstr "El archivo seleccionado ya está incluido en el proyecto."
 
@@ -4185,10 +4022,10 @@ msgid "File name exceeds maximum length of 50 characters."
 msgstr "El nombre del archivo supera la longitud máxima de 50 caracteres."
 
 msgid "Select a Project from your computer to upload\n"
-msgstr "Selecciona un Proyecto de tu ordenador para subirlo\n"
+msgstr "Selecciona un Proyecto de tu ordenador para subirlo\\\\n"
 
 msgid "Be sure the heirarchy format follows:\n"
-msgstr "Asegúrate de que el formato de la jerarquía es el siguiente:\n"
+msgstr "Asegúrate de que el formato de la jerarquía es el siguiente:\\\\n"
 
 msgid "Project Name"
 msgstr "Nombre del proyecto"
@@ -4281,7 +4118,7 @@ msgid "Create User"
 msgstr "Crear usuario"
 
 msgid "Upload User"
-msgstr "Cargar usuario"
+msgstr "Subir usuario"
 
 msgid ""
 "A user with that name already exists in this classroom. Please rename your "
@@ -4306,7 +4143,7 @@ msgid "Project must contain a main file"
 msgstr "El proyecto debe contener un archivo principal"
 
 msgid "Select a User from your computer to upload\n"
-msgstr "Selecciona un Usuario de tu ordenador para subir\n"
+msgstr "Selecciona un Usuario de tu ordenador para subir\\\\n"
 
 msgid "User Name"
 msgstr "Nombre de usuario"
@@ -4530,12 +4367,6 @@ msgstr "Adelante"
 msgid "Warning! Could damage servo in this range"
 msgstr "Advertencia Podría dañar el servo en este rango"
 
-msgid "Motor Velocity Plot"
-msgstr "Gráfico de velocidad del motor"
-
-msgid "Motor Position Plot"
-msgstr "Gráfico de posición del motor"
-
 msgid "Servo Position Plot"
 msgstr "Gráfico de posición del servo"
 
@@ -4554,12 +4385,6 @@ msgstr "Parar todos los motores"
 msgid "Stop Current Motor"
 msgstr "Corriente de parada Motor"
 
-msgid "Motor Velocities"
-msgstr "Velocidades del motor"
-
-msgid "Motor Positions"
-msgstr "Posiciones del motor"
-
 msgid "Servo Port:"
 msgstr "Servopuerto:"
 
@@ -4577,12 +4402,6 @@ msgstr "Activar Servo"
 
 msgid "Servo Positions"
 msgstr "Posiciones del servo"
-
-msgid "Analog Sensors"
-msgstr "Sensores analógicos"
-
-msgid "Digital Sensors"
-msgstr "Sensores digitales"
 
 msgid "Accelerometers"
 msgstr "Acelerómetros"
@@ -4608,41 +4427,752 @@ msgstr "Servo"
 msgid "Sensor"
 msgstr "Sensor"
 
-msgid "Modules"
-msgstr "Módulos"
-
-msgid "Functions"
-msgstr "Funciones"
-
-msgid "Structures"
-msgstr "Estructuras"
-
-msgid "Enumerations"
-msgstr "Enumeraciones"
-
-msgid "Files"
-msgstr "Archivos"
-
-msgid "Search..."
-msgstr "Busca..."
-
-msgid "Detailed Description"
-msgstr "Descripción detallada"
-
-msgid "Parameters"
-msgstr "Parámetros"
-
-msgid "Return Value"
-msgstr "Valor de retorno"
-
-msgid "Fields"
-msgstr "Campos"
-
 msgid "Common Functions"
 msgstr "Funciones comunes"
 
 msgid "Full Documentation"
 msgstr "Documentación completa"
+
+msgid "Challenge Progress"
+msgstr "Desafío Progreso"
+
+msgid ""
+"Use the classroom cards along the top to create a class or open one you "
+"already teach. After you pick a class, use the Home, Assignments, People, "
+"Grades, and Leaderboard tabs for day-to-day work."
+msgstr "Utiliza las fichas de clase de la parte superior para crear una clase o abrir una que ya impartas. Después de elegir una clase, utiliza las pestañas Inicio, Tareas, Personas, Calificaciones y Tabla de clasificación para el trabajo diario."
+
+msgid "Classroom cards"
+msgstr "Fichas de aula"
+
+msgid ""
+"This scrollable row holds every class you own. The first card creates a new "
+"classroom; each card after that opens that class into the workspace below "
+"when you click it."
+msgstr "Esta fila desplazable contiene todas las clases que posees. La primera tarjeta crea una nueva clase; cada tarjeta posterior abre esa clase en el espacio de trabajo inferior cuando haces clic en ella."
+
+msgid ""
+"Click the Create New Classroom card to open the setup dialog and continue "
+"the tour."
+msgstr "Haz clic en la tarjeta Crear nueva aula para abrir el diálogo de configuración y continuar el recorrido."
+
+msgid ""
+"After you tap Create, your new class shows up as another card in this row "
+"next to Create New Classroom."
+msgstr "Después de tocar Crear, tu nueva clase aparecerá como otra tarjeta en esta fila, junto a Crear nueva aula."
+
+msgid ""
+"Click your classroom's card in this row to load it. The roster and tabs "
+"below update for that class—open People when you want to review enrollments."
+msgstr "Haz clic en la ficha de tu clase en esta fila para cargarla. La lista y las fichas de abajo se actualizan para esa clase: abre Personas cuando quieras revisar las inscripciones."
+
+msgid "Home tab"
+msgstr "Pestaña Inicio"
+
+msgid ""
+"See class information, copy the invite code for students, and quick "
+"classroom context."
+msgstr "Consulta la información de la clase, copia el código de invitación para los alumnos y el contexto rápido de la clase."
+
+msgid "Assignments tab"
+msgstr "Pestaña Asignaciones"
+
+msgid ""
+"Open **Assignments** to manage this class’s work. The list below groups "
+"posts by topic; use the row menu on each assignment to edit or delete. "
+"Press Next to spotlight that list, then you will walk through creating a "
+"new assignment."
+msgstr "Abre **Asignaciones** para gestionar el trabajo de esta clase. La lista de abajo agrupa las tareas por temas; utiliza el menú de filas de cada tarea para editarla o eliminarla. Pulsa Siguiente para resaltar esa lista y, a continuación, te guiaremos en la creación de una nueva tarea."
+
+msgid "Assignments workspace"
+msgstr "Espacio de trabajo Asignaciones"
+
+msgid ""
+"This panel is where posted assignments appear. When the class is new it may "
+"be empty—**Create Assignment** (top right) opens the editor; the tour goes "
+"through title, challenges, roster, due date, and publishing next."
+msgstr "Este panel es donde aparecen las tareas publicadas. Cuando la clase es nueva puede estar vacío-**Crear tarea** (arriba a la derecha) abre el editor; el recorrido pasa por título, retos, lista, fecha de vencimiento y publicación siguiente."
+
+msgid "Create an assignment"
+msgstr "Crear una tarea"
+
+msgid ""
+"Tap **Create Assignment** to open the editor. You will name the work, pick "
+"simulator challenges, choose who receives it, set topic and due date, then "
+"publish with Assign."
+msgstr "Toca **Crear tarea** para abrir el editor. Le darás un nombre al trabajo, elegirás los retos del simulador, escogerás quién lo recibe, establecerás el tema y la fecha de entrega, y luego lo publicarás con Asignar."
+
+msgid "Assignment details"
+msgstr "Detalles de la asignación"
+
+msgid ""
+"Enter a required title and optional description, then tick the JBC "
+"challenges students must complete. Points roll up on the right as you add "
+"scenes."
+msgstr "Introduce un título obligatorio y una descripción opcional, y luego marca los retos JBC que los alumnos deben completar. Los puntos se acumulan a la derecha a medida que añades escenas."
+
+msgid "Class, roster, and topic"
+msgstr "Clase, lista y tema"
+
+msgid ""
+"Confirm **For Class**, open **Assign to** in the next steps to pick who "
+"receives this post, and choose a **Topic** bucket. After the roster dialog "
+"you will return here to adjust per-challenge points and the due date before "
+"publishing."
+msgstr "Confirma **Para la clase**, abre **Asignar a** en los pasos siguientes para elegir quién recibe esta publicación, y elige un cubo de **Tema**. Después del diálogo de la lista, volverás aquí para ajustar los puntos por reto y la fecha de vencimiento antes de publicar."
+
+msgid "Open Assign to"
+msgstr "Abrir Asignar a"
+
+msgid ""
+"Tap **Assign to** to open the roster dialog. Use **All Students** or "
+"individual checkboxes, then **Done** to save— the tour highlights those "
+"controls next."
+msgstr "Toca **Asignar a** para abrir el diálogo de la lista. Utiliza **Todos los alumnos** o casillas de verificación individuales, y luego **Hecho** para guardar; el recorrido resalta esos controles a continuación."
+
+msgid "Choose who receives this assignment"
+msgstr "Elige quién recibe esta tarea"
+
+msgid ""
+"This dialog lists the class roster for this post. Toggle **All Students** "
+"or pick individuals—you need at least one student before you can publish. "
+"Tap **Done** to save your picks and advance the tour. **Next** moves on "
+"without applying changes you only made here."
+msgstr "Este diálogo muestra la lista de alumnos para esta publicación. Selecciona **Todos los alumnos** o elige individuos: necesitas al menos un alumno para poder publicar. Pulsa **Hecho** para guardar tus elecciones y avanzar en el recorrido. **Siguiente** avanza sin aplicar los cambios que sólo has hecho aquí."
+
+msgid "Points and due date"
+msgstr "Puntos y fecha de vencimiento"
+
+msgid ""
+"The total updates automatically from the challenges you checked on the "
+"left. Expand the table to set **points per challenge** if you need "
+"different weights, then pick a **Due date** for the class. When you are "
+"satisfied, continue to **Assign** to publish (or Next to skip publishing "
+"while finishing the tour)."
+msgstr "El total se actualiza automáticamente a partir de los retos que marcaste a la izquierda. Amplía la tabla para establecer **puntos por reto** si necesitas distintos pesos, y luego elige una **Fecha de vencimiento** para la clase. Cuando estés satisfecho, continúa en **Asignar** para publicar (o en Siguiente para omitir la publicación mientras terminas el recorrido)."
+
+msgid "Publish the assignment"
+msgstr "Publica la tarea"
+
+msgid ""
+"Tap **Assign** to save the assignment to the class. Use the X on the left "
+"to close without saving, or press Next to leave the tour on this screen "
+"without publishing."
+msgstr "Pulsa **Asignar** para guardar la tarea en la clase. Utiliza la X de la izquierda para cerrar sin guardar, o pulsa Siguiente para dejar el recorrido en esta pantalla sin publicar."
+
+msgid "Find it in the list"
+msgstr "Encuéntralo en la lista"
+
+msgid ""
+"Published work lands in the Assignments tab under its topic. The "
+"highlighted row is the one you just added—open the row menu (**⋯**) to edit "
+"or delete, or tap the row to expand details."
+msgstr "El trabajo publicado aparece en la pestaña Asignaciones bajo su tema. La fila resaltada es la que acabas de añadir; abre el menú de la fila (**⋯**) para editarla o eliminarla, o toca la fila para ampliar los detalles."
+
+msgid "People tab"
+msgstr "Pestaña Personas"
+
+msgid ""
+"Review who is enrolled, open student details, and remove a student from the "
+"class when needed."
+msgstr "Revisa quién está matriculado, abre los detalles del alumno y elimina a un alumno de la clase cuando sea necesario."
+
+msgid "Grades tab"
+msgstr "Pestaña Grados"
+
+msgid ""
+"Open the gradebook: filter assignments by due or posted dates, filter which "
+"students and challenges appear, use Export filters next to Export CSV for "
+"scoped downloads, and open See Details to adjust per-challenge scores or "
+"overrides."
+msgstr "Abre el libro de calificaciones: filtra las tareas por fechas de vencimiento o de publicación, filtra qué alumnos y retos aparecen, utiliza los filtros Exportar junto a Exportar CSV para descargas de alcance, y abre Ver detalles para ajustar las puntuaciones o anulaciones por reto."
+
+msgid "Leaderboard tab"
+msgstr "Ficha Clasificación"
+
+msgid ""
+"Switch between Default JBC Challenges and Limited Challenges to see how the "
+"class is performing on simulator scenes and timed challenges."
+msgstr "Cambia entre Desafíos JBC predeterminados y Desafíos limitados para ver el rendimiento de la clase en las escenas del simulador y en los desafíos cronometrados."
+
+msgid ""
+"This is your student classroom hub. Join a class with the button below; "
+"once you are inside a class, the guided tour walks through each top tab and "
+"the assignment details window."
+msgstr "Este es el centro de tu clase de estudiante. Únete a una clase con el botón de abajo; una vez dentro de una clase, la visita guiada recorre cada pestaña superior y la ventana de detalles de la tarea."
+
+msgid ""
+"Tap Join Class, enter the invite code from your teacher, choose a display "
+"name, and you will land in that classroom with full access to assignments "
+"and leaderboards."
+msgstr "Toca Unirse a clase, introduce el código de invitación de tu profesor, elige un nombre para mostrar y aterrizarás en esa clase con acceso completo a las tareas y a las tablas de clasificación."
+
+msgid ""
+"Type the classroom invite code, add the name your teacher should see, then "
+"press Join to finish enrolling."
+msgstr "Escribe el código de invitación al aula, añade el nombre que debe ver tu profesor y, a continuación, pulsa Unirse para finalizar la inscripción."
+
+msgid ""
+"From the Leaderboard tab you explore class challenge boards. Inside, switch "
+"between Default JBC Challenges (always-on simulator scenes) and Limited "
+"Challenges (timed or attempt-limited events)."
+msgstr "Desde la pestaña Clasificación exploras los tableros de desafíos de clase. Dentro, cambia entre Desafíos JBC por defecto (escenas de simulador siempre activas) y Desafíos limitados (eventos cronometrados o con intentos limitados)."
+
+msgid ""
+"This board lists the standard Botball challenges everyone can practice. "
+"Compare your progress with classmates, export a PDF summary, jump to your "
+"row, or review badges you have earned."
+msgstr "Este tablero enumera los desafíos estándar de Botball que todo el mundo puede practicar. Compara tus progresos con los de tus compañeros, exporta un resumen en PDF, salta a tu fila o revisa las insignias que has ganado."
+
+msgid ""
+"Download a PDF snapshot of how you are doing on the visible "
+"challenges—great for sharing progress at home or with a mentor."
+msgstr "Descarga una instantánea en PDF de tus progresos en los retos visibles, ideal para compartirlos en casa o con un mentor."
+
+msgid ""
+"Long leaderboard? Use this control to scroll straight to your entry so you "
+"can see placement and points at a glance."
+msgstr "¿Una tabla de clasificación larga? Utiliza este control para desplazarte directamente a tu entrada, de modo que puedas ver la posición y los puntos de un vistazo."
+
+msgid ""
+"Open the badge gallery to celebrate milestones you unlocked by finishing "
+"challenges successfully."
+msgstr "Abre la galería de insignias para celebrar los hitos que has desbloqueado completando retos con éxito."
+
+msgid ""
+"Select Limited Challenges to open any special contests your teacher "
+"enabled—watch the countdowns and attempt limits shown there."
+msgstr "Selecciona Retos limitados para abrir los concursos especiales que haya habilitado tu profesor: observa las cuentas atrás y los límites de intentos que se muestran allí."
+
+msgid ""
+"Each card explains the rules for that limited run. Stay inside the allowed "
+"window so your submissions count toward the class leaderboard."
+msgstr "Cada tarjeta explica las reglas de esa tirada limitada. Mantente dentro de la ventana permitida para que tus envíos cuenten para la clasificación de la clase."
+
+msgid ""
+"Use the menu icon for shortcuts such as leaving the classroom or jumping to "
+"other tools."
+msgstr "Utiliza el icono del menú para atajos como salir del aula o saltar a otras herramientas."
+
+msgid ""
+"This panel surfaces helpful links and the Leave Classroom action when you "
+"need to step out while keeping your past scores saved."
+msgstr "Este panel muestra enlaces útiles y la acción Salir de clase cuando necesites salir mientras mantienes guardadas tus puntuaciones anteriores."
+
+msgid ""
+"Choose Leave Classroom only when you are done with the class. Your "
+"completed work stays on record, but you will need a fresh invite to rejoin "
+"later."
+msgstr "Elige Abandonar el Aula sólo cuando hayas terminado la clase. Tu trabajo completado permanecerá registrado, pero necesitarás una nueva invitación para reincorporarte más tarde."
+
+msgid "Enter a classroom name."
+msgstr "Introduce el nombre del aula."
+
+msgid "A classroom with that name already exists."
+msgstr "Ya existe un aula con ese nombre."
+
+msgid "Choose a different name than the current one."
+msgstr "Elige un nombre distinto del actual."
+
+msgid "Could not rename this classroom (missing record)."
+msgstr "No se ha podido renombrar esta aula (falta el registro)."
+
+msgid "Could not save. Try again."
+msgstr "No se ha podido guardar. Inténtalo de nuevo."
+
+msgid "Something went wrong."
+msgstr "Algo salió mal."
+
+msgid "Rename classroom"
+msgstr "Cambiar el nombre del aula"
+
+msgid "Classroom name"
+msgstr "Nombre del aula"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Saving…"
+msgstr "Ahorrar.."
+
+msgid "Yes"
+msgstr "Sí"
+
+msgid "No"
+msgstr "No"
+
+msgid "Teachers"
+msgstr "Profesores"
+
+msgid "Students"
+msgstr "Estudiantes"
+
+msgid "Assigned To"
+msgstr "Asignado a"
+
+msgid "Not started"
+msgstr "No iniciado"
+
+msgid "Not completed"
+msgstr "No completado"
+
+msgid "Completed at"
+msgstr "Completado en"
+
+msgid "On time"
+msgstr "A tiempo"
+
+msgid "Late"
+msgstr "Tarde"
+
+msgid "No deadline"
+msgstr "Sin plazo"
+
+msgid "Go to Challenge"
+msgstr "Ir al Desafío"
+
+msgid "No challenges added to this assignment."
+msgstr "No se han añadido retos a esta tarea."
+
+msgid "Close"
+msgstr "Cerrar"
+
+msgid "Assignment Details"
+msgstr "Detalles de la misión"
+
+msgid "See Assigned Challenges"
+msgstr "Ver Retos Asignados"
+
+msgid "Challenges completed"
+msgstr "Desafíos superados"
+
+msgid "Edit"
+msgstr "Edita"
+
+msgid "Create Assignment"
+msgstr "Crear asignación"
+
+msgid "You have no assignments in this class yet."
+msgstr "Aún no tienes tareas en esta clase."
+
+msgid "Assignments you publish will appear in the lists below, grouped by topic."
+msgstr "Las tareas que publiques aparecerán en las listas siguientes, agrupadas por temas."
+
+msgid "Classroom Code"
+msgstr "Código del aula"
+
+msgid "Override"
+msgstr "Anular"
+
+msgid "Submission Details"
+msgstr "Detalles del envío"
+
+msgid "Default"
+msgstr "Por defecto"
+
+msgid "Filter by due or posted date"
+msgstr "Filtrar por fecha de vencimiento o de publicación"
+
+msgid "From"
+msgstr "En"
+
+msgid "To"
+msgstr "A"
+
+msgid "Clear date filter"
+msgstr "Borrar filtro de fechas"
+
+msgid "Export filters"
+msgstr "Filtros de exportación"
+
+msgid ""
+"Hold Ctrl or Cmd while clicking to select. Leave unselected to include all "
+"students."
+msgstr "Mantén pulsada la tecla Ctrl o Cmd mientras haces clic para seleccionar. Deja sin seleccionar para incluir a todos los alumnos."
+
+msgid "Challenges"
+msgstr "Desafíos"
+
+msgid ""
+"Shown for assignments in the date range. Leave unselected to include all "
+"challenges."
+msgstr "Se muestra para los retos en el intervalo de fechas. Dejar sin seleccionar para incluir todos los retos."
+
+msgid "Clear student and challenge filters"
+msgstr "Filtros claros para alumnos y retos"
+
+msgid "Export CSV"
+msgstr "Exportar CSV"
+
+msgid "No assignment columns match the current date and challenge filters."
+msgstr "Ninguna columna de asignación coincide con los filtros actuales de fecha y reto."
+
+msgid "Student Name"
+msgstr "Nombre del alumno"
+
+msgid "Home"
+msgstr "Inicio"
+
+msgid "Assignments"
+msgstr "Asignaciones"
+
+msgid "People"
+msgstr "Personas"
+
+msgid "Grades"
+msgstr "Grados"
+
+msgid "Select a classroom to view details"
+msgstr "Selecciona un aula para ver los detalles"
+
+msgid "Assign To"
+msgstr "Asignar a"
+
+msgid "All Students"
+msgstr "Todos los alumnos"
+
+msgid "No Subject"
+msgstr "Sin Asunto"
+
+msgid "Create Subject"
+msgstr "Crear tema"
+
+msgid "Untitled assignment"
+msgstr "Trabajo sin título"
+
+msgid "Edit Assignment"
+msgstr "Editar asignación"
+
+msgid "Save Changes"
+msgstr "Guardar cambios"
+
+msgid "Assign"
+msgstr "Asigna"
+
+msgid "Assignment Title*"
+msgstr "Título de la misión*"
+
+msgid "*Required"
+msgstr "*Necesario"
+
+msgid "Assignment Description"
+msgstr "Descripción de la tarea"
+
+msgid "Optional"
+msgstr "Opcional"
+
+msgid "Choose JBC Challenges to Assign"
+msgstr "Elige Desafíos JBC para asignar"
+
+msgid "For Class"
+msgstr "Para la clase"
+
+msgid "Assign to"
+msgstr "Asignar a"
+
+msgid "Topic"
+msgstr "Tema"
+
+msgid "Points"
+msgstr "Puntos"
+
+msgid "Due Date"
+msgstr "Fecha de vencimiento"
+
+msgid "Delete classroom"
+msgstr "Borrar aula"
+
+msgid "Assigned Challenges"
+msgstr "Retos asignados"
+
+msgid "Can 7 Chopped"
+msgstr "Lata 7 Picada"
+
+msgid "Can 7 chopped"
+msgstr "Lata 7 picada"
+
+msgid "Can 11 not upright"
+msgstr "Lata 11 no vertical"
+
+msgid "Can 1 Rescued"
+msgstr "Lata 1 Rescatada"
+
+msgid "Can 1 rescued"
+msgstr "Lata 1 rescatada"
+
+msgid "Can 2 Rescued"
+msgstr "Can 2 Rescatado"
+
+msgid "Can 2 rescued"
+msgstr "Lata 2 rescatada"
+
+msgid "Can 3 Rescued"
+msgstr "Can 3 Rescatado"
+
+msgid "Can 3 rescued"
+msgstr "Lata 3 rescatada"
+
+msgid "Touch the ream"
+msgstr "Toca la resma"
+
+msgid "Can A not upright in a circle"
+msgstr "Can A no erguido en círculo"
+
+msgid "Can B not upright in a circle"
+msgstr "Can B no erguido en círculo"
+
+msgid "Can C not upright in a circle"
+msgstr "Can C no erguido en círculo"
+
+msgid "Can D not upright in a circle"
+msgstr "Can D no erguido en círculo"
+
+msgid "Can E not upright in a circle"
+msgstr "Can E no erguido en círculo"
+
+msgid "Proximity of can5"
+msgstr "Proximidad del can5"
+
+msgid "Proximity of can7"
+msgstr "Proximidad del can7"
+
+msgid "Not Set"
+msgstr "No fijado"
+
+msgid "Posted"
+msgstr "Publicado en"
+
+msgid "No Due Date"
+msgstr "Sin fecha de vencimiento"
+
+msgid "See Assigned Students"
+msgstr "Ver alumnos asignados"
+
+msgid "Due"
+msgstr "Debido"
+
+msgid "New Assignment Posted"
+msgstr "Nueva asignación publicada"
+
+msgid "Created at"
+msgstr "Creado en"
+
+msgid "No assignments yet"
+msgstr "Aún no hay asignaciones"
+
+msgid "Upcoming Assignment"
+msgstr "Próxima misión"
+
+msgid "No upcoming assignments"
+msgstr "No hay tareas pendientes"
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Final Score"
+msgstr "Puntuación final"
+
+msgid "Not Completed"
+msgstr "No completado"
+
+msgid "See Details"
+msgstr "Ver detalles"
+
+msgid "See Classroom Cards"
+msgstr "Ver fichas de aula"
+
+msgid ""
+"Published work lands in the Assignments tab under its topic. The "
+"highlighted row is the one you just added. Press Next, then you will open "
+"that row to see details and reach your challenges."
+msgstr "El trabajo publicado aparece en la pestaña Tareas bajo su tema. La fila resaltada es la que acabas de añadir. Pulsa Siguiente, entonces abrirás esa fila para ver los detalles y alcanzar tus retos."
+
+msgid "Select your new assignment"
+msgstr "Selecciona tu nueva misión"
+
+msgid ""
+"Click the highlighted assignment row once. That selects it and opens the "
+"details panel below the row so you can open **See Assigned Challenges** "
+"next."
+msgstr "Haz clic una vez en la fila de la tarea resaltada. Eso la selecciona y abre el panel de detalles debajo de la fila para que puedas abrir **Ver retos asignados** a continuación."
+
+msgid "See assigned challenges"
+msgstr "Ver retos asignados"
+
+msgid ""
+"In the details panel, tap **See Assigned Challenges** to open the list of "
+"simulator scenes for this post. You will use **Go to Challenge** there to "
+"jump into a scene."
+msgstr "En el panel de detalles, pulsa **Ver desafíos asignados** para abrir la lista de escenas del simulador de este puesto. Allí utilizarás **Ir a Desafío** para saltar a una escena."
+
+msgid "Open a challenge from here"
+msgstr "Abre un reto desde aquí"
+
+msgid ""
+"Each row lists one assigned scene. Use **Go to Challenge** to open that "
+"simulator challenge in a new flow—handy for previewing what students will "
+"see. Close the dialog when you are done, then continue the tour."
+msgstr "Cada fila enumera una escena asignada. Utiliza **Ir al Desafío** para abrir ese desafío del simulador en un nuevo flujo, lo que resulta útil para previsualizar lo que verán los alumnos. Cierra el cuadro de diálogo cuando hayas terminado y continúa el recorrido."
+
+msgctxt "Part of copyright notice, after KIPR is listed"
+msgid "and External Contributors"
+msgstr "y colaboradores externos"
+
+msgctxt "URL link to github repository follows"
+msgid "Visit our"
+msgstr "Visita nuestro"
+
+msgctxt "Terminate program execution"
+msgid "Stop"
+msgstr "Para"
+
+msgctxt "Begin program execution"
+msgid "Run"
+msgstr "Ejecuta"
+
+msgctxt "Computer text command line (e.g., DOS)"
+msgid "Console"
+msgstr "Consola"
+
+msgctxt "A predefined task for the user to complete"
+msgid "Challenge"
+msgstr "Desafío"
+
+msgctxt "RotationwUnits order"
+msgid "XYZ"
+msgstr "XYZ"
+
+msgctxt "RotationwUnits order"
+msgid "YZX"
+msgstr "YZX"
+
+msgctxt "RotationwUnits order"
+msgid "ZXY"
+msgstr "ZXY"
+
+msgctxt "RotationwUnits order"
+msgid "XZY"
+msgstr "XZY"
+
+msgctxt "RotationwUnits order"
+msgid "YXZ"
+msgstr "YXZ"
+
+msgctxt "RotationwUnits order"
+msgid "ZYX"
+msgstr "ZYX"
+
+msgctxt "Red, Green, Blue"
+msgid "RGB"
+msgstr "RGB"
+
+msgctxt "Volume (box) in the 3D scene"
+msgid "Volume"
+msgstr "Volumen"
+
+msgctxt "Student grade level"
+msgid "Kindergarten"
+msgstr "Jardín de infancia"
+
+msgctxt "Student grade level"
+msgid "1st grade"
+msgstr "1er grado"
+
+msgctxt "Student grade level"
+msgid "2nd grade"
+msgstr "2º curso"
+
+msgctxt "Student grade level"
+msgid "3rd grade"
+msgstr "3er grado"
+
+msgctxt "Student grade level"
+msgid "4th grade"
+msgstr "4º curso"
+
+msgctxt "Student grade level"
+msgid "5th grade"
+msgstr "5º curso"
+
+msgctxt "Student grade level"
+msgid "6th grade"
+msgstr "6º curso"
+
+msgctxt "Student grade level"
+msgid "7th grade"
+msgstr "7º curso"
+
+msgctxt "Student grade level"
+msgid "8th grade"
+msgstr "8º curso"
+
+msgctxt "Student grade level"
+msgid "9th grade"
+msgstr "9º curso"
+
+msgctxt "Student grade level"
+msgid "10th grade"
+msgstr "10º curso"
+
+msgctxt "Student grade level"
+msgid "11th grade"
+msgstr "11º curso"
+
+msgctxt "Student grade level"
+msgid "12th grade"
+msgstr "12º curso"
+
+msgctxt "Student grade level"
+msgid "1st"
+msgstr "1º"
+
+msgctxt "Student grade level"
+msgid "2nd"
+msgstr "2ª"
+
+msgctxt "Student grade level"
+msgid "3rd"
+msgstr "3ª"
+
+msgctxt "Student grade level"
+msgid "4th"
+msgstr "4ª"
+
+msgctxt "Student grade level"
+msgid "5th"
+msgstr "5.º"
+
+msgctxt "Student grade level"
+msgid "6th"
+msgstr "6.º"
+
+msgctxt "Student grade level"
+msgid "7th"
+msgstr "7"
+
+msgctxt "Student grade level"
+msgid "8th"
+msgstr "8"
+
+msgctxt "Student grade level"
+msgid "9th"
+msgstr "noveno"
+
+msgctxt "Student grade level"
+msgid "10th"
+msgstr "10.º"
+
+msgctxt "Student grade level"
+msgid "11th"
+msgstr "undécimo"
+
+msgctxt "Student grade level"
+msgid "12th"
+msgstr "12.º"
+
+msgctxt "Student grade level; Kingergarten"
+msgid "K"
+msgstr "K"
 
 msgctxt "func:a_button:detailed"
 msgid "Gets the A button's state (pressed or not pressed.)"
@@ -5158,7 +5688,7 @@ msgstr "Un valor de 0 (inactivo) o 1 (activo)."
 
 msgctxt "func:set_b_button_text:detailed"
 msgid "Updates the B button's text. Deprecatednot planned for the Wallaby"
-msgstr "Actualiza el texto del botón B. ObsoletoNo está previsto para el Wallaby"
+msgstr "Actualiza el texto del botón B. ObsoletoNo previsto para el Wallaby"
 
 msgctxt "func:set_b_button_text:param:text:description"
 msgid "The text to display. Limit of 16 characters."
@@ -5188,7 +5718,7 @@ msgctxt "func:set_digital_pullup:detailed"
 msgid ""
 "Sets the current digital pullup state Deprecatednot applicable on the "
 "Wallaby"
-msgstr "Establece el estado del pullup digital actual Deprecatedno aplicable en el Wallaby"
+msgstr "Establece el estado actual del pullup digital Deprecatedno aplicable en el Wallaby"
 
 msgctxt "func:set_digital_pullup:param:port:description"
 msgid "The port to modify"
@@ -5540,11 +6070,8 @@ msgctxt "struct:thread:detailed"
 msgid ""
 "a thread runs a function \"in the background\" (while another function is "
 "executing)."
-msgstr "un hilo ejecuta una función \ejecutando)."
+msgstr "un hilo ejecuta una función \\\\ejecutando)."
 
 msgctxt "struct:thread:member:data:brief"
 msgid "a C++ Thread object cast to a void*. Not intended to be accessed."
 msgstr "un objeto Hilo C++ convertido a void*. No está pensado para ser accedido."
-
-msgid "Challenge Progress"
-msgstr "Desafío Progreso"

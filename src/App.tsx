@@ -104,7 +104,6 @@ class App extends React.Component<Props, State> {
      */
 
     const storedSettings = localStorage.getItem('bbSettings');
-    console.log("App componentDidMount called with bbSettings:", localStorage.getItem('bbSettings'));
     if (storedSettings) {
 
       const parsedSettings: Partial<Settings> = JSON.parse(storedSettings) as Partial<Settings>;
@@ -113,7 +112,6 @@ class App extends React.Component<Props, State> {
     const lang: LocalizedString.Language = LocalizedString.validate(localStorage.getItem('bblocale'));
     if (lang) {
       this.props.setLocale(lang);
-      console.log(`Read locale from localstorage: ${lang}`);
     } else {
       switch (navigator.language) {
         case 'ja':
@@ -154,7 +152,6 @@ class App extends React.Component<Props, State> {
 
     const interfaceMode = localStorage.getItem('interfaceMode');
     if (interfaceMode) {
-      console.log("Read interfaceMode from localstorage:", interfaceMode);
       this.props.setInterfaceMode(interfaceMode === 'Advanced' ? InterfaceMode.ADVANCED : InterfaceMode.SIMPLE);
     }
 
@@ -185,17 +182,6 @@ class App extends React.Component<Props, State> {
             console.error('Failed to read user consent from DB');
           });
 
-        // db.get<Tours>(Selector.tours(user.uid))
-        //   .then(tours => {
-        //     console.log('Tours info:', tours);
-        //   })
-        //   .catch(error => {
-        //     if (DbError.is(error) && error.code === DbError.CODE_NOT_FOUND) {
-        //       console.log('Tours info does not exist');
-        //     } else {
-        //       console.error('Failed to read tours info from DB', error);
-        //     }
-        //   });
       } else {
         this.props.login();
       }
@@ -245,6 +231,7 @@ class App extends React.Component<Props, State> {
           <Route path="/classrooms/:teacherId/teacherView" element={<ClassroomTeacherView theme={DARK} />} />
           <Route path="/classrooms/:studentId/studentView/" element={<ClassroomStudentView theme={DARK} />} />
           <Route path="/classrooms/:studentId/studentView/:classroomId" element={<ClassroomStudentView theme={DARK} />} />
+          <Route path="/classrooms/:studentId/curriculumPage" element={<CurriculumPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <DocumentationWindow theme={DARK} documentationType={'default'} />

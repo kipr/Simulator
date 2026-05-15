@@ -4252,6 +4252,587 @@ msgstr ""
 msgid "Code students can use to join the classroom"
 msgstr ""
 
+msgid ""
+"Use the classroom cards along the top to create a class or open one you "
+"already teach. After you pick a class, use the Home, Assignments, People, "
+"Grades, and Leaderboard tabs for day-to-day work."
+msgstr ""
+
+msgid "Classroom cards"
+msgstr ""
+
+msgid ""
+"This scrollable row holds every class you own. The first card creates a new "
+"classroom; each card after that opens that class into the workspace below "
+"when you click it."
+msgstr ""
+
+msgid ""
+"Click the Create New Classroom card to open the setup dialog and continue "
+"the tour."
+msgstr ""
+
+msgid ""
+"After you tap Create, your new class shows up as another card in this row "
+"next to Create New Classroom."
+msgstr ""
+
+msgid ""
+"Click your classroom's card in this row to load it. The roster and tabs "
+"below update for that class—open People when you want to review enrollments."
+msgstr ""
+
+msgid "Home tab"
+msgstr ""
+
+msgid ""
+"See class information, copy the invite code for students, and quick "
+"classroom context."
+msgstr ""
+
+msgid "Assignments tab"
+msgstr ""
+
+msgid ""
+"Open **Assignments** to manage this class’s work. The list below groups "
+"posts by topic; use the row menu on each assignment to edit or delete. "
+"Press Next to spotlight that list, then you will walk through creating a "
+"new assignment."
+msgstr ""
+
+msgid "Assignments workspace"
+msgstr ""
+
+msgid ""
+"This panel is where posted assignments appear. When the class is new it may "
+"be empty—**Create Assignment** (top right) opens the editor; the tour goes "
+"through title, challenges, roster, due date, and publishing next."
+msgstr ""
+
+msgid "Create an assignment"
+msgstr ""
+
+msgid ""
+"Tap **Create Assignment** to open the editor. You will name the work, pick "
+"simulator challenges, choose who receives it, set topic and due date, then "
+"publish with Assign."
+msgstr ""
+
+msgid "Assignment details"
+msgstr ""
+
+msgid ""
+"Enter a required title and optional description, then tick the JBC "
+"challenges students must complete. Points roll up on the right as you add "
+"scenes."
+msgstr ""
+
+msgid "Class, roster, and topic"
+msgstr ""
+
+msgid ""
+"Confirm **For Class**, open **Assign to** in the next steps to pick who "
+"receives this post, and choose a **Topic** bucket. After the roster dialog "
+"you will return here to adjust per-challenge points and the due date before "
+"publishing."
+msgstr ""
+
+msgid "Open Assign to"
+msgstr ""
+
+msgid ""
+"Tap **Assign to** to open the roster dialog. Use **All Students** or "
+"individual checkboxes, then **Done** to save— the tour highlights those "
+"controls next."
+msgstr ""
+
+msgid "Choose who receives this assignment"
+msgstr ""
+
+msgid ""
+"This dialog lists the class roster for this post. Toggle **All Students** "
+"or pick individuals—you need at least one student before you can publish. "
+"Tap **Done** to save your picks and advance the tour. **Next** moves on "
+"without applying changes you only made here."
+msgstr ""
+
+msgid "Points and due date"
+msgstr ""
+
+msgid ""
+"The total updates automatically from the challenges you checked on the "
+"left. Expand the table to set **points per challenge** if you need "
+"different weights, then pick a **Due date** for the class. When you are "
+"satisfied, continue to **Assign** to publish (or Next to skip publishing "
+"while finishing the tour)."
+msgstr ""
+
+msgid "Publish the assignment"
+msgstr ""
+
+msgid ""
+"Tap **Assign** to save the assignment to the class. Use the X on the left "
+"to close without saving, or press Next to leave the tour on this screen "
+"without publishing."
+msgstr ""
+
+msgid "Find it in the list"
+msgstr ""
+
+msgid ""
+"Published work lands in the Assignments tab under its topic. The "
+"highlighted row is the one you just added—open the row menu (**⋯**) to edit "
+"or delete, or tap the row to expand details."
+msgstr ""
+
+msgid "People tab"
+msgstr ""
+
+msgid ""
+"Review who is enrolled, open student details, and remove a student from the "
+"class when needed."
+msgstr ""
+
+msgid "Grades tab"
+msgstr ""
+
+msgid ""
+"Open the gradebook: filter assignments by due or posted dates, filter which "
+"students and challenges appear, use Export filters next to Export CSV for "
+"scoped downloads, and open See Details to adjust per-challenge scores or "
+"overrides."
+msgstr ""
+
+msgid "Leaderboard tab"
+msgstr ""
+
+msgid ""
+"Switch between Default JBC Challenges and Limited Challenges to see how the "
+"class is performing on simulator scenes and timed challenges."
+msgstr ""
+
+msgid ""
+"This is your student classroom hub. Join a class with the button below; "
+"once you are inside a class, the guided tour walks through each top tab and "
+"the assignment details window."
+msgstr ""
+
+msgid ""
+"Tap Join Class, enter the invite code from your teacher, choose a display "
+"name, and you will land in that classroom with full access to assignments "
+"and leaderboards."
+msgstr ""
+
+msgid ""
+"Type the classroom invite code, add the name your teacher should see, then "
+"press Join to finish enrolling."
+msgstr ""
+
+msgid ""
+"From the Leaderboard tab you explore class challenge boards. Inside, switch "
+"between Default JBC Challenges (always-on simulator scenes) and Limited "
+"Challenges (timed or attempt-limited events)."
+msgstr ""
+
+msgid ""
+"This board lists the standard Botball challenges everyone can practice. "
+"Compare your progress with classmates, export a PDF summary, jump to your "
+"row, or review badges you have earned."
+msgstr ""
+
+msgid ""
+"Download a PDF snapshot of how you are doing on the visible "
+"challenges—great for sharing progress at home or with a mentor."
+msgstr ""
+
+msgid ""
+"Long leaderboard? Use this control to scroll straight to your entry so you "
+"can see placement and points at a glance."
+msgstr ""
+
+msgid ""
+"Open the badge gallery to celebrate milestones you unlocked by finishing "
+"challenges successfully."
+msgstr ""
+
+msgid ""
+"Select Limited Challenges to open any special contests your teacher "
+"enabled—watch the countdowns and attempt limits shown there."
+msgstr ""
+
+msgid ""
+"Each card explains the rules for that limited run. Stay inside the allowed "
+"window so your submissions count toward the class leaderboard."
+msgstr ""
+
+msgid ""
+"Use the menu icon for shortcuts such as leaving the classroom or jumping to "
+"other tools."
+msgstr ""
+
+msgid ""
+"This panel surfaces helpful links and the Leave Classroom action when you "
+"need to step out while keeping your past scores saved."
+msgstr ""
+
+msgid ""
+"Choose Leave Classroom only when you are done with the class. Your "
+"completed work stays on record, but you will need a fresh invite to rejoin "
+"later."
+msgstr ""
+
+msgid "Enter a classroom name."
+msgstr ""
+
+msgid "A classroom with that name already exists."
+msgstr ""
+
+msgid "Choose a different name than the current one."
+msgstr ""
+
+msgid "Could not rename this classroom (missing record)."
+msgstr ""
+
+msgid "Could not save. Try again."
+msgstr ""
+
+msgid "Something went wrong."
+msgstr ""
+
+msgid "Rename classroom"
+msgstr ""
+
+msgid "Classroom name"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Saving…"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Remove User from Classroom"
+msgstr ""
+
+msgid "Teachers"
+msgstr ""
+
+msgid "Students"
+msgstr ""
+
+msgid "Assigned To"
+msgstr ""
+
+msgid "Not started"
+msgstr ""
+
+msgid "Not completed"
+msgstr ""
+
+msgid "Completed at"
+msgstr ""
+
+msgid "On time"
+msgstr ""
+
+msgid "Late"
+msgstr ""
+
+msgid "No deadline"
+msgstr ""
+
+msgid "Go to Challenge"
+msgstr ""
+
+msgid "No challenges added to this assignment."
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Assignment Details"
+msgstr ""
+
+msgid "See Assigned Challenges"
+msgstr ""
+
+msgid "Challenges completed"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Create Assignment"
+msgstr ""
+
+msgid "You have no assignments in this class yet."
+msgstr ""
+
+msgid "Assignments you publish will appear in the lists below, grouped by topic."
+msgstr ""
+
+msgid "Classroom Code"
+msgstr ""
+
+msgid "Override"
+msgstr ""
+
+msgid "Submission Details"
+msgstr ""
+
+msgid "Default"
+msgstr ""
+
+msgid "Filter by due or posted date"
+msgstr ""
+
+msgid "From"
+msgstr ""
+
+msgid "To"
+msgstr ""
+
+msgid "Clear date filter"
+msgstr ""
+
+msgid "Export filters"
+msgstr ""
+
+msgid ""
+"Hold Ctrl or Cmd while clicking to select. Leave unselected to include all "
+"students."
+msgstr ""
+
+msgid "Challenges"
+msgstr ""
+
+msgid ""
+"Shown for assignments in the date range. Leave unselected to include all "
+"challenges."
+msgstr ""
+
+msgid "Clear student and challenge filters"
+msgstr ""
+
+msgid "Export CSV"
+msgstr ""
+
+msgid "No assignment columns match the current date and challenge filters."
+msgstr ""
+
+msgid "Student Name"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Assignments"
+msgstr ""
+
+msgid "People"
+msgstr ""
+
+msgid "Grades"
+msgstr ""
+
+msgid "Select a classroom to view details"
+msgstr ""
+
+msgid "Assign To"
+msgstr ""
+
+msgid "All Students"
+msgstr ""
+
+msgid "No Subject"
+msgstr ""
+
+msgid "Create Subject"
+msgstr ""
+
+msgid "Untitled assignment"
+msgstr ""
+
+msgid "Edit Assignment"
+msgstr ""
+
+msgid "Save Changes"
+msgstr ""
+
+msgid "Assign"
+msgstr ""
+
+msgid "Assignment Title*"
+msgstr ""
+
+msgid "*Required"
+msgstr ""
+
+msgid "Assignment Description"
+msgstr ""
+
+msgid "Optional"
+msgstr ""
+
+msgid "Choose JBC Challenges to Assign"
+msgstr ""
+
+msgid "For Class"
+msgstr ""
+
+msgid "Assign to"
+msgstr ""
+
+msgid "Topic"
+msgstr ""
+
+msgid "Points"
+msgstr ""
+
+msgid "Due Date"
+msgstr ""
+
+msgid "Delete classroom"
+msgstr ""
+
+msgid "Assigned Challenges"
+msgstr ""
+
+msgid "Can 7 Chopped"
+msgstr ""
+
+msgid "Can 7 chopped"
+msgstr ""
+
+msgid "Can 11 not upright"
+msgstr ""
+
+msgid "Can 1 Rescued"
+msgstr ""
+
+msgid "Can 1 rescued"
+msgstr ""
+
+msgid "Can 2 Rescued"
+msgstr ""
+
+msgid "Can 2 rescued"
+msgstr ""
+
+msgid "Can 3 Rescued"
+msgstr ""
+
+msgid "Can 3 rescued"
+msgstr ""
+
+msgid "Touch the ream"
+msgstr ""
+
+msgid "Can A not upright in a circle"
+msgstr ""
+
+msgid "Can B not upright in a circle"
+msgstr ""
+
+msgid "Can C not upright in a circle"
+msgstr ""
+
+msgid "Can D not upright in a circle"
+msgstr ""
+
+msgid "Can E not upright in a circle"
+msgstr ""
+
+msgid "Proximity of can5"
+msgstr ""
+
+msgid "Proximity of can7"
+msgstr ""
+
+msgid "Not Set"
+msgstr ""
+
+msgid "Posted"
+msgstr ""
+
+msgid "No Due Date"
+msgstr ""
+
+msgid "See Assigned Students"
+msgstr ""
+
+msgid "Due"
+msgstr ""
+
+msgid "New Assignment Posted"
+msgstr ""
+
+msgid "Created at"
+msgstr ""
+
+msgid "No assignments yet"
+msgstr ""
+
+msgid "Upcoming Assignment"
+msgstr ""
+
+msgid "No upcoming assignments"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Final Score"
+msgstr ""
+
+msgid "Not Completed"
+msgstr ""
+
+msgid "See Details"
+msgstr ""
+
+msgid "See Classroom Cards"
+msgstr ""
+
+msgid ""
+"Published work lands in the Assignments tab under its topic. The "
+"highlighted row is the one you just added. Press Next, then you will open "
+"that row to see details and reach your challenges."
+msgstr ""
+
+msgid "Select your new assignment"
+msgstr ""
+
+msgid ""
+"Click the highlighted assignment row once. That selects it and opens the "
+"details panel below the row so you can open **See Assigned Challenges** "
+"next."
+msgstr ""
+
+msgid "See assigned challenges"
+msgstr ""
+
+msgid ""
+"In the details panel, tap **See Assigned Challenges** to open the list of "
+"simulator scenes for this post. You will use **Go to Challenge** there to "
+"jump into a scene."
+msgstr ""
+
+msgid "Open a challenge from here"
+msgstr ""
+
+msgid ""
+"Each row lists one assigned scene. Use **Go to Challenge** to open that "
+"simulator challenge in a new flow—handy for previewing what students will "
+"see. Close the dialog when you are done, then continue the tour."
+msgstr ""
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr ""

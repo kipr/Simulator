@@ -129,6 +129,13 @@ class Challenge extends React.PureComponent<Props, State> {
                   locale={locale}
                   type="success"
                 />
+                {latestChallengeCompletion?.success?.exprStates?.completion &&
+                  latestChallengeCompletion.completedAt && (
+                  <div style={{ fontSize: '0.85em', padding: '0.35em 0 0 0.25em', opacity: 0.9 }}>
+                    {LocalizedString.lookup(tr('Completed at'), locale)}:{' '}
+                    {new Date(latestChallengeCompletion.completedAt).toLocaleString(locale)}
+                  </div>
+                )}
               </Section>
             )}
             {latestChallenge.failureGoals && latestChallenge.failureGoals.length > 0 && (

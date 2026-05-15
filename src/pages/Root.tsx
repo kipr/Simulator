@@ -1491,6 +1491,8 @@ class Root extends React.Component<Props, State> {
             theme={theme}
             onClose={this.onModalClose_}
             onAccept={this.onSettingsSceneAccept_}
+
+
           />
         )}
         {modal.type === Modal.Type.ResetCode && (

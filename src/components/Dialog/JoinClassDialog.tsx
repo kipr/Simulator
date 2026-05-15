@@ -13,7 +13,7 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesome } from '../FontAwesome';
 import { InterfaceMode } from 'ivygate/dist/src/types/interface';
 import { default as IvygateClassroomType } from 'ivygate/dist/src/types/classroomTypes';
-import { Classroom } from 'state/State/Classroom';
+import { AsyncClassroom, Classroom } from '../../state/State/Classroom';
 import TourTarget from '../Tours/TourTarget';
 import { TourRegistry } from '../../tours/TourRegistry';
 
@@ -23,7 +23,7 @@ export interface JoinClassDialogPublicProps extends ThemeProps, StyleProps {
   tourRegistry?: TourRegistry;
   locale: LocalizedString.Language;
   onClose: () => void;
-  onJoinClassDialogClose: (foundClassroom: Classroom, classroomInviteCode: string, displayName: string) => void;
+  onJoinClassDialogClose: (foundClassroom: AsyncClassroom, classroomInviteCode: string, displayName: string) => void;
   onContinueTour?: () => void;
 }
 
@@ -95,7 +95,6 @@ export class JoinClassDialog extends React.PureComponent<Props, State> {
 
     try {
       const returnedClassroom = await findClassroomByInviteCode(classroomInviteCode);
-      console.log("Returned classroom from invite code:", returnedClassroom);
 
       returnedClassroom ? this.props.onJoinClassDialogClose(returnedClassroom, classroomInviteCode, values.displayName) : this.setState({ errorMessage: 'Invalid invite code. Please check and try again.' });
       if (this.props.onContinueTour) {

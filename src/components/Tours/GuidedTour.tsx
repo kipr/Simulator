@@ -29,6 +29,14 @@ export interface GuidedTourPublicProps extends ThemeProps, StyleProps {
   onBackClick?: (stepIndex: number) => void;
   onNextClick?: (stepIndex: number) => void;
 
+  /**
+   * When Back is pressed, return a step index to use instead of `currentStepIndex - 1`.
+   * Return `undefined` for the default. Only used in the non–sub-tour flow.
+   */
+  resolveBackStepIndex?: (currentStepIndex: number, defaultPrevIndex: number) => number | undefined;
+
+  /** Fired when the visible step index changes while the tour is open (including when it first opens). */
+  onStepIndexChange?: (stepIndex: number) => void;
 
   initialStepIndex?: number;
   lockScroll?: boolean;
@@ -309,7 +317,10 @@ class GuidedTour extends React.PureComponent<Props, State> {
     if (!prevProps.isOpen && this.props.isOpen) {
       this.setState(
         { stepIndex: this.props.initialStepIndex ?? 0, rect: null },
-        () => this.openTour()
+        () => {
+          this.openTour();
+          this.props.onStepIndexChange?.(this.props.initialStepIndex ?? 0);
+        }
       );
       return;
     }
@@ -334,6 +345,7 @@ class GuidedTour extends React.PureComponent<Props, State> {
       const nextStep = this.props.steps[this.state.stepIndex];
       if (nextStep?.onEnter) nextStep.onEnter();
 
+      this.props.onStepIndexChange?.(this.state.stepIndex);
       this.measure(true);
     }
 
@@ -444,7 +456,7 @@ class GuidedTour extends React.PureComponent<Props, State> {
         }
 
         if (Date.now() - start > timeout) {
-          void this.waitForTarget(targetKey, timeout).then(resolve); // try again after timeout
+          resolve(null);
           return;
         }
 
@@ -467,7 +479,7 @@ class GuidedTour extends React.PureComponent<Props, State> {
     const step = this.currentStep();
     if (!this.props.isOpen || !step?.advanceOnTargetClick) return;
 
-    const el = this.props.registry.get(step.targetKey);
+    const el = this.props.registry.get(step.advanceClickTargetKey ?? step.targetKey);
     if (!el) return;
 
     const handler = (e: Event) => {
@@ -778,8 +790,22 @@ class GuidedTour extends React.PureComponent<Props, State> {
         return;
       }
 
-      this.props.onBackClick?.(this.state.stepIndex - 1);
-      this.setState((s) => ({ stepIndex: s.stepIndex - 1 }));
+      const current = this.state.stepIndex;
+      const defaultPrev = current - 1;
+      const resolved = this.props.resolveBackStepIndex?.(current, defaultPrev);
+      const max = this.props.steps.length - 1;
+      const nextIndex =
+        typeof resolved === 'number' &&
+          Number.isFinite(resolved) &&
+          Number.isInteger(resolved) &&
+          resolved >= 0 &&
+          resolved <= max &&
+          resolved < current
+          ? resolved
+          : defaultPrev;
+
+      this.props.onBackClick?.(nextIndex);
+      this.setState({ stepIndex: nextIndex });
     }
   };
 
@@ -817,7 +843,6 @@ class GuidedTour extends React.PureComponent<Props, State> {
   };
   private onSelect_ = (index: number, option: ComboBox.Option) => {
     const { props } = this;
-    console.log("Selected tour section:", option.data);
     this.setState({
       selectedTourSection: option.data as string,
     });
@@ -831,7 +856,6 @@ class GuidedTour extends React.PureComponent<Props, State> {
     const step = this.currentStep();
     if (!step) return null;
 
-    console.log("Guided tour step: ", this.props.steps[this.state.stepIndex]);
     const rect = this.state.rect;
     const dimopacity = this.props.dimopacity ?? 0.65;
     const allowTargetInteraction = step.allowTargetInteraction !== false;

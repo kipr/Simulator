@@ -6,7 +6,7 @@ import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
 import { State as ReduxState } from '../state';
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
-import { AsyncClassroom, Classroom } from '../state/State/Classroom';
+import { AsyncClassroom, Classroom, ClassroomAssignment } from '../state/State/Classroom';
 import Dict from '../util/objectOps/Dict';
 import { addStudentToClassroomAsyncRaw, ClassroomsAction, removeStudentFromClassroom, studentInClassroom } from 'state/reducer/classrooms';
 import { auth } from '../firebase/firebase';
@@ -19,12 +19,14 @@ import MainMenu from '../components/MainMenu';
 import { FontAwesome } from '../components/FontAwesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import ClassroomExtraMenu from '../components/ClassroomExtraMenu';
-import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
+import TourDoc, { getTourSteps, getStudentViewInClassroomTourStepsForStudent, TourStep } from '../tours/Tours';
 import TourTarget from '../components/Tours/TourTarget';
 import { TourRegistry } from '../tours/TourRegistry';
 import GuidedTour from '../components/Tours/GuidedTour';
 import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/tours';
 import tr from '@i18n';
+import StudentTabs from '../components/Classrooms/StudentTabs';
+import Async from 'state/State/Async';
 
 namespace SubMenu {
   export enum Type {
@@ -83,8 +85,8 @@ interface LeaderboardUser {
 
 export interface ClassroomStudentViewPublicProps extends StyleProps, ThemeProps {
   onStudentAdded: (classroomId: string, studentId: string, displayName: string) => void;
-  onJoinClassroom: (classroom: Classroom) => void;
-  onRemoveStudentFromClassroom: (studentId: string, currentClassroom: Classroom) => Promise<void>;
+  onJoinClassroom: (classroom: AsyncClassroom) => void;
+  onRemoveStudentFromClassroom: (studentId: string, currentClassroom: AsyncClassroom) => Promise<void>;
 }
 
 interface ClassroomStudentViewPrivateProps {
@@ -96,7 +98,7 @@ interface ClassroomStudentViewPrivateProps {
 }
 
 interface ClassroomStudentViewState {
-  currentClassroom: Classroom;
+  currentClassroom: AsyncClassroom;
   selectedStudentId: string;
   leaderboardClassroom: AsyncClassroom | null;
   users: Record<string, LeaderboardUser>;
@@ -113,6 +115,11 @@ interface ClassroomStudentViewState {
   currentTab?: "Default JBC Challenges" | "Limited Challenges";
   studentViewTourSteps: TourStep[];
   tourId?: string;
+  tourAutoOpenAssignmentDetails?: boolean;
+  /** When set, StudentTabs switches to this tab index (0–3) so tour targets mount. */
+  tourStudentTabSync?: number;
+  /** Expand all assignment topic sections so the first row is visible for the tour. */
+  tourExpandStudentAssignmentTopics?: boolean;
 }
 
 interface ClickProps {
@@ -164,8 +171,7 @@ const ClassroomHeaderContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
   gap: '3em',
-  height: 'auto',
-  width: '90vw'
+  height: '88vh',
 }));
 
 const MyClassroomContainer = styled('div', (props: ThemeProps) => ({
@@ -173,8 +179,8 @@ const MyClassroomContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   alignItems: 'center',
   flex: 1,
-  height: '100%',
-  width: '90vw'
+  minHeight: '80vh',
+  width: '100vw'
 
 }));
 
@@ -250,14 +256,14 @@ class ClassroomStudentView extends React.Component<Props, State> {
       showLeaveClassroomDialog: false,
       leaderboardClassroom: null,
       subMenu: SubMenu.NONE,
-      studentViewTourSteps: []
+      studentViewTourSteps: [],
+      tourAutoOpenAssignmentDetails: false,
     };
 
 
   }
 
   async componentDidMount() {
-    console.log("ClassroomStudentView componentDidMount props:", this.props);
     const currentUserId = auth.currentUser?.uid || '';
     const isInClassroom = await studentInClassroom(currentUserId);
     const currentUser = auth.currentUser.uid;
@@ -268,15 +274,21 @@ class ClassroomStudentView extends React.Component<Props, State> {
         await fetchTourIfNeeded(uid, TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM);
       }
 
+      const loadedClasssroom = Async.latestValue(isInClassroom.classroom);
+
       this.setState({
         isStudentInClassroom: isInClassroom.inClassroom,
         currentClassroom: isInClassroom.classroom,
-        currentStudentDisplayName: isInClassroom.classroom.studentIds[currentUserId].displayName,
-        studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM, this.props.locale),
+        currentStudentDisplayName: loadedClasssroom.studentIds[currentUserId].displayName,
+        studentViewTourSteps: getStudentViewInClassroomTourStepsForStudent(
+          this.props.locale,
+          loadedClasssroom,
+          currentUserId
+        ),
         tourId: TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM,
       }, () => {
         this.props.onJoinClassroom(isInClassroom.classroom);
-        this.props.navigate(`/classrooms/${currentUser}/studentView/${isInClassroom.classroom.classroomId}`);
+        this.props.navigate(`/classrooms/${currentUser}/studentView/${Async.latestValue(isInClassroom.classroom).classroomId}`);
       });
     } else {
       if (uid) {
@@ -292,8 +304,15 @@ class ClassroomStudentView extends React.Component<Props, State> {
     if (prevState.currentClassroom !== this.state.currentClassroom) {
       if (this.state.currentClassroom) {
         const currentUser = auth.currentUser.uid;
-        this.props.navigate(`/classrooms/${currentUser}/studentView/${this.state.currentClassroom.classroomId}`);
-        this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM, this.props.locale), tourId: TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM });
+        this.props.navigate(`/classrooms/${currentUser}/studentView/${Async.latestValue(this.state.currentClassroom).classroomId}`);
+        this.setState({
+          studentViewTourSteps: getStudentViewInClassroomTourStepsForStudent(
+            this.props.locale,
+            Async.latestValue(this.state.currentClassroom),
+            auth.currentUser?.uid || ''
+          ),
+          tourId: TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM,
+        });
       } else {
         this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW, this.props.locale), tourId: TourDoc.IDS.STUDENT_VIEW });
       }
@@ -301,8 +320,15 @@ class ClassroomStudentView extends React.Component<Props, State> {
     if (prevProps.locale !== this.props.locale) {
       if (this.state.currentClassroom) {
         const currentUser = auth.currentUser.uid;
-        this.props.navigate(`/classrooms/${currentUser}/studentView/${this.state.currentClassroom.classroomId}`);
-        this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM, this.props.locale), tourId: TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM });
+        this.props.navigate(`/classrooms/${currentUser}/studentView/${Async.latestValue(this.state.currentClassroom).classroomId}`);
+        this.setState({
+          studentViewTourSteps: getStudentViewInClassroomTourStepsForStudent(
+            this.props.locale,
+            Async.latestValue(this.state.currentClassroom),
+            auth.currentUser?.uid || ''
+          ),
+          tourId: TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM,
+        });
       } else {
         this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW, this.props.locale), tourId: TourDoc.IDS.STUDENT_VIEW });
       }
@@ -315,6 +341,10 @@ class ClassroomStudentView extends React.Component<Props, State> {
     }
   }
 
+  private onStudentAssignmentAction_ = (_currentSelectedClassroom: AsyncClassroom, _action: 'edit' | 'create', _assignmentToEdit?: ClassroomAssignment) => {
+    // Student view does not surface create/edit from this path; AssignmentsView still requires the callback.
+  };
+
   private onJoinClassroomDialog_ = () => {
     this.setState({ showJoinClassroomDialog: true });
   };
@@ -323,7 +353,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
     this.setState({ showLeaveClassroomDialog: true });
   };
 
-  private onCloseJoinClassroomDialog_ = async (returnedClassroom: Classroom, inviteCode: string, displayName: string) => {
+  private onCloseJoinClassroomDialog_ = async (returnedClassroom: AsyncClassroom, inviteCode: string, displayName: string) => {
     const classroom = await addStudentToClassroomAsyncRaw(
       returnedClassroom,
       inviteCode,
@@ -370,14 +400,26 @@ class ClassroomStudentView extends React.Component<Props, State> {
   };
 
   private renderMyClassroom = () => {
-    const { isStudentInClassroom, currentTab } = this.state;
+    const { isStudentInClassroom, currentTab, currentClassroom } = this.state;
     const { theme, locale, style } = this.props;
     return (
 
       <MyClassroomContainer theme={theme}>
         {isStudentInClassroom ? (
 
-          <ChallengeTabView theme={theme} locale={locale} tourRegistry={this.registry} showTab={currentTab ? currentTab : undefined} />
+          // <ChallengeTabView theme={theme} locale={locale} tourRegistry={this.registry} showTab={currentTab ? currentTab : undefined} />
+          <StudentTabs
+            currentSelectedClassroom={currentClassroom}
+            onAssignmentAction={this.onStudentAssignmentAction_}
+            theme={theme}
+            tourRegistry={this.registry}
+            tourAutoOpenAssignmentDetails={this.state.tourAutoOpenAssignmentDetails}
+            tourSyncTabIndex={this.state.tourStudentTabSync}
+            tourExpandAssignmentTopics={this.state.tourExpandStudentAssignmentTopics}
+            tourAssignmentDetailsStepId={this.state.studentViewTourSteps[this.state.currentTourStepIndex ?? 0]?.id}
+            tourGuidedStepIndex={this.state.currentTourStepIndex}
+            leaderboardChallengeShowTab={this.state.currentTab}
+          />
 
         ) : (
           <ClassroomInfoContainer theme={theme}>
@@ -426,30 +468,55 @@ class ClassroomStudentView extends React.Component<Props, State> {
   };
   private onCloseTour_ = () => {
     void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId);
+    this.setState({
+      tourStudentTabSync: undefined,
+      tourExpandStudentAssignmentTopics: false,
+      tourAutoOpenAssignmentDetails: false,
+      showJoinClassroomDialog: false,
+      subMenu: SubMenu.NONE,
+    });
   };
 
   private onSkipTour_ = () => {
     void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId, { dismissed: true });
-
+    this.setState({
+      tourStudentTabSync: undefined,
+      tourExpandStudentAssignmentTopics: false,
+      tourAutoOpenAssignmentDetails: false,
+      showJoinClassroomDialog: false,
+      subMenu: SubMenu.NONE,
+    });
   };
 
   private onNextClick_ = (stepIndex: number) => {
-    this.setState({ currentTourStepIndex: stepIndex });
+    this.setState(this.studentTourUiStateForStepIndex_(stepIndex));
   };
   private onBackClick_ = (stepIndex: number) => {
     const { studentViewTourSteps } = this.state;
+    const step = studentViewTourSteps[stepIndex];
+    const base = this.studentTourUiStateForStepIndex_(stepIndex);
 
-    if (studentViewTourSteps[stepIndex].targetKey === 'classroom-extra-options-click') {
-      this.setState({ subMenu: SubMenu.NONE, currentTourStepIndex: stepIndex });
+    if (step?.targetKey === 'classroom-extra-options-click') {
+      this.setState({ ...base, subMenu: SubMenu.NONE });
+      return;
     }
-    if (studentViewTourSteps[stepIndex].targetKey === 'challenge-tab-view-limited-challenges-click') {
-      this.setState({ currentTab: 'Default JBC Challenges', currentTourStepIndex: stepIndex }, () => {
+    if (step?.targetKey === 'challenge-tab-view-limited-challenges-click') {
+      this.setState({ ...base, currentTab: 'Default JBC Challenges' }, () => {
         this.setState({ currentTab: undefined });
       });
+      return;
     }
-    if (studentViewTourSteps[stepIndex].targetKey === 'join-classroom-button') {
-      this.setState({ showJoinClassroomDialog: false, currentTourStepIndex: stepIndex });
+    if (step?.targetKey === 'join-classroom-button') {
+      this.setState({ ...base, showJoinClassroomDialog: false });
+      return;
     }
+    if (step?.id === 'default-jbc-challenges-leaderboard-tab') {
+      this.setState({ ...base, currentTab: 'Default JBC Challenges' }, () => {
+        this.setState({ currentTab: undefined });
+      });
+      return;
+    }
+    this.setState(base);
   };
 
   private onContinueTour_ = () => {
@@ -462,6 +529,86 @@ class ClassroomStudentView extends React.Component<Props, State> {
     void retakeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId);
   };
 
+  private studentTourTabIndexForStep_(step: TourStep | undefined): number | undefined {
+    if (!step?.id) return undefined;
+    const { id } = step;
+    if (id === 'student-tab-home') return 0;
+    if (id === 'student-tab-assignments') return 1;
+    if (id === 'student-tab-people') return 2;
+    if (id === 'student-tab-leaderboard') return 3;
+    if (id === 'student-assignments-panel' || id === 'student-assignment-first-row' || id === 'student-assignment-open-details-prompt') {
+      return 1;
+    }
+    if (id.startsWith('assignment-details')) return 1;
+    const leaderboardTourIds = new Set([
+      'challenge-tab-view',
+      'default-jbc-challenges-leaderboard-tab',
+      'export-button',
+      'scroll-to-my-scores-button',
+      'see-my-badges-button',
+      'challenge-tab-view-limited-challenges-click',
+      'challenge-tab-view-limited-challenges',
+    ]);
+    if (leaderboardTourIds.has(id)) return 3;
+    return undefined;
+  }
+
+  /**
+   * Tour UI for a given step (tab sync, assignment-details flag, join dialog, extra menu).
+   * Applied from Back/Next as well as onStepIndexChange so the destination view mounts before
+   * GuidedTour measures (the previous step may live in Home, Assignments, People, or Leaderboard).
+   */
+  private studentTourUiStateForStepIndex_(stepIndex: number): Pick<
+  ClassroomStudentViewState,
+  | 'currentTourStepIndex'
+  | 'tourStudentTabSync'
+  | 'tourExpandStudentAssignmentTopics'
+  | 'tourAutoOpenAssignmentDetails'
+  | 'showJoinClassroomDialog'
+  | 'subMenu'
+  > {
+    const step = this.state.studentViewTourSteps[stepIndex];
+    const id = step?.id;
+    const expandAssignmentTopics =
+      id === 'student-assignments-panel' ||
+      id === 'student-assignment-first-row' ||
+      id === 'student-assignment-open-details-prompt' ||
+      (id?.startsWith('assignment-details') ?? false);
+    const tourAutoOpenAssignmentDetails = !!(id && id.startsWith('assignment-details'));
+    const showJoinClassroomDialog = id === 'join-classroom-dialog';
+
+    return {
+      currentTourStepIndex: stepIndex,
+      tourStudentTabSync: this.studentTourTabIndexForStep_(step),
+      tourExpandStudentAssignmentTopics: expandAssignmentTopics,
+      tourAutoOpenAssignmentDetails,
+      showJoinClassroomDialog,
+      subMenu: id === 'classroom-extra-options-dropdown' ? SubMenu.EXTRA_MENU : SubMenu.NONE,
+    };
+  }
+
+  /**
+   * From the “Limited Challenge Tab View” click step only, Back goes to the Default JBC Challenges
+   * leaderboard step so that view’s content is shown.
+   */
+  private resolveStudentTourBackStep_ = (currentStepIndex: number, _defaultPrevIndex: number): number | undefined => {
+    const steps = this.state.studentViewTourSteps;
+    const cur = steps[currentStepIndex];
+    if (!cur) return undefined;
+    if (cur.id !== 'challenge-tab-view-limited-challenges-click') {
+      return undefined;
+    }
+    const jbc = steps.findIndex((s) => s.id === 'default-jbc-challenges-leaderboard-tab');
+    if (jbc >= 0 && jbc < currentStepIndex) {
+      return jbc;
+    }
+    return undefined;
+  };
+
+  private onGuidedTourStepIndexChange_ = (stepIndex: number) => {
+    this.setState(this.studentTourUiStateForStepIndex_(stepIndex));
+  };
+
   render() {
     const { props, state } = this;
     const { style, locale, toursById, toursLoaded } = props;
@@ -469,7 +616,6 @@ class ClassroomStudentView extends React.Component<Props, State> {
     const theme = DARK;
     const activeTour = tourId ? (toursById[tourId] ?? TourDoc.DEFAULT) : TourDoc.DEFAULT;
     const activeTourLoaded = !!(tourId && toursLoaded[tourId]);
-
     const showTour = !!tourId && activeTourLoaded && !activeTour.completed;
     return (
       <PageContainer style={style} theme={theme}>
@@ -498,13 +644,12 @@ class ClassroomStudentView extends React.Component<Props, State> {
         <TourTarget registry={this.registry} targetKey='student-dashboard' style={style}>
           <ClassroomsContainer style={style} theme={theme}>
             <ClassroomsClassroomInfoContainer style={style} theme={theme}>
-              <h1>{LocalizedString.lookup(tr("Classrooms - Student View"), locale)}</h1>
               <ClassroomHeaderContainer style={style} theme={theme}>
                 {this.renderMyClassroom()}
                 {showLeaveClassroomDialog && (
                   <LeaveClassDialog
                     onClose={this.onExitLeaveClassroomDialog_}
-                    currentClassroom={currentClassroom}
+                    currentClassroom={Async.latestValue(currentClassroom)}
                     locale={locale}
                     onLeaveClassDialogClose={this.onCloseLeaveClassroomDialog_}
                     theme={DARK}
@@ -539,6 +684,8 @@ class ClassroomStudentView extends React.Component<Props, State> {
             onSkip={this.onSkipTour_}
             onBackClick={this.onBackClick_}
             onNextClick={this.onNextClick_}
+            onStepIndexChange={this.onGuidedTourStepIndexChange_}
+            resolveBackStepIndex={this.resolveStudentTourBackStep_}
             theme={theme} />
         )}
       </PageContainer>
@@ -561,10 +708,10 @@ export default connect(
     onStudentAdded: (inviteCode: string, studentId: string, displayName: string) => {
       dispatch(ClassroomsAction.studentAdded({ classroomId: inviteCode, studentId, displayName }));
     },
-    onJoinClassroom: (classroom: Classroom) => {
+    onJoinClassroom: (classroom: AsyncClassroom) => {
       dispatch(ClassroomsAction.joinClassroom({ classroom }));
     },
 
-    onRemoveStudentFromClassroom: (studentId: string, currentClassroom: Classroom) =>
+    onRemoveStudentFromClassroom: (studentId: string, currentClassroom: AsyncClassroom) =>
       removeStudentFromClassroom(studentId, currentClassroom),
   }))(withNavigate(ClassroomStudentView));
