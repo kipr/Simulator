@@ -89,7 +89,8 @@ async function applyClassroomAssignmentsPatch(docRef, existing, incomingAssignme
     }
 
     if (incomingAssignment) {
-      const { assignedTo: _at, ...rest } = incomingAssignment;
+      const rest = { ...incomingAssignment };
+      delete rest.assignedTo;
       for (const [field, value] of Object.entries(rest)) {
         update[new FieldPath('classroomAssignments', assignmentKey, field)] = value;
       }
@@ -203,7 +204,8 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
 
       if (existingSnap.exists) {
         const existing = existingSnap.data();
-        const { teacherId: _ignoredTeacherId, ...dataWithoutTeacherId } = data;
+        const dataWithoutTeacherId = { ...data };
+        delete dataWithoutTeacherId.teacherId;
         await docRef.set(
           {
             ...dataWithoutTeacherId,
@@ -485,7 +487,9 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const { uid } = req.user;
       const { id } = req.params;
-      const docRef = admin.firestore().collection('classrooms').doc(id);
+      const docRef = admin.firestore()
+        .collection('classrooms')
+        .doc(id);
       const snap = await docRef.get();
       if (!snap.exists) {
         return res.status(404).json({ message: 'Classroom not found' });
@@ -508,7 +512,9 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const { uid } = req.user;
       const { id, studentId } = req.params;
-      const docRef = admin.firestore().collection('classrooms').doc(id);
+      const docRef = admin.firestore()
+        .collection('classrooms')
+        .doc(id);
       const snap = await docRef.get();
       if (!snap.exists) {
         return res.status(404).json({ message: 'Classroom not found' });
@@ -677,7 +683,8 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
       }
 
       if (isOwner) {
-        const { teacherId: _ignoredTeacherId, ...dataWithoutTeacherId } = data;
+        const dataWithoutTeacherId = { ...data };
+        delete dataWithoutTeacherId.teacherId;
         const payload = {
           ...dataWithoutTeacherId,
           teacherId: existing.teacherId,

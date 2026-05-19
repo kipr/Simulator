@@ -550,11 +550,11 @@ export function getTeacherViewTourStepsForClassroom(
     return steps;
   }
   const placement = teacherNewClassroomCardPlacement(count);
-  return steps.map(step =>
+  return steps.map(step => (
     step.id === 'see-created-classroom' || step.id === 'classroom-users'
       ? { ...step, placement }
       : step
-  );
+  ));
 }
 
 export function getStudentViewTourSteps(locale: LocalizedString.Language): TourStep[] {

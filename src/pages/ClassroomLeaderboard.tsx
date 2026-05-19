@@ -1182,19 +1182,17 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   }
 }
 
-export default connect((state: ReduxState) => {
-  return ({
+export default connect(
+  (state: ReduxState) => ({
     locale: state.i18n.locale,
     classroom: state.classrooms.selectedClassroom,
     challenges: state.challenges,
-    currentStudentDisplayName: Async.latestValue(state.classrooms.currentStudentClassroom) ? Async.latestValue(state.classrooms.currentStudentClassroom).studentIds[auth.currentUser.uid].displayName : null,
-
-  });
-},
+    currentStudentDisplayName: Async.latestValue(state.classrooms.currentStudentClassroom)
+      ? Async.latestValue(state.classrooms.currentStudentClassroom).studentIds[auth.currentUser.uid].displayName
+      : null,
+  }),
   (dispatch) => ({
     onClearSelectedClassroom: () =>
       dispatch(ClassroomsAction.clearSelectedClassroom({})),
   })
-
-
 )(CompWithRouter) as React.ComponentType<ClassroomLeaderboardPublicProps>;
