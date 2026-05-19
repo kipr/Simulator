@@ -507,7 +507,7 @@ export function getTeacherViewTourSteps(
       targetKey: classroomTabTargetKey('Leaderboard', locale),
       title: LocalizedString.lookup(tr('Leaderboard tab'), locale),
       content: LocalizedString.lookup(
-        tr('Switch between Default JBC Challenges and Limited Challenges to see how the class is performing on simulator scenes and timed challenges.'),
+        tr('Switch between Default JBC Challenges and Limited Challenges to see how the class is performing. Use Export All General Scores for a PDF of each student\'s completion status, or Export All Detailed Scores for success and failure goals per challenge.'),
         locale
       ),
       placement: 'bottom',
@@ -532,12 +532,29 @@ export function getTeacherViewTourSteps(
   return steps;
 }
 
+/** Tooltip side for steps that spotlight the newly created classroom card. */
+function teacherNewClassroomCardPlacement(ownedClassroomCount: number): TourPlacement {
+  // Sole class sits directly beside "Create New Classroom"; place the dialog on the card's right edge.
+  return ownedClassroomCount === 1 ? 'right' : 'left';
+}
+
 /** Teacher tour for a loaded classroom (assignments segment always included so new classes can learn Create Assignment). */
 export function getTeacherViewTourStepsForClassroom(
   locale: LocalizedString.Language,
-  _classroom: Classroom | undefined | null
+  _classroom: Classroom | undefined | null,
+  options?: { ownedClassroomCount?: number }
 ): TourStep[] {
-  return getTeacherViewTourSteps(locale);
+  const steps = getTeacherViewTourSteps(locale);
+  const count = options?.ownedClassroomCount ?? 0;
+  if (count !== 1) {
+    return steps;
+  }
+  const placement = teacherNewClassroomCardPlacement(count);
+  return steps.map(step =>
+    step.id === 'see-created-classroom' || step.id === 'classroom-users'
+      ? { ...step, placement }
+      : step
+  );
 }
 
 export function getStudentViewTourSteps(locale: LocalizedString.Language): TourStep[] {

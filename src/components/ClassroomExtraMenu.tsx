@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { State as ReduxState } from '../state';
 import LocalizedString from '../util/LocalizedString';
 import { AsyncClassroom } from '../state/State/Classroom';
+import { classroomNameAsString } from '../util/classroomDisplayName';
 import Async from 'state/State/Async';
 import TourTarget from './Tours/TourTarget';
 import { TourRegistry } from '../tours/TourRegistry';
@@ -121,7 +122,7 @@ class ClassroomExtraMenu extends React.PureComponent<Props, State> {
     return (
       <TourTarget registry={this.props.tourRegistry} targetKey='classroom-extra-options-dropdown'>
         <Container theme={theme} style={style} className={className}>
-          <ItemLabel theme={theme}><ItemIcon icon={faUsersRectangle} /> {LocalizedString.lookup(tr('Current Classroom: '), locale)} {latestClassroom?.classroomId || LocalizedString.lookup(tr('None'), locale)}</ItemLabel>
+          <ItemLabel theme={theme}><ItemIcon icon={faUsersRectangle} /> {LocalizedString.lookup(tr('Current Classroom: '), locale)} {latestClassroom ? classroomNameAsString(latestClassroom.classroomId, locale) : LocalizedString.lookup(tr('None'), locale)}</ItemLabel>
           <ItemLabel theme={theme}><ItemIcon icon={faPersonChalkboard} /> {LocalizedString.lookup(tr('Classroom Teacher: '), locale)} {latestClassroom?.teacherDisplayName || LocalizedString.lookup(tr('None'), locale)}</ItemLabel>
           {latestClassroom
             ? (<TourTarget registry={this.props.tourRegistry} targetKey='leave-classroom'>
