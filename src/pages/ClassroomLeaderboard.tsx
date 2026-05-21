@@ -21,6 +21,7 @@ import { auth } from '../firebase/firebase';
 import { LeaderboardEntry, LeaderboardUserContext } from 'state/State/LimitedChallengeLeaderboard';
 import TourTarget from '../components/Tours/TourTarget';
 import { TourRegistry } from '../tours/TourRegistry';
+import { classroomNameAsString } from '../util/classroomDisplayName';
 
 const SELFIDENTIFIER = "My Scores!";
 
@@ -33,6 +34,7 @@ interface Challenge {
 
 interface Score {
   name: LocalizedString; // Challenge name
+  challengeId?: string;
   completed: boolean;
   score?: number;
   completionTime?: number;
@@ -104,8 +106,20 @@ const ClassroomLeaderboardContainer = styled("div", (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
   overflow: 'auto',
+  width: '95%',
+  marginTop: '20px',
 
 }));
+
+/** Teacher view: size the leaderboard table panel without changing ChallengeTabView section tabs. */
+const TeacherLeaderboardPanel = styled('div', {
+  width: '75%',
+  height: '75%',
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: 0,
+  alignSelf: 'center',
+});
 
 const ClassroomLeaderboardTitleContainer = styled('div', {
   alignItems: 'center',
@@ -134,11 +148,15 @@ const StyledTableRow = styled('tr', (props: { key: string, self: string, ref: Re
   borderBottom: '1px solid #ddd',
   backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000',
 }));
-const LeaderboardScrollContainer = styled('div', {
+const LeaderboardScrollContainer = styled('div', (props: { $teacherView?: boolean }) => ({
   width: '100%',
   overflow: 'auto',
   WebkitOverflowScrolling: 'touch',
-  height: '85%',
+  height: props.$teacherView ? undefined : '85%',
+  ...(props.$teacherView ? {
+    flex: 1,
+    minHeight: 0,
+  } : {}),
 
   scrollbarWidth: 'thin',
   scrollbarColor: 'rgba(121,121,121,0.6) transparent',
@@ -157,7 +175,7 @@ const LeaderboardScrollContainer = styled('div', {
   '::-webkit-scrollbar-thumb:hover': {
     backgroundColor: 'rgba(121,121,121,0.7)',
   },
-});
+}));
 
 const Button = styled('button', (props: ThemeProps & ButtonProps) => ({
   padding: '12px 24px',
@@ -204,13 +222,19 @@ const StickyNameTh = styled('th', (props: ThemeProps) => ({
   zIndex: 7,
   whiteSpace: 'nowrap',
 }));
-const LeaderboardContainer = styled('div', (props: ThemeProps) => ({
-  width: '100%',
-  maxWidth: '900px',
+const LeaderboardContainer = styled('div', (props: ThemeProps & { $teacherView?: boolean }) => ({
+  width: '95%',
+  maxWidth: props.$teacherView ? 'none' : '900px',
   backgroundColor: props.theme.backgroundColor,
   border: `1px solid ${props.theme.borderColor}`,
   borderRadius: '8px',
   overflow: 'hidden',
+  ...(props.$teacherView ? {
+    flex: 1,
+    minHeight: 0,
+    display: 'flex',
+    flexDirection: 'column',
+  } : {}),
 }));
 
 const LeaderboardHeader = styled('div', (props: ThemeProps) => ({
@@ -372,21 +396,25 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   }
   async componentDidMount() {
     const { classroomId } = this.props.params;
-    if (this.props.view !== 'studentView') {
-      let currentUserId = '';
-      const tokenManager = db.tokenManager;
-      if (tokenManager) {
-        const auth_ = tokenManager.auth();
-        const currentUserAuth_ = auth_.currentUser;
-        currentUserId = currentUserAuth_.uid;
-      }
-      const classroom = await findClassroomDocByReadableId(classroomId, currentUserId);
-      this.setState({ shownClassroom: classroom }, () => { void this.onLog(); });
-    } else {
+    if (this.props.view === 'studentView' || this.props.view === 'teacherView') {
       if (this.props.currentClassroom) {
-        this.setState({ shownClassroom: { docId: Async.latestValue(this.props.currentClassroom).docId, classroom: Async.latestValue(this.props.currentClassroom) } }, () => { void this.onLog(); });
+        const classroom = Async.latestValue(this.props.currentClassroom);
+        this.setState(
+          { shownClassroom: { docId: classroom.docId, classroom } },
+          () => { void this.onLog(); }
+        );
       }
+      return;
     }
+    let currentUserId = '';
+    const tokenManager = db.tokenManager;
+    if (tokenManager) {
+      const auth_ = tokenManager.auth();
+      const currentUserAuth_ = auth_.currentUser;
+      currentUserId = currentUserAuth_.uid;
+    }
+    const classroom = await findClassroomDocByReadableId(classroomId, currentUserId);
+    this.setState({ shownClassroom: classroom }, () => { void this.onLog(); });
   }
   async componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomLeaderboardState>): Promise<void> {
     if (prevProps.params.classroomId !== this.props.params.classroomId) {
@@ -409,7 +437,9 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   }
 
   componentWillUnmount(): void {
-    this.props.onClearSelectedClassroom();
+    if (this.props.view !== 'teacherView') {
+      this.props.onClearSelectedClassroom();
+    }
   }
   private myScoresRef = createRef<HTMLTableRowElement>();
 
@@ -438,10 +468,18 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       );
     }
 
-    if (topEntries.length === 0 && !userContext) {
+    const isTeacherView = this.props.view === 'teacherView';
+    const tableEntries = isTeacherView ? sortedUsers : topEntries;
+
+    if (tableEntries.length === 0 && !userContext) {
       return (
         <EmptyState theme={theme}>
-          {LocalizedString.lookup(tr('No completions yet. Be the first to complete this challenge!'), locale)}
+          {LocalizedString.lookup(
+            isTeacherView
+              ? tr('No students or challenge scores yet for this classroom.')
+              : tr('No completions yet. Be the first to complete this challenge!'),
+            locale
+          )}
         </EmptyState>
       );
     }
@@ -450,12 +488,10 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     const userInTopEntries = userContext && topEntries.some(e => e.id === userContext.id);
 
     // Show user context section only if user has a completion and is not in top N
-    const showUserContextSection = userContext && !userInTopEntries;
-
-
+    const showUserContextSection = !isTeacherView && userContext && !userInTopEntries;
 
     return (
-      <LeaderboardScrollContainer>
+      <LeaderboardScrollContainer $teacherView={isTeacherView}>
         <Table>
           <thead>
             <tr>
@@ -473,10 +509,12 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
             </tr>
           </thead>
           <tbody>
-            {/* Top entries - already sorted by server */}
-            {topEntries.map((entry, index) => {
+            {tableEntries.map((entry, index) => {
               const rank = index + 1;
-              const isCurrentUser = params.studentId === entry.id;
+              const currentUid = auth.currentUser?.uid;
+              const isCurrentUser = currentUid
+                ? entry.id === currentUid
+                : params.studentId === entry.id;
               return this.renderLeaderboardRow(entry, rank, isCurrentUser, challengeArray);
             })}
 
@@ -606,6 +644,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       for (const [challengeId, challenge] of Object.entries(userData.challenges)) {
         const score: Score = {
           name: tr(challengeId),
+          challengeId,
           completed: challengeCompletion(challenge),
           challengeCompletion: userData.challenges[challengeId] as ChallengeCompletion,
 
@@ -620,7 +659,11 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     const sortedUsers = this.orderUsersByCompletedChallenges(users);
     const topThree = sortedUsers.slice(0, 3);
 
-    const me = sortedUsers.find(user => user.id === params.studentId);
+    const currentUid = auth.currentUser?.uid;
+    const me =
+      (currentUid && sortedUsers.find(user => user.id === currentUid)) ||
+      (params.studentId && sortedUsers.find(user => user.id === params.studentId)) ||
+      undefined;
 
     this.setState({
       users,
@@ -644,6 +687,22 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       return completedChallengesB - completedChallengesA;
     });
     return userArray;
+  };
+
+  private classroomLabelForExport = (): string => {
+    const { shownClassroom } = this.state;
+    const { locale } = this.props;
+    if (!shownClassroom?.classroom) return 'classroom';
+    return classroomNameAsString(shownClassroom.classroom.classroomId, locale);
+  };
+
+  private canExportClassroomScores = (): boolean => {
+    const { loading, users, shownClassroom } = this.state;
+    return !loading && !!shownClassroom && Object.keys(users).length > 0;
+  };
+
+  private usersForExport = (): User[] => {
+    return this.orderUsersByCompletedChallenges(this.state.users);
   };
 
   private customSort = (list: string[]): string[] => {
@@ -671,23 +730,83 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     });
   };
 
-  private getCurrentUser = (): User => {
-    const { users } = this.state;
+  /** Leaderboard users are keyed by display name; match by uid or display name. */
+  private findCurrentStudentUser = (): User | null => {
+    const { users, userContext } = this.state;
     const { currentStudentDisplayName } = this.props;
-    let currentUser: User;
-    const tokenManager = db.tokenManager;
-    if (tokenManager) {
-      const auth_ = tokenManager.auth();
-      const currentUserAuth_ = auth_.currentUser;
-      currentUser = {
-        id: currentUserAuth_.uid,
-        name: currentStudentDisplayName || currentUserAuth_.displayName || 'Unknown',
-        scores: Object.values(users).find(u => u.id === currentStudentDisplayName)?.scores || [],
-        altId: Object.values(users).find(u => u.id === currentStudentDisplayName)?.altId || 'Unknown'
-      };
-    }
+    const uid = auth.currentUser?.uid;
 
-    return currentUser || null;
+    if (userContext && (!uid || userContext.id === uid)) {
+      return userContext;
+    }
+    if (uid) {
+      const byUid = Object.values(users).find(u => u.id === uid);
+      if (byUid) return byUid;
+    }
+    if (currentStudentDisplayName && users[currentStudentDisplayName]) {
+      return users[currentStudentDisplayName];
+    }
+    if (currentStudentDisplayName) {
+      return Object.values(users).find(u => u.name === currentStudentDisplayName) ?? null;
+    }
+    return null;
+  };
+
+  private getCurrentUser = (): User | null => {
+    const existing = this.findCurrentStudentUser();
+    const tokenManager = db.tokenManager;
+    if (!tokenManager) return existing;
+
+    const currentUserAuth_ = tokenManager.auth().currentUser;
+    if (!currentUserAuth_) return existing;
+
+    const { currentStudentDisplayName } = this.props;
+    return {
+      id: currentUserAuth_.uid,
+      name:
+        existing?.name ||
+        currentStudentDisplayName ||
+        currentUserAuth_.displayName ||
+        'Unknown',
+      scores: existing?.scores ?? [],
+      altId: existing?.altId || 'Unknown',
+    };
+  };
+
+  /** One row per leaderboard column, including challenges not yet attempted. */
+  private scoresForStudentExport = (user: User): Score[] => {
+    const { challenges } = this.state;
+    const challengeIds = this.customSort(Object.keys(challenges));
+
+    return challengeIds.map(challengeId => {
+      const challengeMeta = challenges[challengeId];
+      const existing = user.scores.find(
+        s =>
+          s.challengeId === challengeId ||
+          s.name['en-US'] === challengeMeta?.name['en-US']
+      );
+      if (existing) return existing;
+      return {
+        name: challengeMeta?.name ?? tr(challengeId),
+        challengeId,
+        completed: false,
+      };
+    });
+  };
+
+  private exportStatusLabel = (user: User, score: Score): string => {
+    const { challenges } = this.state;
+    const challengeId = score.challengeId;
+    const challengeMeta = challengeId ? challenges[challengeId] : undefined;
+    const attempted = user.scores.some(
+      s =>
+        s.challengeId === challengeId ||
+        (challengeMeta && s.name['en-US'] === challengeMeta.name['en-US'])
+    );
+    if (!attempted) {
+      return 'Not Attempted';
+    }
+    return score.completed ? 'Completed' : 'Not Completed';
   };
 
   private getCurrentUserEmail = (): string | null => {
@@ -704,10 +823,14 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     return null;
   };
 
-  private exportUserScores = (user: User) => {
+  private exportUserScores = (_user?: User | null) => {
+    const resolved = this.findCurrentStudentUser() ?? _user ?? null;
+    if (!resolved) return;
+
     const { locale } = this.props;
     const pdfDoc = new jsPDF();
     const date = new Date();
+    const exportScores = this.scoresForStudentExport(resolved);
 
     // Title
     pdfDoc.setFontSize(18);
@@ -720,41 +843,51 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
     // Basic Info
     pdfDoc.setFontSize(14);
-    pdfDoc.text(`Name: ${user.name}`, 20, 40);
+    pdfDoc.text(`Name: ${resolved.name}`, 20, 40);
     pdfDoc.text(`Email: ${this.getCurrentUserEmail() || 'Unknown'}`, 20, 50);
-
-    const sortedScores = this.customSort(user.scores.map(s => s.name['en-US'])).map(name => user.scores.find(s => s.name['en-US'] === name));
 
     // Scores
     pdfDoc.setFontSize(12);
     pdfDoc.text('Scores:', 20, 60);
 
-    sortedScores.forEach((score, i) => {
+    let y = 60;
+    exportScores.forEach((score) => {
+      y += 10;
+      if (y > 280) {
+        pdfDoc.addPage();
+        y = 20;
+      }
+      const label =
+        LocalizedString.lookup(score.name, locale) ||
+        LocalizedString.lookup(tr(`${score.name[locale]}`), locale) ||
+        score.challengeId ||
+        'Unnamed';
       pdfDoc.text(
-        `${LocalizedString.lookup(tr(`${score.name[locale]}`), locale) || "Unnamed"} - ${score.completed ? "Completed" : "Not Completed"
-        }`,
+        `${label} - ${this.exportStatusLabel(resolved, score)}`,
         30,
-        70 + i * 10
+        y
       );
     });
 
-    pdfDoc.save(`${user.name}-scores.pdf`);
+    pdfDoc.save(`${resolved.name}-scores.pdf`);
 
   };
 
-  // Export current user's JBC scores to PDF - very simple, completed or not completed with timestamp
+  // Export all students' JBC scores (completed / not completed) for the classroom.
   private exportClassroomScores() {
-    const { users, shownClassroom } = this.state;
+    if (!this.canExportClassroomScores()) return;
+
     const { locale } = this.props;
     const pdfDoc = new jsPDF();
+    const classroomLabel = this.classroomLabelForExport();
+    const exportUsers = this.usersForExport();
 
     const date = new Date();
 
-
-    Object.values(users).forEach((user, userIndex) => {
+    exportUsers.forEach((user, userIndex) => {
       // Title
       pdfDoc.setFontSize(18);
-      pdfDoc.text(`${shownClassroom.classroom.classroomId} General Challenge Scores`, 105, 20, { align: 'center' });
+      pdfDoc.text(`${classroomLabel} General Challenge Scores`, 105, 20, { align: 'center' });
 
       // Date
       pdfDoc.setFontSize(16);
@@ -778,18 +911,21 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
           60 + i * 10
         );
       });
-      if (userIndex < Object.values(users).length - 1) {
+      if (userIndex < exportUsers.length - 1) {
         pdfDoc.addPage();
       }
     });
 
-    pdfDoc.save(`${shownClassroom.classroom.classroomId}-scores.pdf`);
+    pdfDoc.save(`${classroomLabel}-general-scores.pdf`);
   }
 
 
   private exportDetailedClassroomScores() {
-    const { users, shownClassroom } = this.state;
+    if (!this.canExportClassroomScores()) return;
+
     const { locale, challenges } = this.props;
+    const classroomLabel = this.classroomLabelForExport();
+    const exportUsers = this.usersForExport();
 
     const pdf = new jsPDF();
     const date = new Date();
@@ -817,13 +953,13 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       return y;
     };
 
-    Object.values(users).forEach((user, userIndex) => {
+    exportUsers.forEach((user, userIndex) => {
 
       // Header
       pdf.setFontSize(18);
       pdf.setTextColor('black');
       pdf.text(
-        `${shownClassroom.classroom.classroomId} Detailed Challenge Scores`,
+        `${classroomLabel} Detailed Challenge Scores`,
         105, 20,
         { align: 'center' }
       );
@@ -844,91 +980,87 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       ).map(name => user.scores.find(s => s.name["en-US"] === name));
 
       sortedScores.forEach(score => {
+        const challengeId = score.challengeId;
+        if (!challengeId) return;
 
-        Object.values(challenges).forEach(challenge => {
+        const asyncChallenge = challenges[challengeId];
+        const latest = asyncChallenge ? Async.latestValue(asyncChallenge) : null;
+        if (!latest) return;
 
-          const latest = Async.latestValue(challenge);
-          if (!latest) return;
+        const successGoals = Object.values(latest.successGoals || {});
+        const failureGoals = Object.values(latest.failureGoals || {});
 
-          const sceneId = latest.sceneId;
-          if (sceneId !== score.name[locale]) return;
+        // Challenge Title
+        y = writeLine(
+          `${LocalizedString.lookup(tr(`${latest.name[locale]}:`), locale) || "Unnamed"}`,
+          30, 10, "helvetica", "bold"
+        );
 
-          const successGoals = Object.values(latest.successGoals || {});
-          const failureGoals = Object.values(latest.failureGoals || {});
+        // Success Section
+        if (successGoals.length > 0) {
+          y = writeLine("Success", 55, 10, "helvetica", "normal");
+        }
 
-          // Challenge Title
-          y = writeLine(
-            `${LocalizedString.lookup(tr(`${latest.name[locale]}:`), locale) || "Unnamed"}`,
-            30, 10, "helvetica", "bold"
-          );
+        successGoals.forEach(goal => {
+          const completion = score.challengeCompletion;
+          const isCompleted = completion?.success?.exprStates?.[goal.exprId];
 
-          // Success Section
-          if (successGoals.length > 0) {
-            y = writeLine("Success", 55, 10, "helvetica", "normal");
+          if (isCompleted) {
+            // Checkbox ✓
+            y = writeLine("3", 65, 10, "ZapfDingbats", "normal", "green");
+
+            // Goal text also green
+            pdf.setFont("helvetica", "normal");
+            pdf.setTextColor("green");
+            pdf.text(
+              LocalizedString.lookup(tr(goal.name[locale]), locale),
+              72,
+              y
+            );
+          } else {
+            y = writeLine(
+              LocalizedString.lookup(tr(goal.name[locale]), locale),
+              72, 10, "helvetica", "normal", "black"
+            );
           }
+        });
 
-          successGoals.forEach(goal => {
-            const completion = score.challengeCompletion;
-            const isCompleted = completion?.success?.exprStates?.[goal.exprId];
+        if (failureGoals.length > 0) {
+          y = writeLine("Failure", 55, 10);
+        }
 
-            if (isCompleted) {
-              // Checkbox ✓
-              y = writeLine("3", 65, 10, "ZapfDingbats", "normal", "green");
+        failureGoals.forEach(goal => {
+          const completion = score.challengeCompletion;
+          const isFailed = completion?.failure?.exprStates?.[goal.exprId];
 
-              // Goal text also green
-              pdf.setFont("helvetica", "normal");
-              pdf.setTextColor("green");
-              pdf.text(
-                LocalizedString.lookup(tr(goal.name[locale]), locale),
-                72,
-                y
-              );
-            } else {
-              y = writeLine(
-                LocalizedString.lookup(tr(goal.name[locale]), locale),
-                72, 10, "helvetica", "normal", "black"
-              );
-            }
-          });
-
-          if (failureGoals.length > 0) {
-            y = writeLine("Failure", 55, 10);
+          if (isFailed) {
+            // Checkbox X in red
+            y = writeLine("3", 65, 10, "ZapfDingbats", "normal", "red");
+            pdf.setFont("helvetica", "normal");
+            pdf.setTextColor("red");
+            pdf.text(
+              LocalizedString.lookup(tr(goal.name[locale]), locale),
+              72,
+              y
+            );
+          } else {
+            y = writeLine(
+              LocalizedString.lookup(tr(goal.name[locale]), locale),
+              72, 10, "helvetica", "normal", "black"
+            );
           }
-
-          failureGoals.forEach(goal => {
-            const completion = score.challengeCompletion;
-            const isFailed = completion?.failure?.exprStates?.[goal.exprId];
-
-            if (isFailed) {
-              // Checkbox X in red
-              y = writeLine("3", 65, 10, "ZapfDingbats", "normal", "red");
-              pdf.setFont("helvetica", "normal");
-              pdf.setTextColor("red");
-              pdf.text(
-                LocalizedString.lookup(tr(goal.name[locale]), locale),
-                72,
-                y
-              );
-            } else {
-              y = writeLine(
-                LocalizedString.lookup(tr(goal.name[locale]), locale),
-                72, 10, "helvetica", "normal", "black"
-              );
-            }
-          });
-
         });
 
       });
 
       // Add new page between users
-      if (userIndex < Object.values(users).length - 1) {
+      if (userIndex < exportUsers.length - 1) {
         pdf.addPage();
         y = 50;
       }
     });
 
-    pdf.save(`${shownClassroom.classroom.classroomId}-scores.pdf`);
+    pdf.save(`${classroomLabel}-detailed-scores.pdf`);
   }
 
   private onSeeMyBadges() {
@@ -936,9 +1068,10 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   }
 
   private renderClassroomLeaderboardNew = () => {
-    const { theme, locale, currentStudentDisplayName } = this.props;
+    const { theme, locale, currentStudentDisplayName, view } = this.props;
+    const isTeacherView = view === 'teacherView';
     return (
-      <LeaderboardContainer theme={theme}>
+      <LeaderboardContainer theme={theme} $teacherView={isTeacherView}>
         <LeaderboardHeader theme={theme}>
           <LeaderboardTitle theme={theme}>
             {LocalizedString.lookup(tr('Leaderboard'), locale)}
@@ -988,7 +1121,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       </ButtonContainer>
     );
     return (
-      <>
+      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         {view === 'studentView'
           ? < div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
             <ClassroomLeaderboardTitleContainer>
@@ -1001,45 +1134,65 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
               locale={locale}
               onClose={() => this.setState({ showBadgeDialog: false })}
               currentStudentDisplayName={currentStudentDisplayName}
-              currentUserScores={users[currentStudentDisplayName]?.scores || []}
+              currentUserScores={
+                this.findCurrentStudentUser()?.scores ||
+                (currentStudentDisplayName ? users[currentStudentDisplayName]?.scores : undefined) ||
+                []
+              }
               theme={theme} />}
 
           </div >
-          :          <ClassroomLeaderboardContainer style={style} theme={theme}>
+          : <ClassroomLeaderboardContainer style={style} theme={theme}>
             < div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
               <ClassroomLeaderboardTitleContainer>
                 <h1>{LocalizedString.lookup(tr("Classroom Leaderboard"), locale)}</h1>
 
                 <ButtonContainer>
-                  <Button theme={DARK} onClick={() => this.exportClassroomScores()}> {LocalizedString.lookup(tr("Export All General Scores"), locale)}</Button>
-                  <Button theme={DARK} onClick={() => this.exportDetailedClassroomScores()}> {LocalizedString.lookup(tr("Export All Detailed Scores"), locale)}</Button>
+                  <TourTarget registry={tourRegistry} targetKey="export-all-general-scores">
+                    <Button
+                      theme={DARK}
+                      $disabled={!this.canExportClassroomScores()}
+                      onClick={() => this.exportClassroomScores()}
+                    >
+                      {LocalizedString.lookup(tr("Export All General Scores"), locale)}
+                    </Button>
+                  </TourTarget>
+                  <TourTarget registry={tourRegistry} targetKey="export-all-detailed-scores">
+                    <Button
+                      theme={DARK}
+                      $disabled={!this.canExportClassroomScores()}
+                      onClick={() => this.exportDetailedClassroomScores()}
+                    >
+                      {LocalizedString.lookup(tr("Export All Detailed Scores"), locale)}
+                    </Button>
+                  </TourTarget>
                 </ButtonContainer>
 
               </ClassroomLeaderboardTitleContainer>
-              {this.renderClassroomLeaderboardNew()}
+              <TeacherLeaderboardPanel>
+                {this.renderClassroomLeaderboardNew()}
+              </TeacherLeaderboardPanel>
             </div>
           </ClassroomLeaderboardContainer>
         }
 
 
-      </>
+      </div>
     );
   }
 }
 
-export default connect((state: ReduxState) => {
-  return ({
+export default connect(
+  (state: ReduxState) => ({
     locale: state.i18n.locale,
     classroom: state.classrooms.selectedClassroom,
     challenges: state.challenges,
-    currentStudentDisplayName: Async.latestValue(state.classrooms.currentStudentClassroom) ? Async.latestValue(state.classrooms.currentStudentClassroom).studentIds[auth.currentUser.uid].displayName : null,
-
-  });
-},
-(dispatch) => ({
-  onClearSelectedClassroom: () =>
-    dispatch(ClassroomsAction.clearSelectedClassroom({})),
-})
-
-
+    currentStudentDisplayName: Async.latestValue(state.classrooms.currentStudentClassroom)
+      ? Async.latestValue(state.classrooms.currentStudentClassroom).studentIds[auth.currentUser.uid].displayName
+      : null,
+  }),
+  (dispatch) => ({
+    onClearSelectedClassroom: () =>
+      dispatch(ClassroomsAction.clearSelectedClassroom({})),
+  })
 )(CompWithRouter) as React.ComponentType<ClassroomLeaderboardPublicProps>;

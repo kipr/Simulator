@@ -307,7 +307,9 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       showAreYouSureDialog: false,
       leaderboardClassroom: null,
       cardContainerVisible: true,
-      teacherTourSteps: getTeacherViewTourStepsForClassroom(props.locale, null),
+      teacherTourSteps: getTeacherViewTourStepsForClassroom(props.locale, null, {
+        ownedClassroomCount: ClassroomTeacherView.countOwnedClassrooms_(props.classroomList),
+      }),
       teacherSubviewHasModal: false,
     };
 
@@ -362,13 +364,21 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     return cur.value;
   }
 
+  private static countOwnedClassrooms_(classroomList: Props['classroomList']): number {
+    if (!classroomList) return 0;
+    return Object.values(classroomList).filter(c => c.type === Async.Type.Loaded).length;
+  }
+
   private syncTeacherTourSteps_(): void {
     const classroom = this.computeSyncedLoadedClassroom_();
-    const next = getTeacherViewTourStepsForClassroom(this.props.locale, classroom ?? null);
+    const ownedClassroomCount = ClassroomTeacherView.countOwnedClassrooms_(this.props.classroomList);
+    const next = getTeacherViewTourStepsForClassroom(this.props.locale, classroom ?? null, {
+      ownedClassroomCount,
+    });
     const prev = this.state.teacherTourSteps;
     if (
       prev.length === next.length &&
-      prev.every((s, i) => s.id === next[i].id)
+      prev.every((s, i) => s.id === next[i].id && s.placement === next[i].placement)
     ) {
       return;
     }
@@ -571,13 +581,13 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     const { selectedStudentId } = this.state;
     const ivygateClassrooms: IvyGateClassroom[] = [];
 
-    for (const [id, asyncClassroom] of Object.entries(classroomList)) {
+    for (const [id, asyncClassroom] of Object.entries(classroomList ?? {})) {
 
-      if (asyncClassroom.type === Async.Type.Loaded && classroomList !== null) {
+      if (asyncClassroom.type === Async.Type.Loaded) {
 
         const classroom = asyncClassroom.value;
         // map studentIds to match IvygateFileExplorer's User objects
-        const classroomUsers: User[] = Object.values(classroom.studentIds).map((studentId) => {
+        const classroomUsers: User[] = Object.values(classroom.studentIds ?? {}).map((studentId) => {
           const studentChallenges = this.challengeCache[selectedStudentId];
           const userProjects: SimClassroomProject[] = studentChallenges
             ? Object.entries(studentChallenges).flatMap(([challengeId, score]) => {
@@ -835,8 +845,8 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       renameClassroomTarget?.type === Async.Type.Loaded ||
       showAreYouSureDialog ||
       showCreateClassroomDialog;
-    return Object.entries(classroomList).map(([id, asyncClassroom]) => {
-      if (asyncClassroom.type === Async.Type.Loaded && classroomList !== null) {
+    return Object.entries(classroomList ?? {}).map(([id, asyncClassroom]) => {
+      if (asyncClassroom.type === Async.Type.Loaded) {
         const classroom = asyncClassroom.value;
         const cardBody = (
           <CardWrapper theme={theme} selected={Async.latestValue(this.state.currentSelectedClassroom)?.classroomId === classroom.classroomId} onClick={() => this.setState({ currentSelectedClassroom: asyncClassroom })}>

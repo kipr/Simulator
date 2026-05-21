@@ -349,6 +349,9 @@ class ClassroomStudentView extends React.Component<Props, State> {
     this.setState({ showJoinClassroomDialog: true });
   };
 
+  private classroomForLeave_ = (): AsyncClassroom | null =>
+    this.props.currentStudentClassroom ?? this.state.currentClassroom ?? null;
+
   private onLeaveClassroomDialog_ = () => {
     this.setState({ showLeaveClassroomDialog: true });
   };
@@ -362,7 +365,10 @@ class ClassroomStudentView extends React.Component<Props, State> {
     );
 
     if (classroom) {
-      this.props.onStudentAdded(inviteCode, auth.currentUser?.uid || '', displayName);
+      const docId = Async.latestValue(classroom).docId;
+      if (docId) {
+        this.props.onStudentAdded(docId, auth.currentUser?.uid || '', displayName);
+      }
       this.props.onJoinClassroom(classroom);
       this.setState({ showJoinClassroomDialog: false, isStudentInClassroom: true, currentClassroom: classroom, currentStudentDisplayName: displayName });
     }
@@ -371,11 +377,12 @@ class ClassroomStudentView extends React.Component<Props, State> {
   };
 
   private onCloseLeaveClassroomDialog_ = async () => {
-    const { currentClassroom } = this.state;
-    await this.props.onRemoveStudentFromClassroom(
-      auth.currentUser?.uid || '',
-      currentClassroom
-    );
+    const currentClassroom = this.classroomForLeave_();
+    const uid = auth.currentUser?.uid;
+    if (!currentClassroom || !uid) {
+      throw new Error('No classroom loaded');
+    }
+    await this.props.onRemoveStudentFromClassroom(uid, currentClassroom);
     this.props.navigate(`/classrooms/${auth.currentUser?.uid || ''}/studentView/`);
     this.setState({ showLeaveClassroomDialog: false, isStudentInClassroom: false, currentClassroom: null, currentStudentDisplayName: undefined });
   };
@@ -646,10 +653,10 @@ class ClassroomStudentView extends React.Component<Props, State> {
             <ClassroomsClassroomInfoContainer style={style} theme={theme}>
               <ClassroomHeaderContainer style={style} theme={theme}>
                 {this.renderMyClassroom()}
-                {showLeaveClassroomDialog && (
+                {showLeaveClassroomDialog && this.classroomForLeave_() && (
                   <LeaveClassDialog
                     onClose={this.onExitLeaveClassroomDialog_}
-                    currentClassroom={Async.latestValue(currentClassroom)}
+                    currentClassroom={Async.latestValue(this.classroomForLeave_())}
                     locale={locale}
                     onLeaveClassDialogClose={this.onCloseLeaveClassroomDialog_}
                     theme={DARK}
@@ -712,6 +719,12 @@ export default connect(
       dispatch(ClassroomsAction.joinClassroom({ classroom }));
     },
 
-    onRemoveStudentFromClassroom: (studentId: string, currentClassroom: AsyncClassroom) =>
-      removeStudentFromClassroom(studentId, currentClassroom),
+    onRemoveStudentFromClassroom: async (studentId: string, currentClassroom: AsyncClassroom) => {
+      await removeStudentFromClassroom(studentId, currentClassroom);
+      dispatch(ClassroomsAction.removeStudentFromClassroom({
+        studentId,
+        currentClassroom,
+        persist: false,
+      }));
+    },
   }))(withNavigate(ClassroomStudentView));
