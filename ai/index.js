@@ -89,7 +89,7 @@ function createAiRouter(firebaseTokenManager, config) {
       language,
       console: consoleText,
       robot,
-      model = 'claude-sonnet-4-20250514',
+      model = 'claude-sonnet-4-6',
       locale,
     } = req.body;
     const userId = req.user?.uid;
