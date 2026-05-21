@@ -2,121 +2,6 @@
 const express = require('express');
 const admin = require('firebase-admin');
 
-function studentEntryId(entry) {
-  if (!entry) return undefined;
-  if (typeof entry === 'string') return entry;
-  if (!entry.id) return undefined;
-  if (typeof entry.id === 'string') return entry.id;
-  if (typeof entry.id === 'object' && entry.id['en-US']) return entry.id['en-US'];
-  return undefined;
-}
-
-/** Firestore map key for a student (may differ from entry.id in edge cases). */
-function findStudentRosterKey(studentIds, studentId) {
-  if (!studentIds || typeof studentIds !== 'object' || Array.isArray(studentIds)) {
-    return null;
-  }
-  if (studentIds[studentId]) return studentId;
-  for (const [key, entry] of Object.entries(studentIds)) {
-    if (key === studentId || studentEntryId(entry) === studentId) {
-      return key;
-    }
-  }
-  return null;
-}
-
-/** All roster map keys that refer to this student (removes duplicates / legacy keys). */
-function rosterKeysForStudent(studentIds, studentId) {
-  if (!studentIds || typeof studentIds !== 'object' || Array.isArray(studentIds)) {
-    return [];
-  }
-  const keys = new Set();
-  for (const [key, entry] of Object.entries(studentIds)) {
-    if (key === studentId || studentEntryId(entry) === studentId) {
-      keys.add(key);
-    }
-  }
-  return [...keys];
-}
-
-/** Firestore update() deep-merges maps; assignedTo keys must be deleted explicitly. */
-function addAssignedToDeletesForStudent(update, classroomAssignments, studentId) {
-  if (!classroomAssignments || typeof classroomAssignments !== 'object') {
-    return;
-  }
-  const FieldPath = admin.firestore.FieldPath;
-  for (const [assignmentKey, assignment] of Object.entries(classroomAssignments)) {
-    const assignedTo = assignment?.assignedTo;
-    if (!assignedTo || typeof assignedTo !== 'object') continue;
-    for (const [assignedKey, entry] of Object.entries(assignedTo)) {
-      if (assignedKey === studentId || studentEntryId(entry) === studentId) {
-        update[
-          new FieldPath('classroomAssignments', assignmentKey, 'assignedTo', assignedKey)
-        ] = admin.firestore.FieldValue.delete();
-      }
-    }
-  }
-}
-
-/** Apply assignment map patch without leaving stale assignedTo entries after merge. */
-async function applyClassroomAssignmentsPatch(docRef, existing, incomingAssignments) {
-  const FieldPath = admin.firestore.FieldPath;
-  const existingAssignments = existing.classroomAssignments || {};
-  const incoming = incomingAssignments || {};
-  const update = {};
-  const assignmentKeys = new Set([
-    ...Object.keys(existingAssignments),
-    ...Object.keys(incoming),
-  ]);
-
-  for (const assignmentKey of assignmentKeys) {
-    const existingAssignment = existingAssignments[assignmentKey];
-    const incomingAssignment = incoming[assignmentKey];
-    const existingAt = existingAssignment?.assignedTo || {};
-    const incomingAt = incomingAssignment?.assignedTo || {};
-
-    for (const assignedKey of Object.keys(existingAt)) {
-      if (!(assignedKey in incomingAt)) {
-        update[
-          new FieldPath('classroomAssignments', assignmentKey, 'assignedTo', assignedKey)
-        ] = admin.firestore.FieldValue.delete();
-      }
-    }
-    for (const [assignedKey, entry] of Object.entries(incomingAt)) {
-      update[
-        new FieldPath('classroomAssignments', assignmentKey, 'assignedTo', assignedKey)
-      ] = entry;
-    }
-
-    if (incomingAssignment) {
-      const rest = { ...incomingAssignment };
-      delete rest.assignedTo;
-      for (const [field, value] of Object.entries(rest)) {
-        update[new FieldPath('classroomAssignments', assignmentKey, field)] = value;
-      }
-    }
-  }
-
-  if (Object.keys(update).length === 0) return;
-  update.updatedAt = admin.firestore.FieldValue.serverTimestamp();
-  await docRef.update(update);
-}
-
-/** Delete roster entry and remove student from every assignment's assignedTo. */
-async function removeStudentFromClassroomDoc(docRef, existing, studentId) {
-  const keys = rosterKeysForStudent(existing.studentIds, studentId);
-  if (keys.length === 0) return false;
-  const update = {
-    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-  };
-  for (const key of keys) {
-    update[`studentIds.${key}`] = admin.firestore.FieldValue.delete();
-  }
-  addAssignedToDeletesForStudent(update, existing.classroomAssignments, studentId);
-  await docRef.update(update);
-  return true;
-}
-
 // You already have FirebaseTokenManager; we’ll use it to verify the ID token.
 module.exports = function createClassroomsRouter(firebaseTokenManager) {
   const router = express.Router();
@@ -152,71 +37,13 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
 
   const colPath = () => admin.firestore().collection('classrooms');
 
-  // Student leaves whichever classroom they are enrolled in (uses auth uid; no doc id required).
-  router.post('/leave', async (req, res) => {
-    try {
-      const { uid } = req.user;
-      let qsnap = await colPath()
-        .where(`studentIds.${uid}`, '!=', null)
-        .get();
-
-      // Legacy rosters may use a map key other than the uid; scan once if the index query misses.
-      if (qsnap.empty) {
-        const all = await colPath().get();
-        const matches = all.docs.filter((doc) =>
-          rosterKeysForStudent(doc.data().studentIds, uid).length > 0,
-        );
-        if (matches.length > 0) {
-          qsnap = { docs: matches, empty: false };
-        }
-      }
-
-      if (qsnap.empty) {
-        return res.status(404).json({ message: 'Student not in any classroom' });
-      }
-
-      let removed = false;
-      for (const doc of qsnap.docs) {
-        const existing = doc.data();
-        const didRemove = await removeStudentFromClassroomDoc(doc.ref, existing, uid);
-        if (didRemove) removed = true;
-      }
-
-      if (!removed) {
-        return res.status(404).json({ message: 'Student not in classroom' });
-      }
-      return res.sendStatus(204);
-    } catch (err) {
-      console.error('POST /classrooms/leave error:', err);
-      return res.status(500).json({ message: err.message });
-    }
-  });
-
-  // CREATE classroom (POST on an existing id must not reassign teacherId to the caller)
+  // CREATE classroom
   router.post('/:id', async (req, res) => {
     try {
       const { uid } = req.user;
       const { id } = req.params;
       const data = req.body || {};
       const firestore = admin.firestore();
-      const docRef = firestore.collection('classrooms').doc(id);
-      const existingSnap = await docRef.get();
-
-      if (existingSnap.exists) {
-        const existing = existingSnap.data();
-        const dataWithoutTeacherId = { ...data };
-        delete dataWithoutTeacherId.teacherId;
-        await docRef.set(
-          {
-            ...dataWithoutTeacherId,
-            teacherId: existing.teacherId,
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-          },
-          { merge: true },
-        );
-        return res.sendStatus(204);
-      }
-
       const classroomData = {
         ...data,
         teacherId: uid,
@@ -224,7 +51,8 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       };
 
-      await docRef.set(classroomData);
+      await firestore.collection('classrooms').doc(id)
+        .set(classroomData);
 
       return res.status(204).json({ id, ...classroomData });
     } catch (err) {
@@ -366,9 +194,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
         .get();
 
       const result = {};
-      qsnap.forEach((doc) => {
-        result[doc.id] = { ...doc.data(), docId: doc.id };
-      });
+      qsnap.forEach((doc) => (result[doc.id] = doc.data()));
 
       return res.status(200).json(result);
     } catch (err) {
@@ -390,7 +216,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
         return res.status(404).json({});
       }
 
-      return res.status(200).json({ [id]: { ...doc.data(), docId: id } });
+      return res.status(200).json({ [id]: doc.data() });
     } catch (err) {
       console.error('GET /classrooms/:id error:', err);
       return res.status(500).json({ message: err.message });
@@ -437,7 +263,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
 
       const result = {};
       qsnap.forEach((doc) => {
-        result[doc.id] = { ...doc.data(), docId: doc.id };
+        result[doc.id] = doc.data();
       });
       return res.status(200).json(result);
     } catch (err) {
@@ -482,163 +308,11 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     }
   });
 
-  // Student leaves their own classroom (caller uid only; never touches teacherId).
-  router.post('/:id/leave', async (req, res) => {
-    try {
-      const { uid } = req.user;
-      const { id } = req.params;
-      const docRef = admin.firestore()
-        .collection('classrooms')
-        .doc(id);
-      const snap = await docRef.get();
-      if (!snap.exists) {
-        return res.status(404).json({ message: 'Classroom not found' });
-      }
-      const existing = snap.data();
-      const didRemove = await removeStudentFromClassroomDoc(docRef, existing, uid);
-      if (!didRemove) {
-        return res.status(404).json({ message: 'Student not in classroom' });
-      }
-      return res.sendStatus(204);
-    } catch (err) {
-      console.error('POST /classrooms/:id/leave error:', err);
-      return res.status(500).json({ message: err.message });
-    }
-  });
-
-  // Remove one student from the roster (leave classroom / teacher removes student).
-  // Never reads or writes teacherId.
-  router.delete('/:id/students/:studentId', async (req, res) => {
-    try {
-      const { uid } = req.user;
-      const { id, studentId } = req.params;
-      const docRef = admin.firestore()
-        .collection('classrooms')
-        .doc(id);
-      const snap = await docRef.get();
-      if (!snap.exists) {
-        return res.status(404).json({ message: 'Classroom not found' });
-      }
-      const existing = snap.data();
-      const isTeacher = existing.teacherId === uid;
-      const isSelf = studentId === uid;
-      if (!isTeacher && !isSelf) {
-        return res.status(403).json({ message: 'Forbidden' });
-      }
-      const didRemove = await removeStudentFromClassroomDoc(
-        docRef,
-        existing,
-        studentId,
-      );
-      if (!didRemove) {
-        return res.status(404).json({ message: 'Student not in classroom' });
-      }
-      return res.sendStatus(204);
-    } catch (err) {
-      console.error('DELETE /classrooms/:id/students/:studentId error:', err);
-      return res.status(500).json({ message: err.message });
-    }
-  });
-
-  const isRosterOnlyPatch = (data) => {
-    const keys = Object.keys(data).filter((k) => k !== 'updatedAt');
-    return (
-      keys.length === 1 &&
-      keys[0] === 'studentIds' &&
-      data.studentIds &&
-      typeof data.studentIds === 'object'
-    );
-  };
-
-  const isRosterAndAssignmentsPatch = (data) => {
-    const keys = Object.keys(data).filter((k) => k !== 'updatedAt');
-    return (
-      keys.length === 2 &&
-      keys.includes('studentIds') &&
-      keys.includes('classroomAssignments') &&
-      data.studentIds &&
-      typeof data.studentIds === 'object' &&
-      data.classroomAssignments &&
-      typeof data.classroomAssignments === 'object'
-    );
-  };
-
-  const applyRosterPatch = async (docRef, existing, data) => {
-    const update = {
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-    };
-    const existingIds = existing.studentIds || {};
-    const incomingIds = data.studentIds;
-
-    for (const [studentId, entry] of Object.entries(incomingIds)) {
-      update[`studentIds.${studentId}`] = entry;
-    }
-    for (const studentId of Object.keys(existingIds)) {
-      if (!(studentId in incomingIds)) {
-        update[`studentIds.${studentId}`] = admin.firestore.FieldValue.delete();
-      }
-    }
-
-    await docRef.update(update);
-  };
-
-  /** Non-teacher roster PATCH: may only join (add self) or leave (remove self). */
-  const applyStudentRosterPatchAsNonTeacher = async (docRef, existing, data, uid) => {
-    const existingIds = existing.studentIds || {};
-    const incomingIds = data.studentIds || {};
-    const selfKey = findStudentRosterKey(existingIds, uid);
-    const addedKeys = Object.keys(incomingIds).filter((k) => !(k in existingIds));
-    const removedKeys = Object.keys(existingIds).filter((k) => !(k in incomingIds));
-
-    const forbidden = () => {
-      const err = new Error('Forbidden');
-      err.status = 403;
-      throw err;
-    };
-
-    // Join: preserve roster, add only the authenticated student.
-    if (removedKeys.length === 0 && addedKeys.length === 1 && addedKeys[0] === uid) {
-      for (const key of Object.keys(existingIds)) {
-        if (!(key in incomingIds)) forbidden();
-      }
-      await docRef.update({
-        [`studentIds.${uid}`]: incomingIds[uid],
-        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
-      return;
-    }
-
-    // Leave: preserve roster for everyone else, remove only the authenticated student.
-    if (addedKeys.length === 0 && removedKeys.length === 1) {
-      const removedKey = removedKeys[0];
-      if (
-        removedKey !== uid &&
-        removedKey !== selfKey &&
-        studentEntryId(existingIds[removedKey]) !== uid
-      ) {
-        forbidden();
-      }
-      for (const key of Object.keys(existingIds)) {
-        if (key === removedKey) continue;
-        if (!(key in incomingIds)) forbidden();
-      }
-      for (const key of Object.keys(incomingIds)) {
-        if (!(key in existingIds)) forbidden();
-      }
-      await removeStudentFromClassroomDoc(docRef, existing, uid);
-      return;
-    }
-
-    forbidden();
-  };
-
   // PATCH (classroom update)
   // Firestore merge:true recursively merges maps, so nested fields like
   // classroomAssignments.*.assignedTo and studentIds.*.assignments never drop
   // removed keys when the client sends a smaller object. Teachers send the full
   // classroom from the client after edits, so we replace the document for them.
-  // Roster-only patches (studentIds only) never change teacherId — even if
-  // teacherId was previously corrupted to match a student's uid.
   router.patch('/:id', async (req, res) => {
     try {
       const { uid } = req.user;
@@ -651,50 +325,13 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
         return res.status(404).json({ message: 'Classroom not found' });
       }
       const existing = snap.data();
+      const payload = {
+        ...data,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      };
       const isOwner = existing.teacherId === uid;
-
-      if (isRosterAndAssignmentsPatch(data) && isOwner) {
-        await applyRosterPatch(docRef, existing, { studentIds: data.studentIds });
-        await applyClassroomAssignmentsPatch(
-          docRef,
-          existing,
-          data.classroomAssignments,
-        );
-        return res.sendStatus(204);
-      }
-
-      if (isRosterOnlyPatch(data)) {
-        if (isOwner) {
-          await applyRosterPatch(docRef, existing, data);
-        } else {
-          try {
-            await applyStudentRosterPatchAsNonTeacher(docRef, existing, data, uid);
-          } catch (err) {
-            if (err.status === 403) {
-              return res.status(403).json({ message: 'Forbidden' });
-            }
-            if (err.status === 404) {
-              return res.status(404).json({ message: err.message });
-            }
-            throw err;
-          }
-        }
-        return res.sendStatus(204);
-      }
-
-      if (isOwner) {
-        const dataWithoutTeacherId = { ...data };
-        delete dataWithoutTeacherId.teacherId;
-        const payload = {
-          ...dataWithoutTeacherId,
-          teacherId: existing.teacherId,
-          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        };
-        await docRef.set(payload, { merge: false });
-        return res.sendStatus(204);
-      }
-
-      return res.status(403).json({ message: 'Forbidden' });
+      await docRef.set(payload, { merge: !isOwner });
+      return res.sendStatus(204);
     } catch (err) {
       console.error('PATCH /classrooms error:', err);
       return res.status(500).json({ message: err.message });

@@ -10,17 +10,13 @@ import { I18nAction } from '../../state/reducer';
 import { connect } from 'react-redux';
 import Form from '../interface/Form';
 import { Classroom } from 'state/State/Classroom';
-import {
-  classroomNameAsString,
-  classroomNamesMatch,
-} from '../../util/classroomDisplayName';
 
 export interface LeaveClassDialogPublicProps extends ThemeProps, StyleProps {
 
   locale: LocalizedString.Language;
   onClose: () => void;
   currentClassroom: Classroom;
-  onLeaveClassDialogClose: () => Promise<void>;
+  onLeaveClassDialogClose: () => void;
 }
 
 interface LeaveClassDialogPrivateProps {
@@ -29,7 +25,6 @@ interface LeaveClassDialogPrivateProps {
 }
 
 interface LeaveClassDialogState {
-  errorMessage: string;
 }
 
 type Props = LeaveClassDialogPublicProps & LeaveClassDialogPrivateProps;
@@ -56,65 +51,33 @@ const StyledForm = styled(Form, (props: ThemeProps) => ({
   paddingRight: `${props.theme.itemPadding * 2}px`,
 }));
 
-const ErrorMessage = styled('div', (props: ThemeProps) => ({
-  color: '#ff6b6b',
-  fontSize: '0.9em',
-  textAlign: 'center',
-}));
-
 export class LeaveClassDialog extends React.PureComponent<Props, State> {
-  /** Exact name shown in the dialog — user must match this string. */
-  private readonly confirmClassroomName_: string;
 
   constructor(props: Props) {
     super(props);
-    this.confirmClassroomName_ = classroomNameAsString(
-      props.currentClassroom.classroomId,
-      props.locale
-    );
-    this.state = { errorMessage: '' };
   }
 
-  onFinalize_ = async (values: { [id: string]: string }) => {
+  onFinalize_ = (values: { [id: string]: string }) => {
     const { leaveClassName } = values;
-    const entered = typeof leaveClassName === 'string' ? leaveClassName : '';
-    if (!classroomNamesMatch(entered, this.confirmClassroomName_)) {
-      this.setState({
-        errorMessage: LocalizedString.lookup(
-          tr('Classroom name does not match. Type the classroom name exactly as shown above.'),
-          this.props.locale
-        ),
-      });
-      return;
-    }
+    const { currentClassroom } = this.props;
     try {
-      this.setState({ errorMessage: '' });
-      await this.props.onLeaveClassDialogClose();
+      if (leaveClassName === currentClassroom.classroomId) {
+        this.props.onLeaveClassDialogClose();
+      } else {
+        return;
+      }
     } catch (error) {
       console.error('Error leaving classroom:', error);
-      this.setState({
-        errorMessage: LocalizedString.lookup(
-          tr('Could not leave the classroom. Please try again.'),
-          this.props.locale
-        ),
-      });
     }
+
+
   };
 
   render() {
-    const { props, state } = this;
-    const { style, className, theme, onClose, locale } = props;
-    const { errorMessage: leaveError } = state;
-    const displayName = this.confirmClassroomName_;
+    const { props } = this;
+    const { style, className, theme, onClose, locale, currentClassroom } = props;
     const LEAVECLASSROOM_FORM_ITEMS: Form.Item[] = [
-      Form.leaveClass(
-        'leaveClassName',
-        LocalizedString.lookup(tr('Leave Classroom'), locale),
-        LocalizedString.lookup(
-          tr('Type the classroom name shown above to confirm.'),
-          locale
-        )
-      ),
+      Form.leaveClass('leaveClassName', LocalizedString.lookup(tr('Leave Classroom'), locale), LocalizedString.lookup(tr('Reenter classroom name to confirm leaving classroom.'), locale)),
     ];
 
     return (
@@ -126,12 +89,8 @@ export class LeaveClassDialog extends React.PureComponent<Props, State> {
         <Container theme={theme} style={style} className={className}>
 
           <div style={{ display: 'flex', flexDirection: 'row', gap: '0.25em', alignItems: 'center' }}>
-            {LocalizedString.lookup(tr('Are you sure you want to leave: '), locale)}
-            <ClassroomName theme={theme}>{displayName}</ClassroomName>?
+            {LocalizedString.lookup(tr('Are you sure you want to leave: '), locale)}<ClassroomName theme={theme}>{currentClassroom.classroomId}</ClassroomName>?
           </div>
-          {leaveError ? (
-            <ErrorMessage theme={theme}>{leaveError}</ErrorMessage>
-          ) : null}
           <StyledForm
             theme={theme}
             onFinalize={this.onFinalize_}

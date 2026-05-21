@@ -209,7 +209,7 @@ class ChallengeTabView extends React.Component<Props, State> {
               theme={theme}
               view={view}
               currentStudentDisplayName={currentStudentDisplayName}
-              currentClassroom={view === 'teacherView' ? currentSelectedClassroom : currentStudentClassroom}
+              currentClassroom={currentStudentClassroom}
               tourRegistry={this.props.tourRegistry} />
           </TourTarget>
         </SectionsColumn>)

@@ -329,13 +329,11 @@ class GuidedTour extends React.PureComponent<Props, State> {
       return;
     }
 
-    // if steps changed, clamp index and remeasure (e.g. placement updated for same step id)
+    // if steps changed, clamp index
     if (prevProps.steps !== this.props.steps) {
       const max = Math.max(0, this.props.steps.length - 1);
       if (this.state.stepIndex > max) {
         this.setState({ stepIndex: max }, () => this.measure(true));
-      } else if (this.props.isOpen) {
-        this.measure(false);
       }
     }
 

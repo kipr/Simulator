@@ -386,17 +386,6 @@ const CreateAssignmentView = ({
   const assignButtonTourActive =
     !originalAssignment && activeTourStepId === 'teacher-create-assignment-assign';
 
-  function selectedStudentsLabel() {
-    const selectedCount = Object.keys(selectedStudents).length;
-    const rosterCount = Object.keys(loadedClassroom?.studentIds || {}).length;
-    if (rosterCount === 0) {
-      return `0 ${LocalizedString.lookup(tr('Students'), locale)}`;
-    }
-    return selectedCount === rosterCount
-      ? LocalizedString.lookup(tr('All Students'), locale)
-      : `${selectedCount} ${LocalizedString.lookup(tr('Students'), locale)}`;
-  }
-
   function resolveStudentsForAssign(): Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }> {
     if (Object.keys(selectedStudents).length > 0) {
       return selectedStudents;
@@ -429,7 +418,7 @@ const CreateAssignmentView = ({
     ? !(Object.keys(selectedStudents).length > 0)
     : !(
       assignButtonTourActive ||
-        enableAssign
+        (enableAssign && Object.keys(selectedStudents).length > 0)
     );
 
   return (
@@ -456,7 +445,7 @@ const CreateAssignmentView = ({
                     onEditComplete?.(selectedStudents, editedAssignment);
                     handleEdit(editedAssignment);
                   })()
-                  : enableAssign || assignButtonTourActive
+                  : (enableAssign && Object.keys(selectedStudents).length > 0) || assignButtonTourActive
                     ? runCreateAssign()
                     : null;
               }}>
@@ -475,7 +464,7 @@ const CreateAssignmentView = ({
                   onEditComplete?.(selectedStudents, editedAssignment);
                   handleEdit(editedAssignment);
                 })()
-                : enableAssign || assignButtonTourActive
+                : (enableAssign && Object.keys(selectedStudents).length > 0) || assignButtonTourActive
                   ? runCreateAssign()
                   : null;
             }}>
@@ -547,13 +536,17 @@ const CreateAssignmentView = ({
                 <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-assign-to-button" style={{ display: 'contents' }}>
                   <Button
                     style={{ marginLeft: '1.4em' }} theme={theme} onClick={() => setAssignToMenuVisible(true)}>
-                    {selectedStudentsLabel()}
+                    {Object.keys(selectedStudents).length === Object.keys(loadedClassroom?.studentIds || {}).length
+                      ? LocalizedString.lookup(tr('All Students'), locale)
+                      : `${Object.keys(selectedStudents).length} ${LocalizedString.lookup(tr('Students'), locale)}`}
                   </Button>
                 </TourTarget>
               ) : (
                 <Button
                   style={{ marginLeft: '1.4em' }} theme={theme} onClick={() => setAssignToMenuVisible(true)}>
-                  {selectedStudentsLabel()}
+                  {Object.keys(selectedStudents).length === Object.keys(loadedClassroom?.studentIds || {}).length
+                    ? LocalizedString.lookup(tr('All Students'), locale)
+                    : `${Object.keys(selectedStudents).length} ${LocalizedString.lookup(tr('Students'), locale)}`}
                 </Button>
               )}
             </AssignmentInfoRow>

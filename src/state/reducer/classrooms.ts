@@ -4,7 +4,6 @@ import Async from '../State/Async';
 import Dict from '../../util/objectOps/Dict';
 import Selector from '../../db/Selector';
 import db from '../../db';
-import { auth } from '../../firebase/firebase';
 import { errorToAsyncError } from './util';
 import construct from '../../util/redux/construct';
 import ChallengeCompletion from 'state/State/ChallengeCompletion';
@@ -118,8 +117,7 @@ export namespace ClassroomsAction {
     type: 'classrooms/remove-student-from-classroom';
     studentId: string;
     currentClassroom: AsyncClassroom;
-    /** When false, only update Redux (caller already persisted). */
-    persist?: boolean;
+
   }
 
   export const removeStudentFromClassroom = construct<RemoveStudentFromClassroom>('classrooms/remove-student-from-classroom');
@@ -327,11 +325,8 @@ const listOwned = async () => {
     const result = await db.list<Classroom>('classrooms');
 
     const classrooms: Dict<AsyncClassroom> = {};
-    Object.entries(result).forEach(([id, raw]) => {
-      const classroomData = classroomFromListPayload(raw, id);
-      if (classroomData) {
-        classrooms[id] = Async.loaded({ brief: {}, value: classroomData });
-      }
+    Object.entries(result).forEach(([id, classroom]) => {
+      classrooms[id] = Async.loaded({ brief: {}, value: classroom });
     });
     store.dispatch(ClassroomsAction.setClassrooms({ classrooms }));
 
@@ -433,7 +428,7 @@ export async function addStudentToClassroomAsyncRaw(
 
   await db.set(
     { collection: 'classrooms', id: docId },
-    { studentIds: updatedStudentIds },
+    { ...Async.latestValue(foundClassroom), studentIds: updatedStudentIds },
     true
   );
 
@@ -442,25 +437,11 @@ export async function addStudentToClassroomAsyncRaw(
     studentIds: updatedStudentIds
   };
 
-  const updatedValue = {
-    ...Async.latestValue(foundClassroom),
-    docId: docId || Async.latestValue(foundClassroom).docId,
-    studentIds: updatedStudentIds,
-  };
-  const asyncClassroom: AsyncClassroom = {
+  const updatedValue = { ...Async.latestValue(foundClassroom), studentIds: updatedStudentIds };
+  return {
     type: Async.Type.Loaded,
     value: updatedValue,
   };
-
-  if (docId) {
-    store.dispatch(
-      ClassroomsAction.setClassrooms({
-        classrooms: { [docId]: asyncClassroom },
-      })
-    );
-  }
-
-  return asyncClassroom;
 }
 
 // Add student to classroom in database and update store (action)
@@ -475,200 +456,25 @@ export const studentAdded = (
   studentEntry
 });
 
-function resolveClassroomDocId(
-  classroom: Classroom,
-  entities: Dict<AsyncClassroom> = store.getState().classrooms.entities
-): string | undefined {
-  for (const [entityId, asyncClassroom] of Object.entries(entities)) {
-    if (asyncClassroom.type !== Async.Type.Loaded) continue;
-    if (asyncClassroom.value.classroomId === classroom.classroomId) {
-      return entityId;
-    }
-  }
-
-  return classroom.docId?.trim() || undefined;
-}
-
-async function loadStudentEnrollmentFromServer(): Promise<{
-  docId: string;
-  classroom: Classroom;
-} | null> {
-  const result = await db.get<Record<string, Classroom>>(
-    Selector.classroom('myClassroom')
-  );
-  const entry = result ? Object.entries(result)[0] : undefined;
-  if (!entry) return null;
-  const [docId, raw] = entry;
-  return { docId, classroom: { ...raw, docId } };
-}
-
-function studentIdFromRosterEntry(
-  entry: { id?: string | Dict<string> } | undefined
-): string | undefined {
-  if (!entry?.id) return undefined;
-  if (typeof entry.id === 'string') return entry.id;
-  if (typeof entry.id === 'object' && entry.id['en-US']) return entry.id['en-US'];
-  return undefined;
-}
-
-function omitStudentFromRoster(
-  studentIds: Classroom['studentIds'] | undefined,
-  studentId: string
-): Classroom['studentIds'] {
-  const next = { ...(studentIds || {}) };
-  for (const [key, entry] of Object.entries(next)) {
-    if (key === studentId || studentIdFromRosterEntry(entry) === studentId) {
-      delete next[key];
-    }
-  }
-  return next;
-}
-
-function removeStudentFromAssignmentAssignedTo(
-  classroomAssignments: Classroom['classroomAssignments'] | undefined,
-  studentId: string
-): Classroom['classroomAssignments'] | undefined {
-  if (!classroomAssignments) return classroomAssignments;
-  let changed = false;
-  const next: Dict<ClassroomAssignment> = {};
-  for (const [assignmentKey, assignment] of Object.entries(classroomAssignments)) {
-    if (!assignment?.assignedTo) {
-      next[assignmentKey] = assignment;
-      continue;
-    }
-    const assignedTo = { ...assignment.assignedTo };
-    for (const [key, entry] of Object.entries(assignedTo)) {
-      if (key === studentId || studentIdFromRosterEntry(entry) === studentId) {
-        delete assignedTo[key];
-        changed = true;
-      }
-    }
-    next[assignmentKey] = changed
-      ? { ...assignment, assignedTo }
-      : assignment;
-  }
-  return changed ? next : classroomAssignments;
-}
-
-/** Roster + assignment assignees after a student leaves or is removed. */
-export function applyStudentRemovedFromClassroom(
-  classroom: Classroom,
-  studentId: string
-): Classroom {
-  const studentIds = omitStudentFromRoster(classroom.studentIds, studentId);
-  const classroomAssignments = removeStudentFromAssignmentAssignedTo(
-    classroom.classroomAssignments,
-    studentId
-  );
-  let challengePointsOverrides = classroom.challengePointsOverrides;
-  if (challengePointsOverrides?.[studentId]) {
-    challengePointsOverrides = { ...challengePointsOverrides };
-    delete challengePointsOverrides[studentId];
-  }
-  return {
-    ...classroom,
-    studentIds,
-    classroomAssignments,
-    challengePointsOverrides,
-  };
-}
-
-function classroomEntityAfterStudentRemoved(
-  state: ClassroomsState,
-  classroom: Classroom,
-  studentId: string
-): { docId: string | undefined; entity: AsyncClassroom | null } {
-  const docId = resolveClassroomDocId(classroom, state.entities);
-  if (!docId) return { docId: undefined, entity: null };
-  const cleaned = applyStudentRemovedFromClassroom(classroom, studentId);
-  return {
-    docId,
-    entity: Async.loaded({
-      brief: {},
-      value: { ...cleaned, docId },
-    }),
-  };
-}
-
-/** POST /api/classrooms/leave or /api/classrooms/:id/leave (classrooms.js). */
-async function postClassroomLeave(docId?: string): Promise<void> {
-  const id = docId ? `${docId}/leave` : 'leave';
-  await db.set(Selector.classroom(id), {}, false);
-}
-
-/** DELETE /api/classrooms/:id/students/:studentId (classrooms.js). */
-async function deleteClassroomStudent(docId: string, studentId: string): Promise<void> {
-  await db.delete(Selector.classroom(`${docId}/students/${studentId}`));
-}
-
-/** PATCH roster + assignments after removal (classrooms.js applyRosterPatch + applyClassroomAssignmentsPatch). */
-async function patchClassroomAfterStudentRemoval(
-  docId: string,
-  classroom: Classroom,
-  studentId: string
-): Promise<void> {
-  const cleaned = applyStudentRemovedFromClassroom(classroom, studentId);
-  await db.set(
-    Selector.classroom(docId),
-    {
-      studentIds: cleaned.studentIds ?? {},
-      classroomAssignments: cleaned.classroomAssignments ?? {},
-    },
-    true
-  );
-}
-
-function isDbNotFound(error: unknown): boolean {
-  if (typeof error !== 'object' || error === null) return false;
-  const e = error as { code?: unknown };
-  return e.code === 404;
-}
-
 // Remove student from classroom in database and update store
 export const removeStudentFromClassroom = async (
   studentId: string,
   currentClassroom: AsyncClassroom
 ) => {
-  const classroom = Async.latestValue(currentClassroom);
-  const authUid = auth.currentUser?.uid;
-  const isSelfLeave = !!authUid && studentId === authUid;
+  const exisitingStudentIds = Object.keys(Async.latestValue(currentClassroom).studentIds);
+  if (exisitingStudentIds.includes(studentId)) {
+    const updatedStudentIds = { ...Async.latestValue(currentClassroom).studentIds };
+    delete updatedStudentIds[studentId];
+    const docId = Async.latestValue(currentClassroom).docId;
 
-  if (isSelfLeave) {
-    try {
-      await postClassroomLeave();
-      return;
-    } catch (error) {
-      if (!isDbNotFound(error)) throw error;
-    }
+    await db.set(
+      { collection: 'classrooms', id: docId },
+      { ...Async.latestValue(currentClassroom), studentIds: updatedStudentIds },
+      false
+    );
 
-    const docId =
-      resolveClassroomDocId(classroom) || classroom.docId?.trim();
-
-    if (!docId) {
-      throw new Error('Cannot leave classroom: classroom not found on server');
-    }
-
-    try {
-      await postClassroomLeave(docId);
-      return;
-    } catch (error) {
-      if (!isDbNotFound(error)) throw error;
-    }
-
-    throw new Error('Cannot leave classroom: classroom not found on server');
   }
 
-  const docId = resolveClassroomDocId(classroom);
-  if (!docId) {
-    throw new Error('Cannot remove student: missing classroom document id');
-  }
-
-  try {
-    await deleteClassroomStudent(docId, studentId);
-  } catch (error) {
-    if (!isDbNotFound(error)) throw error;
-    await patchClassroomAfterStudentRemoval(docId, classroom, studentId);
-  }
 };
 
 // Check if student is in any classroom
@@ -682,31 +488,14 @@ export const studentInClassroom = async (
     const normalized =
       typeof studentId === 'string' ? studentId : studentId['en-US'];
 
-    const entry = result ? Object.entries(result)[0] : undefined;
-    if (!entry) {
+    // Extract the real Classroom object
+    const classroom = result ? Object.values(result)[0] : null;
+
+    if (!classroom || !classroom.studentIds) {
       return { inClassroom: false, classroom: null };
     }
 
-    const [docId, rawClassroom] = entry;
-    const classroom: Classroom = {
-      ...rawClassroom,
-      docId,
-    };
-
-    if (!classroom.studentIds) {
-      return { inClassroom: false, classroom: null };
-    }
-
-    const inClass =
-      normalized in classroom.studentIds ||
-      Object.values(classroom.studentIds).some(
-        (entry) =>
-          entry &&
-          (entry.id === normalized ||
-            (typeof entry.id === 'object' &&
-              entry.id !== null &&
-              entry.id['en-US'] === normalized))
-      );
+    const inClass = normalized in classroom.studentIds;
 
     const asyncClassroom: AsyncClassroom = {
       brief: {},
@@ -714,7 +503,7 @@ export const studentInClassroom = async (
       value: classroom,
     };
 
-    store.dispatch(ClassroomsAction.setClassrooms({ classrooms: { [docId]: asyncClassroom } }));
+    store.dispatch(ClassroomsAction.setClassrooms({ classrooms: { [asyncClassroom.value.docId || '']: asyncClassroom } }));
     return { inClassroom: inClass, classroom: inClass ? asyncClassroom : null };
   } catch (error) {
     console.error('Error checking if student has classroom:', error);
@@ -755,11 +544,11 @@ function classroomFromListPayload(raw: unknown, docIdFromKey: string): Classroom
   const v = raw as Record<string, unknown>;
   if (v.type === Async.Type.Loaded && v.value && typeof v.value === 'object') {
     const inner = v.value as Classroom;
-    return { ...inner, docId: docIdFromKey, studentIds: inner.studentIds ?? {} };
+    return { ...inner, docId: inner.docId || docIdFromKey };
   }
   const c = raw as Classroom;
   if (typeof c.teacherId === 'string' && c.teacherId.length > 0) {
-    return { ...c, docId: docIdFromKey, studentIds: c.studentIds ?? {} };
+    return { ...c, docId: c.docId || docIdFromKey };
   }
   return null;
 }
@@ -1228,10 +1017,7 @@ export const reduceClassrooms = (
     case 'classrooms/set-classroom': {
       return {
         ...state,
-        entities: {
-          ...state.entities,
-          [action.classroomId]: action.classroom,
-        },
+        [action.classroomId]: action.classroom,
       };
     }
 
@@ -1250,44 +1036,28 @@ export const reduceClassrooms = (
       return state;
     }
     case 'classrooms/student-added': {
-      const entityKey =
-        state.entities[action.classroomId]
-          ? action.classroomId
-          : Object.entries(state.entities).find(
-            ([, asyncClassroom]) =>
-              asyncClassroom.type === Async.Type.Loaded &&
-              asyncClassroom.value.docId === action.classroomId
-          )?.[0];
-      if (!entityKey) return state;
-
-      const asyncClassroom = state.entities[entityKey];
+      const asyncClassroom = state.entities[action.classroomId];
       if (!asyncClassroom || asyncClassroom.type !== Async.Type.Loaded) return state;
 
       const classroom = asyncClassroom.value;
-      const studentIds = {
-        ...(classroom.studentIds ?? {}),
-        [action.studentId]: { id: action.studentId, displayName: action.displayName },
+
+      const updated = {
+        ...classroom,
+        studentIds: {
+          ...classroom.studentIds,
+          [action.studentId]: { id: action.studentId, displayName: action.displayName }
+        }
       };
-
-      const updated = { ...classroom, studentIds };
-      const loaded = Async.loaded({
-        brief: asyncClassroom.brief,
-        value: updated,
-      });
-
-      const selectedClassroom =
-        state.selectedClassroom?.type === Async.Type.Loaded &&
-        resolveClassroomDocId(state.selectedClassroom.value, state.entities) === entityKey
-          ? loaded
-          : state.selectedClassroom;
 
       return {
         ...state,
         entities: {
           ...state.entities,
-          [entityKey]: loaded,
-        },
-        selectedClassroom,
+          [action.classroomId]: Async.loaded({
+            brief: asyncClassroom.brief,
+            value: updated
+          })
+        }
       };
     }
 
@@ -1300,35 +1070,37 @@ export const reduceClassrooms = (
 
     }
     case 'classrooms/remove-student-from-classroom': {
-      if (action.persist !== false) {
-        void removeStudentFromClassroom(action.studentId, action.currentClassroom);
+      void removeStudentFromClassroom(action.studentId, action.currentClassroom);
+      const exisitingStudentIds = Object.keys(Async.latestValue(action.currentClassroom).studentIds);
+
+      if (exisitingStudentIds.includes(action.studentId)) {
+        const updatedStudentIds = { ...Async.latestValue(action.currentClassroom).studentIds };
+        delete updatedStudentIds[action.studentId];
+        const docId = Async.latestValue(action.currentClassroom).docId;
+
+        // store.dispatch(
+        //   ClassroomsAction.setClassroom({
+        //     classroomId: docId,
+        //     classroom: Async.loaded({
+        //       brief: {},
+        //       value: { ...Async.latestValue(action.currentClassroom), studentIds: updatedStudentIds }
+        //     })
+        //   })
+        // );
+        return {
+          ...state,
+          entities: {
+            ...state.entities,
+            [Async.latestValue(action.currentClassroom).docId]: Async.loaded({
+              brief: {},
+              value: { ...Async.latestValue(action.currentClassroom), studentIds: updatedStudentIds }
+            })
+          },
+          currentStudentClassroom: null
+        };
       }
 
-      const classroom = Async.latestValue(action.currentClassroom);
-      const { docId, entity } = classroomEntityAfterStudentRemoved(
-        state,
-        classroom,
-        action.studentId
-      );
-
-      const entities = entity && docId
-        ? { ...state.entities, [docId]: entity }
-        : state.entities;
-
-      const selectedClassroom =
-        entity &&
-        docId &&
-        state.selectedClassroom?.type === Async.Type.Loaded &&
-        resolveClassroomDocId(state.selectedClassroom.value, state.entities) === docId
-          ? entity
-          : state.selectedClassroom;
-
-      return {
-        ...state,
-        entities,
-        selectedClassroom,
-        ...(action.persist === false ? { currentStudentClassroom: null } : {}),
-      };
+      return state;
     }
 
     case 'classrooms/student-in-classroom': {

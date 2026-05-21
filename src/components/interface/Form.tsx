@@ -103,16 +103,12 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
     const { items } = props;
     const { values } = state;
 
-    const ret: { [id: string]: unknown } = {};
+    const ret = {};
     for (const item of items) {
-      if (!(item.id in values)) continue;
-      const finalizer = item.finalizer ?? Form.IDENTITY_FINALIZER;
-      ret[item.id] = finalizer(values[item.id].text);
+      ret[item.id] = item.finalizer(values[item.id].text);
     }
 
-    void Promise.resolve(this.props.onFinalize(ret)).catch((error: unknown) => {
-      console.error('Form onFinalize error:', error);
-    });
+    this.props.onFinalize(ret);
   };
 
   private isFinalizeAllowed_ = () => {

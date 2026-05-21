@@ -145,11 +145,8 @@ const PeopleView = ({
   function getStudents(currentSelectedClassroom: AsyncClassroom | null) {
 
     const loadedClassroom = Async.latestValue(currentSelectedClassroom);
-    const docId = loadedClassroom?.docId || '';
-    const stateClassroom = docId ? classroomList[docId] : undefined;
-    const students =
-      Async.latestValue(stateClassroom)?.studentIds ??
-      loadedClassroom?.studentIds;
+    const stateClassroom = classroomList[loadedClassroom?.docId || ''];
+    const students = Async.latestValue(stateClassroom)?.studentIds;
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em', fontSize: '1.5em', alignItems: 'flex-start', width: '80%' }}>
