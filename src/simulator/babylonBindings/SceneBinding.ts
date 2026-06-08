@@ -30,6 +30,27 @@ import WorkerInstance from "../../programming/WorkerInstance";
 import LocalizedString from '../../util/LocalizedString';
 import ScriptManager from '../ScriptManager';
 import { RENDER_SCALE } from '../../components/constants/renderConstants';
+import {
+  horizDistRobotToReamWorldCm_,
+  REAM_STOP_NEAR_SAMPLE_NODE_IDS,
+} from '../../util/jbcReamStopNear';
+import {
+  matItemMeshMatLocalCm,
+  matPlayZonesFromScene,
+  robotLinkBabylonToWorldCm,
+  sceneMeshBabylonToWorldCm,
+  scriptSceneNodeMatLocalCm,
+} from '../../util/jbcMatPlayArea';
+import { robotFootprintHullsIntersectPlayAreaPolygon } from '../../util/playAreaRobotIntersection';
+import { sceneHasCustomChallengeRuntime } from '../../util/customChallengeSceneScripts';
+import { yAngleDegreesFromQuaternion } from '../../util/babylonMath';
+import { isMatZoneEditActive } from '../../util/matZoneEditSession';
+import { MatPlayZoneSurfaceMeshes } from './matPlayZoneSurfaceMeshes';
+import {
+  PLAY_AREA_ROBOT_BOUNDS_DEBUG_VISIBLE,
+  PlayAreaRobotBoundsDebugMeshes,
+} from './playAreaRobotBoundsDebugMeshes';
+import type { MatPlayZone } from '../../util/jbcMatPlayArea';
 
 import { createMaterial, updateMaterialBasic, updateMaterialPbr } from './createSceneObjects/createMaterials';
 import { createDirectionalLight, createPointLight, createSpotLight } from './createSceneObjects/createLights';
@@ -70,6 +91,9 @@ class SceneBinding {
   private scriptManager_ = new ScriptManager();
   get scriptManager() { return this.scriptManager_; }
 
+  private matPlayZoneSurfaces_ = new MatPlayZoneSurfaceMeshes();
+  private playAreaRobotBoundsDebug_ = new PlayAreaRobotBoundsDebugMeshes();
+
   get camera() { return this.camera_; }
 
   private canvas_: HTMLCanvasElement;
@@ -86,19 +110,33 @@ class SceneBinding {
     const engine = this.bScene_.getEngine();
     if (this.engineView_) engine.unRegisterView(this.engineView_.target);
     this.engineView_ = engine.registerView(this.canvas_);
-
-    this.bScene_.detachControl();
-    engine.inputElement = this.canvas_ as unknown as HTMLElement;
-    this.camera_.attachControl(this.engineView_.target, true);
-    this.bScene_.attachControl();
-
+    this.attachSimulatorControls();
   }
+
+  /** Release camera / scene pointer handlers (e.g. while dragging a play-area handle). */
+  readonly detachSimulatorControls = (): void => {
+    this.camera_?.detachControl();
+    this.bScene_.detachControl();
+  };
+
+  /** Re-attach camera to the registered engine view (detach first to avoid duplicate listeners). */
+  readonly attachSimulatorControls = (): void => {
+    if (!this.canvas_ || !this.camera_) return;
+    this.canvas_.style.pointerEvents = '';
+    this.detachSimulatorControls();
+    const engine = this.bScene_.getEngine();
+    engine.inputElement = this.canvas_ as unknown as HTMLElement;
+    const target = this.engineView_?.target ?? this.canvas_;
+    this.camera_.attachControl(target, true);
+    this.bScene_.attachControl();
+  };
 
   /**
    * `declineTicks` is used for a race between initial robot origin setting and tick origin updates.
    * When this is true, the tick() method will exit immediately and return undefined.
    */
   private declineTicks_ = false;
+  private gizmosEnabled_ = true;
 
   private materialIdIter_ = 0;
 
@@ -134,8 +172,274 @@ class SceneBinding {
     this.scriptManager_.onCollisionFiltersChanged = this.onCollisionFiltersChanged_;
     this.scriptManager_.onIntersectionFiltersChanged = this.onIntersectionFiltersChanged_;
 
+    this.scriptManager_.resolveNodeMatLocal = nodeId => {
+      for (const robotSceneId in this.robotBindings_) {
+        const robotBinding = this.robotBindings_[robotSceneId];
+        if (nodeId === robotSceneId) {
+          return robotBinding.getMatFootprintLocal();
+        }
+        const onRobot = robotBinding.getMatLinkLocal(nodeId);
+        if (onRobot) {
+          return onRobot;
+        }
+      }
 
+      return this.resolveMatItemMatLocalCm_(nodeId);
+    };
 
+    this.scriptManager_.resolveNodeWorldCm = nodeId => {
+      for (const robotSceneId in this.robotBindings_) {
+        const robotBinding = this.robotBindings_[robotSceneId];
+        if (nodeId === robotSceneId) {
+          const sampleIds = ['left_wheel_link', 'right_wheel_link', 'chassis'];
+          if (!sampleIds.includes(robotSceneId)) {
+            sampleIds.push(robotSceneId);
+          }
+          const samples: RawVector3[] = [];
+          for (const sampleId of sampleIds) {
+            const link = robotBinding.links[sampleId];
+            if (!link) continue;
+            link.computeWorldMatrix(true);
+            const ap = link.getAbsolutePosition();
+            samples.push(robotLinkBabylonToWorldCm({ x: ap.x, y: ap.y, z: ap.z }));
+          }
+          if (samples.length === 0) return null;
+          return {
+            x: samples.reduce((s, p) => s + p.x, 0) / samples.length,
+            y: samples.reduce((s, p) => s + p.y, 0) / samples.length,
+            z: samples.reduce((s, p) => s + p.z, 0) / samples.length,
+          };
+        }
+        const link = robotBinding.links[nodeId];
+        if (link) {
+          link.computeWorldMatrix(true);
+          const ap = link.getAbsolutePosition();
+          return robotLinkBabylonToWorldCm({ x: ap.x, y: ap.y, z: ap.z });
+        }
+      }
+
+      const bNode = this.findSceneMeshForNode_(nodeId);
+      if (bNode && 'getAbsolutePosition' in bNode) {
+        bNode.computeWorldMatrix(true);
+        const ap = bNode.getAbsolutePosition();
+        return sceneMeshBabylonToWorldCm({ x: ap.x, y: ap.y, z: ap.z });
+      }
+
+      return null;
+    };
+
+    this.scriptManager_.resolveNodeWorldBoundsCm = nodeId => {
+      const bNode = this.findSceneMeshForNode_(nodeId);
+      if (!(bNode instanceof AbstractMesh)) {
+        return null;
+      }
+      bNode.computeWorldMatrix(true);
+      const bb = bNode.getBoundingInfo().boundingBox;
+      return {
+        min: sceneMeshBabylonToWorldCm({
+          x: bb.minimumWorld.x,
+          y: bb.minimumWorld.y,
+          z: bb.minimumWorld.z,
+        }),
+        max: sceneMeshBabylonToWorldCm({
+          x: bb.maximumWorld.x,
+          y: bb.maximumWorld.y,
+          z: bb.maximumWorld.z,
+        }),
+      };
+    };
+
+    this.scriptManager_.resolveReamStopNearDistCm = reamNodeId => {
+      const reamNode = this.findSceneMeshForNode_(reamNodeId);
+      if (!reamNode || !('getAbsolutePosition' in reamNode)) {
+        return null;
+      }
+      reamNode.computeWorldMatrix(true);
+      const reamAp = reamNode.getAbsolutePosition();
+      const reamWorld = sceneMeshBabylonToWorldCm({
+        x: reamAp.x,
+        y: reamAp.y,
+        z: reamAp.z,
+      });
+
+      let minDist: number | null = null;
+      for (const robotBinding of Object.values(this.robotBindings_)) {
+        for (const sampleId of REAM_STOP_NEAR_SAMPLE_NODE_IDS) {
+          const link = robotBinding.links[sampleId];
+          if (!link) continue;
+          link.computeWorldMatrix(true);
+          const ap = link.getAbsolutePosition();
+          // Robot link poses use the same Babylon cm units as mat items (not meters).
+          const robotWorld = sceneMeshBabylonToWorldCm({ x: ap.x, y: ap.y, z: ap.z });
+          const dist = horizDistRobotToReamWorldCm_(robotWorld, reamWorld);
+          if (dist === null) continue;
+          minDist = minDist === null ? dist : Math.min(minDist, dist);
+        }
+      }
+      return minDist;
+    };
+
+    this.scriptManager_.resolveRobotIntersectsPlayZone = polygon => {
+      // Projected link hulls are custom JBC play-area only (preset scenes never call this).
+      if (!sceneHasCustomChallengeRuntime(this.scene_)) {
+        return false;
+      }
+      for (const robotBinding of Object.values(this.robotBindings_)) {
+        const hulls = robotBinding
+          .getMatLocalLinkFootprintHulls()
+          .map(entry => entry.hull);
+        if (robotFootprintHullsIntersectPlayAreaPolygon(hulls, polygon)) {
+          return true;
+        }
+      }
+      return false;
+    };
+
+    this.scriptManager_.resolveNodeYAngle = nodeId => {
+      const y = this.nodeYAngleDegrees_(nodeId);
+      return y;
+    };
+    this.scriptManager_.resolveNodeUpright = nodeId => {
+      const y = this.nodeYAngleDegrees_(nodeId);
+      if (y !== null) return y > 5;
+      const sceneNode = this.scriptManager_.scene.nodes[nodeId];
+      const orient = sceneNode?.origin?.orientation;
+      if (!orient) return true;
+      try {
+        const q = RotationwUnits.toRawQuaternion(orient);
+        const uy = 1 - 2 * (q.x * q.x + q.z * q.z);
+        const yDeg =
+          (180 / Math.PI) * Math.asin(Math.max(-1, Math.min(1, uy)));
+        return yDeg > 5;
+      } catch {
+        return true;
+      }
+    };
+
+  }
+
+  /** Live Y tilt (degrees) for mat-item pose goals; matches preset `yAngle()` / `nodeUpright()`. */
+  private nodeYAngleDegrees_(nodeId: string): number | null {
+    const bNode = this.findSceneMeshForNode_(nodeId);
+    if (bNode) {
+      bNode.computeWorldMatrix(true);
+      try {
+        const worldMatrix = bNode.getWorldMatrix();
+        const scale = new Vector3();
+        const worldRot = new Quaternion();
+        const pos = new Vector3();
+        worldMatrix.decompose(scale, worldRot, pos);
+        return yAngleDegreesFromQuaternion(worldRot);
+      } catch {
+        // fall through to script scene node
+      }
+    }
+
+    const sceneNode = this.scriptManager_.scene.nodes[nodeId];
+    const orient = sceneNode?.origin?.orientation;
+    if (!orient) return null;
+    try {
+      const q = RotationwUnits.toRawQuaternion(orient);
+      return yAngleDegreesFromQuaternion(RawQuaternion.toBabylon(q));
+    } catch {
+      return null;
+    }
+  }
+
+  /** Live mesh for a scene node id (instances, templates, renamed meshes). */
+  meshForSceneNodeId(nodeId: string): TransformNode | AbstractMesh | null {
+    return this.findSceneMeshForNode_(nodeId);
+  }
+
+  /** Mat-local cm for a mat item: live mesh first, then physics-synced script scene. */
+  private resolveMatItemMatLocalCm_(nodeId: string): { x: number; y: number } | null {
+    const bNode = this.findSceneMeshForNode_(nodeId);
+    if (bNode && 'getAbsolutePosition' in bNode) {
+      bNode.computeWorldMatrix(true);
+      const ap = bNode.getAbsolutePosition();
+      return matItemMeshMatLocalCm({ x: ap.x, y: ap.y, z: ap.z });
+    }
+
+    const synced = scriptSceneNodeMatLocalCm(this.scriptManager_.scene, nodeId);
+    if (synced) return synced;
+
+    return scriptSceneNodeMatLocalCm(this.scene_, nodeId);
+  }
+
+  private findSceneMeshForNode_(nodeId: string): TransformNode | AbstractMesh | null {
+    const cached = this.nodes_[nodeId];
+    if (
+      cached &&
+      !cached.isDisposed() &&
+      (cached instanceof TransformNode || cached instanceof AbstractMesh)
+    ) {
+      if (cached instanceof TransformNode && typeof cached.getChildMeshes === 'function') {
+        const children = cached.getChildMeshes(false);
+        const withPhysics = children.find(m => m.physicsBody);
+        if (withPhysics) return withPhysics;
+        if (children.length > 0) return children[0];
+      }
+      return cached;
+    }
+
+    const byId =
+      this.bScene_.getMeshById(nodeId) ??
+      this.bScene_.getNodeById(nodeId);
+    if (byId instanceof TransformNode || byId instanceof AbstractMesh) {
+      return byId;
+    }
+
+    let physicsMatch: AbstractMesh | null = null;
+    for (const mesh of this.bScene_.meshes) {
+      const meta = mesh.metadata as SceneMeshMetadata | undefined;
+      if (meta?.id !== nodeId) continue;
+      if (mesh.physicsBody) {
+        return mesh;
+      }
+      if (!physicsMatch) {
+        physicsMatch = mesh;
+      }
+    }
+    if (physicsMatch) {
+      return physicsMatch;
+    }
+
+    const sceneNode = this.scene_.nodes[nodeId];
+    if (sceneNode) {
+      const byName = this.bScene_.getNodeByName(
+        LocalizedString.lookup(sceneNode.name, LocalizedString.EN_US)
+      );
+      if (byName instanceof TransformNode || byName instanceof AbstractMesh) {
+        return byName;
+      }
+    }
+
+    return null;
+  }
+
+  set gizmosEnabled(gizmosEnabled: boolean) {
+    if (this.gizmosEnabled_ === gizmosEnabled) return;
+    this.gizmosEnabled_ = gizmosEnabled;
+
+    this.gizmoManager_.positionGizmoEnabled = gizmosEnabled;
+    this.gizmoManager_.rotationGizmoEnabled = gizmosEnabled;
+
+    if (!gizmosEnabled) {
+      if (this.scene_.selectedNodeId && this.scriptManager_.onSelectedNodeIdChange) {
+        this.scriptManager_.onSelectedNodeIdChange(undefined);
+      }
+      this.gizmoManager_.attachToNode(null);
+      return;
+    }
+
+    this.attachSimulatorControls();
+
+    const selectedNodeId = this.scene_.selectedNodeId;
+    if (!selectedNodeId) return;
+    const node = this.bScene_.getNodeById(selectedNodeId);
+    if (node instanceof AbstractMesh || node instanceof TransformNode) {
+      this.gizmoManager_.attachToNode(node);
+    }
   }
 
   private robotLinkOrigins_: Dict<Dict<ReferenceFramewUnits>> = {};
@@ -189,6 +493,10 @@ class SceneBinding {
     return bMaterial;
   };
 
+  private clearDeclineTicks_ = (): void => {
+    this.declineTicks_ = false;
+  };
+
   // Create Robot Binding
   private createRobot_ = async (id: string, node: Node.Robot): Promise<RobotBinding> => {
     // This should probably be somewhere else, but it ensures this is called during
@@ -204,31 +512,24 @@ class SceneBinding {
     await robotBinding.setRobot(node, robot, id);
     // robotBinding.linkOrigins = this.robotLinkOrigins_[id] || {};
 
-    robotBinding.visible = true;
-    const observerObj: { observer: Observer<babylonScene> } = { observer: null };
-
     robotBinding.origin = node.origin;
-
-    this.declineTicks_ = true;
-    observerObj.observer = this.bScene_.onAfterRenderObservable.add((data, state) => {
-      const node = this.scene_.nodes[id];
-      if (!node) {
-        observerObj.observer.unregisterOnNextCall = true;
-        this.declineTicks_ = false;
-        return;
-      }
-
-      const { origin, visible } = node;
-
-      const linkOrigins = this.robotLinkOrigins_[id];
-      // if (linkOrigins) robotBinding.linkOrigins = linkOrigins;
-
-      robotBinding.visible = visible ?? false;
-      observerObj.observer.unregisterOnNextCall = true;
-      this.declineTicks_ = false;
-    });
-
+    robotBinding.visible = node.visible ?? true;
     this.robotBindings_[id] = robotBinding;
+
+    // Skip one tick so physics bodies settle; never block ticks if render is delayed.
+    this.declineTicks_ = true;
+    const observer = this.bScene_.onAfterRenderObservable.add(() => {
+      const sceneNode = this.scene_.nodes[id];
+      if (sceneNode?.type === 'robot') {
+        robotBinding.visible = sceneNode.visible ?? false;
+      }
+      observer.remove();
+      this.clearDeclineTicks_();
+    });
+    requestAnimationFrame(() => {
+      observer.remove();
+      this.clearDeclineTicks_();
+    });
 
     this.syncCollisionFilters_();
 
@@ -399,6 +700,7 @@ class SceneBinding {
     if (node.inner.visible.type === Patch.Type.OuterChange) {
       const nextVisible = node.inner.visible.next;
       apply(bNode, m => {
+        m.setEnabled(nextVisible);
         m.isVisible = nextVisible;
 
         // Create/remove physics for object becoming visible/invisible
@@ -622,6 +924,9 @@ class SceneBinding {
         return undefined;
       }
       case Patch.Type.None: {
+        // Robots are tracked in robotBindings_, not nodes_ — never recreate on None.
+        if (node.prev.type === 'robot') return null;
+
         if (node.prev.type === 'object') {
           // Even though the node is unchanged, if the underlying geometry changed, recreate the object entirely
           const geometryPatch = geometryPatches[node.prev.geometryId];
@@ -631,7 +936,20 @@ class SceneBinding {
           }
         }
 
-        if (node.prev.type === 'robot') return null;
+        const cached = this.nodes_[id];
+        if (cached?.isDisposed()) {
+          delete this.nodes_[id];
+          return this.createNode_(id, node.prev, nextScene);
+        }
+
+        if (!cached) {
+          const existing = this.findSceneMeshForNode_(id);
+          if (existing && !existing.isDisposed()) {
+            return existing;
+          }
+          return this.createNode_(id, node.prev, nextScene);
+        }
+
         return this.findBNode_(id);
       }
     }
@@ -642,13 +960,68 @@ class SceneBinding {
       this.robotBindings_[id].dispose();
       delete this.robotBindings_[id];
     } else {
-      const bNode = this.findBNode_(id);
-      bNode.dispose();
+      const bNode = this.nodes_[id];
+      if (bNode && !bNode.isDisposed()) {
+        bNode.dispose();
+      }
+      delete this.nodes_[id];
 
       const shadowGenerator = this.shadowGenerators_[id];
       if (shadowGenerator) shadowGenerator.dispose();
+      delete this.shadowGenerators_[id];
     }
   };
+
+  /** Recreate JBC mat meshes if a prior dispose left a stale entry in nodes_. */
+  async ensureJbcMatMeshes(scene: Scene): Promise<void> {
+    await this.ensureJbcMatMeshes_(scene);
+  }
+
+  private sceneNeedsJbcMatHeal_(scene: Scene): boolean {
+    for (const matId of ['matA', 'matB'] as const) {
+      const node = scene.nodes[matId];
+      if (!node || node.type !== 'from-jbc-template') continue;
+      const cached = this.nodes_[matId];
+      if (!cached || cached.isDisposed()) return true;
+    }
+    return false;
+  }
+
+  private async ensureJbcMatMeshes_(scene: Scene): Promise<void> {
+    for (const matId of ['matA', 'matB'] as const) {
+      const node = scene.nodes[matId];
+      if (!node || node.type !== 'from-jbc-template') continue;
+
+      const cached = this.nodes_[matId];
+      if (cached && !cached.isDisposed()) {
+        if ('visible' in node) {
+          const visible = (node as unknown as Node.Obj).visible ?? true;
+          if (cached instanceof AbstractMesh) {
+            cached.setEnabled(visible);
+            cached.isVisible = visible;
+          }
+        }
+        continue;
+      }
+
+      const existing = this.findSceneMeshForNode_(matId);
+      if (existing && !existing.isDisposed()) {
+        this.nodes_[matId] = existing;
+        if ('visible' in node && existing instanceof AbstractMesh) {
+          const visible = (node as unknown as Node.Obj).visible ?? true;
+          existing.setEnabled(visible);
+          existing.isVisible = visible;
+        }
+        continue;
+      }
+
+      delete this.nodes_[matId];
+      const created = await this.createNode_(matId, node, scene);
+      if (created) {
+        this.nodes_[matId] = created;
+      }
+    }
+  }
 
   private gizmoManager_: GizmoManager;
 
@@ -987,9 +1360,13 @@ class SceneBinding {
       if (next !== undefined) {
         const node = this.bScene_.getNodeById(next);
         if (node instanceof AbstractMesh || node instanceof TransformNode) {
-          apply(node, m => this.removePhysicsFromObject(m));
+          if (this.gizmosEnabled_) {
+            apply(node, m => this.removePhysicsFromObject(m));
+          }
           node.metadata = { ...(node.metadata as SceneMeshMetadata), selected: true };
-          this.gizmoManager_.attachToNode(node);
+          if (this.gizmosEnabled_) {
+            this.gizmoManager_.attachToNode(node);
+          }
         }
       }
     }
@@ -1035,6 +1412,11 @@ class SceneBinding {
           reinitializedScripts.add(scriptId);
           break;
         }
+        case Patch.Type.InnerChange: {
+          this.scriptManager_.set(scriptId, script.next);
+          reinitializedScripts.add(scriptId);
+          break;
+        }
         case Patch.Type.Remove: {
           this.scriptManager_.remove(scriptId);
           break;
@@ -1049,8 +1431,123 @@ class SceneBinding {
         if (reinitializedScripts.has(scriptId)) this.scriptManager_.bind(scriptId, nodeId);
       }
     }
+
+    this.scriptManager_.ensureSceneScripts(scene);
     this.scene_ = scene;
+    if (this.sceneNeedsJbcMatHeal_(scene)) {
+      await this.ensureJbcMatMeshes_(scene);
+    }
+    // Wizard overlay owns play-area meshes while the user is dragging/resizing zones.
+    if (!isMatZoneEditActive()) {
+      this.syncMatPlayZoneSurfaceMeshes(matPlayZonesFromScene(scene));
+    }
+    this.updatePlayAreaRobotBoundsDebug_();
   };
+
+  /** Surface-aligned play-area visuals (zero thickness, depth-tested). */
+  syncMatPlayZoneSurfaceMeshes(zones: MatPlayZone[]): void {
+    this.matPlayZoneSurfaces_.sync(this.bScene_, zones);
+  }
+
+  private updatePlayAreaRobotBoundsDebug_ = (): void => {
+    const enabled =
+      PLAY_AREA_ROBOT_BOUNDS_DEBUG_VISIBLE &&
+      sceneHasCustomChallengeRuntime(this.scene_) &&
+      matPlayZonesFromScene(this.scene_).length > 0 &&
+      !isMatZoneEditActive();
+
+    this.playAreaRobotBoundsDebug_.setEnabled(this.bScene_, enabled);
+    if (!enabled) return;
+
+    const robots = Object.entries(this.robotBindings_).map(([robotId, binding]) => {
+      const { linkHulls, combinedHull } = binding.getMatLocalFootprintDebugOutline();
+      return { robotId, linkHulls, combinedHull };
+    });
+    this.playAreaRobotBoundsDebug_.update(this.bScene_, robots);
+  };
+
+  /**
+   * Apply script-driven node updates (e.g. setNodeVisible) without a full setScene reload.
+   */
+  applyNodeFromScript(nodeId: string, node: Node): void {
+    this.scene_ = Scene.setNode(this.scene_, nodeId, node);
+
+    const objNode = this.resolveObjectNode_(node);
+    if (!objNode) {
+      return;
+    }
+
+    const visible = (node as Node.Obj).visible;
+    if (visible === undefined) {
+      return;
+    }
+    const bNode = this.findSceneMeshForNode_(nodeId);
+    if (!bNode) {
+      return;
+    }
+
+    const meshes: AbstractMesh[] =
+      bNode instanceof AbstractMesh
+        ? [bNode]
+        : bNode instanceof TransformNode
+          ? (bNode.getChildMeshes(false))
+          : [];
+
+    for (const mesh of meshes) {
+      if (!(mesh instanceof AbstractMesh)) continue;
+      mesh.setEnabled(visible);
+      mesh.isVisible = visible;
+      if (!visible) {
+        this.removePhysicsFromObject(mesh);
+      } else {
+        this.restorePhysicsToObject(mesh, objNode, nodeId, this.scene_);
+      }
+    }
+  }
+
+  /**
+   * Push scene node origins into Babylon/physics. Redux scene state often still
+   * has starting poses while dynamic bodies moved in the sim (saved only in completion diff).
+   */
+  syncNodeOriginsFromScene(scene: Scene = this.scene_): void {
+    for (const nodeId of Dict.keySet(scene.nodes)) {
+      const node = scene.nodes[nodeId];
+
+      if (node.type === 'robot') {
+        const robotBinding = this.robotBindings_[nodeId];
+        if (robotBinding && node.origin) {
+          robotBinding.origin = node.origin;
+        }
+        continue;
+      }
+
+      const objNode = this.resolveObjectNode_(node);
+      if (!objNode) continue;
+
+      const bNode = this.findSceneMeshForNode_(nodeId);
+      if (!(bNode instanceof AbstractMesh)) continue;
+
+      this.updateNodePosition_(objNode, bNode, nodeId, scene);
+    }
+  }
+
+  private resolveObjectNode_(node: Node): Node.Obj | null {
+    if (node.type === 'object') {
+      return node;
+    }
+    if (
+      node.type === 'from-jbc-template' ||
+      node.type === 'from-rock-template' ||
+      node.type === 'from-space-template' ||
+      node.type === 'from-bb-template'
+    ) {
+      const template = preBuiltTemplates[node.templateId];
+      if (template?.type === 'object') {
+        return { ...template, ...Node.Base.upcast(node) };
+      }
+    }
+    return null;
+  }
 
   private currentIntersections_: Dict<Set<string>> = {};
 
@@ -1093,7 +1590,17 @@ class SceneBinding {
       try {
         const filterIds = this.intersectionFilters_[nodeId];
         for (const filterId of filterIds) {
-          const intersection = this.nodeMeshes_(nodeId)[0].intersectsMesh(this.nodeMeshes_(filterId)[0], true);
+          const primaryMeshes = this.nodeMeshes_(nodeId);
+          const filterMeshes = this.nodeMeshes_(filterId);
+          if (primaryMeshes.length === 0 || filterMeshes.length === 0) continue;
+
+          let intersection = false;
+          for (const primaryMesh of primaryMeshes) {
+            if (primaryMesh.intersectsMesh(filterMeshes[0], true)) {
+              intersection = true;
+              break;
+            }
+          }
 
           if (intersection) {
             if (!this.currentIntersections_[nodeId]) this.currentIntersections_[nodeId] = new Set();
@@ -1120,6 +1627,8 @@ class SceneBinding {
         delete this.intersectionFilters_[nodeId];
       }
     }
+
+    this.updatePlayAreaRobotBoundsDebug_();
 
     return ret;
   }

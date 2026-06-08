@@ -1,6 +1,8 @@
 import * as React from 'react';
 
 import * as Sim from '../../simulator/Space';
+import { getSimulatorViewProjectionMatrix } from '../../util/jbcMatPlayArea';
+import { safeVector3Project } from '../../util/babylonMath';
 
 import { styled } from 'styletron-react';
 
@@ -223,15 +225,17 @@ export class SimulatorArea extends React.Component<Props, SimulatorAreaState> {
     const canvas = this.canvasRef_;
     const rect = canvas.getBoundingClientRect();
 
-    const projected = Vector3.Project(
+    const transformMatrix = getSimulatorViewProjectionMatrix(camera, scene);
+    if (!transformMatrix) return null;
+
+    const projected = safeVector3Project(
       pos,
-      Matrix.Identity(),
-      scene.getTransformMatrix(),
-      camera.viewport.toGlobal(
-        canvas.width,
-        canvas.height
-      )
+      transformMatrix,
+      camera.viewport.toGlobal(canvas.width, canvas.height)
     );
+    if (!projected) {
+      return null;
+    }
 
     return {
       x: (projected.x / canvas.width) * rect.width,
@@ -253,7 +257,7 @@ export class SimulatorArea extends React.Component<Props, SimulatorAreaState> {
       );
     }
     return (
-      <Container ref={this.bindContainerRef_}>
+      <Container id="simulator-area-root" ref={this.bindContainerRef_}>
         <Canvas ref={this.bindCanvasRef_} />
         {modalDialog.type === ModalDialog.Type.MotorsSwapped && (
           <MotorsSwappedDialog theme={theme} onClose={this.onMotorsSwappedClose_} />

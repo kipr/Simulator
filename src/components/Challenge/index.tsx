@@ -13,9 +13,11 @@ import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 
 import Async from '../../state/State/Async';
+import Dict from '../../util/objectOps/Dict';
 import LocalizedString from '../../util/LocalizedString';
 import { AsyncChallenge } from '../../state/State/Challenge';
 import { AsyncChallengeCompletion } from '../../state/State/ChallengeCompletion';
+import PredicateCompletion from '../../state/State/ChallengeCompletion/PredicateCompletion';
 import PredicateEditor from './PredicateEditor';
 import GoalList from './GoalList';
 
@@ -24,6 +26,10 @@ import tr from '@i18n';
 export interface ChallengePublicProps extends StyleProps, ThemeProps {
   challenge: AsyncChallenge;
   challengeCompletion: AsyncChallengeCompletion;
+  /** Scene event flags updated synchronously from the sim loop (see ChallengeRoot). */
+  liveEventStates?: Dict<boolean>;
+  liveSuccessCompletion?: PredicateCompletion;
+  liveFailureCompletion?: PredicateCompletion;
 }
 
 interface ChallengePrivateProps {
@@ -84,7 +90,7 @@ const SectionIcon = styled(FontAwesome, (props: ThemeProps) => ({
   transition: 'opacity 0.2s'
 }));
 
-class Challenge extends React.PureComponent<Props, State> {
+class Challenge extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -107,7 +113,17 @@ class Challenge extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, className, theme, challenge, challengeCompletion, locale } = props;
+    const {
+      style,
+      className,
+      theme,
+      challenge,
+      challengeCompletion,
+      liveEventStates,
+      liveSuccessCompletion,
+      liveFailureCompletion,
+      locale,
+    } = props;
     const { collapsed, modal } = state;
 
 
@@ -116,6 +132,15 @@ class Challenge extends React.PureComponent<Props, State> {
 
     const latestChallengeCompletion = Async.latestValue(challengeCompletion);
 
+    const goalEventStates: Dict<boolean> = {
+      ...(latestChallengeCompletion?.eventStates ?? {}),
+      ...(liveEventStates ?? {}),
+    };
+
+    const successCompletion =
+      liveSuccessCompletion ?? latestChallengeCompletion?.success;
+    const failureCompletion =
+      liveFailureCompletion ?? latestChallengeCompletion?.failure;
 
     return (
       <>
@@ -125,7 +150,9 @@ class Challenge extends React.PureComponent<Props, State> {
               <Section name={LocalizedString.lookup(tr('Success'), locale)} theme={theme}>
                 <GoalList
                   goals={latestChallenge.successGoals}
-                  predicateCompletion={latestChallengeCompletion ? latestChallengeCompletion.success : undefined}
+                  predicateCompletion={successCompletion}
+                  eventStates={goalEventStates}
+                  otherPredicateCompletion={failureCompletion}
                   locale={locale}
                   type="success"
                 />
@@ -142,7 +169,9 @@ class Challenge extends React.PureComponent<Props, State> {
               <Section name={LocalizedString.lookup(tr('Failure'), locale)} theme={theme}>
                 <GoalList
                   goals={latestChallenge.failureGoals}
-                  predicateCompletion={latestChallengeCompletion ? latestChallengeCompletion.failure : undefined}
+                  predicateCompletion={failureCompletion}
+                  eventStates={goalEventStates}
+                  otherPredicateCompletion={successCompletion}
                   locale={locale}
                   type="failure"
                 />

@@ -10,7 +10,7 @@ import PredicateCompletion from '../State/ChallengeCompletion/PredicateCompletio
 import Selector from '../../db/Selector';
 import db from '../../db';
 
-import { errorToAsyncError, mutate } from './util';
+import { deferAfterReducer, errorToAsyncError, mutate } from './util';
 import construct from '../../util/redux/construct';
 import Dict from '../../util/objectOps/Dict';
 import { ReferenceFramewUnits } from '../../util/math/unitMath';
@@ -194,6 +194,7 @@ const DEFAULT_CHALLENGE_COMPLETIONS: ChallengeCompletions = {
 };
 
 const create = async (challengeId: string, next: Async.Creating<ChallengeCompletion>) => {
+  await deferAfterReducer();
   try {
     await db.set(Selector.challengeCompletion(challengeId), next.value);
     store.dispatch(ChallengeCompletionsAction.setChallengeCompletionInternal({

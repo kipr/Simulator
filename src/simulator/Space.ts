@@ -33,7 +33,13 @@ import WorkerInstance from '../programming/WorkerInstance';
 import AbstractRobot from '../programming/AbstractRobot';
 import ScriptManager from './ScriptManager';
 import SceneBinding, { SceneMeshMetadata } from './babylonBindings/SceneBinding';
-import { flushSync } from "react-dom";
+import { getSimulatorViewProjectionMatrix } from '../util/jbcMatPlayArea';
+import { safeVector3Project } from '../util/babylonMath';
+import {
+  sceneHasCustomChallengeRuntime,
+  syncCustomChallengePhysicsPosesIntoScriptScene,
+} from '../util/customChallengeSceneScripts';
+import { flushSync } from 'react-dom';
 
 export let ACTIVE_SPACE: Space;
 
@@ -54,6 +60,7 @@ export class Space {
   private hl: HighlightLayer;
   private sceneBinding_: SceneBinding;
   private nextScene_: Scene | undefined;
+  private gizmosEnabled_ = true;
 
   onSelectNodeId?: (nodeId: string) => void;
   onSetNodeBatch?: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
@@ -65,11 +72,16 @@ export class Space {
   onCameraChange?: (camera: Camera) => void;
   onGravityChange?: (Vector3wUnits) => void;
   onChallengeSetEventValue?: (eventId: string, value: boolean) => void;
+  /** Fires after the simulator finishes applying a scene (scripts/nodes ready). */
+  onAfterSceneApplied?: (scene: Scene) => void;
   onObjectClick?: (object: { id: string, pos: Vector3 }) => void;
 
 
   private debounceUpdate_ = false;
   private sceneSetting_ = false;
+  /** False until SimulatorArea registers the visible canvas (avoids render/sensor work on a headless context). */
+  private displayCanvasReady_ = false;
+  private pendingDisplayCanvas_: HTMLCanvasElement | undefined;
   private robotLinkOrigins_: Dict<Dict<ReferenceFramewUnits>> = {};
   private scene_ = Scene.EMPTY;
 
@@ -133,11 +145,19 @@ export class Space {
     this.sceneBinding_.noisySensors = noisySensors;
   }
 
+  set gizmosEnabled(gizmosEnabled: boolean) {
+    this.gizmosEnabled_ = gizmosEnabled;
+    if (!this.sceneBinding_) return;
+    this.sceneBinding_.gizmosEnabled = gizmosEnabled;
+  }
+
   get scene() { return this.scene_; }
 
   set scene(scene: Scene) {
     this.scene_ = scene;
-    if (this.sceneBinding_) this.sceneBinding_.scriptManager.scene = this.scene_;
+    if (this.sceneBinding_) {
+      this.sceneBinding_.scriptManager.scene = this.scene_;
+    }
 
     // sceneSetting_ is true if we are currently setting the scene
     // debounceUpdate_ is true if we are currently updating the store
@@ -155,17 +175,19 @@ export class Space {
     (async () => {
       // Disable physics during scene changes to avoid objects moving before the scene is fully loaded
       this.bScene_.physicsEnabled = false;
-
-      await this.sceneBinding_.setScene(scene, Robots.loaded(store.getState().robots));
-      while (this.nextScene_) {
-        const nextScene = this.nextScene_;
-        this.nextScene_ = undefined;
-        await this.sceneBinding_.setScene(nextScene, Robots.loaded(store.getState().robots));
+      try {
+        await this.sceneBinding_.setScene(scene, Robots.loaded(store.getState().robots));
+        while (this.nextScene_) {
+          const nextScene = this.nextScene_;
+          this.nextScene_ = undefined;
+          await this.sceneBinding_.setScene(nextScene, Robots.loaded(store.getState().robots));
+        }
+      } finally {
+        this.bScene_.physicsEnabled = true;
       }
-      this.bScene_.physicsEnabled = true;
-
     })().finally(() => {
       this.sceneSetting_ = false;
+      this.onAfterSceneApplied?.(this.scene_);
     });
   }
 
@@ -197,14 +219,20 @@ export class Space {
 
     const position = mesh.getBoundingInfo().boundingBox.centerWorld;
 
-    const coordinates = Vector3.Project(
+    const camera = this.sceneBinding_.camera ?? this.bScene_.activeCamera;
+    if (!camera) return undefined;
+    const transformMatrix = getSimulatorViewProjectionMatrix(camera, this.bScene_);
+    if (!transformMatrix) return undefined;
+
+    const coordinates = safeVector3Project(
       position,
-      Matrix.Identity(),
-      this.bScene_.getTransformMatrix(),
-      this.sceneBinding_.camera.viewport.toGlobal(
+      transformMatrix,
+      camera.viewport.toGlobal(
         this.engine.getRenderWidth(),
         this.engine.getRenderHeight(),
-      ));
+      )
+    );
+    if (!coordinates) return undefined;
 
     // Assuming the first view is the view of interest. If we ever use multiple views, this may break
     const { top, left } = this.engine.views[0].target.getBoundingClientRect();
@@ -243,7 +271,14 @@ export class Space {
    * @param canvas - The new HTML canvas element to switch to.
    */
   public switchContext(canvas: HTMLCanvasElement): void {
+    this.pendingDisplayCanvas_ = canvas;
+    if (!this.sceneBinding_) return;
     this.sceneBinding_.canvas = canvas;
+    this.displayCanvasReady_ = true;
+  }
+
+  get isDisplayCanvasReady(): boolean {
+    return this.displayCanvasReady_ && !!this.sceneBinding_?.canvas;
   }
 
 
@@ -320,6 +355,32 @@ export class Space {
       }
     }
 
+    // Custom challenges only: physics-tipped cans need world rotation for nodeUpright().
+    // Preset JBC keeps local rotationQuaternion (unchanged above).
+    if (
+      bNode instanceof TransformNode ||
+      bNode instanceof AbstractMesh
+    ) {
+      const sm = this.sceneBinding_?.scriptManager;
+      const customRuntime =
+        !!sm &&
+        sceneHasCustomChallengeRuntime(sm.scene) &&
+        sm.programStatus === 'running';
+      if (customRuntime) {
+        try {
+          bNode.computeWorldMatrix(true);
+          const worldMatrix = bNode.getWorldMatrix();
+          const scale = new Vector3();
+          const worldRot = new Quaternion();
+          const pos = new Vector3();
+          worldMatrix.decompose(scale, worldRot, pos);
+          bRotation = worldRot;
+        } catch {
+          // keep preset-local bRotation
+        }
+      }
+    }
+
     if (bRotation) {
       const bOrientationConv = RotationwUnits.fromRawQuaternion(RawQuaternion.fromBabylon(bRotation), 'euler');
 
@@ -353,6 +414,11 @@ export class Space {
 
     this.sceneBinding_ = new SceneBinding(this.bScene_, havokPlugin);
     this.sceneBinding_.robotLinkOrigins = this.robotLinkOrigins_;
+    this.sceneBinding_.gizmosEnabled = this.gizmosEnabled_;
+    if (this.pendingDisplayCanvas_) {
+      this.sceneBinding_.canvas = this.pendingDisplayCanvas_;
+      this.displayCanvasReady_ = true;
+    }
 
     const scriptManager = this.sceneBinding_.scriptManager;
     scriptManager.onNodeAdd = (id, node) => this.onNodeAdd?.(id, node);
@@ -376,6 +442,10 @@ export class Space {
    * Updates the application state based on the current state of the simulation.
    */
   private updateStore_ = () => {
+    if (!this.displayCanvasReady_ || !this.sceneBinding_?.canvas) {
+      return;
+    }
+
     const { nodes } = this.scene_;
 
     const robots = Scene.robots(this.scene_);
@@ -407,10 +477,19 @@ export class Space {
       });
     }
 
+    const sm = this.sceneBinding_.scriptManager;
+    const customRuntime =
+      sceneHasCustomChallengeRuntime(sm.scene) && sm.programStatus === 'running';
+
     // Check if nodes have moved significant amounts
     for (const nodeId of Dict.keySet(nodes)) {
       const node = nodes[nodeId];
-      const bNode = this.bScene_.getNodeById(nodeId) || this.bScene_.getNodeByName(node.name[LocalizedString.EN_US]);
+      const bNode = customRuntime
+        ? this.sceneBinding_?.meshForSceneNodeId(nodeId) ??
+          this.bScene_.getNodeById(nodeId) ??
+          this.bScene_.getNodeByName(node.name[LocalizedString.EN_US])
+        : this.bScene_.getNodeById(nodeId) ??
+          this.bScene_.getNodeByName(node.name[LocalizedString.EN_US]);
 
       if (tickedIds.has(nodeId)) continue;
 
@@ -446,13 +525,10 @@ export class Space {
       }
     }
 
-    // Update state with significant changes, if needed
-    // These seems to also be necessary for sensors to update
-    // NOTE: flushSync() is used to opt-out of React 18 batching, so that the debounceUpdate_ flag works as intended.
-    // Without flushSync(), debounceUpdate_ will get set to false before the state update happens.
-    // This is hacky and the whole debounceUpdate_ mechanism should be refactored.
     this.debounceUpdate_ = true;
-    if (setNodeBatch.nodeIds.length > 0) flushSync(() => this.onSetNodeBatch?.(setNodeBatch));
+    if (setNodeBatch.nodeIds.length > 0 && this.onSetNodeBatch) {
+      flushSync(() => this.onSetNodeBatch?.(setNodeBatch));
+    }
     this.debounceUpdate_ = false;
   };
 
@@ -462,9 +538,26 @@ export class Space {
    */
   private startRenderLoop(): void {
     this.engine.runRenderLoop(() => {
-      this.updateStore_();
-      this.sceneBinding_.scriptManager.trigger(ScriptManager.Event.RENDER);
-      this.bScene_.render();
+      if (!this.displayCanvasReady_ || !this.sceneBinding_?.canvas) {
+        return;
+      }
+      try {
+        this.updateStore_();
+        const scriptScene = this.sceneBinding_.scriptManager.scene;
+        if (
+          sceneHasCustomChallengeRuntime(scriptScene) &&
+          this.sceneBinding_.scriptManager.programStatus === 'running'
+        ) {
+          syncCustomChallengePhysicsPosesIntoScriptScene(
+            this.sceneBinding_,
+            scriptScene
+          );
+        }
+        this.sceneBinding_.scriptManager.trigger(ScriptManager.Event.RENDER);
+        this.bScene_.render();
+      } catch (e) {
+        console.error('[Space] render loop error', e);
+      }
     });
   }
 }

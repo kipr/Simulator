@@ -20,7 +20,8 @@ export namespace Modal {
     ResetCode,
     NewProject,
     NewFile,
-    RetakeTour
+    RetakeTour,
+    CustomChallengeSetup,
   }
 
   export interface Settings {
@@ -122,6 +123,14 @@ export namespace Modal {
   }
 
   export const RETAKE_TOUR: RetakeTour = { type: Type.RetakeTour };
+
+  export interface CustomChallengeSetup {
+    type: Type.CustomChallengeSetup;
+  }
+
+  export const CUSTOM_CHALLENGE_SETUP: CustomChallengeSetup = {
+    type: Type.CustomChallengeSetup,
+  };
 }
 
 export type Modal = (
@@ -140,5 +149,6 @@ export type Modal = (
   Modal.ResetCode |
   Modal.NewProject |
   Modal.NewFile |
-  Modal.RetakeTour
+  Modal.RetakeTour |
+  Modal.CustomChallengeSetup
 );

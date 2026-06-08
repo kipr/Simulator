@@ -44,10 +44,20 @@ interface OverlayLayoutState {
 type Props = OverlayLayoutProps;
 type State = OverlayLayoutState;
 
+export const SIMULATOR_INTERACTION_OVERLAY_ID = 'simulator-interaction-overlay';
+
 const Container = styled('div', {
   display: 'flex',
   flex: '1 1',
   position: 'relative'
+});
+
+/** Above floating widgets; mat zone handles portal here during custom challenge setup. */
+const InteractionOverlayHost = styled('div', {
+  position: 'absolute',
+  inset: 0,
+  zIndex: 15,
+  pointerEvents: 'none',
 });
 
 const SimulatorAreaContainer = styled('div', {
@@ -71,9 +81,9 @@ const Overlay = styled('div', (props: ThemeProps & { $challenge?: boolean; }) =>
   padding: `${props.theme.widget.padding}px`
 }));
 
-const transparentStyling = (theme: Theme): React.CSSProperties => ({
+const transparentStyling = (theme: Theme) => ({
   backgroundColor: theme.transparentBackgroundColor(0.95),
-  backdropFilter: 'blur(16px)'
+  backdropFilter: 'blur(16px)',
 });
 
 // Overlay positioned centered in column 2 (the space that appears when Editor is miniature)
@@ -528,6 +538,9 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
                 theme={theme}
                 challenge={challengeState.challenge}
                 challengeCompletion={challengeState.challengeCompletion}
+                liveEventStates={challengeState.liveEventStates}
+                liveSuccessCompletion={challengeState.liveSuccessCompletion}
+                liveFailureCompletion={challengeState.liveFailureCompletion}
               />
             </ChallengeWidget>
           ) : undefined}
@@ -557,6 +570,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             />
           </WorldWidget>
         </Overlay>
+        <InteractionOverlayHost id={SIMULATOR_INTERACTION_OVERLAY_ID} />
       </Container>
     );
   }

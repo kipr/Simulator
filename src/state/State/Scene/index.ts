@@ -3,11 +3,40 @@ import Geometry from './Geometry';
 import Node from './Node';
 import Script from './Script';
 import { ReferenceFramewUnits, Vector3wUnits } from '../../../util/math/unitMath';
+import { RawVector2 } from '../../../util/math/math';
 import Camera from './Camera';
 import Patch from '../../../util/redux/Patch';
 import Async from '../Async';
 import LocalizedString from '../../../util/LocalizedString';
 import Author from '../../../db/Author';
+import { CustomChallengeDefinition } from '../../../util/customChallengeStorage';
+
+export interface MatPlayAreaDefinition {
+  corners: [RawVector2, RawVector2, RawVector2, RawVector2];
+}
+
+export type MatPlayAreaEdgeMode = 'straight' | 'curved';
+
+export interface MatPlayZoneDefinition {
+  id: string;
+  name: string;
+  /** Polygon vertices in mat-local cm (clockwise). */
+  points: RawVector2[];
+  edgeMode?: MatPlayAreaEdgeMode;
+  /** @deprecated Use points; four-corner rectangles from older saves. */
+  corners?: [RawVector2, RawVector2, RawVector2, RawVector2];
+  /** @deprecated Items are stored in {@link CustomChallengePlacement}, not per zone. */
+  itemNodeIds?: string[];
+  /** @deprecated Geometries are stored in {@link CustomChallengePlacement}, not per zone. */
+  scriptGeometryIds?: string[];
+  successGoalKeys: string[];
+}
+
+/** World items and script geometries on the mat (not tied to play zones). */
+export interface CustomChallengePlacement {
+  worldItemNodeIds: string[];
+  scriptGeometryIds: string[];
+}
 
 export interface PredefinedLocation {
   id: string;
@@ -33,6 +62,29 @@ interface Scene {
   gravity: Vector3wUnits;
 
   predefinedLocations?: Dict<PredefinedLocation>;
+
+  /** @deprecated Single play region; use matPlayZones. */
+  matPlayArea?: MatPlayAreaDefinition;
+
+  /** Play zones on the JBC mat (custom challenges). */
+  matPlayZones?: MatPlayZoneDefinition[];
+
+  /** Items/geometries placed on the mat for custom challenges. */
+  customChallengePlacement?: CustomChallengePlacement;
+
+  /** Per-item success outcomes from the custom challenge wizard (for runtime script refresh). */
+  customChallengeItemSuccessChoices?: Record<string, string>;
+
+  /** Success/failure rules and starter code (custom JBC challenges live in the scene collection). */
+  customChallenge?: CustomChallengeDefinition;
+
+  /** Classroom-shared copy; students can play but not edit challenge setup. */
+  customChallengeReadOnly?: boolean;
+
+  customChallengeClassroomShare?: {
+    classroomDocId: string;
+    teacherId: string;
+  };
 }
 
 export type SceneBrief = Pick<Scene, 'name' | 'author' | 'description'>;
@@ -82,6 +134,12 @@ export interface PatchScene {
   gravity: Patch<Vector3wUnits>;
 
   predefinedLocations?: Dict<Patch<PredefinedLocation>>;
+
+  matPlayArea?: Patch<MatPlayAreaDefinition>;
+  matPlayZones?: Patch<MatPlayZoneDefinition[]>;
+  customChallengePlacement?: Patch<CustomChallengePlacement>;
+  customChallengeItemSuccessChoices?: Patch<Record<string, string>>;
+  customChallenge?: Patch<CustomChallengeDefinition>;
 }
 
 namespace Scene {
@@ -137,6 +195,52 @@ namespace Scene {
       [nodeId]: node,
     },
   });
+
+  /** Snapshot `origin` into `startingOrigin` when missing (custom challenges / editor-placed items). */
+  export const ensureStartingOrigins = (scene: Scene): Scene => {
+    let nodes = { ...scene.nodes };
+    let changed = false;
+    for (const nodeId of Object.keys(nodes)) {
+      const node = nodes[nodeId];
+      if (node.startingOrigin || !node.origin) continue;
+      changed = true;
+      nodes = {
+        ...nodes,
+        [nodeId]: {
+          ...node,
+          startingOrigin: {
+            position: node.origin.position,
+            orientation: node.origin.orientation,
+            scale: node.origin.scale,
+          },
+        },
+      };
+    }
+    return changed ? { ...scene, nodes } : scene;
+  };
+
+  /** Restore every node's `origin` from `startingOrigin` (challenge reset / soft reset). */
+  export const resetNodeOriginsToStarting = (scene: Scene): Scene => {
+    const withStarting = ensureStartingOrigins(scene);
+    let nodes = { ...withStarting.nodes };
+    for (const nodeId of Object.keys(nodes)) {
+      const node = nodes[nodeId];
+      const { startingOrigin } = node;
+      if (!startingOrigin) continue;
+      nodes = {
+        ...nodes,
+        [nodeId]: {
+          ...node,
+          origin: {
+            position: startingOrigin.position,
+            orientation: startingOrigin.orientation,
+            scale: startingOrigin.scale,
+          },
+        },
+      };
+    }
+    return { ...scene, nodes };
+  };
 
   export const addObject = (scene: Scene, nodeId: string, obj: Node.Obj, geometry: Geometry): Scene => ({
     ...scene,
@@ -223,6 +327,14 @@ namespace Scene {
       camera: Camera.diff(a.camera, b.camera),
       gravity: Patch.diff(a.gravity, b.gravity),
       predefinedLocations: predefinedLocationsDiff,
+      matPlayArea: Patch.diff(a.matPlayArea, b.matPlayArea),
+      matPlayZones: Patch.diff(a.matPlayZones, b.matPlayZones),
+      customChallengePlacement: Patch.diff(a.customChallengePlacement, b.customChallengePlacement),
+      customChallengeItemSuccessChoices: Patch.diff(
+        a.customChallengeItemSuccessChoices,
+        b.customChallengeItemSuccessChoices
+      ),
+      customChallenge: Patch.diff(a.customChallenge, b.customChallenge),
     };
   };
 
@@ -241,6 +353,17 @@ namespace Scene {
     predefinedLocations: patch.predefinedLocations 
       ? Patch.applyDict(patch.predefinedLocations, scene.predefinedLocations || {})
       : scene.predefinedLocations,
+    matPlayArea: Patch.apply(patch.matPlayArea, scene.matPlayArea),
+    matPlayZones: Patch.apply(patch.matPlayZones, scene.matPlayZones),
+    customChallengePlacement: Patch.apply(
+      patch.customChallengePlacement,
+      scene.customChallengePlacement
+    ),
+    customChallengeItemSuccessChoices: Patch.apply(
+      patch.customChallengeItemSuccessChoices,
+      scene.customChallengeItemSuccessChoices
+    ),
+    customChallenge: Patch.apply(patch.customChallenge, scene.customChallenge),
   });
 
   export const EMPTY: Scene = {

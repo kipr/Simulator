@@ -28,6 +28,13 @@ export const mutate = <B, T>(values: Dict<Async<B, T>>, id: string, recipe: (dra
 
 
 
+/**
+ * Async handlers started with `void fn()` from a reducer must await this before
+ * `store.dispatch`, including in catch blocks (sync errors can occur before any I/O await).
+ */
+export const deferAfterReducer = (): Promise<void> =>
+  new Promise(resolve => setTimeout(resolve, 0));
+
 export const errorToAsyncError = (error: unknown): Async.Error => {
   if (DbError.is(error)) return error;
   if (error instanceof Error) return {
