@@ -236,6 +236,10 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
     );
 
     const loadedScenesArray: [string, Scene][] = [];
+    const sandboxScene = Async.latestValue(scenes[JBC_SANDBOX_SCENE_ID]);
+    if (sandboxScene) {
+      loadedScenesArray.push([JBC_SANDBOX_SCENE_ID, sandboxScene]);
+    }
     Dict.forEach(scenes, (value, key) => {
       if (key === JBC_SANDBOX_SCENE_ID) return;
       const underlying = Async.latestValue(value);

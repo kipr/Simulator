@@ -191,7 +191,13 @@ export class Space {
     });
   }
 
-
+  /** Align in-memory simulator scene state with Redux without reloading Babylon. */
+  replaceSceneState(scene: Scene): void {
+    this.scene_ = scene;
+    if (!this.sceneBinding_) return;
+    this.sceneBinding_.scene = scene;
+    this.sceneBinding_.scriptManager.scene = scene;
+  }
 
   /**
    * Handles window resize events, updating the Babylon engine's size accordingly.

@@ -796,7 +796,26 @@ class Root extends React.Component<Props, State> {
   };
 
   private onResetWorldClick_ = () => {
+    const sceneId = this.props.params.sceneId;
+    const prevScene = Async.latestValue(this.props.scene) ?? Scene.EMPTY;
+
     this.props.onResetScene();
+
+    const latestScene = Async.latestValue(store.getState().scenes[sceneId]);
+    if (!latestScene) return;
+
+    const space = Space.getInstance();
+    const binding = space.sceneBinding;
+    if (!binding) return;
+
+    space.robotLinkOrigins = {};
+    binding.robotLinkOrigins = {};
+    space.replaceSceneState(latestScene);
+
+    if (scenePropsRequireSimulatorReload(prevScene, latestScene)) {
+      space.scene = latestScene;
+    }
+    binding.syncNodeOriginsFromScene(latestScene);
   };
 
   private onStartChallengeClick_ = () => {
