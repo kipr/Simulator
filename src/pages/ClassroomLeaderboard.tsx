@@ -22,6 +22,10 @@ import { LeaderboardEntry, LeaderboardUserContext } from 'state/State/LimitedCha
 import TourTarget from '../components/Tours/TourTarget';
 import { TourRegistry } from '../tours/TourRegistry';
 import { classroomNameAsString } from '../util/classroomDisplayName';
+import { isCustomChallengeId } from '../util/customChallengeFactory';
+import { isTeacherOwnedCustomChallenge } from '../util/customChallengeClassroomShare';
+import { ChallengesAction } from '../state/reducer/challenges';
+import { NATIVE_SCROLLBAR_CLASS, nativeScrollbarChrome } from '../util/nativeScrollbarChrome';
 
 const SELFIDENTIFIER = "My Scores!";
 
@@ -71,6 +75,7 @@ interface RouterProps {
 }
 interface ClassroomLeaderboardPrivateProps {
   onClearSelectedClassroom: () => void;
+  onListUserChallenges: () => void;
   locale: LocalizedString.Language;
   classroom: AsyncClassroom;
 }
@@ -101,33 +106,52 @@ const PageContainer = styled('div', (props: ThemeProps) => ({
   color: props.theme.color,
 }));
 
-const ClassroomLeaderboardContainer = styled("div", (props: ThemeProps) => ({
+const TeacherLeaderboardRoot = styled('div', {
+  width: '100%',
+  maxWidth: '100%',
+  minWidth: 0,
+  overflow: 'hidden',
+  boxSizing: 'border-box',
+});
+
+const ClassroomLeaderboardContainer = styled("div", (props: ThemeProps & { $teacherView?: boolean }) => ({
   backgroundColor: props.theme.backgroundColor,
   display: 'flex',
   flexDirection: 'column',
-  overflow: 'auto',
-  width: '95%',
-  marginTop: '20px',
-
+  width: props.$teacherView ? '100%' : '95%',
+  marginTop: props.$teacherView ? 0 : '20px',
+  ...(props.$teacherView ? {
+    maxWidth: '100%',
+    minWidth: 0,
+    overflow: 'hidden',
+  } : {
+    overflow: 'auto',
+  }),
 }));
 
-/** Teacher view: size the leaderboard table panel without changing ChallengeTabView section tabs. */
+/** Fixed-size panel; table scrolls inside via LeaderboardScrollContainer. */
 const TeacherLeaderboardPanel = styled('div', {
-  width: '75%',
+  width: '88%',
+  maxWidth: '88%',
   height: '75%',
+  maxHeight: '75%',
+  alignSelf: 'center',
   display: 'flex',
   flexDirection: 'column',
   minHeight: 0,
-  alignSelf: 'center',
+  minWidth: 0,
+  overflow: 'hidden',
+  boxSizing: 'border-box',
 });
 
-const ClassroomLeaderboardTitleContainer = styled('div', {
+const ClassroomLeaderboardTitleContainer = styled('div', (props: { $compact?: boolean }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   display: 'flex',
   flexDirection: 'column',
-  margin: '20px',
-});
+  margin: props.$compact ? '12px 20px' : '20px',
+  flexShrink: 0,
+}));
 
 const TableHeaderContainer = styled('div', {
   display: 'inline-block',
@@ -148,34 +172,42 @@ const StyledTableRow = styled('tr', (props: { key: string, self: string, ref: Re
   borderBottom: '1px solid #ddd',
   backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000',
 }));
-const LeaderboardScrollContainer = styled('div', (props: { $teacherView?: boolean }) => ({
+const TeacherLeaderboardTableWrap = styled('div', {
+  display: 'block',
+  width: 'max-content',
+  minWidth: '100%',
+});
+
+/** Vertical scroll only (many students). Matches GradesView / classroom card scroll styling. */
+const TeacherLeaderboardVerticalScroll = styled('div', {
+  flex: 1,
+  minHeight: 0,
+  minWidth: 0,
+  maxHeight: '100%',
   width: '100%',
+  boxSizing: 'border-box',
+  overflowX: 'hidden',
+  overflowY: 'auto',
+  ...nativeScrollbarChrome,
+});
+
+/** Horizontal scroll only (many challenge columns). */
+const TeacherLeaderboardHorizontalScroll = styled('div', {
+  width: '100%',
+  boxSizing: 'border-box',
+  overflowX: 'auto',
+  overflowY: 'hidden',
+  ...nativeScrollbarChrome,
+});
+
+const LeaderboardScrollContainer = styled('div', {
+  width: '100%',
+  maxWidth: '100%',
+  boxSizing: 'border-box',
+  height: '85%',
   overflow: 'auto',
-  WebkitOverflowScrolling: 'touch',
-  height: props.$teacherView ? undefined : '85%',
-  ...(props.$teacherView ? {
-    flex: 1,
-    minHeight: 0,
-  } : {}),
-
-  scrollbarWidth: 'thin',
-  scrollbarColor: 'rgba(121,121,121,0.6) transparent',
-
-  '::-webkit-scrollbar': {
-    width: '14px',
-    height: '14px',
-  },
-  '::-webkit-scrollbar-track': {
-    background: 'transparent',
-  },
-  '::-webkit-scrollbar-thumb': {
-    backgroundColor: 'rgba(121,121,121,0.4)',
-    borderRadius: '8px',
-  },
-  '::-webkit-scrollbar-thumb:hover': {
-    backgroundColor: 'rgba(121,121,121,0.7)',
-  },
-}));
+  ...nativeScrollbarChrome,
+});
 
 const Button = styled('button', (props: ThemeProps & ButtonProps) => ({
   padding: '12px 24px',
@@ -223,8 +255,8 @@ const StickyNameTh = styled('th', (props: ThemeProps) => ({
   whiteSpace: 'nowrap',
 }));
 const LeaderboardContainer = styled('div', (props: ThemeProps & { $teacherView?: boolean }) => ({
-  width: '95%',
-  maxWidth: props.$teacherView ? 'none' : '900px',
+  width: props.$teacherView ? '100%' : '95%',
+  maxWidth: props.$teacherView ? '100%' : '900px',
   backgroundColor: props.theme.backgroundColor,
   border: `1px solid ${props.theme.borderColor}`,
   borderRadius: '8px',
@@ -232,18 +264,21 @@ const LeaderboardContainer = styled('div', (props: ThemeProps & { $teacherView?:
   ...(props.$teacherView ? {
     flex: 1,
     minHeight: 0,
+    minWidth: 0,
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
   } : {}),
 }));
 
-const LeaderboardHeader = styled('div', (props: ThemeProps) => ({
+const LeaderboardHeader = styled('div', (props: ThemeProps & { $teacherView?: boolean }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '16px 20px',
   borderBottom: `1px solid ${props.theme.borderColor}`,
   backgroundColor: 'rgba(255,255,255,0.05)',
+  ...(props.$teacherView ? { flexShrink: 0 } : {}),
 }));
 
 const LeaderboardTitle = styled('h2', (props: ThemeProps) => ({
@@ -322,7 +357,13 @@ const Table = styled('table', () => ({
   borderCollapse: 'collapse',
 }));
 
-const TableHeader = styled('th', (props: ThemeProps) => ({
+const TeacherLeaderboardTable = styled(Table, {
+  width: 'max-content',
+  minWidth: '100%',
+  tableLayout: 'auto',
+});
+
+const TableHeader = styled('th', (props: ThemeProps & { $challengeColumn?: boolean }) => ({
   padding: '12px 16px',
   position: 'sticky',
   top: 0,
@@ -332,6 +373,13 @@ const TableHeader = styled('th', (props: ThemeProps) => ({
   color: props.theme.color,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   backgroundColor: 'rgba(255,255,255,0.02)',
+  ...(props.$challengeColumn ? {
+    minWidth: '72px',
+    maxWidth: '140px',
+    whiteSpace: 'normal',
+    verticalAlign: 'bottom',
+    zIndex: 5,
+  } : {}),
 }));
 
 const TableRow = styled('tr', (props: ThemeProps & { $highlight?: boolean }) => ({
@@ -359,6 +407,29 @@ const RankCell = styled(TableCell, (props: ThemeProps & { rank: number }) => ({
         ? '#cd7f32'
         : props.theme.color,
 }));
+
+const StickyRankCell = styled(RankCell, (props: ThemeProps & { $highlight?: boolean }) => ({
+  position: 'sticky',
+  left: 0,
+  zIndex: 4,
+  backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 1)' : props.theme.backgroundColor,
+  minWidth: '80px',
+}));
+
+const StickyNameCell = styled(TableCell, (props: ThemeProps & { $highlight?: boolean }) => ({
+  position: 'sticky',
+  left: '80px',
+  zIndex: 4,
+  backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 1)' : props.theme.backgroundColor,
+  textAlign: 'left',
+  minWidth: '200px',
+  whiteSpace: 'nowrap',
+}));
+
+const ChallengeScoreCell = styled(TableCell, {
+  minWidth: '72px',
+  whiteSpace: 'nowrap',
+});
 
 // Higher-order component to inject router props for classroomId to support refreshing/back button
 function CompWithRouter(props) {
@@ -397,6 +468,9 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   async componentDidMount() {
     const { classroomId } = this.props.params;
     if (this.props.view === 'studentView' || this.props.view === 'teacherView') {
+      if (this.props.view === 'teacherView') {
+        this.props.onListUserChallenges();
+      }
       if (this.props.currentClassroom) {
         const classroom = Async.latestValue(this.props.currentClassroom);
         this.setState(
@@ -433,6 +507,13 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     if (prevProps.currentClassroom !== this.props.currentClassroom && this.props.currentClassroom) {
       this.setState({ shownClassroom: { docId: Async.latestValue(this.props.currentClassroom).docId, classroom: Async.latestValue(this.props.currentClassroom) } }, () => { void this.onLog(); });
 
+    }
+
+    if (
+      this.props.view === 'teacherView' &&
+      prevProps.challenges !== this.props.challenges
+    ) {
+      void this.onLog();
     }
   }
 
@@ -476,7 +557,9 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
         <EmptyState theme={theme}>
           {LocalizedString.lookup(
             isTeacherView
-              ? tr('No students or challenge scores yet for this classroom.')
+              ? challengeArray.length === 0
+                ? tr('No JBC challenges to display yet.')
+                : tr('No students enrolled in this classroom yet.')
               : tr('No completions yet. Be the first to complete this challenge!'),
             locale
           )}
@@ -490,70 +573,108 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     // Show user context section only if user has a completion and is not in top N
     const showUserContextSection = !isTeacherView && userContext && !userInTopEntries;
 
+    const LeaderboardTable = isTeacherView ? TeacherLeaderboardTable : Table;
+
+    const tableContent = (
+      <LeaderboardTable>
+        <thead>
+          <tr>
+            <StickyRankTh theme={theme}>
+              {LocalizedString.lookup(tr('Rank'), locale)}
+            </StickyRankTh>
+
+            <StickyNameTh theme={theme}>
+              {LocalizedString.lookup(tr('Name'), locale)}
+            </StickyNameTh>
+            {challengeArray.map(id => (
+              <TableHeader key={id} theme={theme} $challengeColumn={isTeacherView}>
+                {LocalizedString.lookup(challenges[id].name, locale)}
+              </TableHeader>
+            ))}
+
+          </tr>
+        </thead>
+        <tbody>
+          {tableEntries.map((entry, index) => {
+            const rank = index + 1;
+            const currentUid = auth.currentUser?.uid;
+            const isCurrentUser = currentUid
+              ? entry.id === currentUid
+              : params.studentId === entry.id;
+            return this.renderLeaderboardRow(entry, rank, isCurrentUser, challengeArray);
+          })}
+
+
+
+          {/* Separator and user context section */}
+          {showUserContextSection && (
+            <>
+              <SectionSeparator theme={theme}>
+                <SeparatorCell theme={theme} colSpan={4}>
+                  ··· {LocalizedString.lookup(tr('Your position'), locale)} ···
+                </SeparatorCell>
+              </SectionSeparator>
+
+              {/* User's entry */}
+              {this.renderLeaderboardRow(userContext, sortedUsers.findIndex(user => user.id === params.studentId), true, challengeArray)}
+
+            </>
+          )}
+        </tbody>
+      </LeaderboardTable>
+    );
+
+    if (isTeacherView) {
+      return (
+        <TeacherLeaderboardVerticalScroll className={NATIVE_SCROLLBAR_CLASS}>
+          <TeacherLeaderboardHorizontalScroll className={NATIVE_SCROLLBAR_CLASS}>
+            <TeacherLeaderboardTableWrap>
+              {tableContent}
+            </TeacherLeaderboardTableWrap>
+          </TeacherLeaderboardHorizontalScroll>
+        </TeacherLeaderboardVerticalScroll>
+      );
+    }
+
     return (
-      <LeaderboardScrollContainer $teacherView={isTeacherView}>
-        <Table>
-          <thead>
-            <tr>
-              <StickyRankTh theme={theme}>
-                {LocalizedString.lookup(tr('Rank'), locale)}
-              </StickyRankTh>
-
-              <StickyNameTh theme={theme}>
-                {LocalizedString.lookup(tr('Name'), locale)}
-              </StickyNameTh>
-              {challengeArray.map((entry, index) => {
-                return this.renderTableHeader(entry);
-              })}
-
-            </tr>
-          </thead>
-          <tbody>
-            {tableEntries.map((entry, index) => {
-              const rank = index + 1;
-              const currentUid = auth.currentUser?.uid;
-              const isCurrentUser = currentUid
-                ? entry.id === currentUid
-                : params.studentId === entry.id;
-              return this.renderLeaderboardRow(entry, rank, isCurrentUser, challengeArray);
-            })}
-
-
-
-            {/* Separator and user context section */}
-            {showUserContextSection && (
-              <>
-                <SectionSeparator theme={theme}>
-                  <SeparatorCell theme={theme} colSpan={4}>
-                    ··· {LocalizedString.lookup(tr('Your position'), locale)} ···
-                  </SeparatorCell>
-                </SectionSeparator>
-
-                {/* User's entry */}
-                {this.renderLeaderboardRow(userContext, sortedUsers.findIndex(user => user.id === params.studentId), true, challengeArray)}
-
-              </>
-            )}
-          </tbody>
-        </Table>
+      <LeaderboardScrollContainer>
+        {tableContent}
       </LeaderboardScrollContainer>
     );
   };
 
   private renderLeaderboardRow = (entry: User, rank: number, isCurrentUser: boolean, challengeArray: string[]) => {
-    const { theme, locale } = this.props;
+    const { theme, locale, view } = this.props;
     const { challenges } = this.state;
+    const isTeacherView = view === 'teacherView';
+    const RankCellComponent = isTeacherView ? StickyRankCell : RankCell;
+    const NameCellComponent = isTeacherView ? StickyNameCell : TableCell;
+    const ScoreCellComponent = isTeacherView ? ChallengeScoreCell : TableCell;
+
     return (
       <TableRow key={`${entry.id}-${rank}`} theme={theme} $highlight={isCurrentUser}>
-        <RankCell theme={theme} rank={rank}>#{rank}</RankCell>
-        <TableCell theme={theme}>
+        <RankCellComponent
+          theme={theme}
+          rank={rank}
+          {...(isTeacherView ? { $highlight: isCurrentUser } : {})}
+        >
+          #{rank}
+        </RankCellComponent>
+        <NameCellComponent
+          theme={theme}
+          {...(isTeacherView ? { $highlight: isCurrentUser } : {})}
+        >
           {entry.name}
           {isCurrentUser && ` (${LocalizedString.lookup(tr('You'), locale)})`}
-        </TableCell>
+        </NameCellComponent>
         {challengeArray.map((id) => {
-          const userScore = entry.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
+          const userScore = entry.scores.find(
+            score =>
+              score.challengeId === id ||
+              score.name['en-US'] === challenges[id].name['en-US']
+          );
           return (
-            <TableCell key={id} theme={theme}>
+            <ScoreCellComponent key={id} theme={theme}>
               {!userScore && '-'}
               {userScore?.completed && (
                 <>
@@ -564,17 +685,10 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
               {userScore && !userScore.completed && (
                 <img src="/static/icons/botguy-bw-trans-32x32.png" alt="Favicon" />
               )}
-            </TableCell>
+            </ScoreCellComponent>
           );
         })}
       </TableRow>
-    );
-  };
-
-  private renderTableHeader = (challengeName: string) => {
-    const { theme, locale } = this.props;
-    return (
-      <TableHeader key={`${challengeName}-key`} theme={theme}>{LocalizedString.lookup(tr(`${challengeName}`), locale)}</TableHeader>
     );
   };
 
@@ -585,27 +699,108 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   };
 
 
+  /** Teacher leaderboard columns: built-in JBC + this teacher's custom scene-collection challenges. */
+  private teacherLeaderboardChallengeColumns_ = (
+    classroom: Classroom
+  ): Record<string, Challenge> => {
+    const { challenges: challengeStore } = this.props;
+    const teacherId = classroom.teacherId;
+    const columns: Record<string, Challenge> = {};
+
+    for (const [challengeId, asyncChallenge] of Object.entries(challengeStore)) {
+      const value = Async.latestValue(asyncChallenge);
+      if (!value) continue;
+      if (isCustomChallengeId(challengeId)) {
+        if (!isTeacherOwnedCustomChallenge(value, teacherId)) continue;
+      }
+      columns[challengeId] = {
+        name: value.name,
+        description: value.description,
+      };
+    }
+
+    for (const [sceneId, shared] of Object.entries(
+      classroom.sharedCustomChallenges ?? {}
+    )) {
+      if (columns[sceneId] || shared.sharedByTeacherId !== teacherId) continue;
+      columns[sceneId] = {
+        name: shared.scene.name,
+        description: shared.scene.description,
+      };
+    }
+
+    return columns;
+  };
+
+  private rosterUserKey_ = (student: {
+    id: string | LocalizedString;
+    displayName: string | LocalizedString;
+  }): string => {
+    const displayName =
+      typeof student.displayName === 'string'
+        ? student.displayName
+        : student.displayName[LocalizedString.EN_US];
+    const studentId =
+      typeof student.id === 'string' ? student.id : student.id[LocalizedString.EN_US];
+    return displayName || studentId;
+  };
+
+  /** Seed leaderboard rows from classroom roster (teacher may also be enrolled as a student). */
+  private seedUsersFromClassroomRoster_ = (
+    classroom: Classroom
+  ): Record<string, User> => {
+    const users: Record<string, User> = {};
+    for (const student of Object.values(classroom.studentIds ?? {})) {
+      const key = this.rosterUserKey_(student);
+      const studentId =
+        typeof student.id === 'string' ? student.id : student.id[LocalizedString.EN_US];
+      const displayName =
+        typeof student.displayName === 'string'
+          ? student.displayName
+          : student.displayName[LocalizedString.EN_US];
+      users[key] = {
+        id: studentId,
+        name: displayName,
+        scores: [],
+      };
+    }
+    return users;
+  };
+
   // Logs classroom users and their challenge completions
   private onLog = async () => {
 
-    const { params, currentClassroom } = this.props;
-    const result = await getAllStudentsClassroomChallenges(currentClassroom ? Async.latestValue(currentClassroom) : this.state.shownClassroom?.classroom);
+    const { params, currentClassroom, view } = this.props;
+    const classroomValue =
+      currentClassroom
+        ? Async.latestValue(currentClassroom)
+        : this.state.shownClassroom?.classroom;
+    const result = await getAllStudentsClassroomChallenges(classroomValue);
 
-    const users: Record<string, User> = {};
-    const challenges: Record<string, Challenge> = {};
+    const isTeacherView = view === 'teacherView';
+    const challenges: Record<string, Challenge> = isTeacherView && classroomValue
+      ? this.teacherLeaderboardChallengeColumns_(classroomValue)
+      : {};
 
-    for (const [_, attemptedChallenges] of Object.entries(result)) {
-      const challengeNames = Object.keys(Object.entries(attemptedChallenges)[2][1]);
+    const users: Record<string, User> =
+      isTeacherView && classroomValue
+        ? this.seedUsersFromClassroomRoster_(classroomValue)
+        : {};
 
-      challengeNames.forEach(challengeId => {
-        const challenge = {
-          name: tr(challengeId),
-          description: tr(challengeId),
-        };
-        if (!challenges[challengeId]) {
-          challenges[challengeId] = challenge;
-        }
-      });
+    if (!isTeacherView) {
+      for (const [_, attemptedChallenges] of Object.entries(result)) {
+        const challengeNames = Object.keys(Object.entries(attemptedChallenges)[2][1]);
+
+        challengeNames.forEach(challengeId => {
+          const challenge = {
+            name: tr(challengeId),
+            description: tr(challengeId),
+          };
+          if (!challenges[challengeId]) {
+            challenges[challengeId] = challenge;
+          }
+        });
+      }
     }
 
     interface ChallengeData {
@@ -633,17 +828,19 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     }
     const entries = Object.entries(result as Record<string, UserData>);
 
-    for (const [userId, userData] of entries) {
-      const user: User = {
+    for (const [userKey, userData] of entries) {
+      const existing = users[userKey];
+      const user: User = existing ?? {
         id: userData.uid,
-        name: userId,
+        name: userKey,
         scores: [],
       };
 
-
       for (const [challengeId, challenge] of Object.entries(userData.challenges)) {
+        if (isTeacherView && !challenges[challengeId]) continue;
+        const challengeMeta = challenges[challengeId];
         const score: Score = {
-          name: tr(challengeId),
+          name: challengeMeta?.name ?? tr(challengeId),
           challengeId,
           completed: challengeCompletion(challenge),
           challengeCompletion: userData.challenges[challengeId] as ChallengeCompletion,
@@ -652,9 +849,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
         user.scores.push(score);
       }
 
-      if (!users[userId]) {
-        users[userId] = user;
-      }
+      users[userKey] = user;
     }
     const sortedUsers = this.orderUsersByCompletedChallenges(users);
     const topThree = sortedUsers.slice(0, 3);
@@ -1072,7 +1267,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     const isTeacherView = view === 'teacherView';
     return (
       <LeaderboardContainer theme={theme} $teacherView={isTeacherView}>
-        <LeaderboardHeader theme={theme}>
+        <LeaderboardHeader theme={theme} $teacherView={isTeacherView}>
           <LeaderboardTitle theme={theme}>
             {LocalizedString.lookup(tr('Leaderboard'), locale)}
           </LeaderboardTitle>
@@ -1120,10 +1315,12 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
         <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> {LocalizedString.lookup(tr("See My Badges!"), locale)}</Button>
       </ButtonContainer>
     );
-    return (
-      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        {view === 'studentView'
-          ? < div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+    const isTeacherView = view === 'teacherView';
+
+    if (view === 'studentView') {
+      return (
+        <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
             <ClassroomLeaderboardTitleContainer>
               <h1>{LocalizedString.lookup(tr("Classroom Leaderboard"), locale)}</h1>
 
@@ -1140,44 +1337,45 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
                 []
               }
               theme={theme} />}
+          </div>
+        </div>
+      );
+    }
 
-          </div >
-          : <ClassroomLeaderboardContainer style={style} theme={theme}>
-            < div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
-              <ClassroomLeaderboardTitleContainer>
-                <h1>{LocalizedString.lookup(tr("Classroom Leaderboard"), locale)}</h1>
+    return (
+      <TeacherLeaderboardRoot style={style}>
+        <ClassroomLeaderboardContainer theme={theme} $teacherView>
+          <div style={{ width: '100%', maxWidth: '100%', minWidth: 0, alignItems: 'center', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxSizing: 'border-box' }}>
+            <ClassroomLeaderboardTitleContainer $compact>
+              <h1>{LocalizedString.lookup(tr("Classroom Leaderboard"), locale)}</h1>
 
-                <ButtonContainer>
-                  <TourTarget registry={tourRegistry} targetKey="export-all-general-scores">
-                    <Button
-                      theme={DARK}
-                      $disabled={!this.canExportClassroomScores()}
-                      onClick={() => this.exportClassroomScores()}
-                    >
-                      {LocalizedString.lookup(tr("Export All General Scores"), locale)}
-                    </Button>
-                  </TourTarget>
-                  <TourTarget registry={tourRegistry} targetKey="export-all-detailed-scores">
-                    <Button
-                      theme={DARK}
-                      $disabled={!this.canExportClassroomScores()}
-                      onClick={() => this.exportDetailedClassroomScores()}
-                    >
-                      {LocalizedString.lookup(tr("Export All Detailed Scores"), locale)}
-                    </Button>
-                  </TourTarget>
-                </ButtonContainer>
-
-              </ClassroomLeaderboardTitleContainer>
-              <TeacherLeaderboardPanel>
-                {this.renderClassroomLeaderboardNew()}
-              </TeacherLeaderboardPanel>
-            </div>
-          </ClassroomLeaderboardContainer>
-        }
-
-
-      </div>
+              <ButtonContainer>
+                <TourTarget registry={tourRegistry} targetKey="export-all-general-scores">
+                  <Button
+                    theme={DARK}
+                    $disabled={!this.canExportClassroomScores()}
+                    onClick={() => this.exportClassroomScores()}
+                  >
+                    {LocalizedString.lookup(tr("Export All General Scores"), locale)}
+                  </Button>
+                </TourTarget>
+                <TourTarget registry={tourRegistry} targetKey="export-all-detailed-scores">
+                  <Button
+                    theme={DARK}
+                    $disabled={!this.canExportClassroomScores()}
+                    onClick={() => this.exportDetailedClassroomScores()}
+                  >
+                    {LocalizedString.lookup(tr("Export All Detailed Scores"), locale)}
+                  </Button>
+                </TourTarget>
+              </ButtonContainer>
+            </ClassroomLeaderboardTitleContainer>
+            <TeacherLeaderboardPanel>
+              {this.renderClassroomLeaderboardNew()}
+            </TeacherLeaderboardPanel>
+          </div>
+        </ClassroomLeaderboardContainer>
+      </TeacherLeaderboardRoot>
     );
   }
 }
@@ -1194,5 +1392,7 @@ export default connect(
   (dispatch) => ({
     onClearSelectedClassroom: () =>
       dispatch(ClassroomsAction.clearSelectedClassroom({})),
+    onListUserChallenges: () =>
+      dispatch(ChallengesAction.listUserChallenges({})),
   })
 )(CompWithRouter) as React.ComponentType<ClassroomLeaderboardPublicProps>;

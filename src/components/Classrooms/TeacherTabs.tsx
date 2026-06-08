@@ -41,11 +41,13 @@ const Container = styled('div', ({ $theme }: { $theme: Theme }) => ({
   flexDirection: 'column',
   color: $theme.color,
   backgroundColor: $theme.backgroundColor,
-  // minHeight: '100vh',
 }));
 
 const Body = styled('div', {
   flex: 1,
+  minHeight: 0,
+  minWidth: 0,
+  overflow: 'hidden',
   display: 'flex',
   flexDirection: 'row',
   '@screen and (max-width: 800px)': {
