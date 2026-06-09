@@ -8,6 +8,7 @@ import Node from '../../../state/State/Robot/Node';
 import { ReferenceFramewUnits, Vector3wUnits } from '../../../util/math/unitMath';
 import { clamp, RawVector3 } from '../../../util/math/math';
 import { RENDER_SCALE } from '../../../components/constants/renderConstants';
+import { unitZFromQuaternion } from '../../../util/babylonMath';
 
 
 /**
@@ -103,8 +104,9 @@ class LightSensor extends SensorObject<Node.LightSensor, number> {
       // If the light is directional, determine if it is pointing towards the
       // sensor. If not, it is not received.
       if (light instanceof DirectionalLight) {
-        const direction = Vector3.Forward(true)
-          .applyRotationQuaternion(Quaternion.FromEulerVector(light.getRotation()));
+        const direction = unitZFromQuaternion(
+          Quaternion.FromEulerVector(light.getRotation())
+        );
 
         const dot = Vector3.Dot(direction, Vector3wUnits.toBabylon(offset, RENDER_SCALE));
         const angle = Math.acos(dot / Distance.toValue(Vector3wUnits.length(offset), RENDER_SCALE));
@@ -114,8 +116,9 @@ class LightSensor extends SensorObject<Node.LightSensor, number> {
 
       // Similar for spot light
       if (light instanceof SpotLight) {
-        const direction = Vector3.Forward(true)
-          .applyRotationQuaternion(Quaternion.FromEulerVector(light.getRotation()));
+        const direction = unitZFromQuaternion(
+          Quaternion.FromEulerVector(light.getRotation())
+        );
 
         const dot = Vector3.Dot(direction, Vector3wUnits.toBabylon(offset, RENDER_SCALE));
         const angle = Math.acos(dot / Distance.toValue(Vector3wUnits.length(offset), RENDER_SCALE));

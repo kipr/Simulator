@@ -66,6 +66,7 @@ export interface MenuProps extends StyleProps, ThemeProps {
   onDashboardClick: () => void;
   onLogoutClick: () => void;
   onAiClick: () => void;
+  onEditCustomChallengeClick?: () => void;
 
   onEndChallengeClick: () => void;
   simulatorState: SimulatorState;
@@ -230,6 +231,7 @@ class ChallengeMenu extends React.PureComponent<Props, State> {
       onLogoutClick,
       onEndChallengeClick,
       onAiClick,
+      onEditCustomChallengeClick,
       simulatorState
     } = props;
 
@@ -297,6 +299,7 @@ class ChallengeMenu extends React.PureComponent<Props, State> {
                 onAboutClick={onAboutClick}
                 onSettingsClick={onSettingsClick}
                 onAiClick={onAiClick}
+                onEditCustomChallengeClick={onEditCustomChallengeClick}
               />
             ) : undefined}
           </Item>

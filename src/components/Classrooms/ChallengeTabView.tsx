@@ -88,7 +88,7 @@ type Props = ChallengeTabViewPublicProps & ChallengeTabViewPrivateProps & WithNa
 type State = ChallengeTabViewState;
 
 
-const SidePanel = styled('div', (props: ThemeProps) => ({
+const SidePanel = styled('div', (props: ThemeProps & { $teacherView?: boolean }) => ({
   display: 'flex',
   flexDirection: 'column',
   flexWrap: 'wrap',
@@ -99,16 +99,32 @@ const SidePanel = styled('div', (props: ThemeProps) => ({
   alignContent: 'center',
   width: '100%',
   gap: '10px',
+  ...(props.$teacherView ? {
+    flex: 1,
+    minHeight: 0,
+    minWidth: 0,
+    maxWidth: '100%',
+    overflow: 'hidden',
+    flexWrap: 'nowrap',
+    boxSizing: 'border-box',
+  } : {}),
 }));
 
-const ChallengeViewContainer = styled('div', (props: ThemeProps) => ({
+const ChallengeViewContainer = styled('div', (props: ThemeProps & { $teacherView?: boolean }) => ({
   left: '4%',
   height: '100%',
   width: '95%',
   margin: '1em',
   zIndex: 23,
-  backgroundColor: props.theme.backgroundColor
+  backgroundColor: props.theme.backgroundColor,
+  ...(props.$teacherView ? {
+    maxWidth: '100%',
+    minWidth: 0,
+    overflow: 'hidden',
+    boxSizing: 'border-box',
+  } : {}),
 }));
+
 const SectionName = styled('span', (props: ThemeProps & SectionProps & { selected: boolean }) => ({
   ':hover': {
     cursor: 'pointer',
@@ -123,18 +139,46 @@ const SectionName = styled('span', (props: ThemeProps & SectionProps & { selecte
   userSelect: 'none',
 }));
 
-const SectionsColumn = styled('div', (props: ThemeProps) => ({
+const SectionTabsRow = styled('div', {
+  display: 'flex',
+  flexDirection: 'row',
+  width: '100%',
+  flexShrink: 0,
+});
+
+const SectionNameTab = styled(SectionName, {
+  width: 'auto',
+  flex: 1,
+});
+
+const SectionsColumn = styled('div', (props: ThemeProps & { $teacherView?: boolean }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   flexGrow: 1,
   border: `3px solid ${props.theme.borderColor}`,
-  // minHeight: '100%',
   height: '95%',
   paddingBottom: '3em',
   backgroundColor: props.theme.backgroundColor,
-  zIndex: '1'
+  zIndex: '1',
+  ...(props.$teacherView ? {
+    width: '100%',
+    maxWidth: '100%',
+    minWidth: 0,
+    overflow: 'hidden',
+    boxSizing: 'border-box',
+  } : {}),
 }));
+
+/** Keeps the leaderboard at the section width so the table scrolls inside a fixed panel. */
+const TeacherLeaderboardSlot = styled('div', {
+  width: '100%',
+  maxWidth: '100%',
+  alignSelf: 'stretch',
+  minWidth: 0,
+  overflow: 'hidden',
+  boxSizing: 'border-box',
+});
 
 export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
   'ecmascript': 'javascript',
@@ -198,28 +242,36 @@ class ChallengeTabView extends React.Component<Props, State> {
     const { props, state } = this;
     const { style, locale, theme, tourRegistry, view, currentSelectedClassroom } = props;
     const { selectedSection } = state;
+    const isTeacherView = view === 'teacherView';
     const DefaultJBCChallengeSection = () => {
       const { currentStudentDisplayName } = this.state;
       const { theme, currentStudentClassroom, tourRegistry } = this.props;
+      const leaderboard = (
+        <ClassroomLeaderboard
+          theme={theme}
+          view={view}
+          currentStudentDisplayName={currentStudentDisplayName}
+          currentClassroom={isTeacherView ? currentSelectedClassroom : currentStudentClassroom}
+          tourRegistry={tourRegistry}
+        />
+      );
+
+      const leaderboardContent = isTeacherView
+        ? <TeacherLeaderboardSlot>{leaderboard}</TeacherLeaderboardSlot>
+        : leaderboard;
 
       const content = tourRegistry ? (
-        <SectionsColumn theme={theme}>
-          <TourTarget registry={this.props.tourRegistry} targetKey='default-jbc-challenges-leaderboard-tab'>
-            <ClassroomLeaderboard
-              theme={theme}
-              view={view}
-              currentStudentDisplayName={currentStudentDisplayName}
-              currentClassroom={view === 'teacherView' ? currentSelectedClassroom : currentStudentClassroom}
-              tourRegistry={this.props.tourRegistry} />
+        <SectionsColumn theme={theme} $teacherView={isTeacherView}>
+          <TourTarget
+            registry={this.props.tourRegistry}
+            targetKey='default-jbc-challenges-leaderboard-tab'
+            style={isTeacherView ? { width: '100%', alignSelf: 'stretch', minWidth: 0, maxWidth: '100%', overflow: 'hidden' } : undefined}
+          >
+            {leaderboardContent}
           </TourTarget>
         </SectionsColumn>)
-        : (<SectionsColumn theme={theme}>
-          <ClassroomLeaderboard
-            theme={theme}
-            view={view}
-            currentStudentDisplayName={currentStudentDisplayName}
-            currentClassroom={view === 'teacherView' ? currentSelectedClassroom : currentStudentClassroom}
-          />
+        : (<SectionsColumn theme={theme} $teacherView={isTeacherView}>
+          {leaderboardContent}
         </SectionsColumn>);
       return (content);
     };
@@ -244,21 +296,23 @@ class ChallengeTabView extends React.Component<Props, State> {
 
     const tourContent_ = (
       <TourTarget registry={this.props.tourRegistry} targetKey='challenge-tab-view' style={style}>
-        <ChallengeViewContainer theme={theme}>
+        <ChallengeViewContainer theme={theme} $teacherView={isTeacherView}>
 
-          <SectionName theme={theme} selected={selectedSection === "Default JBC Challenges"} onClick={() => this.onSectionSelect_("Default JBC Challenges")}>
-            {LocalizedString.lookup(tr('Default JBC Challenges'), locale)}
-          </SectionName>
+          <SectionTabsRow>
+            <SectionNameTab theme={theme} selected={selectedSection === "Default JBC Challenges"} onClick={() => this.onSectionSelect_("Default JBC Challenges")}>
+              {LocalizedString.lookup(tr('Default JBC Challenges'), locale)}
+            </SectionNameTab>
 
-          <SectionName
-            theme={theme}
-            selected={selectedSection === "Limited Challenges"}
-            onClick={() => this.onSectionSelect_("Limited Challenges")}
-          >
-            <TourTarget registry={this.props.tourRegistry} targetKey='challenge-tab-view-limited-challenges-click' style={{ display: 'inline-block' }}>
-              {LocalizedString.lookup(tr('Limited Challenges'), locale)}
-            </TourTarget>
-          </SectionName>
+            <SectionNameTab
+              theme={theme}
+              selected={selectedSection === "Limited Challenges"}
+              onClick={() => this.onSectionSelect_("Limited Challenges")}
+            >
+              <TourTarget registry={this.props.tourRegistry} targetKey='challenge-tab-view-limited-challenges-click' style={{ display: 'inline-block' }}>
+                {LocalizedString.lookup(tr('Limited Challenges'), locale)}
+              </TourTarget>
+            </SectionNameTab>
+          </SectionTabsRow>
 
           {selectedSection === 'Default JBC Challenges' && DefaultJBCChallengeSection()}
           {selectedSection === 'Limited Challenges' && LimitedChallengesSection()}
@@ -268,20 +322,21 @@ class ChallengeTabView extends React.Component<Props, State> {
     );
 
     const normalContent_ = (
-      <ChallengeViewContainer theme={theme}>
+      <ChallengeViewContainer theme={theme} $teacherView={isTeacherView}>
 
-        <SectionName theme={theme} selected={selectedSection === "Default JBC Challenges"} onClick={() => this.onSectionSelect_("Default JBC Challenges")}>
-          {LocalizedString.lookup(tr('Default JBC Challenges'), locale)}
-        </SectionName>
+        <SectionTabsRow>
+          <SectionNameTab theme={theme} selected={selectedSection === "Default JBC Challenges"} onClick={() => this.onSectionSelect_("Default JBC Challenges")}>
+            {LocalizedString.lookup(tr('Default JBC Challenges'), locale)}
+          </SectionNameTab>
 
-        <SectionName
-          theme={theme}
-          selected={selectedSection === "Limited Challenges"}
-          onClick={() => this.onSectionSelect_("Limited Challenges")}
-        >
-          {LocalizedString.lookup(tr('Limited Challenges'), locale)}
-
-        </SectionName>
+          <SectionNameTab
+            theme={theme}
+            selected={selectedSection === "Limited Challenges"}
+            onClick={() => this.onSectionSelect_("Limited Challenges")}
+          >
+            {LocalizedString.lookup(tr('Limited Challenges'), locale)}
+          </SectionNameTab>
+        </SectionTabsRow>
 
         {selectedSection === 'Default JBC Challenges' && DefaultJBCChallengeSection()}
         {selectedSection === 'Limited Challenges' && LimitedChallengesSection()}
@@ -289,7 +344,7 @@ class ChallengeTabView extends React.Component<Props, State> {
       </ChallengeViewContainer>
     );
     return (
-      <SidePanel style={style} theme={theme}>
+      <SidePanel style={style} theme={theme} $teacherView={isTeacherView}>
         {tourRegistry ? tourContent_ : normalContent_}
       </SidePanel>
 

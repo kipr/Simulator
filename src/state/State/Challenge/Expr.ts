@@ -96,8 +96,14 @@ namespace Expr {
     if (expr === undefined) return false;
     
     if (context.exprStates[exprId] !== undefined) {
-      if (expr.type === Expr.Type.Once) passthrough(expr, context);
-      return context.exprStates[exprId];
+      if (expr.type === Expr.Type.Once) {
+        if (context.exprStates[exprId] === true) {
+          return true;
+        }
+        // Latched false: re-evaluate so a later true event can satisfy the goal.
+      } else {
+        return context.exprStates[exprId];
+      }
     }
 
     let ret = false;

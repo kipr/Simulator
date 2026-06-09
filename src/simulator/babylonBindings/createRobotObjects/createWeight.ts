@@ -9,6 +9,7 @@ import { RENDER_SCALE } from '../../../components/constants/renderConstants';
 import { Mass } from '../../../util/math/Value';
 import Robot from '../../../state/State/Robot';
 import Dict from '../../../util/objectOps/Dict';
+import { invertedQuaternion, unitYFromQuaternion } from '../../../util/babylonMath';
 
 // Adds an invisible weight to a parent link.
 export const createWeight = (id: string, weight: Node.Weight, bScene_: babylonScene, robot_: Robot, links_: Dict<Mesh>) => {
@@ -31,11 +32,16 @@ export const createWeight = (id: string, weight: Node.Weight, bScene_: babylonSc
 
   const bOrigin = ReferenceFramewUnits.toBabylon(weight.origin, RENDER_SCALE);
 
+  const pivotUp = new Vector3(0, 1, 0);
+  const axisUp = bOrigin.rotationQuaternion
+    ? unitYFromQuaternion(invertedQuaternion(bOrigin.rotationQuaternion))
+    : pivotUp.clone();
+
   const constraint = new LockConstraint(
     bOrigin.position,
-    new Vector3(0,0,0), // RawVector3.toBabylon(new Vector3(-8,10,0)), // updown, frontback
-    Vector3.Up(),
-    Vector3.Up().applyRotationQuaternion(bOrigin.rotationQuaternion.invert()),
+    new Vector3(0, 0, 0),
+    pivotUp,
+    axisUp,
     bScene_
   );
 

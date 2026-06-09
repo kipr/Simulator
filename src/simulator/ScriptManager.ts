@@ -11,6 +11,9 @@ import construct from '../util/redux/construct';
 import { RawAxisAngle, RawQuaternion, RawReferenceFrame, RawVector3 } from '../util/math/math';
 import { Angle, Mass, Distance } from '../util/math/Value';
 import { SharedRegistersRobot } from '../programming/SharedRegistersRobot';
+import { sceneHasCustomChallengeRuntime } from '../util/customChallengeSceneScripts';
+import { isCustomCanPoseChallengeEventId } from '../util/customChallengeGoals';
+import { parsePlayAreaEventId } from '../util/playAreaSuccessGoals';
 
 
 export type Ids = string | string[] | Set<string>;
@@ -56,6 +59,30 @@ export interface ScriptSceneBinding {
   postTestResult: (data: unknown) => void;
 
   setChallengeEventValue: (eventId: string, value: boolean) => void;
+
+  /** Mat-local cm (x = width, y = length) from live simulator pose. */
+  getNodeMatLocal(nodeId: string): { x: number; y: number } | null;
+
+  /** Live world position in centimeters (simulator ground frame). */
+  getNodeWorldCm(nodeId: string): { x: number; y: number; z: number } | null;
+
+  /** Live axis-aligned world bounds in centimeters (mat items). */
+  getNodeWorldBoundsCm(
+    nodeId: string
+  ): { min: { x: number; y: number; z: number }; max: { x: number; y: number; z: number } } | null;
+
+  /** Horizontal world distance (cm) from robot front to ream center (live meshes). */
+  getReamStopNearDistCm(reamNodeId: string): number | null;
+
+  /** True when any robot link volume overlaps the play-area polygon on the mat plane. */
+  robotIntersectsPlayZone(polygon: { x: number; y: number }[]): boolean;
+
+  /** Live Y tilt in degrees (0 = horizontal, 90 = upright). Custom runtime mat-item goals. */
+  getNodeYAngle(nodeId: string): number;
+
+  /** Live upright check from simulator meshes (preset `nodeUpright` equivalent). */
+  getNodeUpright(nodeId: string): boolean;
+
 }
 
 class ScriptManager {
@@ -76,11 +103,68 @@ class ScriptManager {
   onSelectedNodeIdChange?: (id: string) => void;
 
   onChallengeSetEventValue?: (eventId: string, value: boolean) => void;
-  onChallengeGetEventValue?: (eventId: string, value: boolean) => boolean;
+  /** Last values passed to setChallengeEventValue this run (avoids redundant challenge updates). */
+  private challengeEventValues_: Dict<boolean> = {};
+  resolveNodeMatLocal?: (nodeId: string) => { x: number; y: number } | null;
+  resolveNodeWorldCm?: (nodeId: string) => { x: number; y: number; z: number } | null;
+  resolveNodeWorldBoundsCm?: (
+    nodeId: string
+  ) => {
+    min: { x: number; y: number; z: number };
+    max: { x: number; y: number; z: number };
+  } | null;
+  resolveReamStopNearDistCm?: (reamNodeId: string) => number | null;
+  resolveRobotIntersectsPlayZone?: (
+    polygon: { x: number; y: number }[]
+  ) => boolean;
+  resolveNodeYAngle?: (nodeId: string) => number | null;
+  resolveNodeUpright?: (nodeId: string) => boolean;
   private programStatus_: 'running' | 'stopped' = 'stopped';
   get programStatus() { return this.programStatus_; }
   set programStatus(status: 'running' | 'stopped') {
     this.programStatus_ = status;
+    if (status === 'running') {
+      this.challengeEventValues_ = {};
+    }
+  }
+
+  clearChallengeEventValues(): void {
+    this.challengeEventValues_ = {};
+  }
+
+  /** Set a challenge event from simulator code (same dedupe as scene scripts). */
+  getChallengeEventValue(eventId: string): boolean {
+    return this.challengeEventValues_[eventId] ?? false;
+  }
+
+  emitChallengeEventValue(eventId: string, value: boolean): void {
+    if (!this.onChallengeSetEventValue) return;
+    // Custom runtime only: avoid firing saved goals on load (preset scripts self-guard).
+    if (
+      sceneHasCustomChallengeRuntime(this.scene_) &&
+      this.programStatus_ !== 'running' &&
+      !isCustomCanPoseChallengeEventId(eventId)
+    ) {
+      return;
+    }
+    if (this.challengeEventValues_[eventId] === value) return;
+    this.challengeEventValues_[eventId] = value;
+    if (sceneHasCustomChallengeRuntime(this.scene_)) {
+      if (
+        value === true &&
+        parsePlayAreaEventId(eventId)?.kind === 'robotNotIntersecting'
+      ) {
+        console.log('[custom-jbc play-area] emitChallengeEventValue', eventId);
+      }
+      if (
+        value === true &&
+        /^can[a-z0-9]+KnockedOver$/i.test(eventId) &&
+        !/NotKnockedOver/i.test(eventId)
+      ) {
+        console.log('[custom-jbc knock-over] emitChallengeEventValue', eventId);
+      }
+    }
+    this.onChallengeSetEventValue(eventId, value);
   }
 
 
@@ -113,6 +197,23 @@ class ScriptManager {
 
   trigger(event: ScriptManager.Event) {
     for (const id in this.scriptExecutions_) this.scriptExecutions_[id].trigger(event);
+  }
+
+  /** Initialize any scene scripts that are not yet loaded (e.g. customChallengeRuntime). */
+  ensureSceneScripts(scene: Scene) {
+    const runtimeId = 'customChallengeRuntime' as const;
+    const runtimeScript = scene.scripts?.[runtimeId];
+    if (runtimeScript) {
+      this.set(runtimeId, runtimeScript);
+      if (scene.nodes?.robot?.scriptIds?.includes(runtimeId)) {
+        this.bind(runtimeId, 'robot');
+      }
+    }
+    for (const scriptId in scene.scripts ?? {}) {
+      if (scriptId === runtimeId) continue;
+      if (scriptId in this.scriptExecutions_) continue;
+      this.set(scriptId, scene.scripts[scriptId]);
+    }
   }
 
   dispose() {
@@ -584,14 +685,79 @@ namespace ScriptManager {
 
     setChallengeEventValue(eventId: string, value: boolean) {
       if (!this.manager_.onChallengeSetEventValue) return;
-      this.manager_.onChallengeSetEventValue(eventId, value);
-      this.getChallengeEventValue(eventId, value);
+      this.manager_.emitChallengeEventValue(eventId, value);
     }
 
-    getChallengeEventValue(eventId: string, value: boolean) {
-      if (!this.manager_.onChallengeGetEventValue) return;
-      return value;
-      this.getChallengeEventValue(eventId, value);
+    getNodeMatLocal(nodeId: string): { x: number; y: number } | null {
+      if (this.manager_.resolveNodeMatLocal) {
+        return this.manager_.resolveNodeMatLocal(nodeId);
+      }
+      const n = this.nodes[nodeId];
+      if (!n?.origin?.position) return null;
+      const mat = this.nodes['matA'] || this.nodes['matB'];
+      const ox = mat?.origin?.position?.x?.value ?? 0;
+      const oz = mat?.origin?.position?.z?.value ?? 0;
+      return {
+        x: n.origin.position.x.value - ox,
+        y: n.origin.position.z.value - oz,
+      };
+    }
+
+    getNodeWorldCm(nodeId: string): { x: number; y: number; z: number } | null {
+      if (this.manager_.resolveNodeWorldCm) {
+        return this.manager_.resolveNodeWorldCm(nodeId);
+      }
+      return null;
+    }
+
+    getNodeWorldBoundsCm(
+      nodeId: string
+    ): {
+        min: { x: number; y: number; z: number };
+        max: { x: number; y: number; z: number };
+      } | null {
+      if (this.manager_.resolveNodeWorldBoundsCm) {
+        return this.manager_.resolveNodeWorldBoundsCm(nodeId);
+      }
+      return null;
+    }
+
+    getReamStopNearDistCm(reamNodeId: string): number | null {
+      if (this.manager_.resolveReamStopNearDistCm) {
+        return this.manager_.resolveReamStopNearDistCm(reamNodeId);
+      }
+      return null;
+    }
+
+    robotIntersectsPlayZone(polygon: { x: number; y: number }[]): boolean {
+      if (this.manager_.resolveRobotIntersectsPlayZone) {
+        return this.manager_.resolveRobotIntersectsPlayZone(polygon);
+      }
+      return false;
+    }
+
+    getNodeYAngle(nodeId: string): number {
+      if (this.manager_.resolveNodeYAngle) {
+        const y = this.manager_.resolveNodeYAngle(nodeId);
+        if (y !== null) return y;
+      }
+      const n = this.nodes[nodeId];
+      const orient = n?.origin?.orientation;
+      if (!orient) return 90;
+      const q = RotationwUnits.toRawQuaternion(orient);
+      const uy = 1 - 2 * (q.x * q.x + q.z * q.z);
+      return (180 / Math.PI) * Math.asin(Math.max(-1, Math.min(1, uy)));
+    }
+
+    getNodeUpright(nodeId: string): boolean {
+      if (this.manager_.resolveNodeUpright) {
+        return this.manager_.resolveNodeUpright(nodeId);
+      }
+      return this.getNodeYAngle(nodeId) > 5;
+    }
+
+    getChallengeEventValue(eventId: string): boolean {
+      return this.manager_.getChallengeEventValue(eventId);
     }
   }
 

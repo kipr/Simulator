@@ -19,6 +19,7 @@ import ExceptionDialog from '../components/Challenge/ExceptionDialog';
 import { DEFAULT_SETTINGS, Settings } from '../components/constants/Settings';
 import { DARK, Theme } from '../components/constants/theme';
 import { DEFAULT_SCENE } from '../components/constants/defaultScene';
+import CustomChallengeSetupDialog from '../components/Dialog/CustomChallengeSetupDialog';
 
 import SettingsDialog from '../components/Dialog/SettingsDialog';
 import AboutDialog from '../components/Dialog/AboutDialog';
@@ -52,7 +53,7 @@ import {
 import Loading from '../components/Loading';
 import { Editor } from '../components/Editor';
 
-import { State as ReduxState } from '../state';
+import store, { State as ReduxState } from '../state';
 import {
   ScenesAction,
   ChallengeCompletionsAction,
@@ -98,6 +99,15 @@ import { Space } from '../simulator/Space';
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
 import { withParams } from '../util/withParams';
 import tr from '@i18n';
+import MatPlayZonesSceneOverlay from '../components/CustomChallenges/MatPlayZonesSceneOverlay';
+import { sceneHasLinkedChallenge, isCustomChallengeId } from '../util/customChallengeFactory';
+import { isClassroomSharedReadOnlyScene } from '../util/customChallengeClassroomShare';
+import { scenePropsRequireSimulatorReload } from '../util/scenePropsRequireSimulatorReload';
+import { prepareCustomChallengeSceneForSimulator } from '../util/customChallengeSceneScripts';
+import { applyChallengeEventValueChange } from '../util/challengeEventUpdates';
+import { conditionGoalsFromChallenge } from '../util/customChallengePredicates';
+import { isPlayAreaSuccessEventId } from '../util/playAreaSuccessGoals';
+import { worldItemsFromScene } from '../util/jbcChallengeCatalog';
 import { Modal } from './sharedRoot/Modal';
 import Robot from '../state/State/Robot';
 import AiWindow from '../components/Ai/AiWindow';
@@ -202,6 +212,16 @@ interface RootPrivateProps {
   onDeleteProject: (project: Project) => void;
   onChangeInterfaceMode: (
     interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED,
+  ) => void;
+  onChallengeCompletionEventStatesAndPredicateCompletionsChange: (
+    challengeId: string,
+    eventStates: Dict<boolean>,
+    success?: PredicateCompletion,
+    failure?: PredicateCompletion,
+  ) => void;
+  onChallengeCompletionCreate: (
+    challengeId: string,
+    challengeCompletion: ChallengeCompletion,
   ) => void;
 }
 
@@ -345,6 +365,13 @@ class Root extends React.Component<Props, State> {
     // this.props.onLoadProjects();
 
     await fetchTourIfNeeded(currentUser, TourDoc.IDS.SIMULATOR);
+
+    space.sceneBinding.scriptManager.programStatus =
+      this.state.simulatorState.type === SimulatorState.Type.Running
+        ? 'running'
+        : 'stopped';
+    this.applyCustomChallengeGizmoMode_();
+    this.syncChallengeEventHandler_();
   }
 
   componentWillUnmount() {
@@ -353,15 +380,85 @@ class Root extends React.Component<Props, State> {
 
     Space.getInstance().onSelectNodeId = undefined;
     Space.getInstance().onSetNodeBatch = undefined;
+    Space.getInstance().onChallengeSetEventValue = undefined;
+    Space.getInstance().gizmosEnabled = true;
   }
 
   componentDidUpdate(
     prevProps: Readonly<Props>,
     prevState: Readonly<RootState>,
   ): void {
+    if (
+      prevState.modal !== this.state.modal ||
+      prevProps.params.sceneId !== this.props.params.sceneId ||
+      prevProps.params.challengeId !== this.props.params.challengeId
+    ) {
+      this.applyCustomChallengeGizmoMode_();
+    }
+
     if (this.props.scene !== prevProps.scene) {
-      Space.getInstance().scene =
-        Async.latestValue(this.props.scene) || Scene.EMPTY;
+      const prevScene = Async.latestValue(prevProps.scene) || Scene.EMPTY;
+      let latestScene = Async.latestValue(this.props.scene) || Scene.EMPTY;
+      const sceneId = this.props.params.sceneId ?? this.props.params.challengeId;
+      const sceneIdChanged =
+        this.props.params.sceneId !== prevProps.params.sceneId ||
+        this.props.params.challengeId !== prevProps.params.challengeId;
+      if (sceneId && isCustomChallengeId(sceneId)) {
+        const latestChallenge =
+          Async.latestValue(this.props.challenge) ??
+          Async.latestValue(store.getState().challenges[sceneId]);
+        const playAreaRuntimeOptions = latestChallenge
+          ? {
+            playAreaChallengeGoals: conditionGoalsFromChallenge(
+              latestChallenge.success,
+              latestChallenge.successGoals
+            ).filter(g => isPlayAreaSuccessEventId(g.eventId)),
+            challengeSuccessGoals: conditionGoalsFromChallenge(
+              latestChallenge.success,
+              latestChallenge.successGoals
+            ),
+            challengeFailureGoals: conditionGoalsFromChallenge(
+              latestChallenge.failure,
+              latestChallenge.failureGoals
+            ),
+            successPredicate: latestChallenge.success,
+            failurePredicate: latestChallenge.failure,
+          }
+          : {};
+        const refreshed = prepareCustomChallengeSceneForSimulator(
+          latestScene,
+          worldItemsFromScene(latestScene),
+          playAreaRuntimeOptions
+        );
+        const runtimeCodeBefore =
+          latestScene.scripts?.customChallengeRuntime?.code ?? '';
+        const runtimeCodeAfter =
+          refreshed.scripts?.customChallengeRuntime?.code ?? '';
+        const robotScriptsBefore = latestScene.nodes?.robot?.scriptIds ?? [];
+        const robotScriptsAfter = refreshed.nodes?.robot?.scriptIds ?? [];
+        const needsPersist =
+          runtimeCodeBefore !== runtimeCodeAfter ||
+          robotScriptsBefore.join(',') !== robotScriptsAfter.join(',');
+        if (needsPersist) {
+          this.props.onSetScenePartial({
+            scripts: refreshed.scripts,
+            nodes: refreshed.nodes,
+            customChallengeItemSuccessChoices:
+              refreshed.customChallengeItemSuccessChoices,
+          });
+        }
+        latestScene = refreshed;
+      }
+      const inCustomChallengeSetup =
+        this.state.modal.type === Modal.Type.CustomChallengeSetup;
+      if (
+        !inCustomChallengeSetup &&
+        (sceneIdChanged || scenePropsRequireSimulatorReload(prevScene, latestScene))
+      ) {
+        if (Space.getInstance().scene !== latestScene) {
+          Space.getInstance().scene = latestScene;
+        }
+      }
     }
 
     if (this.props.onNodeAdd !== prevProps.onNodeAdd) Space.getInstance().onNodeAdd = this.props.onNodeAdd;
@@ -371,6 +468,14 @@ class Root extends React.Component<Props, State> {
     if (this.props.onGeometryRemove !== prevProps.onGeometryRemove) Space.getInstance().onGeometryRemove = this.props.onGeometryRemove;
     if (this.props.onGravityChange !== prevProps.onGravityChange) Space.getInstance().onGravityChange = this.props.onGravityChange;
     if (this.props.onCameraChange !== prevProps.onCameraChange) Space.getInstance().onCameraChange = this.props.onCameraChange;
+    if (
+      this.props.sceneHasChallenge !== prevProps.sceneHasChallenge ||
+      this.props.params.sceneId !== prevProps.params.sceneId ||
+      this.props.challenge !== prevProps.challenge ||
+      this.props.challengeCompletion !== prevProps.challengeCompletion
+    ) {
+      this.syncChallengeEventHandler_();
+    }
     if (this.state.simulatorState.type !== prevState.simulatorState.type) {
       Space.getInstance().sceneBinding.scriptManager.programStatus =
         this.state.simulatorState.type === SimulatorState.Type.Running
@@ -386,17 +491,27 @@ class Root extends React.Component<Props, State> {
     }
   }
 
+  private applyCustomChallengeGizmoMode_ = () => {
+    // Scene editor always allows move/rotate gizmos (custom-challenge play-area overlay is non-interactive here).
+    Space.getInstance().gizmosEnabled = true;
+    if (Space.getInstance().sceneBinding) {
+      Space.getInstance().sceneBinding.attachSimulatorControls();
+    }
+  };
+
   private onWindowResize_ = () => {
     this.setState({ windowInnerHeight: window.innerHeight });
   };
 
   private onStopped_ = () => {
+    Space.getInstance().sceneBinding.scriptManager.programStatus = 'stopped';
     this.setState({
       simulatorState: SimulatorState.STOPPED,
     });
   };
 
   private onStarted_ = () => {
+    Space.getInstance().sceneBinding.scriptManager.programStatus = 'running';
     this.setState({
       simulatorState: SimulatorState.RUNNING,
     });
@@ -578,6 +693,10 @@ class Root extends React.Component<Props, State> {
                   );
                 }
 
+                if (compileSucceeded) {
+                  Space.getInstance().sceneBinding.scriptManager.programStatus =
+                    'running';
+                }
                 this.setState({
                   simulatorState: compileSucceeded
                     ? SimulatorState.RUNNING
@@ -624,6 +743,8 @@ class Root extends React.Component<Props, State> {
             console: nextConsole,
           },
           () => {
+            Space.getInstance().sceneBinding.scriptManager.programStatus =
+              'running';
             WorkerInstance.start({
               language: 'python',
               code: activeCode,
@@ -633,6 +754,7 @@ class Root extends React.Component<Props, State> {
         break;
       }
       case 'graphical': {
+        Space.getInstance().sceneBinding.scriptManager.programStatus = 'running';
         this.setState(
           {
             simulatorState: SimulatorState.RUNNING,
@@ -674,11 +796,86 @@ class Root extends React.Component<Props, State> {
   };
 
   private onResetWorldClick_ = () => {
+    const sceneId = this.props.params.sceneId;
+    const prevScene = Async.latestValue(this.props.scene) ?? Scene.EMPTY;
+
     this.props.onResetScene();
+
+    const latestScene = Async.latestValue(store.getState().scenes[sceneId]);
+    if (!latestScene) return;
+
+    const space = Space.getInstance();
+    const binding = space.sceneBinding;
+    if (!binding) return;
+
+    space.robotLinkOrigins = {};
+    binding.robotLinkOrigins = {};
+    space.replaceSceneState(latestScene);
+
+    if (scenePropsRequireSimulatorReload(prevScene, latestScene)) {
+      space.scene = latestScene;
+    }
+    binding.syncNodeOriginsFromScene(latestScene);
   };
 
   private onStartChallengeClick_ = () => {
     window.location.href = `/challenge/${this.props.params.sceneId}`;
+  };
+
+  private onSetEventValue_ = (eventId: string, value: boolean) => {
+    const challengeId = this.props.params.challengeId ?? this.props.params.sceneId;
+    if (!challengeId || !this.props.sceneHasChallenge) return;
+
+    const state = store.getState();
+    const latestChallenge =
+      Async.latestValue(this.props.challenge) ??
+      Async.latestValue(state.challenges[challengeId]);
+    if (!latestChallenge) return;
+
+    let latestChallengeCompletion =
+      Async.latestValue(this.props.challengeCompletion) ??
+      Async.latestValue(state.challengeCompletions[challengeId]);
+    if (!latestChallengeCompletion) {
+      this.props.onChallengeCompletionCreate(challengeId, {
+        ...ChallengeCompletion.EMPTY,
+        code: latestChallenge.code,
+        currentLanguage: latestChallenge.defaultLanguage,
+      });
+      latestChallengeCompletion = Async.latestValue(
+        store.getState().challengeCompletions[challengeId]
+      );
+      if (!latestChallengeCompletion) return;
+    }
+
+    const { success, failure } = latestChallenge;
+    const { success: successCompletion, failure: failureCompletion } =
+      latestChallengeCompletion;
+
+    if (latestChallengeCompletion.eventStates[eventId] === value) return;
+
+    const updated = applyChallengeEventValueChange(eventId, value, {
+      success,
+      failure,
+      successGoals: latestChallenge.successGoals,
+      eventStates: latestChallengeCompletion.eventStates,
+      successCompletion,
+      failureCompletion,
+    });
+
+    this.props.onChallengeCompletionEventStatesAndPredicateCompletionsChange(
+      challengeId,
+      updated.eventStates,
+      updated.successCompletion,
+      updated.failureCompletion
+    );
+  };
+
+  private syncChallengeEventHandler_ = () => {
+    const space = Space.getInstance();
+    const linked =
+      this.props.sceneHasChallenge &&
+      (this.props.params.challengeId ?? this.props.params.sceneId);
+    space.onChallengeSetEventValue = linked ? this.onSetEventValue_ : undefined;
   };
 
   private onClearConsole_ = () => {
@@ -757,6 +954,14 @@ class Root extends React.Component<Props, State> {
     window.location.href = '/';
   };
 
+  private onEditCustomChallengeClick_ = () => {
+    const sceneId = this.props.params.sceneId;
+    if (!sceneId || !isCustomChallengeId(sceneId)) return;
+    const sceneValue = Async.latestValue(this.props.scene);
+    if (isClassroomSharedReadOnlyScene(sceneValue)) return;
+    this.setState({ modal: Modal.CUSTOM_CHALLENGE_SETUP, miniEditor: true });
+  };
+
   private onSettingsChange_ = (changedSettings: Partial<Settings>) => {
     const nextSettings: Settings = {
       ...this.state.settings,
@@ -816,6 +1021,10 @@ class Root extends React.Component<Props, State> {
         this.onContinueTour_();
       },
     );
+  };
+
+  private onStartCustomChallengeSetup_ = () => {
+    this.setState({ modal: Modal.CUSTOM_CHALLENGE_SETUP, miniEditor: true });
   };
 
   private onSettingsSceneClick_ = () => {
@@ -1172,6 +1381,12 @@ class Root extends React.Component<Props, State> {
       return <Loading />;
     }
 
+    const sceneValue = Async.latestValue(scene);
+    const canEditCustomChallenge =
+      !!sceneId &&
+      isCustomChallengeId(sceneId) &&
+      !isClassroomSharedReadOnlyScene(sceneValue);
+
     const {
       selectedProject,
       selectedScript,
@@ -1234,13 +1449,14 @@ class Root extends React.Component<Props, State> {
       onScriptChange: this.props.onScriptChange,
       onScriptRemove: this.props.onScriptRemove,
       onObjectAdd: this.props.onObjectAdd,
-      challengeState: challenge
-        ? {
-          challenge,
-          challengeCompletion:
-            challengeCompletion || Async.unloaded({ brief: {} }),
-        }
-        : undefined,
+      challengeState:
+        challenge && challengeId
+          ? {
+            challenge,
+            challengeCompletion:
+              challengeCompletion || Async.unloaded({ brief: {} }),
+          }
+          : undefined,
       onDocumentationGoToFuzzy,
       onCommonDocumentationGoToFuzzy,
       layout: Layout.Overlay,
@@ -1314,6 +1530,9 @@ class Root extends React.Component<Props, State> {
         onAboutClick={this.onModalClick_(Modal.ABOUT)}
         onDocumentationClick={this.onDocumentationClick_}
         onAiClick={this.onAiClick_}
+        onEditCustomChallengeClick={
+          canEditCustomChallenge ? this.onEditCustomChallengeClick_ : undefined
+        }
         onLogoutClick={this.onLogoutClick}
         onDashboardClick={this.onDashboardClick}
         onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
@@ -1379,8 +1598,16 @@ class Root extends React.Component<Props, State> {
         {impl}
       </Container>
     );
+
     return (
       <>
+        {modal.type !== Modal.Type.CustomChallengeSetup && (
+          <MatPlayZonesSceneOverlay
+            theme={theme}
+            locale={this.props.locale}
+            scene={latestScene ?? undefined}
+          />
+        )}
         {tourRegistry ? tourContent_ : normalContent_}
         {showTour && (
           <GuidedTour
@@ -1447,6 +1674,7 @@ class Root extends React.Component<Props, State> {
               <OpenSceneDialog
                 theme={theme}
                 onClose={this.onModalClose_}
+                onStartCustomChallengeSetup={this.onStartCustomChallengeSetup_}
                 tourRegistry={tourRegistry}
                 continueTour={this.onContinueTour_}
               />
@@ -1455,10 +1683,18 @@ class Root extends React.Component<Props, State> {
             <OpenSceneDialog
               theme={theme}
               onClose={this.onModalClose_}
+              onStartCustomChallengeSetup={this.onStartCustomChallengeSetup_}
               tourRegistry={tourRegistry}
               continueTour={this.onContinueTour_}
             />
           ))}
+        {modal.type === Modal.Type.CustomChallengeSetup && (
+          <CustomChallengeSetupDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+            editingChallengeId={sceneId && isCustomChallengeId(sceneId) ? sceneId : undefined}
+          />
+        )}
         {modal.type === Modal.Type.NewScene && (
           <NewSceneDialog
             theme={theme}
@@ -1553,7 +1789,15 @@ const ConnectedRoot = connect(
       challenge.completion();
     } else {
       builder.scene(sceneId);
-      sceneHasChallenge = sceneId in builder.state.challenges;
+      sceneHasChallenge = sceneHasLinkedChallenge(
+        sceneId,
+        builder.state.challenges,
+        builder.state.scenes[sceneId]
+      );
+      if (sceneHasChallenge) {
+        builder.challenge(sceneId);
+        builder.challenge(sceneId).completion();
+      }
     }
 
     builder.dispatchLoads();
@@ -1661,6 +1905,21 @@ const ConnectedRoot = connect(
     ) => {
       dispatch(
         ChallengeCompletionsAction.setEventStates({ challengeId, eventStates }),
+      );
+    },
+    onChallengeCompletionEventStatesAndPredicateCompletionsChange: (
+      challengeId: string,
+      eventStates: Dict<boolean>,
+      success?: PredicateCompletion,
+      failure?: PredicateCompletion,
+    ) => {
+      dispatch(
+        ChallengeCompletionsAction.setEventStatesAndPredicateCompletions({
+          challengeId,
+          eventStates,
+          success,
+          failure,
+        }),
       );
     },
     onChallengeCompletionSuccessPredicateCompletionChange: (

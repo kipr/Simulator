@@ -6,7 +6,7 @@ import Geometry from '../State/Scene/Geometry';
 import Node from '../State/Scene/Node';
 import Script from '../State/Scene/Script';
 import { Scenes } from "../State";
-import { errorToAsyncError, mutate } from './util';
+import { deferAfterReducer, errorToAsyncError, mutate } from './util';
 import db from '../../db';
 import { SCENE_COLLECTION } from '../../db/constants';
 import Selector from '../../db/Selector';
@@ -14,6 +14,19 @@ import * as JBC_SCENES from '../../simulator/definitions/scenes';
 import construct from '../../util/redux/construct';
 import Dict from '../../util/objectOps/Dict';
 import { ReferenceFramewUnits, Vector3wUnits } from '../../util/math/unitMath';
+import { ChallengesAction } from './challenges';
+import { ChallengeCompletionsAction } from './challengeCompletions';
+import { isCustomChallengeId } from '../../util/customChallengeFactory';
+import {
+  challengeFromScene,
+  sceneWithCustomChallenge,
+} from '../../util/customChallengeStorage';
+import {
+  isClassroomSharedReadOnlyScene,
+  sharedCustomChallengeSceneForStudent,
+} from '../../util/customChallengeClassroomShare';
+import { auth } from '../../firebase/firebase';
+import { ChallengeBrief } from '../State/Challenge';
 
 
 export namespace ScenesAction {
@@ -346,13 +359,21 @@ const DEFAULT_SCENES: Scenes = {
   // lightSensorTest: Async.loaded({ value: JBC_SCENES.lightSensorTest }),
 };
 
+const sceneForPersistence_ = (sceneId: string, scene: Scene): Scene => {
+  if (!isCustomChallengeId(sceneId)) return scene;
+  const challenge = Async.latestValue(store.getState().challenges[sceneId]);
+  return challenge ? sceneWithCustomChallenge(scene, challenge) : scene;
+};
+
 const create = async (sceneId: string, next: Async.Creating<Scene>) => {
+  await deferAfterReducer();
   try {
-    await db.set(Selector.scene(sceneId), next.value);
+    const value = sceneForPersistence_(sceneId, next.value);
+    await db.set(Selector.scene(sceneId), value);
     store.dispatch(ScenesAction.setSceneInternal({
       scene: Async.loaded({
-        brief: SceneBrief.fromScene(next.value),
-        value: next.value
+        brief: SceneBrief.fromScene(value),
+        value,
       }),
       sceneId,
     }));
@@ -368,12 +389,24 @@ const create = async (sceneId: string, next: Async.Creating<Scene>) => {
 };
 
 const save = async (sceneId: string, current: Async.Saveable<SceneBrief, Scene>) => {
-  try {
-    await db.set(Selector.scene(sceneId), current.value);
+  await deferAfterReducer();
+  if (isClassroomSharedReadOnlyScene(current.value)) {
     store.dispatch(ScenesAction.setSceneInternal({
       scene: Async.loaded({
         brief: current.brief,
-        value: current.value
+        value: current.value,
+      }),
+      sceneId,
+    }));
+    return;
+  }
+  try {
+    const value = sceneForPersistence_(sceneId, current.value);
+    await db.set(Selector.scene(sceneId), value);
+    store.dispatch(ScenesAction.setSceneInternal({
+      scene: Async.loaded({
+        brief: SceneBrief.fromScene(value),
+        value,
       }),
       sceneId,
     }));
@@ -391,6 +424,7 @@ const save = async (sceneId: string, current: Async.Saveable<SceneBrief, Scene>)
 };
 
 const load = async (sceneId: string, current: AsyncScene | undefined) => {
+  await deferAfterReducer();
   const brief = Async.brief(current);
   try {
     const value = await db.get<Scene>(Selector.scene(sceneId));
@@ -399,6 +433,20 @@ const load = async (sceneId: string, current: AsyncScene | undefined) => {
       sceneId,
     }));
   } catch (error) {
+    const shared = isCustomChallengeId(sceneId)
+      ? sharedCustomChallengeSceneForStudent(
+        store.getState().classrooms,
+        auth.currentUser?.uid,
+        sceneId
+      )
+      : null;
+    if (shared) {
+      store.dispatch(ScenesAction.setSceneInternal({
+        scene: Async.loaded({ brief, value: shared }),
+        sceneId,
+      }));
+      return;
+    }
     store.dispatch(ScenesAction.setSceneInternal({
       scene: Async.loadFailed({ brief, error: errorToAsyncError(error) }),
       sceneId,
@@ -407,9 +455,18 @@ const load = async (sceneId: string, current: AsyncScene | undefined) => {
 };
 
 const remove = async (sceneId: string, next: Async.Deleting<SceneBrief, Scene>) => {
+  await deferAfterReducer();
   try {
     await db.delete(Selector.scene(sceneId));
     store.dispatch(ScenesAction.setSceneInternal({ sceneId, scene: undefined }));
+
+    const state = store.getState();
+    const hasLinkedChallenge = !!state.challenges[sceneId] || isCustomChallengeId(sceneId);
+    if (hasLinkedChallenge) {
+      // Custom challenges live on the scene document; clear in-memory challenge state only.
+      store.dispatch(ChallengesAction.removeChallenge({ challengeId: sceneId }));
+      store.dispatch(ChallengeCompletionsAction.removeChallenge({ challengeId: sceneId }));
+    }
   } catch (error) {
     store.dispatch(ScenesAction.setSceneInternal({
       scene: Async.deleteFailed({ brief: next.brief, value: next.value, error: errorToAsyncError(error) }),
@@ -419,6 +476,7 @@ const remove = async (sceneId: string, next: Async.Deleting<SceneBrief, Scene>) 
 };
 
 export const listUserScenes = async () => {
+  await deferAfterReducer();
   const scenes = await db.list<Scene>(SCENE_COLLECTION);
   store.dispatch(ScenesAction.setScenesInternal({
     scenes: Dict.map(scenes, scene => Async.loaded({

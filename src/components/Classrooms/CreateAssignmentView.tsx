@@ -21,8 +21,13 @@ import { Challenges } from '../../state/State';
 import ScrollArea from '../interface/ScrollArea';
 import ResizeableComboBox from '../interface/ResizeableComboBox';
 import { ClassroomsAction } from 'state/reducer/classrooms';
+import { ChallengesAction } from 'state/reducer/challenges';
 import TourTarget from '../Tours/TourTarget';
 import { TourRegistry } from '../../tours/TourRegistry';
+import { isCustomChallengeId } from '../../util/customChallengeFactory';
+import { isTeacherOwnedCustomChallenge } from '../../util/customChallengeClassroomShare';
+import { auth } from '../../firebase/firebase';
+import Challenge, { AsyncChallenge } from '../../state/State/Challenge';
 
 
 export interface CreateAssignmentViewPublicProps extends ThemeProps, StyleProps {
@@ -42,6 +47,7 @@ export interface CreateAssignmentViewPrivateProps extends ThemeProps {
   challenges: Challenges;
   onCreateAssignment?: (classroom: Classroom, assignment: ClassroomAssignment, students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => void;
   onEditAssignment?: (classroom: Classroom, docId: string, assignment: ClassroomAssignment) => void;
+  onListUserChallenges?: () => void;
 }
 interface ClickProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -216,6 +222,7 @@ const CreateAssignmentView = ({
   originalAssignment,
   onEditComplete,
   onEditAssignment,
+  onListUserChallenges,
   tourRegistry,
   activeTourStepId
 }: Props) => {
@@ -295,6 +302,10 @@ const CreateAssignmentView = ({
 
 
   useEffect(() => {
+    onListUserChallenges?.();
+  }, [onListUserChallenges]);
+
+  useEffect(() => {
     if (!activeTourStepId) return;
     const keepAssignToOpen = new Set([
       'teacher-create-assignment-assign-to-dialog',
@@ -308,44 +319,136 @@ const CreateAssignmentView = ({
     }
   }, [activeTourStepId]);
 
+  const teacherId = auth.currentUser?.uid;
+
+  const builtinChallengeEntries = React.useMemo(
+    () =>
+      Object.values(challenges || {}).filter(entry => {
+        const value = Async.latestValue(entry);
+        return value && !isCustomChallengeId(value.sceneId);
+      }),
+    [challenges]
+  );
+
+  const customChallengeEntries = React.useMemo(
+    () =>
+      Object.values(challenges || {}).filter(entry =>
+        isTeacherOwnedCustomChallenge(Async.latestValue(entry), teacherId)
+      ),
+    [challenges, teacherId]
+  );
+
+  const toggleChallengeAssignment_ = (currentChallenge: Challenge) => {
+    const existingChallenges = assignmentInfo.challenges || {};
+    const alreadyExists = Object.values(existingChallenges).some(
+      ({ challenge }) => challenge.sceneId === currentChallenge.sceneId
+    );
+    const key = currentChallenge.sceneId;
+
+    setAssignedPointsSet(prev => {
+      const next = { ...prev };
+      if (alreadyExists) {
+        delete next[key];
+      } else {
+        next[key] = {
+          challenge: {
+            sceneId: currentChallenge.sceneId,
+            name: LocalizedString.lookup(currentChallenge.name, locale),
+            description: LocalizedString.lookup(currentChallenge.description, locale),
+          },
+          points: 0,
+        };
+      }
+      return next;
+    });
+  };
+
+  function customChallengeLabel_(name: string, description: string): React.ReactNode {
+    const desc = description?.trim();
+    if (!desc || desc === name) {
+      return <strong>{name}</strong>;
+    }
+    return (
+      <span>
+        <strong>{name}</strong>
+        <div style={{ fontSize: '0.85em', opacity: 0.85, marginTop: 2, lineHeight: 1.35 }}>
+          {desc}
+        </div>
+      </span>
+    );
+  }
+
+  function assignedChallengeRowLabel_(challenge: ClassroomAssignmentChallenge): React.ReactNode {
+    if (isCustomChallengeId(challenge.sceneId)) {
+      return customChallengeLabel_(challenge.name, challenge.description);
+    }
+    return LocalizedString.lookup(tr(challenge.description), locale);
+  }
+
+  function renderChallengeCheckbox_(
+    challenge: AsyncChallenge,
+    options?: { showNameAndDescription?: boolean }
+  ) {
+    const currentChallenge = Async.latestValue(challenge);
+    if (!currentChallenge) return null;
+    const name = LocalizedString.lookup(currentChallenge.name, locale);
+    const description = LocalizedString.lookup(currentChallenge.description, locale);
+    const label = options?.showNameAndDescription
+      ? customChallengeLabel_(name, description)
+      : description;
+    const checked = assignmentInfo.challenges
+      ? Object.values(assignmentInfo.challenges).some(
+        ({ challenge: assignedChallenge }) =>
+          assignedChallenge.sceneId === currentChallenge.sceneId
+      )
+      : false;
+
+    return (
+      <CheckboxRow theme={theme} key={`${currentChallenge.sceneId}-key`}>
+        <StyledCheckbox
+          theme={theme}
+          type="checkbox"
+          id={`assign-to-${currentChallenge.sceneId}`}
+          name={`assign-to-${currentChallenge.sceneId}`}
+          checked={checked}
+          onChange={() => toggleChallengeAssignment_(currentChallenge)}
+        />
+        <label htmlFor={`assign-to-${currentChallenge.sceneId}`}>{label}</label>
+      </CheckboxRow>
+    );
+  }
+
   function renderChallengeCheckboxes() {
     return (
-      <div style={{ fontSize: '1.5em', display: 'flex', flexDirection: 'column', gap: '1em', alignItems: 'flex-start', margin: '1em' }}>
-        {
-          Object.values(challenges || {}).map(challenge => (
-
-            <CheckboxRow theme={theme} key={`${Async.latestValue(challenge).sceneId}-key`}>
-              <StyledCheckbox theme={theme} type="checkbox" id={`assign-to-${LocalizedString.lookup(Async.latestValue(challenge).description, locale)}`}
-                name={`assign-to-${LocalizedString.lookup(Async.latestValue(challenge).name, locale)}`}
-                value={LocalizedString.lookup(Async.latestValue(challenge).name, locale)}
-                checked={assignmentInfo.challenges ? Object.values(assignmentInfo.challenges).some(({ challenge: assignedChallenge }) => assignedChallenge.sceneId === Async.latestValue(challenge).sceneId) : false}
-                onChange={() => {
-                  const currentChallenge = Async.latestValue(challenge);
-                  const existingChallenges = assignmentInfo.challenges || {};
-
-                  const alreadyExists = Object.values(existingChallenges).some(
-                    ({ challenge }) => challenge.sceneId === currentChallenge.sceneId
-                  );
-
-                  const key = currentChallenge.sceneId;
-
-                  setAssignedPointsSet(prev => {
-                    const next = { ...prev };
-                    if (alreadyExists) {
-                      delete next[key];
-                    } else {
-                      next[key] = { challenge: { sceneId: currentChallenge.sceneId, name: currentChallenge.name[locale], description: currentChallenge.description[locale] }, points: 0 };
-                    }
-                    return next;
-
-                  });
-                }} />
-
-              <label htmlFor={`assign-to-${LocalizedString.lookup(Async.latestValue(challenge).description, locale)}`}>{LocalizedString.lookup(Async.latestValue(challenge).description, locale)}</label>
-            </CheckboxRow>
-          ))
-        }
-      </div>);
+      <div
+        style={{
+          fontSize: '1.5em',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1em',
+          alignItems: 'flex-start',
+          margin: '1em',
+        }}
+      >
+        {builtinChallengeEntries.map(entry => renderChallengeCheckbox_(entry))}
+        {customChallengeEntries.length > 0 && (
+          <>
+            <div style={{ fontSize: '0.85em', opacity: 0.85, marginTop: '0.5em' }}>
+              {LocalizedString.lookup(tr('Your custom JBC challenges'), locale)}
+            </div>
+            <div style={{ fontSize: '0.75em', opacity: 0.75, lineHeight: 1.4 }}>
+              {LocalizedString.lookup(
+                tr('Students can play these but cannot edit the challenge setup.'),
+                locale
+              )}
+            </div>
+            {customChallengeEntries.map(entry =>
+              renderChallengeCheckbox_(entry, { showNameAndDescription: true })
+            )}
+          </>
+        )}
+      </div>
+    );
   }
 
   function editTopic() {
@@ -646,7 +749,7 @@ const CreateAssignmentView = ({
                               {Object.values(assignedPointsSet)?.map(({ challenge, points }, index) => (
                                 <TableRow theme={theme} key={`${challenge.sceneId}-points-row`}>
                                   <TableCell theme={theme} style={{ maxWidth: '70%', fontSize: '0.8em', color: theme.color }}>
-                                    {LocalizedString.lookup(tr(challenge.description), locale)}
+                                    {assignedChallengeRowLabel_(challenge)}
                                   </TableCell>
                                   <TableCell style={{ width: '20%' }} theme={theme}>
                                     <Input
@@ -729,7 +832,7 @@ const CreateAssignmentView = ({
                             {Object.values(assignedPointsSet)?.map(({ challenge, points }, index) => (
                               <TableRow theme={theme} key={`${challenge.sceneId}-points-row`}>
                                 <TableCell theme={theme} style={{ maxWidth: '70%', fontSize: '0.8em', color: theme.color }}>
-                                  {LocalizedString.lookup(tr(challenge.description), locale)}
+                                  {assignedChallengeRowLabel_(challenge)}
                                 </TableCell>
                                 <TableCell style={{ width: '20%' }} theme={theme}>
                                   <Input
@@ -805,11 +908,14 @@ export default connect((state: ReduxState) => {
     challenges: state.challenges,
 
   };
-}, (dispatch, ownProps) => ({
+}, dispatch => ({
   onCreateAssignment: (classroom: Classroom, assignment: ClassroomAssignment, studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => {
     dispatch(ClassroomsAction.setAssignment({ classroom, assignment, studentIds }));
   },
   onEditAssignment: (classroom: Classroom, docId: string, assignment: ClassroomAssignment) => {
     dispatch(ClassroomsAction.editAssignment({ classroom, assignmentDocId: docId, assignment }));
-  }
+  },
+  onListUserChallenges: () => {
+    dispatch(ChallengesAction.listUserChallenges({}));
+  },
 }))(CreateAssignmentView) as React.ComponentType<CreateAssignmentViewPublicProps>; 

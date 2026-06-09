@@ -2,7 +2,7 @@
 import {
   Scene as babylonScene, TransformNode, PhysicsViewer, Vector3, IPhysicsEnabledObject,
   Mesh, PhysicsJoint, IPhysicsEnginePluginV2, PhysicsConstraintAxis, Physics6DoFConstraint,
-  PhysicsConstraintMotorType, PhysicsConstraintAxisLimitMode,
+  PhysicsConstraintMotorType, PhysicsConstraintAxisLimitMode, VertexBuffer,
 } from '@babylonjs/core';
 
 import '@babylonjs/core/Physics/physicsEngineComponent';
@@ -10,7 +10,13 @@ import '@babylonjs/core/Physics/physicsEngineComponent';
 import SceneNode from '../../state/State/Scene/Node';
 import Robot from '../../state/State/Robot';
 import Node from '../../state/State/Robot/Node';
-import { RawQuaternion, RawVector3, clamp, RawEuler } from '../../util/math/math';
+import { RawQuaternion, RawVector2, RawVector3, clamp, RawEuler } from '../../util/math/math';
+import { worldCmToMatLocal } from '../../util/jbcMatPlayArea';
+import {
+  capMatLocalPointsForHull,
+  convexHull2d,
+  dedupeMatLocalPoints,
+} from '../../util/playAreaRobotIntersection';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/math/unitMath';
 import { Angle } from '../../util/math/Value';
 import { SceneMeshMetadata } from './SceneBinding';
@@ -32,6 +38,9 @@ import SensorObject from './sensors/SensorObject';
 import SensorParameters from './sensors/SensorParameters';
 import LightSensor from './sensors/LightSensor';
 import LocalizedString from '../../util/LocalizedString';
+
+/** Max mesh vertices sampled per link when building mat footprints. */
+const MAX_PROJECTED_VERTICES_PER_LINK_ = 800;
 
 class RobotBinding {
   /**  Type 'RobotBinding' is missing the following properties from type
@@ -502,6 +511,132 @@ class RobotBinding {
       link.rotationQuaternion = RawQuaternion.toBabylon(rawLinkPosition.orientation);
       link.scaling = RawVector3.toBabylon(rawLinkPosition.scale);
     }
+  }
+
+  /** Mat-local convex footprint hulls (custom JBC play-area; SceneBinding only). */
+  getMatLocalLinkFootprintHulls(): Array<{ linkId: string; hull: RawVector2[] }> {
+    const out: Array<{ linkId: string; hull: RawVector2[] }> = [];
+    for (const [linkId, link] of Object.entries(this.links_)) {
+      if (link.visibility === 0) continue;
+      const hull = this.matLocalFootprintHullForLink_(link);
+      if (hull.length >= 3) out.push({ linkId, hull });
+    }
+    return out;
+  }
+
+  /** Combined mat-local hull over all visible links. */
+  getMatLocalCombinedFootprintHull(): RawVector2[] {
+    return this.combinedFootprintHullFromLinkHulls_(this.getMatLocalLinkFootprintHulls());
+  }
+
+  /** Per-link hulls plus combined outline (single pass over link geometry). */
+  getMatLocalFootprintDebugOutline(): {
+    linkHulls: Array<{ linkId: string; hull: RawVector2[] }>;
+    combinedHull: RawVector2[];
+  } {
+    const linkHulls = this.getMatLocalLinkFootprintHulls();
+    return {
+      linkHulls,
+      combinedHull: this.combinedFootprintHullFromLinkHulls_(linkHulls),
+    };
+  }
+
+  private combinedFootprintHullFromLinkHulls_(
+    linkHulls: Array<{ linkId: string; hull: RawVector2[] }>
+  ): RawVector2[] {
+    const points: RawVector2[] = [];
+    for (const { hull } of linkHulls) {
+      for (const point of hull) {
+        points.push(point);
+      }
+    }
+    if (points.length < 3) return points;
+    return convexHull2d(points);
+  }
+
+  /** Link render mesh only — excludes sensor sight lines and hidden colliders parented to the link. */
+  private visibleRenderMeshesForLink_(link: Mesh): Mesh[] {
+    if (!link.isVisible || link.visibility === 0) return [];
+    if (link.getClassName?.() === 'LinesMesh') return [];
+    return [link];
+  }
+
+  private matLocalFootprintHullForLink_(link: Mesh): RawVector2[] {
+    const deduped = dedupeMatLocalPoints(this.matLocalProjectedVerticesForLink_(link));
+    return convexHull2d(capMatLocalPointsForHull(deduped));
+  }
+
+  /** Project render-mesh vertices onto the mat plane (mat-local cm), subsampled. */
+  private matLocalProjectedVerticesForLink_(link: Mesh): RawVector2[] {
+    const projected: RawVector2[] = [];
+    for (const mesh of this.visibleRenderMeshesForLink_(link)) {
+      mesh.computeWorldMatrix(true);
+      const positions = mesh.getVerticesData(VertexBuffer.PositionKind);
+      if (!positions || positions.length < 3) continue;
+
+      const vertexCount = positions.length / 3;
+      const stride =
+        vertexCount > MAX_PROJECTED_VERTICES_PER_LINK_
+          ? Math.ceil(vertexCount / MAX_PROJECTED_VERTICES_PER_LINK_)
+          : 1;
+
+      const wm = mesh.getWorldMatrix();
+      for (let vi = 0; vi < vertexCount; vi += stride) {
+        const i = vi * 3;
+        const world = Vector3.TransformCoordinates(
+          new Vector3(positions[i], positions[i + 1], positions[i + 2]),
+          wm
+        );
+        projected.push(
+          worldCmToMatLocal({
+            x: world.x * 100,
+            y: world.y * 100,
+            z: world.z * 100,
+          })
+        );
+      }
+    }
+    return projected;
+  }
+
+  getMatFootprintLocal(): RawVector2 | null {
+    const samples: RawVector2[] = [];
+    const sampleIds = ['left_wheel_link', 'right_wheel_link', 'chassis'];
+    if (!sampleIds.includes(this.rootId_)) {
+      sampleIds.push(this.rootId_);
+    }
+    for (const linkId of sampleIds) {
+      const link = this.links_[linkId];
+      if (!link) continue;
+      link.computeWorldMatrix(true);
+      const ap = link.getAbsolutePosition();
+      samples.push(
+        worldCmToMatLocal({
+          x: ap.x * 100,
+          y: ap.y * 100,
+          z: ap.z * 100,
+        })
+      );
+    }
+    if (samples.length === 0) {
+      return null;
+    }
+    return {
+      x: samples.reduce((s, p) => s + p.x, 0) / samples.length,
+      y: samples.reduce((s, p) => s + p.y, 0) / samples.length,
+    };
+  }
+
+  getMatLinkLocal(linkId: string): RawVector2 | null {
+    const link = this.links_[linkId];
+    if (!link) return null;
+    link.computeWorldMatrix(true);
+    const ap = link.getAbsolutePosition();
+    return worldCmToMatLocal({
+      x: ap.x * 100,
+      y: ap.y * 100,
+      z: ap.z * 100,
+    });
   }
 
   get origin(): ReferenceFramewUnits {

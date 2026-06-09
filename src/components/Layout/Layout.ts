@@ -6,8 +6,10 @@ import { StyleProps } from "../../util/style";
 import { StyledText } from "../../util";
 import { Editor } from "../Editor";
 import { ThemeProps } from "../constants/theme";
+import Dict from '../../util/objectOps/Dict';
 import Challenge, { AsyncChallenge } from '../../state/State/Challenge';
 import ChallengeCompletion, { AsyncChallengeCompletion } from '../../state/State/ChallengeCompletion';
+import PredicateCompletion from '../../state/State/ChallengeCompletion/PredicateCompletion';
 import { AsyncScene } from '../../state/State/Scene';
 import Node from '../../state/State/Scene/Node';
 import Geometry from '../../state/State/Scene/Geometry';
@@ -86,4 +88,8 @@ export enum Layout {
 export interface ChallengeState {
   challenge: AsyncChallenge;
   challengeCompletion: AsyncChallengeCompletion;
+  /** Merged into GoalList on each scene script event (Babylon loop, outside React batching). */
+  liveEventStates?: Dict<boolean>;
+  liveSuccessCompletion?: PredicateCompletion;
+  liveFailureCompletion?: PredicateCompletion;
 }

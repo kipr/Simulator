@@ -98,6 +98,7 @@ export interface MenuPublicProps extends StyleProps, ThemeProps {
   onAboutClick: () => void;
   onDocumentationClick: () => void;
   onAiClick: (event: React.MouseEvent) => void;
+  onEditCustomChallengeClick?: (event: React.MouseEvent) => void;
   onDashboardClick: () => void;
   onLogoutClick: () => void;
 
@@ -345,6 +346,7 @@ class SimMenu extends React.PureComponent<Props, State> {
       onStartChallengeClick,
       onDeleteSceneClick,
       onAiClick,
+      onEditCustomChallengeClick,
       simulatorState,
       onRetakeTourClick,
       locale,
@@ -475,6 +477,7 @@ class SimMenu extends React.PureComponent<Props, State> {
         onFeedbackClick={onFeedbackClick}
         onSettingsClick={onSettingsClick}
         onAiClick={onAiClick}
+        onEditCustomChallengeClick={onEditCustomChallengeClick}
         tourRegistry={this.props.tourRegistry}
         onRetakeTourClick={onRetakeTourClick}
       />

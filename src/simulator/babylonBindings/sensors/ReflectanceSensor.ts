@@ -1,4 +1,4 @@
-import { LinesMesh, CreateLines, Vector3, Mesh, Ray } from '@babylonjs/core';
+import { LinesMesh, CreateLines, Vector3, Mesh, Ray, PickingInfo, Texture } from '@babylonjs/core';
 
 import { Distance } from '../../../util/math/Value';
 import SensorParameters from './SensorParameters';
@@ -7,6 +7,7 @@ import Node from '../../../state/State/Robot/Node';
 import { ReferenceFramewUnits } from '../../../util/math/unitMath';
 import { clamp } from '../../../util/math/math';
 import { RENDER_SCALE } from '../../../components/constants/renderConstants';
+import { unitZFromQuaternion } from '../../../util/babylonMath';
 
 
 class ReflectanceSensor extends SensorObject<Node.ReflectanceSensor, number> {
@@ -32,7 +33,7 @@ class ReflectanceSensor extends SensorObject<Node.ReflectanceSensor, number> {
     this.trace_ = CreateLines(id, {
       points: [
         Vector3.Zero(),
-        ReflectanceSensor.FORWARD.multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
+        ReflectanceSensor.FORWARD.clone().multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
       ],
     }, scene);
     this.trace_.visibility = 1;
@@ -52,20 +53,27 @@ class ReflectanceSensor extends SensorObject<Node.ReflectanceSensor, number> {
 
     const ray = new Ray(
       this.trace_.absolutePosition,
-      ReflectanceSensor.FORWARD.applyRotationQuaternion(this.trace_.absoluteRotationQuaternion),
+      unitZFromQuaternion(this.trace_.absoluteRotationQuaternion),
       rawMaxDistance
     );
 
-    // Make sure mesh is visible before picking
-    const hit = scene.pickWithRay(ray, mesh => {
-      return mesh !== this.trace_ && !links.has(mesh as Mesh) && !colliders.has(mesh as Mesh) && mesh.isVisible;
-    });
+    let hit: PickingInfo | null = null;
+    try {
+      hit = scene.pickWithRay(ray, mesh => {
+        return mesh !== this.trace_ && !links.has(mesh as Mesh) && !colliders.has(mesh as Mesh) && mesh.isVisible;
+      });
+    } catch {
+      return 0;
+    }
 
-    if (!hit.pickedMesh || !hit.pickedMesh.material || hit.pickedMesh.material.getActiveTextures().length === 0) return 0;
+    const pickedMaterial = hit?.pickedMesh?.material;
+    if (!pickedMaterial) return 0;
+    const activeTextures = pickedMaterial.getActiveTextures();
+    if (activeTextures.length === 0) return 0;
 
     let sensorValue = 0;
 
-    const hitTexture = hit.pickedMesh.material.getActiveTextures()[0];
+    const hitTexture = activeTextures[0] as Texture;
 
     // Only reprocess the texture if we hit a different texture than before
     if (this.lastHitTextureId_ === null || this.lastHitTextureId_ !== hitTexture.uid) {
@@ -80,8 +88,10 @@ class ReflectanceSensor extends SensorObject<Node.ReflectanceSensor, number> {
     }
 
     if (this.lastHitPixels_ !== null) {
-      const hitTextureCoordinates = hit.getTextureCoordinates();
-      const arrayIndex = Math.floor(hitTextureCoordinates.x * (hitTexture.getSize().width - 1)) * 4 + Math.floor(hitTextureCoordinates.y * (hitTexture.getSize().height - 1)) * hitTexture.getSize().width * 4;
+      const hitTextureCoordinates = hit?.getTextureCoordinates();
+      if (!hitTextureCoordinates) return 0;
+      const textureSize = hitTexture.getSize();
+      const arrayIndex = Math.floor(hitTextureCoordinates.x * (textureSize.width - 1)) * 4 + Math.floor(hitTextureCoordinates.y * (textureSize.height - 1)) * textureSize.width * 4;
 
       const r = this.lastHitPixels_[arrayIndex] as number;
       const g = this.lastHitPixels_[arrayIndex + 1] as number;

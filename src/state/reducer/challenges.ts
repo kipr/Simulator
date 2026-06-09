@@ -1,16 +1,31 @@
 import store from '..';
 import { Challenges } from '../State';
-import Challenge, { AsyncChallenge, ChallengeBrief } from '../State/Challenge';
+import Dict from '../../util/objectOps/Dict';
+import Challenge, { AsyncChallenge, ChallengeBrief, Goal } from '../State/Challenge';
 import Event from '../State/Challenge/Event';
 import Predicate from '../State/Challenge/Predicate';
 import Async from '../State/Async';
 
-import { errorToAsyncError, mutate } from './util';
+import { deferAfterReducer, errorToAsyncError, mutate } from './util';
 import construct from '../../util/redux/construct';
 import LocalizedString from '../../util/LocalizedString';
 
 import db from '../../db';
 import Selector from '../../db/Selector';
+import { CHALLENGE_COLLECTION, SCENE_COLLECTION } from '../../db/constants';
+import { isCustomChallengeId } from '../../util/customChallengeFactory';
+import {
+  challengeFromScene,
+  sceneWithCustomChallenge,
+} from '../../util/customChallengeStorage';
+import {
+  isClassroomSharedReadOnlyScene,
+  sharedCustomChallengeForStudent,
+  sharedCustomChallengeSceneForStudent,
+} from '../../util/customChallengeClassroomShare';
+import Scene, { SceneBrief } from '../State/Scene';
+import { auth } from '../../firebase/firebase';
+import { ScenesAction } from './scenes';
 
 import jbc0 from '../../simulator/definitions/challenges/jbc0-Drive-Straight';
 import jbc1 from '../../simulator/definitions/challenges/jbc1-Tag-Youre-It';
@@ -145,6 +160,36 @@ export namespace ChallengesAction {
   }
 
   export const setDescription = construct<SetDescription>('challenges/set-description');
+
+  export interface ApplyChallengeConditions {
+    type: 'challenges/apply-challenge-conditions';
+    challengeId: string;
+    success?: Predicate;
+    failure?: Predicate;
+    successGoals?: Goal[];
+    failureGoals?: Goal[];
+  }
+
+  export const applyChallengeConditions = construct<ApplyChallengeConditions>(
+    'challenges/apply-challenge-conditions'
+  );
+
+  export interface ListUserChallenges {
+    type: 'challenges/list-user-challenges';
+  }
+
+  export const listUserChallenges = construct<ListUserChallenges>(
+    'challenges/list-user-challenges'
+  );
+
+  export interface SetChallengesInternal {
+    type: 'challenges/set-challenges-internal';
+    challenges: Dict<AsyncChallenge>;
+  }
+
+  export const setChallengesInternal = construct<SetChallengesInternal>(
+    'challenges/set-challenges-internal'
+  );
 }
 
 export type ChallengesAction = (
@@ -158,7 +203,10 @@ export type ChallengesAction = (
   ChallengesAction.RemoveEvent |
   ChallengesAction.SetEvent |
   ChallengesAction.SetName |
-  ChallengesAction.SetDescription
+  ChallengesAction.SetDescription |
+  ChallengesAction.ApplyChallengeConditions |
+  ChallengesAction.ListUserChallenges |
+  ChallengesAction.SetChallengesInternal
 );
 
 const DEFAULT_CHALLENGES: Challenges = {
@@ -349,8 +397,11 @@ const DEFAULT_CHALLENGES: Challenges = {
 };
 
 const create = async (challengeId: string, next: Async.Creating<Challenge>) => {
+  await deferAfterReducer();
   try {
-    await db.set(Selector.challenge(challengeId), next.value);
+    if (!isCustomChallengeId(challengeId)) {
+      await db.set(Selector.challenge(challengeId), next.value);
+    }
     store.dispatch(ChallengesAction.setChallengeInternal({
       challenge: Async.loaded({
         brief: ChallengeBrief.fromChallenge(next.value),
@@ -370,7 +421,35 @@ const create = async (challengeId: string, next: Async.Creating<Challenge>) => {
 };
 
 const save = async (challengeId: string, current: Async.Saveable<ChallengeBrief, Challenge>) => {
+  await deferAfterReducer();
   try {
+    if (isCustomChallengeId(challengeId)) {
+      const sceneAsync = store.getState().scenes[challengeId];
+      const sceneValue = Async.latestValue(sceneAsync);
+      if (isClassroomSharedReadOnlyScene(sceneValue)) {
+        store.dispatch(ChallengesAction.setChallengeInternal({
+          challenge: Async.loaded({
+            brief: current.brief,
+            value: current.value,
+          }),
+          challengeId,
+        }));
+        return;
+      }
+      if (!sceneValue) {
+        throw new Error(`Cannot save custom challenge ${challengeId}: scene not loaded`);
+      }
+      const sceneToSave = sceneWithCustomChallenge(sceneValue, current.value);
+      await db.set(Selector.scene(challengeId), sceneToSave);
+      store.dispatch(ChallengesAction.setChallengeInternal({
+        challenge: Async.loaded({
+          brief: current.brief,
+          value: current.value,
+        }),
+        challengeId,
+      }));
+      return;
+    }
     await db.set(Selector.challenge(challengeId), current.value);
     store.dispatch(ChallengesAction.setChallengeInternal({
       challenge: Async.loaded({
@@ -393,14 +472,76 @@ const save = async (challengeId: string, current: Async.Saveable<ChallengeBrief,
 };
 
 const load = async (challengeId: string, current: AsyncChallenge | undefined) => {
+  await deferAfterReducer();
   const brief = Async.brief(current);
   try {
+    if (isCustomChallengeId(challengeId)) {
+      const scene = await db.get<Scene>(Selector.scene(challengeId));
+      let value = challengeFromScene(challengeId, scene);
+      if (!value) {
+        throw new Error(`Scene ${challengeId} is not a custom challenge`);
+      }
+      if (!scene.customChallenge) {
+        try {
+          const legacy = await db.get<Challenge>(Selector.challenge(challengeId));
+          value = {
+            ...legacy,
+            name: scene.name,
+            description: scene.description,
+            author: scene.author,
+            sceneId: challengeId,
+          };
+          await db.set(Selector.scene(challengeId), sceneWithCustomChallenge(scene, value));
+        } catch {
+          // No legacy challenge document — use scene metadata with empty rules.
+        }
+      }
+      store.dispatch(ChallengesAction.setChallengeInternal({
+        challenge: Async.loaded({
+          brief: ChallengeBrief.fromChallenge(value),
+          value,
+        }),
+        challengeId,
+      }));
+      return;
+    }
     const value = await db.get<Challenge>(Selector.challenge(challengeId));
     store.dispatch(ChallengesAction.setChallengeInternal({
       challenge: Async.loaded({ brief, value }),
       challengeId,
     }));
   } catch (error) {
+    if (isCustomChallengeId(challengeId)) {
+      const classrooms = store.getState().classrooms;
+      const studentId = auth.currentUser?.uid;
+      const sharedScene = sharedCustomChallengeSceneForStudent(
+        classrooms,
+        studentId,
+        challengeId
+      );
+      const shared = sharedCustomChallengeForStudent(
+        classrooms,
+        studentId,
+        challengeId
+      );
+      if (shared && sharedScene) {
+        store.dispatch(ScenesAction.setSceneInternal({
+          scene: Async.loaded({
+            brief: SceneBrief.fromScene(sharedScene),
+            value: sharedScene,
+          }),
+          sceneId: challengeId,
+        }));
+        store.dispatch(ChallengesAction.setChallengeInternal({
+          challenge: Async.loaded({
+            brief: ChallengeBrief.fromChallenge(shared),
+            value: shared,
+          }),
+          challengeId,
+        }));
+        return;
+      }
+    }
     store.dispatch(ChallengesAction.setChallengeInternal({
       challenge: Async.loadFailed({ brief, error: errorToAsyncError(error) }),
       challengeId,
@@ -408,9 +549,31 @@ const load = async (challengeId: string, current: AsyncChallenge | undefined) =>
   }
 };
 
+export const listUserChallengesFromDb = async () => {
+  await deferAfterReducer();
+  const scenes = await db.list<Scene>(SCENE_COLLECTION);
+  const customChallenges: Dict<AsyncChallenge> = {};
+  for (const sceneId in scenes) {
+    if (!isCustomChallengeId(sceneId)) continue;
+    const scene = scenes[sceneId];
+    const challenge = challengeFromScene(sceneId, scene);
+    if (!challenge) continue;
+    customChallenges[sceneId] = Async.loaded({
+      brief: ChallengeBrief.fromChallenge(challenge),
+      value: challenge,
+    });
+  }
+  store.dispatch(ChallengesAction.setChallengesInternal({
+    challenges: customChallenges,
+  }));
+};
+
 const remove = async (challengeId: string, next: Async.Deleting<ChallengeBrief, Challenge>) => {
+  await deferAfterReducer();
   try {
-    await db.delete(Selector.challenge(challengeId));
+    if (!isCustomChallengeId(challengeId)) {
+      await db.delete(Selector.challenge(challengeId));
+    }
     store.dispatch(ChallengesAction.setChallengeInternal({ challengeId, challenge: undefined }));
   } catch (error) {
     store.dispatch(ChallengesAction.setChallengeInternal({
@@ -486,6 +649,23 @@ export const reduceChallenges = (state: Challenges = DEFAULT_CHALLENGES, action:
     case 'challenges/set-description': return mutate(state, action.challengeId, challenge => {
       challenge.description = action.description;
     });
+    case 'challenges/apply-challenge-conditions': return mutate(state, action.challengeId, challenge => {
+      challenge.success = action.success;
+      challenge.failure = action.failure;
+      challenge.successGoals = action.successGoals;
+      challenge.failureGoals = action.failureGoals;
+    });
+    case 'challenges/list-user-challenges': {
+      void listUserChallengesFromDb();
+      return state;
+    }
+    case 'challenges/set-challenges-internal': {
+      const nextState = { ...state };
+      for (const challengeId in action.challenges) {
+        nextState[challengeId] = action.challenges[challengeId];
+      }
+      return nextState;
+    }
     default: return state;
   }
 };

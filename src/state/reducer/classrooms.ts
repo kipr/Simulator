@@ -9,6 +9,7 @@ import { errorToAsyncError } from './util';
 import construct from '../../util/redux/construct';
 import ChallengeCompletion from 'state/State/ChallengeCompletion';
 import { mergeChallengePointsOverride } from '../../util/classroomGradeOverrides';
+import { classroomWithSyncedSharedCustomChallenges } from '../../util/customChallengeClassroomShare';
 
 /**
  * Canonical topic index: each topic maps to assignment titles in that topic.
@@ -892,12 +893,17 @@ export const setAssignment = async (
       ...updatedStudentIds,
     };
 
-    const updatedClassroom = {
+    let updatedClassroom = {
       ...classroom,
       classroomAssignments: nextClassroomAssignments,
       studentIds: mergedStudentIds,
       topics: updatedTopics,
     };
+
+    updatedClassroom = await classroomWithSyncedSharedCustomChallenges(
+      updatedClassroom,
+      classroom.teacherId
+    );
 
     await db.set(
       { collection: 'classrooms', id: docId },
@@ -936,12 +942,16 @@ export const deleteAssignment = async (classroom: Classroom, assignmentDocId: st
     delete previousClassroomAssignments[assignmentToDelete.title];
 
     const updatedTopics = rebuildTopicsFromClassroomAssignments(previousClassroomAssignments);
-    const updatedClassroom = {
+    let updatedClassroom = {
       ...classroom,
       classroomAssignments: previousClassroomAssignments,
       topics: updatedTopics,
     };
 
+    updatedClassroom = await classroomWithSyncedSharedCustomChallenges(
+      updatedClassroom,
+      classroom.teacherId
+    );
 
     await db.set(
       { collection: 'classrooms', id: docId },
@@ -1061,7 +1071,22 @@ export const reduceClassrooms = (
         topics: rebuildTopicsFromClassroomAssignments(updatedClassroomAssignments),
       };
 
-      void saveClassroomDocument(updatedClassroom);
+      void (async () => {
+        const synced = await classroomWithSyncedSharedCustomChallenges(
+          updatedClassroom,
+          classroom.teacherId
+        );
+        await saveClassroomDocument(synced);
+        store.dispatch(
+          ClassroomsAction.setClassroom({
+            classroomId: docId,
+            classroom: Async.loaded({
+              brief: Async.brief(state.entities[docId]),
+              value: synced,
+            }),
+          })
+        );
+      })();
 
       return {
         ...state,

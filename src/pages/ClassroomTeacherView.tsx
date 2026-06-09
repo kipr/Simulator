@@ -87,7 +87,7 @@ export interface ClassroomTeacherViewPublicProps extends StyleProps, ThemeProps 
   onListOwnedClassrooms: () => void;
   onListChallengesByStudentId: (studentId: string) => void;
   onShowClassroomLeaderboard: (classroom: AsyncClassroom) => void;
-  onRemoveStudentFromClassroom: (studentId: string, currentClassroom: Classroom) => void;
+  onRemoveStudentFromClassroom: (studentId: string, currentClassroom: AsyncClassroom) => void;
   onGetAssignments: (classroomDocId: string) => void;
 }
 
@@ -153,10 +153,12 @@ const PageContainer = styled('div', (props: ThemeProps) => ({
 const ClassroomsContainer = styled("div", (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
   width: 'calc(100vw - 2px)',
+  maxWidth: '100vw',
   height: 'calc(100vh - 48px)',
   display: 'flex',
   flexDirection: 'column',
-  overflow: 'auto',
+  overflowX: 'hidden',
+  overflowY: 'auto',
 }));
 
 const ClassroomsTitleContainer = styled('div', (props: ThemeProps) => ({
@@ -440,13 +442,14 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       patch.tourHighlightNewClassroomId = updated.classroomId;
     }
     if (cur?.type === Async.Type.Loaded && cur.value.docId === updated.docId) {
-      this.setState({
+      this.setState(prev => ({
+        ...prev,
         ...patch,
         currentSelectedClassroom: Async.loaded({ brief: {}, value: updated }),
-      });
+      }));
       return;
     }
-    this.setState(patch);
+    this.setState(prev => ({ ...prev, ...patch }));
   };
 
   private onDeleteUser_ = (user: User) => {
@@ -517,8 +520,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       });
 
       if (userClassroom && userClassroom.type === Async.Type.Loaded) {
-        const classroom = userClassroom.value;
-        this.props.onRemoveStudentFromClassroom(`${deleteObject.userName}`, classroom);
+        this.props.onRemoveStudentFromClassroom(`${deleteObject.userName}`, userClassroom);
       }
 
     }
@@ -655,69 +657,6 @@ class ClassroomTeacherView extends React.Component<Props, State> {
   };
 
 
-  private renderManageClassrooms = () => {
-    const { showCreateClassroomDialog, showClassroomLeaderboardSelector } = this.state;
-    const { classroomList, style, theme, locale } = this.props;
-
-    return (
-      <ManageClassroomsContainer theme={theme} style={style}>
-        <Provider store={store}>
-          <IvygateFileExplorer
-            ChallengeComponent={Challenge}
-            config={{ appName: "Simulator", component: "SimClassrooms" }}
-            propUsers={[]}
-            propClassrooms={this.updateIvygateClassrooms()}
-            propSettings={{ ...DEFAULT_SETTINGS, classroomView: true }}
-            onProjectSelected={this.onProjectSelected}
-            onUserSelected={this.onSelectStudent}
-            onAddNewClassroom={this.onAddNewClassroom_}
-            onDeleteClassroom={this.onDeleteClassroom_}
-            onDeleteUser={this.onDeleteUser_}
-            theme={DARK}
-            style={style}
-            locale={locale}
-            ivygateLanguageMapping={IVYGATE_LANGUAGE_MAPPING}
-            activeTourStepId={this.state.teacherTourSteps[this.state.currentTourStepIndex || 0]?.id}
-            tour={{
-              registry: this.registry,
-              targets: {
-                createClassroomDropdown: 'teacher-create-classroom-card',
-                createClassroomDropdownMenu: 'teacher-create-classroom-card',
-                seeCreatedClassroom: 'teacher-newest-classroom-card',
-                classroomUsers: 'teacher-newest-classroom-card',
-                inviteCode: 'teacher-newest-classroom-card',
-              },
-            }}
-            onContinueTour={this.onContinueTour_}
-          />
-        </Provider>
-        {
-          showCreateClassroomDialog && (
-            <CreateClassroomDialog
-              onClose={this.onExitCreateClassroomDialog_}
-              onContinueTour={this.onContinueTour_}
-              onCloseClassroomDialog={this.onCloseClassroomDialog_}
-              theme={DARK}
-              locale={locale}
-              tourRegistry={this.registry}
-            />
-          )}
-        {showClassroomLeaderboardSelector &&
-          (<ClassroomLeaderboardsDialog
-            classrooms={classroomList}
-            onClose={this.onExitClassLeaderboardsDialog_}
-            onCloseClassroomLeaderboardDialog={this.onCloseClassroomLeaderboardDialog_}
-            theme={theme}
-            locale={locale}>
-
-          </ClassroomLeaderboardsDialog>)}
-
-      </ManageClassroomsContainer>
-
-    );
-
-  };
-
   private onCloseTour_ = () => {
     void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, { step: this.state.currentTourStepIndex });
     this.setState({ tourHighlightNewClassroomId: undefined, tourHighlightAssignmentTitle: undefined });
@@ -737,11 +676,12 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     const seeIdx = this.state.teacherTourSteps.findIndex(s => s.id === 'see-created-classroom');
     const clearHighlight = seeIdx >= 0 && stepIndex < seeIdx;
 
-    this.setState({
+    this.setState(prev => ({
+      ...prev,
       currentTourStepIndex: stepIndex,
       ...(closeCreateDialog ? { showCreateClassroomDialog: false } : {}),
       ...(clearHighlight ? { tourHighlightNewClassroomId: undefined } : {}),
-    });
+    }));
   };
 
   private onNextClick_ = (stepIndex: number) => {
@@ -814,7 +754,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       patch.tourHighlightAssignmentTitle = undefined;
     }
     if (Object.keys(patch).length > 0) {
-      this.setState(patch);
+      this.setState(prev => ({ ...prev, ...patch }));
     }
   };
 
@@ -1032,9 +972,9 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                     )}
                     onClose={this.onExitDeleteDialog_}
                     onAccept={this.onCloseDeleteDialog_}
-                    theme={theme}>
-
-                  </DeleteDialog>) : null}
+                    theme={theme}
+                  />
+                ) : null}
                 {renameClassroomTarget?.type === Async.Type.Loaded && (
                   <RenameClassroomDialog
                     theme={theme}
@@ -1109,7 +1049,7 @@ export default connect(
     onDeleteClassroom: (classroomId: string, classroom: Classroom) =>
       dispatch(ClassroomsAction.deleteClassroom({ classroomId, classroom })),
 
-    onRemoveStudentFromClassroom: (studentId: string, currentClassroom: Classroom) =>
+    onRemoveStudentFromClassroom: (studentId: string, currentClassroom: AsyncClassroom) =>
       dispatch(ClassroomsAction.removeStudentFromClassroom({ studentId, currentClassroom })),
   })
 )(DashboardWithNavigate);

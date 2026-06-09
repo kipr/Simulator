@@ -4,7 +4,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { FontAwesome } from '../FontAwesome';
 import { ThemeProps } from '../constants/theme';
-import { faBook, faCogs, faCommentDots, faQuestion, faSignOutAlt, faRobot, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faCogs, faCommentDots, faQuestion, faSignOutAlt, faRobot, faCircleInfo, faSliders } from '@fortawesome/free-solid-svg-icons';
 
 import tr from '@i18n';
 
@@ -23,6 +23,7 @@ export interface ExtraMenuPublicProps extends StyleProps, ThemeProps {
   onSettingsClick: (event: React.MouseEvent) => void;
   onAboutClick: (event: React.MouseEvent) => void;
   onAiClick: (event: React.MouseEvent) => void;
+  onEditCustomChallengeClick?: (event: React.MouseEvent) => void;
   tourRegistry?: TourRegistry;
   onRetakeTourClick?: () => void;
 }
@@ -109,6 +110,7 @@ class ExtraMenu extends React.PureComponent<Props, State> {
       onSettingsClick,
       locale,
       onAiClick,
+      onEditCustomChallengeClick,
       onRetakeTourClick
     } = props;
 
@@ -117,6 +119,9 @@ class ExtraMenu extends React.PureComponent<Props, State> {
     const settingsItem_ = (<Item theme={theme} onClick={onSettingsClick}><ItemIcon icon={faCogs} /> {LocalizedString.lookup(tr('Settings'), locale)}</Item>);
     const aboutItem_ = (<Item theme={theme} onClick={onAboutClick}><ItemIcon icon={faQuestion} /> {LocalizedString.lookup(tr('About'), locale)}</Item>);
     const feedbackItem_ = (<Item theme={theme} onClick={onFeedbackClick}><ItemIcon icon={faCommentDots} /> {LocalizedString.lookup(tr('Feedback'), locale)}</Item>);
+    const editCustomChallengeItem_ = onEditCustomChallengeClick
+      ? (<Item theme={theme} onClick={onEditCustomChallengeClick}><ItemIcon icon={faSliders} /> {LocalizedString.lookup(tr('Edit challenge conditions & items'), locale)}</Item>)
+      : null;
     const logoutItem_ = (<Item theme={theme} onClick={onLogoutClick}><ItemIcon icon={faSignOutAlt} /> {LocalizedString.lookup(tr('Logout'), locale)}</Item>);
     const retakeTourItem_ = (<Item theme={theme} onClick={onRetakeTourClick}><ItemIcon icon={faCircleInfo} /> {LocalizedString.lookup(tr(`Retake Tour`), locale)}</Item>);
     const tourContent_ = (
@@ -137,6 +142,7 @@ class ExtraMenu extends React.PureComponent<Props, State> {
           <TourTarget registry={this.props.tourRegistry} targetKey={'extra-menu-feedback-button'} style={{ display: 'flex', height: '100%' }}>
             {feedbackItem_}
           </TourTarget>}
+        {editCustomChallengeItem_}
         {retakeTourItem_}
         <TourTarget registry={this.props.tourRegistry} targetKey={'extra-menu-logout-button'} style={{ display: 'flex', height: '100%' }}>
           {logoutItem_}
@@ -153,6 +159,7 @@ class ExtraMenu extends React.PureComponent<Props, State> {
         {onFeedbackClick &&
           feedbackItem_
         }
+        {editCustomChallengeItem_}
         {retakeTourItem_}
         {logoutItem_}
 

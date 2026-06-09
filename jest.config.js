@@ -5,6 +5,10 @@ module.exports = {
   preset: 'ts-jest/presets/js-with-ts',
   testEnvironment: 'node',
   roots: ['./test/'],
+  setupFiles: ['<rootDir>/test/jest.setup.js'],
+  moduleNameMapper: {
+    '^@i18n$': '<rootDir>/src/util/i18n.ts',
+  },
 
   // By default, jest will ignore all files in node_modules.
   // But since babylonjs is published as modules, we need to tell jest to transform it (along with transforming our own code).

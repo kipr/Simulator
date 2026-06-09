@@ -10,6 +10,7 @@ import World from "../World";
 import { Info } from "../Info";
 import { Layout, LayoutEditorTarget, LayoutProps } from "./Layout";
 import SimulatorArea from "./SimulatorArea";
+import { SIMULATOR_INTERACTION_OVERLAY_ID } from "./OverlayLayout";
 import { TabBar } from "./TabBar";
 import Widget, { Mode, Size } from "../interface/Widget";
 import { Slider } from "../Slider";
@@ -95,6 +96,13 @@ const SimulatorAreaContainer = styled("div", {
   display: "flex",
   flex: "1 1",
   position: "relative",
+});
+
+const InteractionOverlayHost = styled("div", {
+  position: "absolute",
+  inset: 0,
+  zIndex: 15,
+  pointerEvents: "none",
 });
 const SimultorWidgetContainer = styled("div", {
   display: "flex",
@@ -500,6 +508,9 @@ State
               theme={theme}
               challenge={challengeState.challenge}
               challengeCompletion={challengeState.challengeCompletion}
+              liveEventStates={challengeState.liveEventStates}
+              liveSuccessCompletion={challengeState.liveSuccessCompletion}
+              liveFailureCompletion={challengeState.liveFailureCompletion}
             />
           </SimulatorWidget>
         );
@@ -566,6 +577,7 @@ State
 
           />
         )}
+        <InteractionOverlayHost id={SIMULATOR_INTERACTION_OVERLAY_ID} />
       </SimulatorAreaContainer>
     );
     const tabBar_ = (

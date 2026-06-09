@@ -1,3 +1,6 @@
+/** Global CSS class; pair with rules in index.html.ejs for reliable WebKit scrollbar styling. */
+export const NATIVE_SCROLLBAR_CLASS = 'native-scrollbar-chrome';
+
 /**
  * Native scrollbar appearance used across classroom / leaderboard scroll regions
  * (see ClassroomTeacherView `ClassroomCardScrollContainer`, Leaderboard, etc.).

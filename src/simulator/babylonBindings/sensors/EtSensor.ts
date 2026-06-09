@@ -1,4 +1,4 @@
-import { LinesMesh, CreateLines, Vector3, Mesh, Ray } from '@babylonjs/core';
+import { LinesMesh, CreateLines, Vector3, Mesh, Ray, PickingInfo } from '@babylonjs/core';
 
 import { SceneMeshMetadata } from '../SceneBinding';
 import { Distance } from '../../../util/math/Value';
@@ -8,6 +8,7 @@ import Node from '../../../state/State/Robot/Node';
 import { ReferenceFramewUnits } from '../../../util/math/unitMath';
 import { clamp } from '../../../util/math/math';
 import { RENDER_SCALE } from '../../../components/constants/renderConstants';
+import { unitZFromQuaternion } from '../../../util/babylonMath';
 
 
 class EtSensor extends SensorObject<Node.EtSensor, number> {
@@ -31,7 +32,7 @@ class EtSensor extends SensorObject<Node.EtSensor, number> {
     this.trace_ = CreateLines(id, {
       points: [
         Vector3.Zero(),
-        EtSensor.FORWARD.multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
+        EtSensor.FORWARD.clone().multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
       ],
     }, scene);
     this.trace_.visibility = 0;
@@ -50,23 +51,28 @@ class EtSensor extends SensorObject<Node.EtSensor, number> {
 
     const ray = new Ray(
       this.trace_.absolutePosition,
-      EtSensor.FORWARD.applyRotationQuaternion(this.trace_.absoluteRotationQuaternion),
+      unitZFromQuaternion(this.trace_.absoluteRotationQuaternion),
       rawMaxDistance
     );
 
-    const hit = scene.pickWithRay(ray, mesh => {
-      const metadata = mesh.metadata as SceneMeshMetadata;
-      return (
-        metadata &&
+    let hit: PickingInfo | null = null;
+    try {
+      hit = scene.pickWithRay(ray, mesh => {
+        const metadata = mesh.metadata as SceneMeshMetadata;
+        return (
+          metadata &&
         mesh !== this.trace_ &&
         !links.has(mesh as Mesh) &&
         !colliders.has(mesh as Mesh) &&
         mesh.isVisible &&
         (!!mesh.physicsImpostor || !metadata.selected)
-      );
-    });
+        );
+      });
+    } catch {
+      return Promise.resolve(0);
+    }
 
-    const distance = hit.pickedMesh ? hit.distance : Number.POSITIVE_INFINITY;
+    const distance = hit?.pickedMesh ? hit.distance : Number.POSITIVE_INFINITY;
 
     let value: number;
     if (!this.realistic) {

@@ -1,6 +1,7 @@
 
 import Async from '../Async';
 import Dict from '../../../util/objectOps/Dict';
+import Scene from '../Scene';
 
 export interface Classroom {
   classroomId: string; // classroom ID
@@ -15,6 +16,16 @@ export interface Classroom {
   /** Teacher per-student per-challenge point overrides: studentId → assignmentKey (docId or title) → sceneId → points */
   challengePointsOverrides?: Dict<Dict<Dict<number>>>;
 
+  /** Teacher custom JBC snapshots shared with students via assignments (read-only for students). */
+  sharedCustomChallenges?: Dict<ClassroomSharedCustomChallenge>;
+
+}
+
+export interface ClassroomSharedCustomChallenge {
+  sceneId: string;
+  scene: Scene;
+  sharedByTeacherId: string;
+  updatedAt: string;
 }
 
 export interface ClassroomAssignment {

@@ -1,3 +1,15 @@
+jest.mock('../../src/util/customChallengeSceneScripts', () => ({
+  sceneHasCustomChallengeRuntime: () => false,
+}));
+
+jest.mock('../../src/util/customChallengeGoals', () => ({
+  isCustomCanPoseChallengeEventId: () => false,
+}));
+
+jest.mock('../../src/util/playAreaSuccessGoals', () => ({
+  parsePlayAreaEventId: () => undefined,
+}));
+
 import ScriptManager from '../../src/simulator/ScriptManager';
 import Script from '../../src/state/State/Scene/Script';
 import { Vector3wUnits } from '../../src/util/math/unitMath';

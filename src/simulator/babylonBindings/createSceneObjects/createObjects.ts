@@ -161,7 +161,12 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
    * If so, we save significant resources by using instancing and we avoid building and storing multiple copies of the same geometry.
    * For more on instances see: https://doc.babylonjs.com/features/featuresDeepDive/mesh/copies/instances
    */
-  const match = bScene_.meshes.filter(m => m.name.startsWith(node.geometryId))[0];
+  const match = bScene_.meshes.filter(m => {
+    const md = m.metadata as { matPlayZoneOverlay?: boolean } | undefined;
+    if (md?.matPlayZoneOverlay) return false;
+    if (m.name.startsWith('matPlayZone')) return false;
+    return m.name.startsWith(node.geometryId);
+  })[0];
   if (match && match instanceof Mesh) {
     ret.visual = match.createInstance(`${match.name}-instance`);
 
