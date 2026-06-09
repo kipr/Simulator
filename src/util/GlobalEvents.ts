@@ -15,6 +15,7 @@ export class GlobalEvents {
   };
 
   constructor() {
+    if (typeof window === 'undefined') return;
     window.onmousemove = this.types_.onMouseMove.trigger;
     window.onmouseup = this.types_.onMouseUp.trigger;
   }
