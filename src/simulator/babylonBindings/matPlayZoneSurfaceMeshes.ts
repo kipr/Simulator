@@ -1,4 +1,7 @@
 import earcut from 'earcut';
+
+type EarcutFn = (data: number[], holeIndices?: number[], dim?: number) => number[];
+const earcutTriangles: EarcutFn = earcut as EarcutFn;
 import {
   Color3,
   Color4,
@@ -88,7 +91,7 @@ function triangulateLocalXZ_(points: Vector3[]): number[] {
   for (const p of points) {
     flat.push(p.x, p.z);
   }
-  let indices = earcut(flat);
+  let indices = earcutTriangles(flat);
   if (signedAreaXZ_(points) < 0) {
     indices = indices.slice();
     for (let i = 0; i < indices.length; i += 3) {
