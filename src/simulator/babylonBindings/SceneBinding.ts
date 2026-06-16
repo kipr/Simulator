@@ -13,7 +13,7 @@ import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
 
 import Dict from "../../util/objectOps/Dict";
 import { RawQuaternion, RawVector3 } from "../../util/math/math";
-import Scene from "../../state/State/Scene";
+import Scene, { PatchScene } from "../../state/State/Scene";
 import Camera from "../../state/State/Scene/Camera";
 import Geometry from "../../state/State/Scene/Geometry";
 import Node from "../../state/State/Scene/Node";
@@ -42,7 +42,10 @@ import {
   scriptSceneNodeMatLocalCm,
 } from '../../util/jbcMatPlayArea';
 import { robotFootprintHullsIntersectPlayAreaPolygon } from '../../util/playAreaRobotIntersection';
-import { sceneHasCustomChallengeRuntime } from '../../util/customChallengeSceneScripts';
+import {
+  isCustomChallengeMarkerIntersectionVolume,
+  sceneHasCustomChallengeRuntime,
+} from '../../util/customChallengeSceneScripts';
 import { yAngleDegreesFromQuaternion } from '../../util/babylonMath';
 import { isMatZoneEditActive } from '../../util/matZoneEditSession';
 import { MatPlayZoneSurfaceMeshes } from './matPlayZoneSurfaceMeshes';
@@ -442,6 +445,43 @@ class SceneBinding {
     }
   }
 
+  syncSelectedNodeFromScene(scene: Scene): void {
+    const prev = this.scene_.selectedNodeId;
+    const next = scene.selectedNodeId;
+    if (prev === next) {
+      this.scene_ = scene;
+      this.scriptManager_.scene = scene;
+      return;
+    }
+
+    if (prev !== undefined) {
+      const prevNode = this.scene_.nodes[prev] ?? scene.nodes[prev];
+      const prevNodeObj = prevNode ? this.resolveObjectNode_(prevNode) : null;
+      const prevBNode = this.bScene_.getNodeById(prev);
+      if (prevNodeObj && (prevBNode instanceof AbstractMesh || prevBNode instanceof TransformNode)) {
+        prevBNode.metadata = { ...(prevBNode.metadata as SceneMeshMetadata), selected: false };
+        apply(prevBNode, m => this.restorePhysicsToObject(m, prevNodeObj, prev, scene));
+      }
+      this.gizmoManager_.attachToNode(null);
+    }
+
+    this.scene_ = scene;
+    this.scriptManager_.scene = scene;
+
+    if (next === undefined) return;
+    const node = this.findSceneMeshForNode_(next);
+    if (!(node instanceof AbstractMesh || node instanceof TransformNode)) return;
+    if (node instanceof AbstractMesh && (!node.isEnabled() || !node.isVisible)) return;
+
+    if (this.gizmosEnabled_) {
+      apply(node, m => this.removePhysicsFromObject(m));
+    }
+    node.metadata = { ...(node.metadata as SceneMeshMetadata), selected: true };
+    if (this.gizmosEnabled_) {
+      this.gizmoManager_.attachToNode(node);
+    }
+  }
+
   private robotLinkOrigins_: Dict<Dict<ReferenceFramewUnits>> = {};
 
   set robotLinkOrigins(robotLinkOrigins: Dict<Dict<ReferenceFramewUnits>>) {
@@ -699,17 +739,13 @@ class SceneBinding {
 
     if (node.inner.visible.type === Patch.Type.OuterChange) {
       const nextVisible = node.inner.visible.next;
-      apply(bNode, m => {
-        m.setEnabled(nextVisible);
-        m.isVisible = nextVisible;
-
-        // Create/remove physics for object becoming visible/invisible
-        if (!nextVisible) {
-          this.removePhysicsFromObject(m);
-        } else {
-          this.restorePhysicsToObject(m, node.next, id, nextScene);
-        }
-      });
+      const meshes =
+        bNode instanceof AbstractMesh
+          ? [bNode]
+          : bNode instanceof TransformNode
+            ? bNode.getChildMeshes(false)
+            : [];
+      this.applyObjectMeshVisibility_(id, nextVisible, node.next, meshes);
     }
     return Promise.resolve(bNode);
   };
@@ -1293,9 +1329,44 @@ class SceneBinding {
   };
 
 
+  private patchDictHasChanges_<T>(patches?: Dict<Patch<T>>): boolean {
+    return !!patches && Object.values(patches).some(p => p.type !== Patch.Type.None);
+  }
+
+  private scenePatchHasChangesBesidesSelection_(patch: PatchScene): boolean {
+    return (
+      patch.name.type !== Patch.Type.None ||
+      patch.author.type !== Patch.Type.None ||
+      patch.description.type !== Patch.Type.None ||
+      patch.hdriUri?.type !== Patch.Type.None ||
+      patch.selectedScriptId.type !== Patch.Type.None ||
+      this.patchDictHasChanges_(patch.geometry) ||
+      this.patchDictHasChanges_(patch.nodes) ||
+      this.patchDictHasChanges_(patch.scripts) ||
+      patch.camera.type !== Patch.Type.None ||
+      patch.gravity.type !== Patch.Type.None ||
+      this.patchDictHasChanges_(patch.predefinedLocations) ||
+      patch.matPlayArea?.type !== Patch.Type.None ||
+      patch.matPlayZones?.type !== Patch.Type.None ||
+      patch.customChallengePlacement?.type !== Patch.Type.None ||
+      patch.customChallengeItemSuccessChoices?.type !== Patch.Type.None ||
+      patch.customChallenge?.type !== Patch.Type.None
+    );
+  }
+
   readonly setScene = async (scene: Scene, robots: Dict<Robot>) => {
+    const incomingPatch = Scene.diff(this.scene_, scene);
+    const shouldClearPersistedSelection =
+      !!scene.selectedNodeId &&
+      this.scenePatchHasChangesBesidesSelection_(incomingPatch);
+    const sceneToApply = shouldClearPersistedSelection
+      ? { ...scene, selectedNodeId: undefined }
+      : scene;
     this.robots_ = robots;
-    const patch = Scene.diff(this.scene_, scene);
+    this.gizmoManager_.attachToNode(null);
+    const patch = shouldClearPersistedSelection
+      ? Scene.diff(this.scene_, sceneToApply)
+      : incomingPatch;
     const nodeIds = Dict.keySet(patch.nodes);
     const removedKeys: Set<string> = new Set();
 
@@ -1303,7 +1374,7 @@ class SceneBinding {
     for (const nodeId of nodeIds) {
       const node = patch.nodes[nodeId];
       if (node.type !== Patch.Type.Remove) continue;
-      await this.updateNode_(nodeId, node, patch.geometry, scene);
+      await this.updateNode_(nodeId, node, patch.geometry, sceneToApply);
 
       delete this.nodes_[nodeId];
       delete this.shadowGenerators_[nodeId];
@@ -1313,12 +1384,12 @@ class SceneBinding {
     }
 
     // Now get a breadth-first sort of the remaining nodes (we need to make sure we add parents first)
-    const sortedNodeIds = Scene.nodeOrdering(scene);
+    const sortedNodeIds = Scene.nodeOrdering(sceneToApply);
     for (const nodeId of sortedNodeIds) {
       if (removedKeys.has(nodeId)) continue;
       const node = patch.nodes[nodeId];
 
-      const updatedNode = await this.updateNode_(nodeId, node, patch.geometry, scene);
+      const updatedNode = await this.updateNode_(nodeId, node, patch.geometry, sceneToApply);
       if (updatedNode) {
         this.nodes_[nodeId] = updatedNode;
       }
@@ -1331,7 +1402,7 @@ class SceneBinding {
       if (prev !== undefined) {
         // Get the scene object, resolving templates if needed
         let prevNodeObj: Node.Obj;
-        const prevNode = scene.nodes[prev];
+        const prevNode = sceneToApply.nodes[prev];
         if (prevNode.type === 'object') prevNodeObj = prevNode;
         else if (prevNode.type === 'from-jbc-template') {
           const nodeTemplate = preBuiltTemplates[prevNode.templateId];
@@ -1350,7 +1421,7 @@ class SceneBinding {
         const prevBNode = this.bScene_.getNodeById(prev);
         if (prevNodeObj && (prevBNode instanceof AbstractMesh || prevBNode instanceof TransformNode)) {
           prevBNode.metadata = { ...(prevBNode.metadata as SceneMeshMetadata), selected: false };
-          apply(prevBNode, m => this.restorePhysicsToObject(m, prevNodeObj, prev, scene));
+          apply(prevBNode, m => this.restorePhysicsToObject(m, prevNodeObj, prev, sceneToApply));
         }
 
         this.gizmoManager_.attachToNode(null);
@@ -1425,28 +1496,34 @@ class SceneBinding {
     }
 
     // Iterate through all nodes to find reinitialized binds
-    for (const nodeId in scene.nodes) {
-      const node = scene.nodes[nodeId];
+    for (const nodeId in sceneToApply.nodes) {
+      const node = sceneToApply.nodes[nodeId];
       for (const scriptId of node.scriptIds || []) {
         if (reinitializedScripts.has(scriptId)) this.scriptManager_.bind(scriptId, nodeId);
       }
     }
 
-    this.scriptManager_.ensureSceneScripts(scene);
-    this.scene_ = scene;
-    if (this.sceneNeedsJbcMatHeal_(scene)) {
-      await this.ensureJbcMatMeshes_(scene);
+    this.scriptManager_.ensureSceneScripts(sceneToApply);
+    this.scene_ = sceneToApply;
+    if (this.sceneNeedsJbcMatHeal_(sceneToApply)) {
+      await this.ensureJbcMatMeshes_(sceneToApply);
     }
-    // Wizard overlay owns play-area meshes while the user is dragging/resizing zones.
+    // Saved scenes show subtle matte play-area boundaries without editor shine.
     if (!isMatZoneEditActive()) {
-      this.syncMatPlayZoneSurfaceMeshes(matPlayZonesFromScene(scene));
+      this.syncMatPlayZoneSurfaceMeshes(
+        matPlayZonesFromScene(sceneToApply),
+        { fill: true, fillAlpha: 0.12 }
+      );
     }
     this.updatePlayAreaRobotBoundsDebug_();
   };
 
   /** Surface-aligned play-area visuals (zero thickness, depth-tested). */
-  syncMatPlayZoneSurfaceMeshes(zones: MatPlayZone[]): void {
-    this.matPlayZoneSurfaces_.sync(this.bScene_, zones);
+  syncMatPlayZoneSurfaceMeshes(
+    zones: MatPlayZone[],
+    options?: { fill?: boolean; fillAlpha?: number }
+  ): void {
+    this.matPlayZoneSurfaces_.sync(this.bScene_, zones, options);
   }
 
   private updatePlayAreaRobotBoundsDebug_ = (): void => {
@@ -1465,6 +1542,41 @@ class SceneBinding {
     });
     this.playAreaRobotBoundsDebug_.update(this.bScene_, robots);
   };
+
+  /**
+   * Custom challenge markers hide via scene.visible=false but must stay mesh-enabled
+   * for intersection checks (same as preset invisible startBox / circle volumes).
+   */
+  private applyObjectMeshVisibility_(
+    nodeId: string,
+    visible: boolean,
+    objNode: Node.Obj,
+    meshes: AbstractMesh[]
+  ): void {
+    const intersectionOnly =
+      !visible &&
+      isCustomChallengeMarkerIntersectionVolume(this.scene_, nodeId);
+
+    for (const mesh of meshes) {
+      if (!(mesh instanceof AbstractMesh)) continue;
+      if (intersectionOnly) {
+        mesh.isVisible = false;
+        if (!mesh.isEnabled()) {
+          mesh.setEnabled(true);
+        }
+        this.removePhysicsFromObject(mesh);
+        continue;
+      }
+
+      mesh.setEnabled(visible);
+      mesh.isVisible = visible;
+      if (!visible) {
+        this.removePhysicsFromObject(mesh);
+      } else {
+        this.restorePhysicsToObject(mesh, objNode, nodeId, this.scene_);
+      }
+    }
+  }
 
   /**
    * Apply script-driven node updates (e.g. setNodeVisible) without a full setScene reload.
@@ -1493,16 +1605,7 @@ class SceneBinding {
           ? (bNode.getChildMeshes(false))
           : [];
 
-    for (const mesh of meshes) {
-      if (!(mesh instanceof AbstractMesh)) continue;
-      mesh.setEnabled(visible);
-      mesh.isVisible = visible;
-      if (!visible) {
-        this.removePhysicsFromObject(mesh);
-      } else {
-        this.restorePhysicsToObject(mesh, objNode, nodeId, this.scene_);
-      }
-    }
+    this.applyObjectMeshVisibility_(nodeId, visible, objNode, meshes);
   }
 
   /**
@@ -1550,6 +1653,7 @@ class SceneBinding {
   }
 
   private currentIntersections_: Dict<Set<string>> = {};
+  private prevIntersectionProgramStatus_: 'running' | 'stopped' = 'stopped';
 
   private nodeMeshes_ = (id: string): AbstractMesh[] => {
     // If the node is a robot, return all the robot's links (parts)
@@ -1581,6 +1685,16 @@ class SceneBinding {
         // throw new Error(`No robot binding for node ${nodeId}`);
       }
     }
+
+    const programStatus = this.scriptManager_.programStatus;
+    if (
+      sceneHasCustomChallengeRuntime(this.scene_) &&
+      programStatus === 'running' &&
+      this.prevIntersectionProgramStatus_ !== 'running'
+    ) {
+      this.currentIntersections_ = {};
+    }
+    this.prevIntersectionProgramStatus_ = programStatus;
 
     // Update intersections
     for (const nodeId in this.intersectionFilters_) {

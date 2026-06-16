@@ -898,6 +898,37 @@ export function conditionGoalsFromItemWizardChoices(
 }
 
 /** Success goals for an item wizard choice (catalog or custom per-can events). */
+function singleMarkerGoalForItemOutcome_(
+  step: ItemSuccessWizardStep,
+  outcomeId: ItemSuccessOutcomeId
+): ConditionGoalInput | null {
+  const option = step.outcomes.find(o => o.id === outcomeId);
+  if (!option || outcomeId === 'skip' || outcomeId === 'custom_script') return null;
+
+  const label = `${step.displayName}: ${option.title}`;
+  const goal = (suffix: string, eventId = `${step.nodeId}${suffix}`): ConditionGoalInput => ({
+    eventId: sanitizeChallengeEventId(eventId),
+    label,
+    latchOnce: true,
+  });
+
+  switch (outcomeId) {
+    case 'cover_location':
+      return goal('Covered');
+    case 'robot_touch':
+    case 'robot_reach':
+      return goal('Reached');
+    case 'robot_inside':
+      if (step.nodeId === 'startBox') return goal('', 'inStartBox');
+      if (step.nodeId === 'notStartBox') return goal('', 'notInStartBox');
+      return goal('Inside', `in${step.nodeId}`);
+    case 'sequence_touch':
+      return goal('Touched');
+    default:
+      return null;
+  }
+}
+
 export function conditionGoalsForItemOutcome(
   step: ItemSuccessWizardStep,
   outcomeId: ItemSuccessOutcomeId
@@ -981,6 +1012,11 @@ export function conditionGoalsForItemOutcome(
       default:
         break;
     }
+  }
+
+  const markerGoal = singleMarkerGoalForItemOutcome_(step, outcomeId);
+  if (markerGoal) {
+    return [markerGoal];
   }
 
   const catalog = catalogGoalsForOutcome(step, outcomeId);

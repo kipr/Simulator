@@ -1183,9 +1183,12 @@ export function applyMatPlayAreaToScene(scene: Scene, corners: MatPlayAreaCorner
 }
 
 /** Draw play areas as coplanar 3D meshes (flush with mat / ground, not screen overlays). */
-export function syncMatPlayZoneSurfaceMeshes(zones: MatPlayZone[]): void {
+export function syncMatPlayZoneSurfaceMeshes(
+  zones: MatPlayZone[],
+  options?: { fill?: boolean; fillAlpha?: number }
+): void {
   try {
-    Space.getInstance().sceneBinding?.syncMatPlayZoneSurfaceMeshes(zones);
+    Space.getInstance().sceneBinding?.syncMatPlayZoneSurfaceMeshes(zones, options);
   } catch {
     // Simulator not initialized.
   }

@@ -3,6 +3,7 @@ import Event from '../state/State/Challenge/Event';
 import Scene from '../state/State/Scene';
 import Geometry from '../state/State/Scene/Geometry';
 import Node from '../state/State/Scene/Node';
+import { Color } from '../state/State/Scene/Color';
 import LocalizedString from './LocalizedString';
 import { CHALLENGE_LIST, ChallengeName } from '../simulator/definitions/challenges/challengeList';
 import { JBC_0 } from '../simulator/definitions/scenes/jbc0-Drive-Straight';
@@ -112,6 +113,13 @@ const JBC_CHALLENGES: Record<ChallengeName, Challenge> = {
 };
 
 export type JbcChallengeRefId = ChallengeName | 'custom';
+
+const START_BOX_NODE_ID = 'startBox';
+
+interface CatalogGeometryVisibilityOptions {
+  showStartBox?: boolean;
+  showMarkers?: boolean;
+}
 
 export interface JbcChallengeRef {
   challengeId: JbcChallengeRefId;
@@ -442,6 +450,34 @@ function setWorldItemVisibility_(scene: Scene, nodeId: string, visible: boolean)
   if ('visible' in node) {
     (node as Node.Obj).visible = visible;
   }
+  if (visible) {
+    node.editable = true;
+  }
+}
+
+function customMarkerMaterial_(material: Node.Obj['material']): Node.Obj['material'] {
+  if (material?.type !== 'pbr') return material;
+  return {
+    type: 'basic',
+    color:
+      material.albedo ??
+      material.emissive ??
+      material.ambient ??
+      material.reflection ?? {
+        type: 'color3',
+        color: Color.rgb(255, 255, 255),
+      },
+  };
+}
+
+function catalogGeometryVisible_(
+  entry: JbcCatalogGeometry,
+  options: CatalogGeometryVisibilityOptions
+): boolean {
+  if (options.showMarkers !== undefined) {
+    return options.showMarkers;
+  }
+  return entry.nodeId !== START_BOX_NODE_ID || options.showStartBox === true;
 }
 
 /**
@@ -451,7 +487,8 @@ function setWorldItemVisibility_(scene: Scene, nodeId: string, visible: boolean)
  */
 export function applyJbcCatalogGeometriesToScene(
   scene: Scene,
-  selectedGeometryKeys: ReadonlySet<string>
+  selectedGeometryKeys: ReadonlySet<string>,
+  options: CatalogGeometryVisibilityOptions = {}
 ): Scene {
   const next = JSON.parse(JSON.stringify(scene)) as Scene;
 
@@ -466,8 +503,11 @@ export function applyJbcCatalogGeometriesToScene(
     }
 
     const placed = JSON.parse(JSON.stringify(entry.sampleNode)) as Node;
+    if (placed.type === 'object' && placed.material?.type === 'pbr') {
+      placed.material = customMarkerMaterial_(placed.material);
+    }
     if ('visible' in placed) {
-      (placed as Node.Obj).visible = true;
+      (placed as Node.Obj).visible = catalogGeometryVisible_(entry, options);
     }
     next.nodes[entry.nodeId] = placed;
   }
@@ -477,24 +517,26 @@ export function applyJbcCatalogGeometriesToScene(
 
 export function ensurePlayZoneGeometriesInScene(
   scene: Scene,
-  geometryKeys: ReadonlySet<string>
+  geometryKeys: ReadonlySet<string>,
+  options: CatalogGeometryVisibilityOptions = {}
 ): Scene {
   const missing = [...geometryKeys].filter(key => {
     const entry = JBC_CATALOG_GEOMETRIES.find(g => g.key === key);
     return entry && !scene.nodes[entry.nodeId];
   });
   if (missing.length === 0) return scene;
-  return applyJbcCatalogGeometriesToScene(scene, new Set(missing));
+  return applyJbcCatalogGeometriesToScene(scene, new Set(missing), options);
 }
 
 /** Show/hide sandbox world items for mat placement (all selected items visible). */
 export function applySandboxMatPlacementToScene(
   scene: Scene,
-  placement: { worldItemKeys: string[]; geometryKeys: string[] }
+  placement: { worldItemKeys: string[]; geometryKeys: string[] },
+  options: CatalogGeometryVisibilityOptions = { showStartBox: true }
 ): Scene {
   const geometryKeySet = new Set(placement.geometryKeys);
   let next = JSON.parse(JSON.stringify(scene)) as Scene;
-  next = ensurePlayZoneGeometriesInScene(next, geometryKeySet);
+  next = ensurePlayZoneGeometriesInScene(next, geometryKeySet, options);
 
   const visibleIds = new Set(placementVisibleNodeIds(placement));
 
@@ -507,7 +549,9 @@ export function applySandboxMatPlacementToScene(
   for (const key of placement.geometryKeys) {
     const entry = JBC_CATALOG_GEOMETRIES.find(g => g.key === key);
     if (entry && next.nodes[entry.nodeId] && 'visible' in next.nodes[entry.nodeId]) {
-      (next.nodes[entry.nodeId] as Node.Obj).visible = visibleIds.has(entry.nodeId);
+      (next.nodes[entry.nodeId] as Node.Obj).visible =
+        visibleIds.has(entry.nodeId) &&
+        catalogGeometryVisible_(entry, options);
     }
   }
 
@@ -517,15 +561,20 @@ export function applySandboxMatPlacementToScene(
 /** Apply mat placement to a saved custom scene (geometries + world items). */
 export function applyCustomChallengeMatPlacementToScene(
   scene: Scene,
-  placement: { worldItemKeys: string[]; geometryKeys: string[] }
+  placement: { worldItemKeys: string[]; geometryKeys: string[] },
+  options: { authoringPreview?: boolean } = {}
 ): Scene {
   const keys = new Set(placement.worldItemKeys);
   const geometryKeys = new Set(placement.geometryKeys);
+  const geometryOptions = {
+    showMarkers: options.authoringPreview === true,
+    showStartBox: options.authoringPreview === true,
+  };
 
-  let next = applySandboxMatPlacementToScene(scene, placement);
+  let next = applySandboxMatPlacementToScene(scene, placement, geometryOptions);
 
   if (geometryKeys.size > 0) {
-    next = applyJbcCatalogGeometriesToScene(next, geometryKeys);
+    next = applyJbcCatalogGeometriesToScene(next, geometryKeys, geometryOptions);
   }
 
   const missing = [...keys].filter(key => !next.nodes[key]);
@@ -577,6 +626,7 @@ export function applyJbcCatalogItemsToScene(
     }
 
     const placed = JSON.parse(JSON.stringify(sourceNode)) as Node;
+    placed.editable = true;
     if ('visible' in placed) {
       (placed as Node.Obj).visible = true;
     }

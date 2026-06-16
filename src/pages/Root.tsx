@@ -18,7 +18,10 @@ import ExceptionDialog from '../components/Challenge/ExceptionDialog';
 
 import { DEFAULT_SETTINGS, Settings } from '../components/constants/Settings';
 import { DARK, Theme } from '../components/constants/theme';
-import { DEFAULT_SCENE } from '../components/constants/defaultScene';
+import {
+  DEFAULT_SCENE,
+  JBC_SANDBOX_SCENE_ID,
+} from '../components/constants/defaultScene';
 import CustomChallengeSetupDialog from '../components/Dialog/CustomChallengeSetupDialog';
 
 import SettingsDialog from '../components/Dialog/SettingsDialog';
@@ -99,8 +102,11 @@ import { Space } from '../simulator/Space';
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
 import { withParams } from '../util/withParams';
 import tr from '@i18n';
-import MatPlayZonesSceneOverlay from '../components/CustomChallenges/MatPlayZonesSceneOverlay';
 import { sceneHasLinkedChallenge, isCustomChallengeId } from '../util/customChallengeFactory';
+import {
+  consumeCustomChallengeTourSandboxHandoff,
+  saveCustomChallengeStartHandoff,
+} from '../util/customChallengeStorage';
 import { isClassroomSharedReadOnlyScene } from '../util/customChallengeClassroomShare';
 import { scenePropsRequireSimulatorReload } from '../util/scenePropsRequireSimulatorReload';
 import { prepareCustomChallengeSceneForSimulator } from '../util/customChallengeSceneScripts';
@@ -261,6 +267,7 @@ interface RootState {
   currentTourStepIndex?: number;
   continueTour?: boolean;
   jumpInTour?: boolean;
+  retakingTour?: boolean;
 
   sceneSubMenu?: boolean;
   extraMenu?: boolean;
@@ -366,10 +373,21 @@ class Root extends React.Component<Props, State> {
 
     await fetchTourIfNeeded(currentUser, TourDoc.IDS.SIMULATOR);
 
-    space.sceneBinding.scriptManager.programStatus =
+    if (consumeCustomChallengeTourSandboxHandoff()) {
+      const closeDialogStepIndex = this.state.simulatorRootTourSteps.findIndex(
+        step => step.id === 'close-scene-dialog'
+      );
+      this.setState({
+        currentTourStepIndex: closeDialogStepIndex >= 0 ? closeDialogStepIndex : undefined,
+        modal: Modal.SELECT_SCENE,
+      });
+    }
+
+    this.setScriptManagerProgramStatus_(
       this.state.simulatorState.type === SimulatorState.Type.Running
         ? 'running'
-        : 'stopped';
+        : 'stopped'
+    );
     this.applyCustomChallengeGizmoMode_();
     this.syncChallengeEventHandler_();
   }
@@ -451,7 +469,11 @@ class Root extends React.Component<Props, State> {
       }
       const inCustomChallengeSetup =
         this.state.modal.type === Modal.Type.CustomChallengeSetup;
-      if (
+      const selectedNodeChanged =
+        prevScene.selectedNodeId !== latestScene.selectedNodeId;
+      if (inCustomChallengeSetup && selectedNodeChanged && !sceneIdChanged) {
+        Space.getInstance().syncSelectedNodeFromScene(latestScene);
+      } else if (
         !inCustomChallengeSetup &&
         (sceneIdChanged || scenePropsRequireSimulatorReload(prevScene, latestScene))
       ) {
@@ -477,10 +499,11 @@ class Root extends React.Component<Props, State> {
       this.syncChallengeEventHandler_();
     }
     if (this.state.simulatorState.type !== prevState.simulatorState.type) {
-      Space.getInstance().sceneBinding.scriptManager.programStatus =
+      this.setScriptManagerProgramStatus_(
         this.state.simulatorState.type === SimulatorState.Type.Running
           ? 'running'
-          : 'stopped';
+          : 'stopped'
+      );
     }
 
     if (this.props.projects !== prevProps.projects) {
@@ -488,6 +511,13 @@ class Root extends React.Component<Props, State> {
     }
     if (this.props.locale !== prevProps.locale) {
       this.setState({ simulatorRootTourSteps: getSimulatorTourSteps(this.props.locale) });
+    }
+    if (
+      this.state.retakingTour &&
+      this.props.params.sceneId === JBC_SANDBOX_SCENE_ID &&
+      prevProps.params.sceneId !== JBC_SANDBOX_SCENE_ID
+    ) {
+      this.setState({ retakingTour: false });
     }
   }
 
@@ -503,15 +533,21 @@ class Root extends React.Component<Props, State> {
     this.setState({ windowInnerHeight: window.innerHeight });
   };
 
+  private setScriptManagerProgramStatus_ = (programStatus: 'running' | 'stopped') => {
+    const scriptManager = Space.getInstance().sceneBinding?.scriptManager;
+    if (!scriptManager) return;
+    scriptManager.programStatus = programStatus;
+  };
+
   private onStopped_ = () => {
-    Space.getInstance().sceneBinding.scriptManager.programStatus = 'stopped';
+    this.setScriptManagerProgramStatus_('stopped');
     this.setState({
       simulatorState: SimulatorState.STOPPED,
     });
   };
 
   private onStarted_ = () => {
-    Space.getInstance().sceneBinding.scriptManager.programStatus = 'running';
+    this.setScriptManagerProgramStatus_('running');
     this.setState({
       simulatorState: SimulatorState.RUNNING,
     });
@@ -694,8 +730,7 @@ class Root extends React.Component<Props, State> {
                 }
 
                 if (compileSucceeded) {
-                  Space.getInstance().sceneBinding.scriptManager.programStatus =
-                    'running';
+                  this.setScriptManagerProgramStatus_('running');
                 }
                 this.setState({
                   simulatorState: compileSucceeded
@@ -743,8 +778,7 @@ class Root extends React.Component<Props, State> {
             console: nextConsole,
           },
           () => {
-            Space.getInstance().sceneBinding.scriptManager.programStatus =
-              'running';
+            this.setScriptManagerProgramStatus_('running');
             WorkerInstance.start({
               language: 'python',
               code: activeCode,
@@ -754,7 +788,7 @@ class Root extends React.Component<Props, State> {
         break;
       }
       case 'graphical': {
-        Space.getInstance().sceneBinding.scriptManager.programStatus = 'running';
+        this.setScriptManagerProgramStatus_('running');
         this.setState(
           {
             simulatorState: SimulatorState.RUNNING,
@@ -819,7 +853,13 @@ class Root extends React.Component<Props, State> {
   };
 
   private onStartChallengeClick_ = () => {
-    window.location.href = `/challenge/${this.props.params.sceneId}`;
+    const sceneId = this.props.params.sceneId;
+    if (!sceneId) return;
+    const scene = Async.latestValue(this.props.scene);
+    if (sceneId && scene && isCustomChallengeId(sceneId)) {
+      saveCustomChallengeStartHandoff(sceneId, scene);
+    }
+    window.location.href = `/challenge/${sceneId}`;
   };
 
   private onSetEventValue_ = (eventId: string, value: boolean) => {
@@ -1303,6 +1343,9 @@ class Root extends React.Component<Props, State> {
           this.setState({ extraMenu: undefined });
         };
       }
+      if (this.state.simulatorRootTourSteps[stepIndex].targetKey === 'close-scene-dialog') {
+        this.setState({ modal: Modal.SELECT_SCENE });
+      }
     });
   };
   private onBackClick_ = (stepIndex: number) => {
@@ -1349,13 +1392,27 @@ class Root extends React.Component<Props, State> {
   };
 
   private onRetakeTourAccept_ = () => {
-    this.setState({ modal: Modal.NONE }, () => {
+    const currentSceneId = this.props.params.sceneId;
+    const retakingFromCustomJbcScene =
+      !!currentSceneId && isCustomChallengeId(currentSceneId);
+
+    this.setState({ modal: Modal.NONE, retakingTour: true }, () => {
       const currentUser = auth.currentUser.uid;
       void retakeTour(
         this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
         currentUser,
         this.state.tourId,
-      );
+      ).finally(() => {
+        if (retakingFromCustomJbcScene) {
+          this.props.onResetScene();
+          window.location.href = DEFAULT_SCENE;
+          return;
+        }
+        this.props.navigate(DEFAULT_SCENE);
+        if (currentSceneId === JBC_SANDBOX_SCENE_ID) {
+          this.setState({ retakingTour: false });
+        }
+      });
     });
   };
 
@@ -1473,7 +1530,11 @@ class Root extends React.Component<Props, State> {
       : TourDoc.DEFAULT;
     const activeTourLoaded = !!(tourId && toursLoaded[tourId]);
 
-    const showTour = !!tourId && activeTourLoaded && !activeTour.completed;
+    const showTour =
+      !!tourId &&
+      activeTourLoaded &&
+      !activeTour.completed &&
+      !this.state.retakingTour;
     // const showTour = true;
 
     if (showTour && !this.registry) {
@@ -1601,13 +1662,6 @@ class Root extends React.Component<Props, State> {
 
     return (
       <>
-        {modal.type !== Modal.Type.CustomChallengeSetup && (
-          <MatPlayZonesSceneOverlay
-            theme={theme}
-            locale={this.props.locale}
-            scene={latestScene ?? undefined}
-          />
-        )}
         {tourRegistry ? tourContent_ : normalContent_}
         {showTour && (
           <GuidedTour
@@ -1616,6 +1670,7 @@ class Root extends React.Component<Props, State> {
             isOpen={showTour}
             steps={simulatorRootTourSteps}
             registry={tourRegistry}
+            initialStepIndex={this.state.currentTourStepIndex}
             scrollContainer={this.scrollRef}
             onClose={this.onCloseTour_}
             onSkip={this.onSkipTour_}
@@ -1693,6 +1748,8 @@ class Root extends React.Component<Props, State> {
             theme={theme}
             onClose={this.onModalClose_}
             editingChallengeId={sceneId && isCustomChallengeId(sceneId) ? sceneId : undefined}
+            tourRegistry={tourRegistry}
+            continueTour={this.onContinueTour_}
           />
         )}
         {modal.type === Modal.Type.NewScene && (

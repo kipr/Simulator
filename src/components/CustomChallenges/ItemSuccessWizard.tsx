@@ -14,6 +14,7 @@ import {
   ItemSuccessOutcomeId,
   ItemSuccessWizardStep,
 } from '../../util/jbcChallengeSuggestions';
+import { Space } from '../../simulator/Space';
 
 const SectionTitle = styled('h4', (props: ThemeProps) => ({
   margin: `${props.theme.itemPadding * 2}px ${props.theme.itemPadding * 2}px ${props.theme.itemPadding}px`,
@@ -80,18 +81,6 @@ const OutcomeTitle = styled('div', {
   fontWeight: 600,
   marginBottom: '4px',
 });
-
-const ScriptTip = styled('pre', (props: ThemeProps) => ({
-  marginTop: `${props.theme.itemPadding}px`,
-  padding: `${props.theme.itemPadding}px`,
-  fontSize: '0.76em',
-  lineHeight: 1.35,
-  borderRadius: '4px',
-  backgroundColor: 'rgba(0,0,0,0.35)',
-  border: `1px solid ${props.theme.borderColor}`,
-  whiteSpace: 'pre-wrap',
-  wordBreak: 'break-word',
-}));
 
 const ItemNav = styled('div', (props: ThemeProps) => ({
   display: 'flex',
@@ -225,6 +214,17 @@ const ItemSuccessWizard: React.FC<ItemSuccessWizardProps> = ({
     steps.length === 0 ? 0 : Math.min(Math.max(0, currentIndex), steps.length - 1);
   const currentStep: ItemSuccessWizardStep | undefined = steps[safeIndex];
   const selectedOutcome = currentStep ? choices[currentStep.id] : undefined;
+  const shouldHighlightCurrentStep =
+    currentStep?.itemKind !== 'start_box' && currentStep?.itemKind !== 'not_start_box';
+  const highlightedNodeId =
+    showReview || !shouldHighlightCurrentStep ? undefined : currentStep?.nodeId;
+
+  React.useEffect(() => {
+    if (!highlightedNodeId) return undefined;
+    const space = Space.getInstance();
+    space.highlight(highlightedNodeId);
+    return () => space.unhighlight(highlightedNodeId);
+  }, [highlightedNodeId]);
 
   const applyOutcome_ = (step: ItemSuccessWizardStep, outcomeId: ItemSuccessOutcomeId) => {
     if (outcomeId === 'skip' || outcomeId === 'custom_script') {
@@ -352,9 +352,6 @@ const ItemSuccessWizard: React.FC<ItemSuccessWizardProps> = ({
               <div style={{ flex: 1 }}>
                 <OutcomeTitle>{option.title}</OutcomeTitle>
                 <p style={{ margin: 0, opacity: 0.9, lineHeight: 1.4 }}>{option.description}</p>
-                {selectedOutcome === option.id && option.scriptTip && (
-                  <ScriptTip theme={theme}>{option.scriptTip}</ScriptTip>
-                )}
               </div>
             </div>
           </OutcomeCard>

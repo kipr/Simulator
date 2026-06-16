@@ -63,9 +63,9 @@ import { Space } from '../simulator/Space';
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
 import { withParams } from '../util/withParams';
 import tr from '@i18n';
-import MatPlayZonesSceneOverlay from '../components/CustomChallenges/MatPlayZonesSceneOverlay';
 import { applyChallengeEventValueChange } from '../util/challengeEventUpdates';
 import { isCustomChallengeId } from '../util/customChallengeFactory';
+import { loadCustomChallengeStartHandoff } from '../util/customChallengeStorage';
 import { isClassroomSharedReadOnlyScene } from '../util/customChallengeClassroomShare';
 import {
   isCustomCanPoseChallengeEventId,
@@ -1449,11 +1449,16 @@ class Root extends React.Component<Props, State> {
 
     const latestChallengeCompletion = Async.latestValue(challengeCompletion);
     if (challengeId && !challengeStarted) {
+      const customStartHandoff = isCustomChallengeId(challengeId)
+        ? loadCustomChallengeStartHandoff(challengeId)
+        : null;
       return (
         <LoadingOverlay
           onStartClick={this.onChallengeStartClick_}
           challenge={challenge}
           loading={!latestChallengeCompletion}
+          fallbackName={customStartHandoff?.name}
+          fallbackDescription={customStartHandoff?.description}
         />
       );
     }
@@ -1581,13 +1586,6 @@ class Root extends React.Component<Props, State> {
 
     return (
       <>
-        {modal.type !== Modal.Type.CustomChallengeSetup && (
-          <MatPlayZonesSceneOverlay
-            theme={theme}
-            locale={props.locale}
-            scene={latestScene ?? undefined}
-          />
-        )}
         <Container $windowInnerHeight={windowInnerHeight}>
           <ChallengeMenu
             layout={layout}

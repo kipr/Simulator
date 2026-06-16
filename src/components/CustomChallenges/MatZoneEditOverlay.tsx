@@ -186,7 +186,7 @@ const MatZoneEditOverlay: React.FC<MatZoneEditOverlayProps> = ({
   }, []);
 
   const syncSurfaceMeshes_ = React.useCallback((zoneList: MatPlayZone[]) => {
-    syncMatPlayZoneSurfaceMeshes(zoneList);
+    syncMatPlayZoneSurfaceMeshes(zoneList, { fill: true, fillAlpha: 0.22 });
   }, []);
 
   const setZoneShape_ = (zoneId: string, shape: MatPlayAreaShape) => {

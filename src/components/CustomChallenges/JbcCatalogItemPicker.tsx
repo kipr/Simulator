@@ -10,13 +10,22 @@ import {
 import tr from '@i18n';
 import { CatalogPickerList } from './catalogPickerList';
 
-export type ItemPickerEntry = JbcCatalogItem | WorldSceneItem;
+export interface ItemPickerGroupEntry {
+  key: string;
+  nodeId: string;
+  displayName: string;
+  templateId?: string;
+  itemKeys: string[];
+}
+
+export type ItemPickerEntry = JbcCatalogItem | WorldSceneItem | ItemPickerGroupEntry;
 
 export interface JbcCatalogItemPickerProps extends ThemeProps {
   locale: LocalizedString.Language;
   catalog: ItemPickerEntry[];
   selectedItemKeys: ReadonlySet<string>;
   onToggle: (entry: ItemPickerEntry, selected: boolean) => void;
+  onAddPaperReam?: () => void;
   listMaxHeight?: string;
   helpText?: LocalizedString;
   showUsedIn?: boolean;
@@ -47,6 +56,19 @@ const Row = styled('label', (props: ThemeProps & { $selected?: boolean }) => ({
   },
 }));
 
+const AddRow = styled('button', (props: ThemeProps) => ({
+  width: '100%',
+  display: 'block',
+  padding: `${props.theme.itemPadding * 1.5}px`,
+  cursor: 'pointer',
+  textAlign: 'left',
+  color: props.theme.color,
+  backgroundColor: 'rgba(255, 255, 255, 0.04)',
+  border: 'none',
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+  fontWeight: 700,
+}));
+
 const Meta = styled('span', {
   display: 'block',
   fontSize: '0.85em',
@@ -54,21 +76,57 @@ const Meta = styled('span', {
   marginTop: '4px',
 });
 
+function isGroupEntry_(entry: ItemPickerEntry): entry is ItemPickerGroupEntry {
+  return 'itemKeys' in entry;
+}
+
+function compactPaperReams_(
+  catalog: ItemPickerEntry[],
+  locale: LocalizedString.Language
+): ItemPickerEntry[] {
+  const reams = catalog.filter(entry => /^ream\d+$/i.test(entry.nodeId));
+  if (reams.length <= 1) return catalog;
+
+  const withoutReams = catalog.filter(entry => !/^ream\d+$/i.test(entry.nodeId));
+  return [
+    ...withoutReams,
+    {
+      key: 'paperReams',
+      nodeId: 'ream1',
+      displayName: String(LocalizedString.lookup(tr('Paper Reams'), locale)),
+      templateId: 'ream',
+      itemKeys: reams
+        .map(entry => entry.key)
+        .sort((a, b) => {
+          const aNum = Number(a.replace(/\D+/g, ''));
+          const bNum = Number(b.replace(/\D+/g, ''));
+          return aNum - bNum;
+        }),
+    },
+  ];
+}
+
 const JbcCatalogItemPicker: React.FC<JbcCatalogItemPickerProps> = ({
   theme,
   locale,
   catalog,
   selectedItemKeys,
   onToggle,
+  onAddPaperReam,
   listMaxHeight = '220px',
   helpText,
   showUsedIn = true,
 }) => {
   const [filter, setFilter] = React.useState('');
 
+  const compactCatalog = React.useMemo(
+    () => compactPaperReams_(catalog, locale),
+    [catalog, locale]
+  );
+
   const sortedCatalog = React.useMemo(
-    () => [...catalog].sort(compareJbcWorldItemOrder),
-    [catalog]
+    () => [...compactCatalog].sort(compareJbcWorldItemOrder),
+    [compactCatalog]
   );
 
   const filtered = React.useMemo(() => {
@@ -107,13 +165,23 @@ const JbcCatalogItemPicker: React.FC<JbcCatalogItemPickerProps> = ({
         }
       />
       <CatalogPickerList theme={theme} $maxHeight={listMaxHeight}>
+        {onAddPaperReam && (
+          <AddRow theme={theme} type="button" onClick={onAddPaperReam}>
+            + {LocalizedString.lookup(tr('Add Paper Ream'), locale)}
+          </AddRow>
+        )}
         {filtered.length === 0 && (
           <p style={{ padding: theme.itemPadding * 2, opacity: 0.7 }}>
             {LocalizedString.lookup(tr('No matching items'), locale)}
           </p>
         )}
         {filtered.map(entry => {
-          const selected = selectedItemKeys.has(entry.key);
+          const selected = isGroupEntry_(entry)
+            ? entry.itemKeys.every(key => selectedItemKeys.has(key))
+            : selectedItemKeys.has(entry.key);
+          const selectedCount = isGroupEntry_(entry)
+            ? entry.itemKeys.filter(key => selectedItemKeys.has(key)).length
+            : 0;
           return (
             <Row key={entry.key} theme={theme} $selected={selected}>
               <input
@@ -126,6 +194,13 @@ const JbcCatalogItemPicker: React.FC<JbcCatalogItemPickerProps> = ({
                 {entry.templateId && showUsedIn && (
                   <Meta>
                     {LocalizedString.lookup(tr('Template'), locale)}: {entry.templateId}
+                  </Meta>
+                )}
+                {isGroupEntry_(entry) && (
+                  <Meta>
+                    {selectedCount > 0
+                      ? `${selectedCount}/${entry.itemKeys.length} ${LocalizedString.lookup(tr('selected'), locale)}`
+                      : `${entry.itemKeys.length} ${LocalizedString.lookup(tr('available'), locale)}`}
                   </Meta>
                 )}
                 {showUsedIn && 'usedIn' in entry && entry.usedIn.length > 0 && (

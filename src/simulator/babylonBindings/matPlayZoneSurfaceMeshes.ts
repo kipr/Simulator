@@ -29,6 +29,11 @@ const LINE_PREFIX = 'matPlayZoneOutline_';
 /** World-space lift along surface normal (m) — avoids z-fighting, not visible as thickness. */
 const SURFACE_LIFT_M = 0.00025;
 
+export interface MatPlayZoneSurfaceMeshOptions {
+  fill?: boolean;
+  fillAlpha?: number;
+}
+
 function parseRgba_(rgba: string): Color4 {
   const m = /rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*(?:,\s*([\d.]+))?\s*\)/.exec(rgba);
   if (!m) {
@@ -130,16 +135,15 @@ function surfaceFrame_(
 function createFillMaterial_(
   bScene: BabylonScene,
   zoneId: string,
-  fill: Color4
+  fill: Color4,
+  alpha: number
 ): StandardMaterial {
   const material = new StandardMaterial(`${MESH_PREFIX}mat_${zoneId}`, bScene);
   const color = new Color3(fill.r, fill.g, fill.b);
   material.diffuseColor = color;
-  material.emissiveColor = color;
   material.specularColor = Color3.Black();
-  material.disableLighting = true;
   material.backFaceCulling = true;
-  material.alpha = fill.a;
+  material.alpha = alpha;
   material.transparencyMode = StandardMaterial.MATERIAL_ALPHABLEND;
   material.forceDepthWrite = true;
   material.zOffset = -2;
@@ -154,8 +158,14 @@ export class MatPlayZoneSurfaceMeshes {
   private fingerprint_ = '';
   private fillMaterials_: StandardMaterial[] = [];
 
-  sync(bScene: BabylonScene, zones: MatPlayZone[]): void {
-    const fingerprint = zonesFingerprint_(zones);
+  sync(
+    bScene: BabylonScene,
+    zones: MatPlayZone[],
+    options: MatPlayZoneSurfaceMeshOptions = {}
+  ): void {
+    const showFill = options.fill === true;
+    const fillAlpha = options.fillAlpha ?? 0.16;
+    const fingerprint = `${showFill ? 'fill' : 'outline'}:${zonesFingerprint_(zones)}`;
     if (fingerprint === this.fingerprint_ && this.root_) {
       return;
     }
@@ -176,7 +186,6 @@ export class MatPlayZoneSurfaceMeshes {
       if (!frame) return;
 
       const colors = ZONE_DISPLAY_COLORS[zoneIndex % ZONE_DISPLAY_COLORS.length];
-      const fill = parseRgba_(colors.fill);
       const stroke = parseRgba_(colors.stroke);
       const lift = frame.normal.scale(SURFACE_LIFT_M);
 
@@ -186,40 +195,43 @@ export class MatPlayZoneSurfaceMeshes {
       anchor.rotationQuaternion = frame.rotation;
       anchor.computeWorldMatrix(true);
 
-      const inv = Matrix.Invert(anchor.getWorldMatrix());
-      const localPoints = dedupeLocalPoints_(
-        worldM.map(wm => {
-          const lifted = wm.add(lift);
-          return Vector3.TransformCoordinates(lifted, inv);
-        })
-      );
-      if (localPoints.length < 3) return;
+      if (showFill) {
+        const fill = parseRgba_(colors.fill);
+        const inv = Matrix.Invert(anchor.getWorldMatrix());
+        const localPoints = dedupeLocalPoints_(
+          worldM.map(wm => {
+            const lifted = wm.add(lift);
+            return Vector3.TransformCoordinates(lifted, inv);
+          })
+        );
+        if (localPoints.length < 3) return;
 
-      const indices = triangulateLocalXZ_(localPoints);
-      if (indices.length < 3) return;
+        const indices = triangulateLocalXZ_(localPoints);
+        if (indices.length < 3) return;
 
-      const positions: number[] = [];
-      const normals: number[] = [];
-      for (const p of localPoints) {
-        positions.push(p.x, p.y, p.z);
-        normals.push(0, 1, 0);
+        const positions: number[] = [];
+        const normals: number[] = [];
+        for (const p of localPoints) {
+          positions.push(p.x, p.y, p.z);
+          normals.push(0, 1, 0);
+        }
+
+        const vertexData = new VertexData();
+        vertexData.positions = positions;
+        vertexData.indices = indices;
+        vertexData.normals = normals;
+
+        const surface = new Mesh(`${MESH_PREFIX}${zone.id}`, bScene);
+        vertexData.applyToMesh(surface);
+        surface.parent = anchor;
+        surface.isPickable = false;
+        surface.metadata = { matPlayZoneOverlay: true };
+
+        const fillMaterial = createFillMaterial_(bScene, zone.id, fill, fillAlpha);
+        this.fillMaterials_.push(fillMaterial);
+        surface.material = fillMaterial;
+        surface.renderingGroupId = 2;
       }
-
-      const vertexData = new VertexData();
-      vertexData.positions = positions;
-      vertexData.indices = indices;
-      vertexData.normals = normals;
-
-      const surface = new Mesh(`${MESH_PREFIX}${zone.id}`, bScene);
-      vertexData.applyToMesh(surface);
-      surface.parent = anchor;
-      surface.isPickable = false;
-      surface.metadata = { matPlayZoneOverlay: true };
-
-      const fillMaterial = createFillMaterial_(bScene, zone.id, fill);
-      this.fillMaterials_.push(fillMaterial);
-      surface.material = fillMaterial;
-      surface.renderingGroupId = 2;
 
       const outlinePts = worldM.map(wm => wm.add(lift));
       const outline = MeshBuilder.CreateLines(

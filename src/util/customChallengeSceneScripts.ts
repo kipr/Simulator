@@ -149,6 +149,159 @@ export interface CustomChallengeRuntimeScriptInput {
   challengeFailureGoals?: ConditionGoalInput[];
   /** Merged item goals (predicate Event exprs + wizard rows); preferred for listeners. */
   itemChallengeGoals?: ConditionGoalInput[];
+  /** True while the challenge editor is previewing marker placement. */
+  authoringPreview?: boolean;
+}
+
+function markerNodeIdsForPlacement_(placement: MatPlacementSelection): string[] {
+  return [
+    ...new Set(
+      placement.geometryKeys
+        .map(key => JBC_CATALOG_GEOMETRIES.find(g => g.key === key)?.nodeId)
+        .filter((nodeId): nodeId is string => !!nodeId)
+    ),
+  ];
+}
+
+export function customChallengeMarkerNodeIds(scene: Scene): string[] {
+  return markerNodeIdsForPlacement_(matPlacementFromScene(scene));
+}
+
+/** Invisible marker meshes that must stay enabled for intersection checks (preset JBC behavior). */
+export function isCustomChallengeMarkerIntersectionVolume(
+  scene: Scene,
+  nodeId: string
+): boolean {
+  if (!sceneHasCustomChallengeRuntime(scene)) return false;
+  if (nodeId === 'startBox' || nodeId === 'notStartBox') return true;
+  return customChallengeMarkerNodeIds(scene).includes(nodeId);
+}
+
+function eventCandidatesForMarkerNode_(nodeId: string): string[] {
+  const ids = [
+    `${nodeId}Reached`,
+    `${nodeId}Inside`,
+    `${nodeId}Touched`,
+    `${nodeId}Covered`,
+    `${nodeId}Intersects`,
+    `in${nodeId}`,
+  ];
+
+  if (nodeId === 'startBox') {
+    ids.push('inStartBox');
+  }
+  if (nodeId === 'notStartBox') {
+    ids.push('notInStartBox');
+  }
+  if (/line/i.test(nodeId)) {
+    ids.push('onLine', 'robotTouchingLine');
+  }
+  if (nodeId === 'endBox' || nodeId === 'endOfMat') {
+    ids.push('reachedEnd', 'offMat');
+  }
+  if (/garage/i.test(nodeId)) {
+    ids.push('inGarage', 'touchGarageLines');
+  }
+
+  return ids;
+}
+
+export function customChallengeMarkerNodeIdsForEvent(
+  scene: Scene,
+  eventId: string
+): string[] {
+  const normalized = sanitizeChallengeEventId(eventId).toLowerCase();
+  return customChallengeMarkerNodeIds(scene).filter(nodeId =>
+    eventCandidatesForMarkerNode_(nodeId).some(
+      candidate => sanitizeChallengeEventId(candidate).toLowerCase() === normalized
+    )
+  );
+}
+
+function setCustomChallengeMarkerNodesVisible_(
+  scene: Scene,
+  visible: boolean
+): Scene {
+  let next = scene;
+  for (const nodeId of customChallengeMarkerNodeIds(scene)) {
+    const node = next.nodes[nodeId];
+    if (!node || !('visible' in node) || (node as { visible?: boolean }).visible === visible) {
+      continue;
+    }
+    next = Scene.setNode(next, nodeId, {
+      ...node,
+      visible,
+    } as typeof node);
+  }
+  return next;
+}
+
+function buildChallengeMarkerRuntime_(input: CustomChallengeRuntimeScriptInput): string {
+  const markerNodeIds = markerNodeIdsForPlacement_(input.placement);
+  const authoringPreview = input.authoringPreview === true;
+
+  return `
+// CUSTOM_MARKER_RUNTIME_VISIBILITY
+const CUSTOM_CHALLENGE_MARKER_NODE_IDS = ${JSON.stringify(markerNodeIds)};
+const CUSTOM_CHALLENGE_MARKER_AUTHORING_PREVIEW = ${JSON.stringify(authoringPreview)};
+
+function customChallengeMarkerEventCandidates_(nodeId) {
+  const ids = [
+    nodeId + 'Reached',
+    nodeId + 'Inside',
+    nodeId + 'Touched',
+    nodeId + 'Covered',
+    nodeId + 'Intersects',
+    'in' + nodeId,
+  ];
+  if (nodeId === 'startBox') ids.push('inStartBox');
+  if (nodeId === 'notStartBox') ids.push('notInStartBox');
+  if (/line/i.test(nodeId)) ids.push('onLine', 'robotTouchingLine');
+  if (nodeId === 'endBox' || nodeId === 'endOfMat') ids.push('reachedEnd', 'offMat');
+  if (/garage/i.test(nodeId)) ids.push('inGarage', 'touchGarageLines');
+  return ids.map(id => String(id).replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase());
+}
+
+function customChallengeMarkerNodeIdsForEvent_(eventId) {
+  const normalized = String(eventId).replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase();
+  return CUSTOM_CHALLENGE_MARKER_NODE_IDS.filter(nodeId =>
+    customChallengeMarkerEventCandidates_(nodeId).includes(normalized)
+  );
+}
+
+function setCustomChallengeMarkerVisible_(nodeId, visible) {
+  if (CUSTOM_CHALLENGE_MARKER_AUTHORING_PREVIEW) return;
+  const node = scene.nodes[nodeId];
+  if (!node || node.visible === visible) return;
+  scene.setNode(nodeId, {
+    ...node,
+    visible,
+  });
+}
+
+function setCustomChallengeMarkerVisibleForEvent_(eventId, visible) {
+  for (const nodeId of customChallengeMarkerNodeIdsForEvent_(eventId)) {
+    setCustomChallengeMarkerVisible_(nodeId, visible);
+  }
+}
+
+function setAllCustomChallengeMarkersVisible_(visible) {
+  for (const nodeId of CUSTOM_CHALLENGE_MARKER_NODE_IDS) {
+    setCustomChallengeMarkerVisible_(nodeId, visible);
+  }
+}
+
+if (!CUSTOM_CHALLENGE_MARKER_AUTHORING_PREVIEW) {
+  let customChallengeMarkersWereRunning_ = false;
+  scene.addOnRenderListener(() => {
+    const running = scene.programStatus === 'running';
+    if (!running || !customChallengeMarkersWereRunning_) {
+      setAllCustomChallengeMarkersVisible_(false);
+    }
+    customChallengeMarkersWereRunning_ = running;
+  });
+}
+`;
 }
 
 function buildPlayZoneRuntime_(input: CustomChallengeRuntimeScriptInput): string {
@@ -416,10 +569,10 @@ scene.addOnCollisionListener('${escapeJsString_(reamId)}', (otherNodeId) => {
     }
 
     const reachMatch = /^(can[a-z0-9]+)Reached$/i.exec(goal.eventId);
-    if (!reachMatch) continue;
-    const nodeId = reachMatch[1];
-    const eventId = escapeJsString_(goal.eventId);
-    lines.push(`
+    if (reachMatch) {
+      const nodeId = reachMatch[1];
+      const eventId = escapeJsString_(goal.eventId);
+      lines.push(`
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   if (
     scene.programStatus === 'running' &&
@@ -429,6 +582,96 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
     scene.setChallengeEventValue('${eventId}', true);
   }
 }, '${escapeJsString_(nodeId)}');`);
+      continue;
+    }
+
+    const markerReachedMatch = /^(.+)(Reached|Inside|Touched)$/i.exec(goal.eventId);
+    if (markerReachedMatch) {
+      const nodeId = markerReachedMatch[1];
+      const eventId = escapeJsString_(goal.eventId);
+      lines.push(`
+scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+  if (
+    scene.programStatus === 'running' &&
+    type === 'start' &&
+    otherNodeId === '${escapeJsString_(nodeId)}'
+  ) {
+    setCustomChallengeMarkerVisibleForEvent_('${eventId}', true);
+    scene.setChallengeEventValue('${eventId}', true);
+  }
+}, '${escapeJsString_(nodeId)}');`);
+      continue;
+    }
+
+    const startBoxEventMatch = /^(notInStartBox|inStartBox)$/i.exec(goal.eventId);
+    if (startBoxEventMatch) {
+      const isNot = /^not/i.test(goal.eventId);
+      const targetNodeId = isNot ? 'notStartBox' : 'startBox';
+      const eventId = escapeJsString_(goal.eventId);
+      const targetNodeIdEscaped = escapeJsString_(targetNodeId);
+      // Match preset JBC (e.g. jbc0): collision volumes stay invisible; do not toggle marker visibility.
+      if (isNot) {
+        lines.push(`
+scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+  if (scene.programStatus === 'running' && otherNodeId === '${targetNodeIdEscaped}') {
+    scene.setChallengeEventValue('${eventId}', type === 'start');
+  }
+}, '${targetNodeIdEscaped}');`);
+      } else {
+        lines.push(`
+scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+  if (scene.programStatus === 'running' && otherNodeId === '${targetNodeIdEscaped}') {
+    if (type === 'start') {
+      console.log('[custom-jbc start-box] robot intersection', {
+        type,
+        otherNodeId,
+        eventId: '${eventId}',
+        programStatus: scene.programStatus,
+      });
+      scene.setChallengeEventValue('${eventId}', true);
+    }
+  }
+}, '${targetNodeIdEscaped}');`);
+      }
+      continue;
+    }
+
+    const insideEventMatch = /^in(.+)$/i.exec(goal.eventId);
+    if (insideEventMatch) {
+      const rawNodeId = insideEventMatch[1];
+      const nodeId = rawNodeId.charAt(0).toLowerCase() + rawNodeId.slice(1);
+      const eventId = escapeJsString_(goal.eventId);
+      lines.push(`
+scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+  if (scene.programStatus === 'running' && otherNodeId === '${escapeJsString_(nodeId)}') {
+    setCustomChallengeMarkerVisibleForEvent_('${eventId}', type === 'start');
+    scene.setChallengeEventValue('${eventId}', type === 'start');
+  }
+}, '${escapeJsString_(nodeId)}');`);
+      continue;
+    }
+
+    const coveredMatch = /^(.+)Covered$/i.exec(goal.eventId);
+    if (!coveredMatch) continue;
+    const coveredNodeId = coveredMatch[1];
+    const eventId = escapeJsString_(goal.eventId);
+    const covererNodeIds = [
+      'robot',
+      ...placement.worldItemKeys.map(nodeIdForPlacementKey_),
+    ].filter(id => id !== coveredNodeId);
+    for (const covererNodeId of covererNodeIds) {
+      lines.push(`
+scene.addOnIntersectionListener('${escapeJsString_(covererNodeId)}', (type, otherNodeId) => {
+  if (
+    scene.programStatus === 'running' &&
+    type === 'start' &&
+    otherNodeId === '${escapeJsString_(coveredNodeId)}'
+  ) {
+    setCustomChallengeMarkerVisibleForEvent_('${eventId}', true);
+    scene.setChallengeEventValue('${eventId}', true);
+  }
+}, '${escapeJsString_(coveredNodeId)}');`);
+    }
   }
 
   return lines.join('\n');
@@ -540,10 +783,6 @@ function buildItemUpdateListeners_(
   );
   if (watches.length === 0) return '';
 
-  const watchNodeIds = [
-    ...new Set(watches.map(w => w.nodeId)),
-  ];
-
   // Knock-over before still-standing so paired failure clears when tip is detected.
   const ordered = [...watches].sort(
     (a, b) => Number(b.trueWhenKnocked) - Number(a.trueWhenKnocked)
@@ -557,13 +796,6 @@ function buildItemUpdateListeners_(
     const prevKey = '__jbcKoPrev_${nid}';
     if (knocked !== globalThis[prevKey]) {
       globalThis[prevKey] = knocked;
-      console.log('[custom-jbc knock-over] detected', {
-        nodeId: '${nid}',
-        eventId: '${eid}',
-        knocked,
-        yAngle: yAngleForChallenge_('${nid}'),
-        programStatus: scene.programStatus,
-      });
       scene.setChallengeEventValue('${eid}', knocked);
     }
   })();`;
@@ -578,29 +810,14 @@ function buildItemUpdateListeners_(
   })();`;
   });
 
-  const watchListLiteral = JSON.stringify(
-    watches.map(w => ({ nodeId: w.nodeId, eventId: w.eventId, knocked: w.trueWhenKnocked }))
-  );
-
   // Preset JBC uprightCans: no programStatus guard on the render loop (emit still guarded in ScriptManager).
   return `
-// KNOCK_OVER_CONSOLE_DEBUG
 // KNOCK_OVER_LIVE_POSE
-const __jbcKoWatchNodes = ${JSON.stringify(watchNodeIds)};
-console.log('[custom-jbc knock-over] runtime loaded', { nodes: __jbcKoWatchNodes, watches: ${watchListLiteral} });
-
 function nodeUprightForChallenge_(nodeId) {
   if (typeof scene.getNodeUpright === 'function') {
     return scene.getNodeUpright(nodeId);
   }
   return nodeUpright(nodeId);
-}
-
-function yAngleForChallenge_(nodeId) {
-  if (typeof scene.getNodeYAngle === 'function') {
-    return scene.getNodeYAngle(nodeId);
-  }
-  return yAngle(nodeId);
 }
 
 scene.addOnRenderListener(() => {
@@ -636,14 +853,18 @@ export function buildCustomChallengeRuntimeScript(
     input.worldItems,
     challengeItemGoals
   );
+  const markerBlock = buildChallengeMarkerRuntime_(input);
 
   return `// Auto-generated — updates challenge events for play areas and mat items.
 // PLAY_AREA_LEAVE_DEBUG
 // PLAY_AREA_ROBOT_BODY_BOUNDS
 // PLAY_AREA_OPPOSITE_EVENTS
 // ITEM_RULES_FROM_PREDICATE
+// START_BOX_RUNTIME_HIGHLIGHT
+// CUSTOM_MARKER_RUNTIME_VISIBILITY
 // JBC_NODE_UPRIGHT
 ${nodeUpright}
+${markerBlock}
 ${playZoneBlock}
 ${touchBlock}
 // REAM_STOP_NEAR_RUNTIME
@@ -667,7 +888,11 @@ export function applyCustomChallengeRuntimeScriptToScene(
     input.worldItems,
     challengeItemGoals
   ).map(w => w.reamNodeId);
-  let next = syncReamFrontBoundariesOnScene(scene, stopNearReamIds);
+  let next =
+    input.authoringPreview === true
+      ? scene
+      : setCustomChallengeMarkerNodesVisible_(scene, false);
+  next = syncReamFrontBoundariesOnScene(next, stopNearReamIds);
 
   const body = buildCustomChallengeRuntimeScript(input);
   const script = Script.ecmaScript('Custom challenge rules (auto)', body);
@@ -724,9 +949,9 @@ function customChallengeRuntimeScriptIsStale_(code: string): boolean {
   if (code.includes('KNOCK_DEBUG_LOG')) return true;
   if (code.includes('KNOCK_OVER_HYSTERESIS')) return true;
   if (code.includes('knockedStable_')) return true;
-  if (!code.includes('KNOCK_OVER_CONSOLE_DEBUG')) return true;
-  if (!code.includes('[custom-jbc knock-over] detected')) return true;
-  if (!code.includes('[custom-jbc knock-over] runtime loaded')) return true;
+  if (code.includes('KNOCK_OVER_CONSOLE_DEBUG')) return true;
+  if (code.includes('[custom-jbc knock-over] detected')) return true;
+  if (code.includes('[custom-jbc knock-over] runtime loaded')) return true;
   if (!code.includes('__jbcKoUp_')) return true;
   if (!code.includes('TOUCH_COLLISION_ON_CAN')) return true;
   if (!code.includes('TOUCH_SKIP_NEVER_TOUCHED')) return true;
@@ -752,6 +977,20 @@ function customChallengeRuntimeScriptIsStale_(code: string): boolean {
   if (code.includes('PLAY_AREA_ROBOT_OR_SAMPLES')) return true;
   if (code.includes('PLAY_AREA_ROBOT_FOOTPRINT')) return true;
   if (!code.includes('ITEM_RULES_FROM_PREDICATE')) return true;
+  if (!code.includes('START_BOX_RUNTIME_HIGHLIGHT')) return true;
+  if (
+    code.includes("otherNodeId === 'startBox'") &&
+    !code.includes('[custom-jbc start-box] robot intersection')
+  ) {
+    return true;
+  }
+  if (
+    code.includes('[custom-jbc start-box] robot intersection') &&
+    !code.includes("if (type === 'start')")
+  ) {
+    return true;
+  }
+  if (!code.includes('CUSTOM_MARKER_RUNTIME_VISIBILITY')) return true;
   return STALE_PLAY_AREA_RUNTIME_MARKERS.some(m => code.includes(m));
 }
 
@@ -761,6 +1000,7 @@ export interface CustomChallengeRuntimeRefreshOptions {
   challengeFailureGoals?: ConditionGoalInput[];
   successPredicate?: Predicate;
   failurePredicate?: Predicate;
+  authoringPreview?: boolean;
 }
 
 function itemSuccessChoicesFromScene_(
@@ -844,24 +1084,28 @@ function applyCustomChallengeRuntimeIfNeeded_(
   itemSuccessChoices: Record<string, ItemSuccessOutcomeId>,
   refreshOptions: CustomChallengeRuntimeRefreshOptions = {}
 ): Scene {
+  const runtimeScene =
+    refreshOptions.authoringPreview === true
+      ? scene
+      : setCustomChallengeMarkerNodesVisible_(scene, false);
   const itemChallengeGoals = resolveItemChallengeGoals_(refreshOptions);
   const needsItems = hasItemSuccessRuntimeListeners_(
-    scene,
+    runtimeScene,
     worldItems,
     itemSuccessChoices,
     itemChallengeGoals
   );
-  const needsPlayArea = hasPlayAreaRuntimeListeners_(scene, goalsForRuntime);
+  const needsPlayArea = hasPlayAreaRuntimeListeners_(runtimeScene, goalsForRuntime);
   if (!needsItems && !needsPlayArea) {
-    return bindRuntimeScriptToRobotNode_(scene);
+    return bindRuntimeScriptToRobotNode_(runtimeScene);
   }
 
-  const placement = matPlacementFromScene(scene);
+  const placement = matPlacementFromScene(runtimeScene);
   const playZones = needsPlayArea
-    ? playZonesForRuntimeScript(matPlayZonesFromScene(scene), goalsForRuntime)
+    ? playZonesForRuntimeScript(matPlayZonesFromScene(runtimeScene), goalsForRuntime)
     : [];
 
-  return applyCustomChallengeRuntimeScriptToScene(scene, {
+  return applyCustomChallengeRuntimeScriptToScene(runtimeScene, {
     playZones,
     placement,
     itemSuccessChoices,
@@ -870,6 +1114,7 @@ function applyCustomChallengeRuntimeIfNeeded_(
     itemChallengeGoals,
     challengeSuccessGoals: refreshOptions.challengeSuccessGoals,
     challengeFailureGoals: refreshOptions.challengeFailureGoals,
+    authoringPreview: refreshOptions.authoringPreview,
   });
 }
 
@@ -905,34 +1150,38 @@ export function refreshCustomChallengeRuntimeScriptOnScene(
   const refreshOptions: CustomChallengeRuntimeRefreshOptions = Array.isArray(options)
     ? { playAreaChallengeGoals: options }
     : options;
-  const existing = scene.scripts?.[RUNTIME_SCRIPT_ID]?.code ?? '';
-  const goalsForRuntime = resolvePlayAreaGoalsForRuntime_(scene, refreshOptions);
-  const itemSuccessChoices = itemSuccessChoicesFromScene_(scene);
+  const runtimeScene =
+    refreshOptions.authoringPreview === true
+      ? scene
+      : setCustomChallengeMarkerNodesVisible_(scene, false);
+  const existing = runtimeScene.scripts?.[RUNTIME_SCRIPT_ID]?.code ?? '';
+  const goalsForRuntime = resolvePlayAreaGoalsForRuntime_(runtimeScene, refreshOptions);
+  const itemSuccessChoices = itemSuccessChoicesFromScene_(runtimeScene);
   const itemChallengeGoals = resolveItemChallengeGoals_(refreshOptions);
   const needsItems = hasItemSuccessRuntimeListeners_(
-    scene,
+    runtimeScene,
     worldItems,
     itemSuccessChoices,
     itemChallengeGoals
   );
-  const needsPlayArea = hasPlayAreaRuntimeListeners_(scene, goalsForRuntime);
+  const needsPlayArea = hasPlayAreaRuntimeListeners_(runtimeScene, goalsForRuntime);
 
   if (!needsItems && !needsPlayArea) {
-    return bindRuntimeScriptToRobotNode_(scene);
+    return bindRuntimeScriptToRobotNode_(runtimeScene);
   }
 
   const canPoseGoals = itemChallengeGoals.filter(isCanPoseChallengeGoal_);
   const needsRefresh =
     customChallengeRuntimeScriptIsStale_(existing) ||
-    sceneNeedsPlayAreaRuntimeRefresh_(scene, existing) ||
+    sceneNeedsPlayAreaRuntimeRefresh_(runtimeScene, existing) ||
     (canPoseGoals.length > 0 && !scriptCoversCanPoseGoals_(existing, canPoseGoals));
 
   if (!needsRefresh) {
-    return bindRuntimeScriptToRobotNode_(scene);
+    return bindRuntimeScriptToRobotNode_(runtimeScene);
   }
 
   return applyCustomChallengeRuntimeIfNeeded_(
-    scene,
+    runtimeScene,
     worldItems,
     goalsForRuntime,
     itemSuccessChoices,

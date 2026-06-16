@@ -57,7 +57,7 @@ export class Space {
   private engine: Engine;
   private workingCanvas: HTMLCanvasElement;
   private bScene_: babylonScene;
-  private hl: HighlightLayer;
+  private hl?: HighlightLayer;
   private sceneBinding_: SceneBinding;
   private nextScene_: Scene | undefined;
   private gizmosEnabled_ = true;
@@ -116,7 +116,9 @@ export class Space {
     }
 
     const meshes = this.bScene_.getMeshesById(id) as Mesh[];
-    this.hl.addMesh(meshes[idx], Color3.Green());
+    const mesh = meshes[idx];
+    if (!mesh) return;
+    this.hl.addMesh(mesh, new Color3(0.45, 0.8, 0.7));
   }
 
   public unhighlight(id: string, idx = 0) {
@@ -125,7 +127,40 @@ export class Space {
     }
 
     const meshes = this.bScene_.getMeshesById(id) as Mesh[];
-    this.hl.removeMesh(meshes[idx]);
+    const mesh = meshes[idx];
+    if (!mesh) return;
+    this.hl.removeMesh(mesh);
+  }
+
+  public clearHighlights() {
+    if (!this.hl) return;
+    this.hl.dispose();
+    this.hl = undefined;
+  }
+
+  private sceneWithCustomChallengeRobotStartingOrigins_(scene: Scene): Scene {
+    if (!sceneHasCustomChallengeRuntime(scene)) return scene;
+
+    let nodes = scene.nodes;
+    let changed = false;
+    for (const robotId of Dict.keySet(Scene.robots(scene))) {
+      const robot = nodes[robotId];
+      if (!robot?.startingOrigin || robot.origin === robot.startingOrigin) continue;
+      changed = true;
+      nodes = {
+        ...nodes,
+        [robotId]: {
+          ...robot,
+          origin: {
+            position: robot.startingOrigin.position,
+            orientation: robot.startingOrigin.orientation,
+            scale: robot.startingOrigin.scale,
+          },
+        },
+      };
+    }
+
+    return changed ? { ...scene, nodes } : scene;
   }
 
   /**
@@ -154,7 +189,8 @@ export class Space {
   get scene() { return this.scene_; }
 
   set scene(scene: Scene) {
-    this.scene_ = scene;
+    const sceneToApply = this.sceneWithCustomChallengeRobotStartingOrigins_(scene);
+    this.scene_ = sceneToApply;
     if (this.sceneBinding_) {
       this.sceneBinding_.scriptManager.scene = this.scene_;
     }
@@ -163,10 +199,10 @@ export class Space {
     // debounceUpdate_ is true if we are currently updating the store
     if (this.sceneSetting_ || this.debounceUpdate_ || !this.sceneBinding_) {
       if (this.sceneBinding_ && !this.sceneSetting_) {
-        this.sceneBinding_.scene = scene;
+        this.sceneBinding_.scene = sceneToApply;
       }
       if (this.sceneSetting_ && !this.debounceUpdate_) {
-        this.nextScene_ = scene;
+        this.nextScene_ = sceneToApply;
       }
       return;
     }
@@ -176,7 +212,7 @@ export class Space {
       // Disable physics during scene changes to avoid objects moving before the scene is fully loaded
       this.bScene_.physicsEnabled = false;
       try {
-        await this.sceneBinding_.setScene(scene, Robots.loaded(store.getState().robots));
+        await this.sceneBinding_.setScene(sceneToApply, Robots.loaded(store.getState().robots));
         while (this.nextScene_) {
           const nextScene = this.nextScene_;
           this.nextScene_ = undefined;
@@ -197,6 +233,15 @@ export class Space {
     if (!this.sceneBinding_) return;
     this.sceneBinding_.scene = scene;
     this.sceneBinding_.scriptManager.scene = scene;
+  }
+
+  syncSelectedNodeFromScene(scene: Scene): void {
+    if (!this.sceneBinding_) {
+      this.scene_ = scene;
+      return;
+    }
+    this.sceneBinding_.syncSelectedNodeFromScene(scene);
+    this.scene_ = scene;
   }
 
   /**
@@ -301,7 +346,11 @@ export class Space {
 
 
     const mesh = eventData.pickInfo.pickedMesh;
-    const id = (mesh.metadata as SceneMeshMetadata).id;
+    const id = (mesh?.metadata as SceneMeshMetadata | undefined)?.id;
+    if (!id) {
+      this.onSelectNodeId?.(undefined);
+      return;
+    }
 
     this.sceneBinding_.scriptManager.trigger(ScriptManager.Event.click({
       nodeId: id,
