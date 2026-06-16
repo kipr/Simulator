@@ -59,7 +59,23 @@ const LoadingButton = withStyleDeep(Button, {
   backgroundColor: 'grey',
 });
 
-const LoadingOverlay = ({ challenge, loading, onStartClick, locale }: { challenge: AsyncChallenge; onStartClick: () => void; loading: boolean; locale: LocalizedString.Language; }) => {
+interface LoadingOverlayProps {
+  challenge: AsyncChallenge;
+  onStartClick: () => void;
+  loading: boolean;
+  locale: LocalizedString.Language;
+  fallbackName?: LocalizedString;
+  fallbackDescription?: LocalizedString;
+}
+
+const LoadingOverlay = ({
+  challenge,
+  loading,
+  onStartClick,
+  locale,
+  fallbackName,
+  fallbackDescription,
+}: LoadingOverlayProps) => {
   const didChallengeFail: boolean = Async.isFailed(challenge);
 
   if (didChallengeFail) {
@@ -73,7 +89,9 @@ const LoadingOverlay = ({ challenge, loading, onStartClick, locale }: { challeng
   }
 
   const latestChallenge = Async.latestValue(challenge);
-  if (!latestChallenge) return null;
+  const name = latestChallenge?.name ?? fallbackName;
+  const description = latestChallenge?.description ?? fallbackDescription;
+  if (!name) return null;
 
   return (
     <Container>
@@ -81,11 +99,13 @@ const LoadingOverlay = ({ challenge, loading, onStartClick, locale }: { challeng
         {LocalizedString.lookup(tr('CHALLENGE'), locale)}
       </TitleContainer>
       <NameContainer>
-        {LocalizedString.lookup(latestChallenge.name, locale)}
+        {LocalizedString.lookup(name, locale)}
       </NameContainer>
-      <DescriptionContainer>
-        {LocalizedString.lookup(latestChallenge.description, locale)}
-      </DescriptionContainer>
+      {description && (
+        <DescriptionContainer>
+          {LocalizedString.lookup(description, locale)}
+        </DescriptionContainer>
+      )}
       <Spacer />
       <BottomBarContainer>
         <Spacer />
@@ -101,4 +121,10 @@ const LoadingOverlay = ({ challenge, loading, onStartClick, locale }: { challeng
 
 export default connect((state: ReduxState) => ({
   locale: state.i18n.locale,
-}))(LoadingOverlay) as React.ComponentType<{ challenge: AsyncChallenge; onStartClick: () => void; loading: boolean; }>;
+}))(LoadingOverlay) as React.ComponentType<{
+  challenge: AsyncChallenge;
+  onStartClick: () => void;
+  loading: boolean;
+  fallbackName?: LocalizedString;
+  fallbackDescription?: LocalizedString;
+}>;
