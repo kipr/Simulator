@@ -280,6 +280,7 @@ class GuidedTour extends React.PureComponent<Props, State> {
   private scrollEl: HTMLElement | null = null;
   private prevComboBoxRootZIndex: string | null = null;
   private prevComboBoxRootPointerEvents: string | null = null;
+  private measureSeq_ = 0;
 
   componentDidMount() {
     this.ensurePortal();
@@ -291,20 +292,11 @@ class GuidedTour extends React.PureComponent<Props, State> {
 
   componentDidUpdate(prevProps: Props, prevState: State) {
 
-    /*
-      Continue tour flag needed because some tour steps trigger dialogs or other
-      UI that require waiting for a target to appear before advancing the tour.
-    */
     if (prevProps.continueTourFlag !== this.props.continueTourFlag && this.props.continueTourFlag) {
-      const nextStepIndex = this.state.stepIndex + 1;
-      if (nextStepIndex < this.props.steps.length) {
-        this.setState({ stepIndex: nextStepIndex, subStepIndex: this.state.subStepIndex + 1 },
-          () => {
-            this.measure(true);
-            this.props.onNextClick(nextStepIndex);
-
-          });
-
+      if (this.currentStep()?.advanceOnContinue) {
+        this.next();
+      } else {
+        this.measure(true);
       }
     }
 
@@ -319,6 +311,21 @@ class GuidedTour extends React.PureComponent<Props, State> {
         { stepIndex: this.props.initialStepIndex ?? 0, rect: null },
         () => {
           this.openTour();
+          this.props.onStepIndexChange?.(this.props.initialStepIndex ?? 0);
+        }
+      );
+      return;
+    }
+    if (
+      this.props.isOpen &&
+      prevProps.initialStepIndex !== this.props.initialStepIndex &&
+      this.props.initialStepIndex !== undefined &&
+      this.props.initialStepIndex !== this.state.stepIndex
+    ) {
+      this.setState(
+        { stepIndex: this.props.initialStepIndex, subStepIndex: 0, rect: null },
+        () => {
+          this.measure(true);
           this.props.onStepIndexChange?.(this.props.initialStepIndex ?? 0);
         }
       );
@@ -391,6 +398,7 @@ class GuidedTour extends React.PureComponent<Props, State> {
   }
 
   private cancelMeasure() {
+    this.measureSeq_ += 1;
     if (this.rafMeasure !== null) {
       cancelAnimationFrame(this.rafMeasure);
       this.rafMeasure = null;
@@ -484,25 +492,7 @@ class GuidedTour extends React.PureComponent<Props, State> {
     const el = this.props.registry.get(step.advanceClickTargetKey ?? step.targetKey);
     if (!el) return;
 
-    const handler = (e: Event) => {
-
-      const nextStep = this.props.steps[this.state.stepIndex + 1];
-      if (!nextStep) {
-        this.next();
-        return;
-      }
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          void (async () => {
-            const nextEl = await this.waitForTarget(nextStep.targetKey, 3000);
-            if (nextEl) {
-              this.next();
-            }
-          })();
-        });
-      });
-    };
+    const handler = () => this.measure(true);
     el.addEventListener("click", handler, true);
     this.targetClickCleanup = () => el.removeEventListener("click", handler, true);
   }
@@ -523,16 +513,28 @@ class GuidedTour extends React.PureComponent<Props, State> {
   }
   private measure(scrollIntoView: boolean) {
     this.cancelMeasure();
+    const measureSeq = this.measureSeq_;
+    const stepIndex = this.state.stepIndex;
 
     this.rafMeasure = requestAnimationFrame(() => {
+      this.rafMeasure = null;
       void (async () => {
         const step = this.currentStep();
         if (!step) {
+          if (measureSeq !== this.measureSeq_) return;
           this.setState({ rect: null });
           return;
         }
+        const targetKey = step.targetKey;
 
-        const el = await this.waitForTarget(step.targetKey, 3000);
+        const el = await this.waitForTarget(targetKey, 3000);
+        if (
+          measureSeq !== this.measureSeq_ ||
+          this.state.stepIndex !== stepIndex ||
+          this.currentStep()?.targetKey !== targetKey
+        ) {
+          return;
+        }
         if (!el) {
           this.setState({ rect: null });
           return;
@@ -553,6 +555,13 @@ class GuidedTour extends React.PureComponent<Props, State> {
         const pad = step.padding ?? 10;
         const raw = el.getBoundingClientRect();
         const clipped = this.getClippedRect(el, raw);
+        if (
+          measureSeq !== this.measureSeq_ ||
+          this.state.stepIndex !== stepIndex ||
+          this.currentStep()?.targetKey !== targetKey
+        ) {
+          return;
+        }
 
         if (!clipped || clipped.width <= 0 || clipped.height <= 0) {
           this.setState({ rect: null });
@@ -652,6 +661,21 @@ class GuidedTour extends React.PureComponent<Props, State> {
   }
   private next = () => {
     const { stepIndex, subSteps, selectedTourSection, subStepIndex } = this.state;
+    if (this.currentStep()?.endsTour) {
+      this.finish();
+      return;
+    }
+    const explicitNextStepId = this.currentStep()?.nextStepId;
+    if (explicitNextStepId) {
+      const explicitNextStepIndex = this.props.steps.findIndex(
+        step => step.id === explicitNextStepId
+      );
+      if (explicitNextStepIndex >= 0) {
+        this.props.onNextClick?.(explicitNextStepIndex);
+        this.setState({ stepIndex: explicitNextStepIndex, subStepIndex: 0 });
+        return;
+      }
+    }
 
     if (subSteps && selectedTourSection) {
       const introStepsCount = 2;
@@ -861,6 +885,9 @@ class GuidedTour extends React.PureComponent<Props, State> {
     const rect = this.state.rect;
     const dimopacity = this.props.dimopacity ?? 0.65;
     const allowTargetInteraction = step.allowTargetInteraction !== false;
+    const hideNextButton =
+      step.noNextButton &&
+      (step.advanceOnContinue || step.advanceOnTargetClick);
     const tourSections = getTourSections(locale);
     const OPTIONS: ComboBox.Option[] =
       Object.keys(this.props.steps[1]?.subTourSteps ?? {}).map((key) => ({
@@ -1020,11 +1047,13 @@ class GuidedTour extends React.PureComponent<Props, State> {
                 {step.backLabel ?? LocalizedString.lookup(tr('Back'), locale)}
               </button>)}
 
-              {step.noNextButton ? null : (<button onClick={this.next} style={btnStyle(false, true)}>
-                {this.state.stepIndex === this.props.steps.length - 1
-                  ? step.doneLabel ?? LocalizedString.lookup(tr('Done'), locale)
-                  : step.nextLabel ?? LocalizedString.lookup(tr('Next'), locale)}
-              </button>)}
+              {hideNextButton ? null : (
+                <button onClick={this.next} style={btnStyle(false, true)}>
+                  {step.endsTour || this.state.stepIndex === this.props.steps.length - 1
+                    ? step.doneLabel ?? LocalizedString.lookup(tr('Done'), locale)
+                    : step.nextLabel ?? LocalizedString.lookup(tr('Next'), locale)}
+                </button>
+              )}
 
               <button onClick={this.skip} style={btnStyle(false, false)}>
                 {step.skipLabel ?? LocalizedString.lookup(tr('Skip'), locale)}

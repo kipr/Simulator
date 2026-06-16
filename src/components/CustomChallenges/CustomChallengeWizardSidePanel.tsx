@@ -7,6 +7,8 @@ import tr from '@i18n';
 import { FontAwesome } from '../FontAwesome';
 import { faCheck, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import ScrollArea from '../interface/ScrollArea';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 export const WIZARD_SIDE_PANEL_ROOT_ID = 'mat-play-zones-panel-root';
 
@@ -101,6 +103,8 @@ export interface CustomChallengeWizardSidePanelProps extends ThemeProps {
   showBack?: boolean;
   /** Show checkmark and primary styling for the final wizard step (Create challenge). */
   isFinishStep?: boolean;
+  tourRegistry?: TourRegistry;
+  tourTargetKey?: string;
 }
 
 const CustomChallengeWizardSidePanel: React.FC<CustomChallengeWizardSidePanelProps> = ({
@@ -116,6 +120,8 @@ const CustomChallengeWizardSidePanel: React.FC<CustomChallengeWizardSidePanelPro
   continuePrimary = true,
   showBack = true,
   isFinishStep = false,
+  tourRegistry,
+  tourTargetKey,
 }) => {
   const [root, setRoot] = React.useState<HTMLElement | null>(null);
 
@@ -136,7 +142,7 @@ const CustomChallengeWizardSidePanel: React.FC<CustomChallengeWizardSidePanelPro
 
   if (!root) return null;
 
-  return ReactDOM.createPortal(
+  const panel_ = (
     <Panel theme={theme}>
       <Header theme={theme}>
         <Title>{stepLabel}</Title>
@@ -171,7 +177,15 @@ const CustomChallengeWizardSidePanel: React.FC<CustomChallengeWizardSidePanelPro
           )}
         </Button>
       </Footer>
-    </Panel>,
+    </Panel>
+  );
+
+  return ReactDOM.createPortal(
+    tourRegistry && tourTargetKey ? (
+      <TourTarget registry={tourRegistry} targetKey={tourTargetKey}>
+        {panel_}
+      </TourTarget>
+    ) : panel_,
     root
   );
 };

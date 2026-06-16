@@ -55,7 +55,10 @@ interface SelectSceneDialogState {
 const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
-  minHeight: '300px',
+  width: '100%',
+  minWidth: '700px',
+  minHeight: '360px',
+  maxHeight: '70vh',
 }));
 
 const SceneColumn = styled(ScrollArea, (props: ThemeProps) => ({
@@ -103,6 +106,9 @@ const MultiSelectToggle = styled('button', (props: ThemeProps & { $selected: boo
 
 const InfoColumn = styled('div', {
   flex: '1 1',
+  display: 'flex',
+  flexDirection: 'column',
+  minWidth: 0,
 });
 
 const InfoContainer = styled('div', (props: ThemeProps) => ({
@@ -119,6 +125,10 @@ const InfoText = styled('span', (props: ThemeProps) => ({
 const InstructionsBody = styled('div', (props: ThemeProps) => ({
   padding: `${props.theme.itemPadding * 2}px`,
   lineHeight: 1.5,
+  width: '100%',
+  minWidth: '700px',
+  minHeight: '360px',
+  maxHeight: '70vh',
   userSelect: 'none',
 }));
 
@@ -228,10 +238,19 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
           <FontAwesome icon={faChevronLeft} /> {LocalizedString.lookup(tr('Back'), locale)}
         </DialogBarButton>
         <Spacer />
-        <DialogBarButton theme={theme} onClick={this.onEnterSandbox_}>
-          {LocalizedString.lookup(tr('Continue'), locale)}{' '}
-          <FontAwesome icon={faChevronRight} />
-        </DialogBarButton>
+        {tourRegistry ? (
+          <TourTarget registry={tourRegistry} targetKey="create-your-own-challenge-continue">
+            <DialogBarButton theme={theme} onClick={this.onEnterSandbox_}>
+              {LocalizedString.lookup(tr('Continue'), locale)}{' '}
+              <FontAwesome icon={faChevronRight} />
+            </DialogBarButton>
+          </TourTarget>
+        ) : (
+          <DialogBarButton theme={theme} onClick={this.onEnterSandbox_}>
+            {LocalizedString.lookup(tr('Continue'), locale)}{' '}
+            <FontAwesome icon={faChevronRight} />
+          </DialogBarButton>
+        )}
       </DialogBarRow>
     );
 
@@ -274,9 +293,17 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
           {LocalizedString.lookup(tr('Delete'), locale)}{canDeleteSelected ? ` (${selectedDeleteSceneIds.length})` : ''}
         </DialogBarButton>
         <Spacer />
-        <DialogBarButton theme={theme} onClick={this.onAccept}>
-          <FontAwesome icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
-        </DialogBarButton>
+        {tourRegistry ? (
+          <TourTarget registry={tourRegistry} targetKey="open-scene-accept">
+            <DialogBarButton theme={theme} onClick={this.onAccept}>
+              <FontAwesome icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
+            </DialogBarButton>
+          </TourTarget>
+        ) : (
+          <DialogBarButton theme={theme} onClick={this.onAccept}>
+            <FontAwesome icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
+          </DialogBarButton>
+        )}
       </DialogBarRow>
     );
 
@@ -293,7 +320,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
         </SceneColumn>
         <InfoColumn>
           {tourRegistry ? (
-            <TourTarget registry={tourRegistry} targetKey="open-scene-info">
+            <TourTarget registry={tourRegistry} targetKey="open-scene-info" style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
               {infoColumn_}
             </TourTarget>
           ) : (
@@ -305,11 +332,23 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
 
     const body_ = showCreateYourOwnInstructions ? instructionsBody_ : scenePickerBody_;
     const bar_ = showCreateYourOwnInstructions ? instructionsBar_ : scenePickerBar_;
+    const tourBody_ =
+      showCreateYourOwnInstructions && tourRegistry ? (
+        <TourTarget registry={tourRegistry} targetKey="create-your-own-challenge-instructions" style={{ width: '100%' }}>
+          {body_}
+        </TourTarget>
+      ) : (
+        body_
+      );
 
     const tourContent_ = (
       <Dialog name={dialogName} theme={theme} onClose={onClose} tourRegistry={tourRegistry}>
-        <TourTarget registry={tourRegistry} targetKey={'open-scene-dialog'} style={{ position: 'relative' }}>
-          {body_}
+        <TourTarget
+          registry={tourRegistry}
+          targetKey={'open-scene-dialog'}
+          style={{ position: 'relative', display: 'flex', flexDirection: 'column', width: '100%', minWidth: '700px', minHeight: '420px' }}
+        >
+          {tourBody_}
           {bar_}
         </TourTarget>
       </Dialog>
@@ -349,7 +388,9 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
     const { selectedSceneId } = this.state;
 
     if (selectedSceneId === CREATE_YOUR_OWN_SCENE_OPTION_ID) {
-      this.setState({ showCreateYourOwnInstructions: true });
+      this.setState({ showCreateYourOwnInstructions: true }, () => {
+        this.props.continueTour?.();
+      });
       return;
     }
 
@@ -370,6 +411,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
 
   private onEnterSandbox_ = () => {
     this.props.onStartCustomChallengeSetup?.();
+    this.props.continueTour?.();
   };
 
   private isSceneDeletable_ = (sceneId: string): boolean => {
@@ -418,10 +460,10 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
   };
 
   private createCreateYourOwnSceneName = () => {
-    const { theme, locale } = this.props;
+    const { theme, locale, tourRegistry } = this.props;
     const { selectedSceneId } = this.state;
 
-    return (
+    const option = (
       <SceneName
         key={CREATE_YOUR_OWN_SCENE_OPTION_ID}
         theme={theme}
@@ -431,6 +473,11 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
         {LocalizedString.lookup(tr('Create Your Own Challenge'), locale)}
       </SceneName>
     );
+    return tourRegistry ? (
+      <TourTarget registry={tourRegistry} targetKey="create-your-own-challenge-option">
+        {option}
+      </TourTarget>
+    ) : option;
   };
 
   private createSelectedSceneInfo = (scenes: Scenes) => {

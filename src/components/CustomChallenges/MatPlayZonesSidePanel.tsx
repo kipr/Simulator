@@ -16,6 +16,8 @@ import ScrollArea from '../interface/ScrollArea';
 import JbcCatalogItemPicker, { ItemPickerEntry } from './JbcCatalogItemPicker';
 import JbcCatalogGeometryPicker from './JbcCatalogGeometryPicker';
 import JbcCatalogSuccessGoalPicker from './JbcCatalogSuccessGoalPicker';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 import {
   JBC_CATALOG_GEOMETRIES,
   JbcCatalogGeometry,
@@ -51,12 +53,15 @@ export interface MatPlayZonesSidePanelProps extends ThemeProps {
   onActiveZoneChange: (zoneId: string) => void;
   onZonesChange: (zones: MatPlayZone[]) => void;
   onWorldItemToggle: (entry: ItemPickerEntry, selected: boolean) => void;
+  onAddPaperReam: () => void;
   onGeometryToggle: (entry: JbcCatalogGeometry, selected: boolean) => void;
   onAddZone: () => void;
   onDeleteZone: (zoneId: string) => void;
   onBack: () => void;
   onContinue: () => void;
   onCancel: () => void;
+  tourRegistry?: TourRegistry;
+  tourTargetKey?: string;
 }
 
 const PANEL_ROOT_ID = 'mat-play-zones-panel-root';
@@ -245,15 +250,21 @@ const MatPlayZonesSidePanel: React.FC<MatPlayZonesSidePanelProps> = ({
   onActiveZoneChange,
   onZonesChange,
   onWorldItemToggle,
+  onAddPaperReam,
   onGeometryToggle,
   onAddZone,
   onDeleteZone,
   onBack,
   onContinue,
   onCancel,
+  tourRegistry,
+  tourTargetKey,
 }) => {
   const [root, setRoot] = React.useState<HTMLElement | null>(null);
   const [playAreaExpanded, setPlayAreaExpanded] = React.useState(false);
+  const [markersExpanded, setMarkersExpanded] = React.useState(
+    selectedGeometryKeys.length > 0
+  );
 
   React.useEffect(() => {
     let el = document.getElementById(PANEL_ROOT_ID);
@@ -269,6 +280,12 @@ const MatPlayZonesSidePanel: React.FC<MatPlayZonesSidePanelProps> = ({
       }
     };
   }, []);
+
+  React.useEffect(() => {
+    if (selectedGeometryKeys.length > 0) {
+      setMarkersExpanded(true);
+    }
+  }, [selectedGeometryKeys.length]);
 
   const activeZone = zones.find(z => z.id === activeZoneId) ?? zones[0];
 
@@ -312,7 +329,18 @@ const MatPlayZonesSidePanel: React.FC<MatPlayZonesSidePanelProps> = ({
 
   if (!root) return null;
 
-  const panelFooter = (
+  const wrapTarget_ = (
+    targetKey: string,
+    children: React.ReactNode
+  ): React.ReactNode =>
+    tourRegistry ? (
+      <TourTarget registry={tourRegistry} targetKey={targetKey}>
+        <div>{children}</div>
+      </TourTarget>
+    ) : children;
+
+  const panelFooter = wrapTarget_(
+    'custom-challenge-mat-setup-continue',
     <Footer theme={theme}>
       <Button theme={theme} type="button" onClick={onCancel}>
         {LocalizedString.lookup(tr('Cancel'), locale)}
@@ -328,7 +356,8 @@ const MatPlayZonesSidePanel: React.FC<MatPlayZonesSidePanelProps> = ({
     </Footer>
   );
 
-  const matItemsSection = (
+  const objectsSection = wrapTarget_(
+    'custom-challenge-mat-setup-objects',
     <>
       <SectionTitle theme={theme}>
         {LocalizedString.lookup(tr('Objects'), locale)}
@@ -340,15 +369,24 @@ const MatPlayZonesSidePanel: React.FC<MatPlayZonesSidePanelProps> = ({
           catalog={worldItems}
           selectedItemKeys={new Set(selectedWorldItemKeys)}
           onToggle={onWorldItemToggle}
+          onAddPaperReam={onAddPaperReam}
           showUsedIn={false}
           helpText={tr('Place cans, reams, and other objects on the mat.')}
           listMaxHeight="22vh"
         />
       </div>
+    </>
+  );
 
+  const markersSection = wrapTarget_(
+    'custom-challenge-mat-setup-markers',
+    <>
       <CollapsibleSection
         theme={theme}
-        {...(selectedGeometryKeys.length > 0 ? { open: true } : {})}
+        open={markersExpanded}
+        onToggle={(e: React.SyntheticEvent<HTMLDetailsElement>) => {
+          setMarkersExpanded(e.currentTarget.open);
+        }}
       >
         <CollapsibleSummary theme={theme}>
           {LocalizedString.lookup(tr('Markers'), locale)}
@@ -369,7 +407,8 @@ const MatPlayZonesSidePanel: React.FC<MatPlayZonesSidePanelProps> = ({
     </>
   );
 
-  const playAreaSection = (
+  const playAreaSection = wrapTarget_(
+    'custom-challenge-mat-setup-play-areas',
     <>
       {!playAreaExpanded && (
         <InfoTag theme={theme}>
@@ -553,7 +592,7 @@ const MatPlayZonesSidePanel: React.FC<MatPlayZonesSidePanelProps> = ({
     </>
   );
 
-  return ReactDOM.createPortal(
+  const panel_ = (
     <Panel theme={theme}>
       <Header theme={theme}>
         <Title>{stepLabel}</Title>
@@ -564,13 +603,22 @@ const MatPlayZonesSidePanel: React.FC<MatPlayZonesSidePanelProps> = ({
 
       <Body>
         <ScrollArea theme={theme} style={{ height: '100%' }}>
-          {matItemsSection}
+          {objectsSection}
+          {markersSection}
           {playAreaSection}
         </ScrollArea>
       </Body>
 
       {panelFooter}
-    </Panel>,
+    </Panel>
+  );
+
+  return ReactDOM.createPortal(
+    tourRegistry && tourTargetKey ? (
+      <TourTarget registry={tourRegistry} targetKey={tourTargetKey}>
+        {panel_}
+      </TourTarget>
+    ) : panel_,
     root
   );
 };

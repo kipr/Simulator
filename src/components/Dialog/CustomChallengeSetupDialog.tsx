@@ -11,8 +11,8 @@ import { faCheck, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-
 import Input from '../interface/Input';
 import TextArea from '../interface/TextArea';
 import Field from '../interface/Field';
-import Scene from '../../state/State/Scene';
-import Challenge, { ChallengeBrief } from '../../state/State/Challenge';
+import Scene, { AsyncScene } from '../../state/State/Scene';
+import Challenge, { AsyncChallenge, ChallengeBrief } from '../../state/State/Challenge';
 import Async from '../../state/State/Async';
 import Dict from '../../util/objectOps/Dict';
 import Event from '../../state/State/Challenge/Event';
@@ -22,6 +22,7 @@ import { ChallengeCompletionsAction, ChallengesAction, ScenesAction } from '../.
 import MatPlayZonesSidePanel from '../CustomChallenges/MatPlayZonesSidePanel';
 import MatZoneEditOverlay from '../CustomChallenges/MatZoneEditOverlay';
 import CustomChallengeRulesSidePanel from '../CustomChallenges/CustomChallengeRulesSidePanel';
+import { Distance } from '../../util';
 import {
   applyCustomChallengeMatPlacementToScene,
   applySandboxMatPlacementToScene,
@@ -61,8 +62,10 @@ import {
   matPlayZonesFromScene,
   newPlayZone,
   rebindSimulatorControls,
+  syncMatPlayZoneSurfaceMeshes,
 } from '../../util/jbcMatPlayArea';
 import { isPlayAreaSuccessEventId, playZonesForRuntimeScript } from '../../util/playAreaSuccessGoals';
+import { setMatZoneEditSession } from '../../util/matZoneEditSession';
 import {
   buildOppositeFailureGoals,
   friendlyFailureGoals,
@@ -85,19 +88,31 @@ import {
   forceCustomChallengeRuntimeScriptOnScene,
   reinstantiateCustomChallengeRuntimeScript,
 } from '../../util/customChallengeSceneScripts';
-import ChallengeCompletion from '../../state/State/ChallengeCompletion';
+import { saveCustomChallengeTourSandboxHandoff } from '../../util/customChallengeStorage';
+import ChallengeCompletion, {
+  AsyncChallengeCompletion,
+} from '../../state/State/ChallengeCompletion';
 import { Space } from '../../simulator/Space';
+import { sprintf } from 'sprintf-js';
+import { ReferenceFramewUnits, RotationwUnits } from '../../util/math/unitMath';
+import { TourRegistry } from '../../tours/TourRegistry';
+import TourTarget from '../Tours/TourTarget';
 
 export interface CustomChallengeSetupDialogPublicProps extends ThemeProps {
   onClose: () => void;
   editingChallengeId?: string;
+  tourRegistry?: TourRegistry;
+  continueTour?: () => void;
 }
 
 interface CustomChallengeSetupDialogPrivateProps {
   locale: LocalizedString.Language;
   sandboxScene: Scene | null;
+  editingSceneAsync: AsyncScene | null;
   editingScene: Scene | null;
+  editingChallengeAsync: AsyncChallenge | null;
   editingChallenge: Challenge | null;
+  editingChallengeCompletionAsync: AsyncChallengeCompletion | null;
 }
 
 type Props = CustomChallengeSetupDialogPublicProps &
@@ -137,6 +152,18 @@ interface WizardState {
   /** Auto-generated opposites the author removed on the failure step. */
   removedFailureEventIds: string[];
   itemSuccessChoices: Record<string, ItemSuccessOutcomeId>;
+}
+
+interface EditSessionSnapshot {
+  challengeId: string;
+  sceneAsync: AsyncScene;
+  challengeAsync: AsyncChallenge;
+  challengeCompletionAsync?: AsyncChallengeCompletion;
+}
+
+function cloneJson_<T>(value: T): T {
+  if (value === undefined || value === null) return value;
+  return JSON.parse(JSON.stringify(value)) as T;
 }
 
 function uniqueBy_<T, K>(values: T[], keyOf: (value: T) => K): T[] {
@@ -189,14 +216,116 @@ const NavButton = styled('button', (props: ThemeProps & { $primary?: boolean }) 
 
 class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState> {
   private initializedForEditId_: string | null = null;
+  private editSessionSnapshot_: EditSessionSnapshot | null = null;
+  private restoredOnCancel_ = false;
 
   constructor(props: Props) {
     super(props);
     this.state = this.initialStateFromProps_(props);
   }
 
+  componentWillUnmount() {
+    this.clearWizardVisualState_({
+      syncRuntimePlacement: !this.restoredOnCancel_,
+    });
+  }
+
+  private clearWizardVisualState_ = (
+    options: { syncRuntimePlacement?: boolean } = {}
+  ) => {
+    if (options.syncRuntimePlacement !== false) {
+      this.syncEditingMatPlacementRuntime_();
+    }
+    setMatZoneEditSession(null);
+    syncMatPlayZoneSurfaceMeshes([]);
+    Space.getInstance().clearHighlights();
+  };
+
+  private closeWithoutRevert_ = () => {
+    this.clearWizardVisualState_();
+    this.props.onClose();
+  };
+
+  private captureEditingSnapshot_(props: Props): void {
+    const {
+      editingChallengeId,
+      editingSceneAsync,
+      editingChallengeAsync,
+      editingChallengeCompletionAsync,
+    } = props;
+
+    if (!editingChallengeId || !editingSceneAsync || !editingChallengeAsync) {
+      this.editSessionSnapshot_ = null;
+      this.restoredOnCancel_ = false;
+      return;
+    }
+
+    if (this.editSessionSnapshot_?.challengeId === editingChallengeId) return;
+
+    this.editSessionSnapshot_ = {
+      challengeId: editingChallengeId,
+      sceneAsync: cloneJson_(editingSceneAsync),
+      challengeAsync: cloneJson_(editingChallengeAsync),
+      challengeCompletionAsync: editingChallengeCompletionAsync
+        ? cloneJson_(editingChallengeCompletionAsync)
+        : undefined,
+    };
+    this.restoredOnCancel_ = false;
+  }
+
+  private restoreEditingSnapshot_ = () => {
+    const snapshot = this.editSessionSnapshot_;
+    if (!snapshot) return;
+
+    const sceneAsync = cloneJson_(snapshot.sceneAsync);
+    const challengeAsync = cloneJson_(snapshot.challengeAsync);
+    this.props.dispatch(
+      ScenesAction.setSceneInternal({
+        sceneId: snapshot.challengeId,
+        scene: sceneAsync,
+      })
+    );
+    this.props.dispatch(
+      ChallengesAction.setChallengeInternal({
+        challengeId: snapshot.challengeId,
+        challenge: challengeAsync,
+      })
+    );
+    if (snapshot.challengeCompletionAsync !== undefined) {
+      this.props.dispatch(
+        ChallengeCompletionsAction.setChallengeCompletionInternal({
+          challengeId: snapshot.challengeId,
+          challengeCompletion: cloneJson_(snapshot.challengeCompletionAsync),
+        })
+      );
+    }
+
+    const restoredScene = Async.latestValue(sceneAsync);
+    if (!restoredScene) return;
+
+    Space.getInstance().scene = restoredScene;
+    const binding = Space.getInstance().sceneBinding;
+    if (binding) {
+      reinstantiateCustomChallengeRuntimeScript(binding.scriptManager, restoredScene);
+    }
+  };
+
+  private onCancel_ = () => {
+    if (this.props.editingChallengeId) {
+      this.restoredOnCancel_ = true;
+      this.restoreEditingSnapshot_();
+      this.clearWizardVisualState_({ syncRuntimePlacement: false });
+      this.props.onClose();
+      return;
+    }
+
+    this.closeWithoutRevert_();
+  };
+
   private initialStateFromProps_(props: Props): WizardState {
     if (!props.editingChallengeId || !props.editingScene || !props.editingChallenge) {
+      this.editSessionSnapshot_ = null;
+      this.restoredOnCancel_ = false;
       const playZones = defaultPlayZones();
       return {
         step: Step.Details,
@@ -218,6 +347,7 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
     }
 
     const { editingScene, editingChallenge } = props;
+    this.captureEditingSnapshot_(props);
     const placement = matPlacementFromScene(editingScene);
     const placementKeys = new Set([
       ...placement.worldItemKeys,
@@ -316,6 +446,7 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
     }
     if (this.state.step === Step.DefineArea && prevState.step !== Step.DefineArea) {
       rebindSimulatorControls();
+      this.syncEditingMatPlacementPreview_();
       this.syncSandboxMatPlacement_();
     } else if (prevState.step === Step.DefineArea && this.state.step !== Step.DefineArea) {
       rebindSimulatorControls();
@@ -361,6 +492,32 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
     dispatch(ScenesAction.setScene({ sceneId: JBC_SANDBOX_SCENE_ID, scene }));
   };
 
+  private syncEditingMatPlacementPreview_ = () => {
+    this.syncEditingMatPlacement_(true);
+  };
+
+  private syncEditingMatPlacementRuntime_ = () => {
+    this.syncEditingMatPlacement_(false);
+  };
+
+  private syncEditingMatPlacement_ = (authoringPreview: boolean) => {
+    const sceneId = this.props.editingChallengeId;
+    if (!sceneId) return;
+
+    const spaceScene = Space.getInstance().scene;
+    const sourceScene =
+      spaceScene && spaceScene !== Scene.EMPTY ? spaceScene : this.props.editingScene;
+    if (!sourceScene) return;
+
+    const scene = applyCustomChallengeMatPlacementToScene(
+      sourceScene,
+      this.matPlacement_(),
+      { authoringPreview }
+    );
+    this.props.dispatch(ScenesAction.setScene({ sceneId, scene }));
+    Space.getInstance().scene = scene;
+  };
+
   private hideAllSandboxWorldItems_ = () => {
     if (this.props.editingChallengeId) return;
     const { sandboxScene, dispatch } = this.props;
@@ -373,10 +530,89 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
     dispatch(ScenesAction.setScene({ sceneId: JBC_SANDBOX_SCENE_ID, scene }));
   };
 
+  private sourceSceneForPaperReamAdd_ = (): Scene | null => {
+    if (!this.props.editingChallengeId) return this.props.sandboxScene;
+    const spaceScene = Space.getInstance().scene;
+    return spaceScene && spaceScene !== Scene.EMPTY
+      ? spaceScene
+      : this.props.editingScene;
+  };
+
+  private nextPaperReamIndex_ = (scene: Scene): number => {
+    let max = 0;
+    for (const nodeId of Object.keys(scene.nodes)) {
+      const match = /^ream(\d+)$/i.exec(nodeId);
+      if (!match) continue;
+      max = Math.max(max, Number(match[1]));
+    }
+    return max + 1;
+  };
+
+  private createPaperReamNode_ = (
+    index: number
+  ): Node => {
+    const row = Math.floor((index - 1) / 2);
+    const col = (index - 1) % 2;
+    const origin: ReferenceFramewUnits = {
+      position: {
+        x: Distance.centimeters(col === 0 ? -18 : 18),
+        y: Distance.centimeters(5),
+        z: Distance.centimeters(67.5 - row * 20),
+      },
+      orientation: RotationwUnits.eulerDegrees(90, 0, 0),
+    };
+
+    return {
+      type: 'from-jbc-template',
+      templateId: 'ream',
+      name: Dict.map(tr('Paper Ream %s'), (str: string) => sprintf(str, index)),
+      startingOrigin: origin,
+      origin,
+      editable: true,
+      visible: true,
+    };
+  };
+
+  private onAddPaperReam_ = () => {
+    const sourceScene = this.sourceSceneForPaperReamAdd_();
+    if (!sourceScene) return;
+
+    const index = this.nextPaperReamIndex_(sourceScene);
+    const nodeId = `ream${index}`;
+    const node: Node = this.createPaperReamNode_(index);
+    const nodes: Dict<Node> = {
+      ...sourceScene.nodes,
+      [nodeId]: node,
+    };
+
+    const selectedWorldItemKeys = Array.from(
+      new Set([...this.state.selectedWorldItemKeys, nodeId])
+    );
+    const scene = applySandboxMatPlacementToScene(
+      {
+        ...sourceScene,
+        nodes,
+      },
+      {
+        worldItemKeys: selectedWorldItemKeys,
+        geometryKeys: this.state.selectedGeometryKeys,
+      }
+    );
+    const sceneId = this.props.editingChallengeId ?? JBC_SANDBOX_SCENE_ID;
+
+    this.props.dispatch(ScenesAction.setScene({ sceneId, scene }));
+    Space.getInstance().scene = scene;
+    rebindSimulatorControls();
+    this.setState({ selectedWorldItemKeys });
+  };
+
   private onWorldItemToggle_ = (entry: ItemPickerEntry, selected: boolean) => {
     const keys = new Set(this.state.selectedWorldItemKeys);
-    if (selected) keys.add(entry.key);
-    else keys.delete(entry.key);
+    const itemKeys = 'itemKeys' in entry ? entry.itemKeys : [entry.key];
+    for (const key of itemKeys) {
+      if (selected) keys.add(key);
+      else keys.delete(key);
+    }
     this.syncWizardGoalsAndEvents_({
       selectedWorldItemKeys: Array.from(keys),
     });
@@ -682,7 +918,9 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
       geometryKeys: state.selectedGeometryKeys,
     };
     let scene = JSON.parse(JSON.stringify(sourceScene)) as Scene;
-    scene = applyCustomChallengeMatPlacementToScene(scene, placement);
+    scene = applyCustomChallengeMatPlacementToScene(scene, placement, {
+      authoringPreview: true,
+    });
     scene = applyMatPlayZonesToScene(scene, playZonesForRuntime, placement);
     scene.customChallengeItemSuccessChoices = { ...state.itemSuccessChoices };
     scene = forceCustomChallengeRuntimeScriptOnScene(
@@ -694,6 +932,7 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
         challengeFailureGoals: state.failureGoals,
         successPredicate: success,
         failurePredicate: failure,
+        authoringPreview: true,
       }
     );
     dispatch(ScenesAction.setScene({ sceneId: challengeId, scene }));
@@ -709,6 +948,10 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
 
   private onBack_ = () => {
     this.setState({ step: Math.max(Step.Details, this.state.step - 1) as Step });
+  };
+
+  private continueTourAfterStepChange_ = () => {
+    this.props.continueTour?.();
   };
 
   private onNext_ = () => {
@@ -732,7 +975,7 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
             ...failureGoals,
           ]),
         };
-      });
+      }, this.continueTourAfterStepChange_);
       return;
     }
     if (this.state.step === Step.Failure) {
@@ -744,10 +987,10 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
           ...mergedSuccessGoals,
           ...prev.failureGoals,
         ]),
-      }));
+      }), this.continueTourAfterStepChange_);
       return;
     }
-    this.setState({ step: (this.state.step + 1) as Step });
+    this.setState({ step: (this.state.step + 1) as Step }, this.continueTourAfterStepChange_);
   };
 
 
@@ -889,7 +1132,6 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
       editingChallengeId,
       dispatch,
       navigate,
-      onClose,
     } = this.props;
     if (!uid) return;
 
@@ -1005,8 +1247,13 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
       );
     }
 
-    onClose();
+    this.closeWithoutRevert_();
     if (!editingChallengeId) {
+      if (this.props.tourRegistry) {
+        saveCustomChallengeTourSandboxHandoff();
+        window.location.href = `/scene/${JBC_SANDBOX_SCENE_ID}`;
+        return;
+      }
       navigate(`/scene/${challengeId}`);
     }
   };
@@ -1014,32 +1261,47 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
   private renderDetailsStep_ = () => {
     const { theme, locale } = this.props;
     const { name, description } = this.state;
+    const wrapTarget_ = (
+      targetKey: string,
+      children: React.ReactNode
+    ): React.ReactNode =>
+      this.props.tourRegistry ? (
+        <TourTarget registry={this.props.tourRegistry} targetKey={targetKey}>
+          {children}
+        </TourTarget>
+      ) : children;
     return (
       <div style={{ padding: theme.itemPadding * 2 }}>
-        <Field name={LocalizedString.lookup(tr('Name'), locale)} theme={theme} long>
-          <Input
-            theme={theme}
-            value={name}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              this.setState({ name: e.currentTarget.value })
-            }
-          />
-        </Field>
-        <Field name={LocalizedString.lookup(tr('Description'), locale)} theme={theme} multiline>
-          <TextArea
-            theme={theme}
-            value={description}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              this.setState({ description: e.currentTarget.value })
-            }
-          />
-        </Field>
+        {wrapTarget_(
+          'custom-challenge-name-field',
+          <Field name={LocalizedString.lookup(tr('Name'), locale)} theme={theme} long>
+            <Input
+              theme={theme}
+              value={name}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                this.setState({ name: e.currentTarget.value })
+              }
+            />
+          </Field>
+        )}
+        {wrapTarget_(
+          'custom-challenge-description-field',
+          <Field name={LocalizedString.lookup(tr('Description'), locale)} theme={theme} multiline>
+            <TextArea
+              theme={theme}
+              value={description}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                this.setState({ description: e.currentTarget.value })
+              }
+            />
+          </Field>
+        )}
       </div>
     );
   };
 
   render() {
-    const { theme, locale, onClose } = this.props;
+    const { theme, locale } = this.props;
     const { step, playZones, activeZoneId, events, successGoals, failureGoals } = this.state;
     const isLast = step === Step.Review;
     const isFirst = step === Step.Details;
@@ -1071,12 +1333,15 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
             selectedWorldItemKeys={this.state.selectedWorldItemKeys}
             selectedGeometryKeys={this.state.selectedGeometryKeys}
             onWorldItemToggle={this.onWorldItemToggle_}
+            onAddPaperReam={this.onAddPaperReam_}
             onGeometryToggle={this.onGeometryToggle_}
             onAddZone={this.onAddPlayZone_}
             onDeleteZone={this.onDeletePlayZone_}
-            onCancel={onClose}
+            onCancel={this.onCancel_}
             onBack={this.onBack_}
             onContinue={this.onNext_}
+            tourRegistry={this.props.tourRegistry}
+            tourTargetKey="custom-challenge-mat-setup-panel"
           />
         </>
       );
@@ -1122,9 +1387,15 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
               this.syncWizardGoalsAndEvents_({ itemSuccessChoices })
             }
             onFailureGoalsChange={next => this.syncWizardGoalsAndEvents_({ failureGoals: next })}
-            onCancel={onClose}
+            onCancel={this.onCancel_}
             onBack={this.onBack_}
             onContinue={this.onNext_}
+            tourRegistry={this.props.tourRegistry}
+            tourTargetKey={`custom-challenge-${step === Step.Success
+              ? 'success'
+              : step === Step.Failure
+                ? 'failure'
+                : 'review'}-panel`}
             continueLabel={
               isLast
                 ? (this.props.editingChallengeId ? tr('Save changes') : tr('Create challenge'))
@@ -1145,14 +1416,17 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
             : tr('New custom challenge'),
           locale
         )}
-        onClose={onClose}
+        onClose={this.onCancel_}
+        tourRegistry={this.props.tourRegistry}
+        tourTargetKey="custom-challenge-setup-dialog"
+        maxWidth="1040px"
       >
         <StepIndicator theme={theme}>
           {stepLabel}
         </StepIndicator>
         <Body theme={theme}>{this.renderDetailsStep_()}</Body>
         <NavBar theme={theme}>
-          <NavButton theme={theme} type="button" onClick={onClose}>
+          <NavButton theme={theme} type="button" onClick={this.onCancel_}>
             {LocalizedString.lookup(tr('Cancel'), locale)}
           </NavButton>
           <div style={{ flex: 1 }} />
@@ -1161,22 +1435,43 @@ class CustomChallengeSetupDialog extends React.PureComponent<Props, WizardState>
               <FontAwesome icon={faChevronLeft} /> {LocalizedString.lookup(tr('Back'), locale)}
             </NavButton>
           )}
-          <NavButton theme={theme} type="button" $primary onClick={this.onNext_}>
-            {isLast ? (
-              <>
-                <FontAwesome icon={faCheck} />{' '}
-                {LocalizedString.lookup(
-                  this.props.editingChallengeId ? tr('Save changes') : tr('Create challenge'),
-                  locale
+          {this.props.tourRegistry ? (
+            <TourTarget registry={this.props.tourRegistry} targetKey="custom-challenge-details-continue">
+              <NavButton theme={theme} type="button" $primary onClick={this.onNext_}>
+                {isLast ? (
+                  <>
+                    <FontAwesome icon={faCheck} />{' '}
+                    {LocalizedString.lookup(
+                      this.props.editingChallengeId ? tr('Save changes') : tr('Create challenge'),
+                      locale
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {LocalizedString.lookup(tr('Continue'), locale)}{' '}
+                    <FontAwesome icon={faChevronRight} />
+                  </>
                 )}
-              </>
-            ) : (
-              <>
-                {LocalizedString.lookup(tr('Continue'), locale)}{' '}
-                <FontAwesome icon={faChevronRight} />
-              </>
-            )}
-          </NavButton>
+              </NavButton>
+            </TourTarget>
+          ) : (
+            <NavButton theme={theme} type="button" $primary onClick={this.onNext_}>
+              {isLast ? (
+                <>
+                  <FontAwesome icon={faCheck} />{' '}
+                  {LocalizedString.lookup(
+                    this.props.editingChallengeId ? tr('Save changes') : tr('Create challenge'),
+                    locale
+                  )}
+                </>
+              ) : (
+                <>
+                  {LocalizedString.lookup(tr('Continue'), locale)}{' '}
+                  <FontAwesome icon={faChevronRight} />
+                </>
+              )}
+            </NavButton>
+          )}
         </NavBar>
       </Dialog>
     );
@@ -1187,11 +1482,20 @@ export default connect(
   (state: ReduxState, ownProps: CustomChallengeSetupDialogPublicProps) => ({
     locale: state.i18n.locale,
     sandboxScene: Async.latestValue(state.scenes[JBC_SANDBOX_SCENE_ID]),
+    editingSceneAsync: ownProps.editingChallengeId
+      ? state.scenes[ownProps.editingChallengeId] ?? null
+      : null,
     editingScene: ownProps.editingChallengeId
       ? Async.latestValue(state.scenes[ownProps.editingChallengeId]) ?? null
       : null,
+    editingChallengeAsync: ownProps.editingChallengeId
+      ? state.challenges[ownProps.editingChallengeId] ?? null
+      : null,
     editingChallenge: ownProps.editingChallengeId
       ? Async.latestValue(state.challenges[ownProps.editingChallengeId]) ?? null
+      : null,
+    editingChallengeCompletionAsync: ownProps.editingChallengeId
+      ? state.challengeCompletions[ownProps.editingChallengeId] ?? null
       : null,
   }),
   dispatch => ({ dispatch })

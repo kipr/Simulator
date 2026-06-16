@@ -34,6 +34,7 @@ import {
 import ChallengeGoalsPreview from './ChallengeGoalsPreview';
 import MatItemRulesSummary from './MatItemRulesSummary';
 import CustomChallengeWizardSidePanel from './CustomChallengeWizardSidePanel';
+import { TourRegistry } from '../../tours/TourRegistry';
 import ItemSuccessWizard from './ItemSuccessWizard';
 import JbcCatalogSuccessGoalPicker from './JbcCatalogSuccessGoalPicker';
 import ConditionGoalsEditor from './ConditionGoalsEditor';
@@ -85,6 +86,8 @@ export interface CustomChallengeRulesSidePanelProps extends ThemeProps {
   onCancel: () => void;
   continueLabel?: Parameters<typeof LocalizedString.lookup>[0];
   isFinishStep?: boolean;
+  tourRegistry?: TourRegistry;
+  tourTargetKey?: string;
 }
 
 const CustomChallengeRulesSidePanel: React.FC<CustomChallengeRulesSidePanelProps> = ({
@@ -112,6 +115,8 @@ const CustomChallengeRulesSidePanel: React.FC<CustomChallengeRulesSidePanelProps
   onCancel,
   continueLabel,
   isFinishStep = false,
+  tourRegistry,
+  tourTargetKey,
 }) => {
   const itemWizardSuccessGoals = React.useMemo(
     () =>
@@ -192,6 +197,8 @@ const CustomChallengeRulesSidePanel: React.FC<CustomChallengeRulesSidePanelProps
       continueLabel={continueLabel}
       isFinishStep={isFinishStep}
       continuePrimary
+      tourRegistry={tourRegistry}
+      tourTargetKey={tourTargetKey}
     >
       {step === 'success' ? (
         <>

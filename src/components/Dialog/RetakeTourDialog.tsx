@@ -8,7 +8,6 @@ import { ThemeProps } from '../constants/theme';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import DialogBar from './DialogBar';
-import { withNavigate, WithNavigateProps } from '../../util/withNavigate';
 
 export interface RetakeTourDialogPublicProps extends ThemeProps, StyleProps {
   onClose: () => void;
@@ -19,7 +18,7 @@ interface RetakeTourDialogPrivateProps {
   locale: LocalizedString.Language;
 }
 
-type Props = RetakeTourDialogPublicProps & RetakeTourDialogPrivateProps & WithNavigateProps;
+type Props = RetakeTourDialogPublicProps & RetakeTourDialogPrivateProps;
 
 const Container = styled('div', (props: ThemeProps) => ({
   color: props.theme.color,
@@ -49,7 +48,6 @@ class RetakeTourDialog extends React.PureComponent<Props> {
   }
 
   private onAccept = () => {
-    this.props.navigate(`/scene/jbcSandbox`);
     this.props.onAccept();
   };
 
@@ -80,6 +78,6 @@ const ConnectedRetakeTourDialog = connect<unknown, unknown, Props>((state: Redux
   locale: state.i18n.locale,
 }), dispatch => ({
 
-}))(withNavigate(RetakeTourDialog)) as React.ComponentType<RetakeTourDialogPublicProps>;
+}))(RetakeTourDialog) as React.ComponentType<RetakeTourDialogPublicProps>;
 
 export default ConnectedRetakeTourDialog;

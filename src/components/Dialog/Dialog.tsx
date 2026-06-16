@@ -18,13 +18,14 @@ export interface DialogProps extends ThemeProps, StyleProps {
   tourRegistry?: TourRegistry;
   /** With tourRegistry, register this key instead of `${name}-dialog` so tour steps stay stable across locales. */
   tourTargetKey?: string;
+  maxWidth?: string;
 }
 
 type Props = DialogProps;
 
-const Container = styled('div', (props: ThemeProps) => ({
-  width: '90%',
-  maxWidth: '800px',
+const Container = styled('div', (props: ThemeProps & { $maxWidth?: string; $inTour?: boolean }) => ({
+  width: props.$inTour ? '100%' : '90%',
+  maxWidth: props.$inTour ? undefined : props.$maxWidth ?? '800px',
   maxHeight: '90vh',
   display: 'flex',
   flexDirection: 'column',
@@ -42,8 +43,12 @@ class Dialog_ extends React.PureComponent<Props> {
     const dialogTourKey = props.tourTargetKey ?? `${name}-dialog`;
 
     const tourContent_ = (
-      <TourTarget registry={props.tourRegistry} targetKey={dialogTourKey}>
-        <Container theme={theme}>
+      <TourTarget
+        registry={props.tourRegistry}
+        targetKey={dialogTourKey}
+        style={{ width: '90%', maxWidth: props.maxWidth ?? '800px' }}
+      >
+        <Container theme={theme} $maxWidth={props.maxWidth} $inTour>
           <Widget
             theme={theme}
             size={0}
@@ -60,7 +65,7 @@ class Dialog_ extends React.PureComponent<Props> {
       </TourTarget>
     );
     const normalContent_ = (
-      <Container theme={theme}>
+      <Container theme={theme} $maxWidth={props.maxWidth}>
         <Widget
           theme={theme}
           size={0}
