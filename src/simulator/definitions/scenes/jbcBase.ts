@@ -226,7 +226,7 @@ export function createBaseSceneSurfaceA(): Scene {
           }
         },
       },
-      'bannerW': {
+      'bannerW': { // West Banner
         type: 'object',
         geometryId: 'bannerW',
         name: tr('BannerW'),
