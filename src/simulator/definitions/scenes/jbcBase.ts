@@ -45,6 +45,38 @@ const GROUND_ORIGIN: ReferenceFramewUnits = {
   },
 };
 
+const BANNER_NORTH_ORIGIN: ReferenceFramewUnits = {
+  position: {
+    x: Distance.centimeters(0),
+    y: Distance.centimeters(15.5),
+    z: Distance.centimeters(226.5),
+  },
+};
+
+const BANNER_SOUTH_ORIGIN: ReferenceFramewUnits = {
+  position: {
+    x: Distance.centimeters(0),
+    y: Distance.centimeters(15.5),
+    z: Distance.centimeters(-126.5),
+  },
+};
+
+const BANNER_EAST_ORIGIN: ReferenceFramewUnits = {
+  position: {
+    x: Distance.centimeters(176.5),
+    y: Distance.centimeters(15.5),
+    z: Distance.centimeters(50),
+  },
+};
+
+const BANNER_WEST_ORIGIN: ReferenceFramewUnits = {
+  position: {
+    x: Distance.centimeters(-176.5),
+    y: Distance.centimeters(15.5),
+    z: Distance.centimeters(50),
+  },
+};
+
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
   position: {
     x: Distance.meters(0),
@@ -75,6 +107,38 @@ export function createBaseSceneSurfaceA(): Scene {
           z: Distance.feet(4),
         }
       },
+      'bannerN': { // Banner North
+        type: 'box',
+        size: {
+          x: Distance.meters(3.54),
+          y: Distance.meters(0.45),
+          z: Distance.centimeters(1),
+        }
+      },
+      'bannerS': {
+        type: 'box',
+        size: {
+          x: Distance.meters(3.54),
+          y: Distance.meters(0.45),
+          z: Distance.centimeters(1),
+        }
+      },
+      'bannerE': {
+        type: 'box',
+        size: {
+          x: Distance.centimeters(1),
+          y: Distance.meters(0.45),
+          z: Distance.meters(3.54),
+        }
+      },
+      'bannerW': {
+        type: 'box',
+        size: {
+          x: Distance.centimeters(1),
+          y: Distance.meters(0.45),
+          z: Distance.meters(3.54),
+        }
+      },
     },
     nodes: {
       'robot': ROBOT,
@@ -97,6 +161,90 @@ export function createBaseSceneSurfaceA(): Scene {
             type: 'color3',
             color: Color.rgb(192, 192, 192),
           },
+        },
+      },
+      'bannerN': {
+        type: 'object',
+        geometryId: 'bannerN',
+        name: tr('BannerN'),
+        startingOrigin: BANNER_NORTH_ORIGIN,
+        origin: BANNER_NORTH_ORIGIN,
+        visible: true,
+        physics: {
+          type: 'box',
+          motionType: PhysicsMotionType.STATIC,
+          restitution: .3,
+          friction: 1,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: 'color3',
+            color: Color.rgb(0, 179, 161),
+          }
+        },
+      },
+      'bannerS': {
+        type: 'object',
+        geometryId: 'bannerS',
+        name: tr('BannerS'),
+        startingOrigin: BANNER_SOUTH_ORIGIN,
+        origin: BANNER_SOUTH_ORIGIN,
+        visible: true,
+        physics: {
+          type: 'box',
+          motionType: PhysicsMotionType.STATIC,
+          restitution: .3,
+          friction: 1,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: 'color3',
+            color: Color.rgb(0, 179, 161),
+          }
+        },
+      },
+      'bannerE': {
+        type: 'object',
+        geometryId: 'bannerE',
+        name: tr('BannerE'),
+        startingOrigin: BANNER_EAST_ORIGIN,
+        origin: BANNER_EAST_ORIGIN,
+        visible: true,
+        physics: {
+          type: 'box',
+          motionType: PhysicsMotionType.STATIC,
+          restitution: .3,
+          friction: 1,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: 'color3',
+            color: Color.rgb(0, 179, 161),
+          }
+        },
+      },
+      'bannerW': {
+        type: 'object',
+        geometryId: 'bannerW',
+        name: tr('BannerW'),
+        startingOrigin: BANNER_WEST_ORIGIN,
+        origin: BANNER_WEST_ORIGIN,
+        visible: true,
+        physics: {
+          type: 'box',
+          motionType: PhysicsMotionType.STATIC,
+          restitution: .3,
+          friction: 1,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: 'color3',
+            color: Color.rgb(0, 179, 161),
+          }
         },
       },
       'light0': {
