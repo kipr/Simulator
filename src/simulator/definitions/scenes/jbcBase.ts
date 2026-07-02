@@ -226,7 +226,7 @@ export function createBaseSceneSurfaceA(): Scene {
           }
         },
       },
-      'bannerW': {
+      'bannerW': { // Test comment
         type: 'object',
         geometryId: 'bannerW',
         name: tr('BannerW'),
