@@ -48,31 +48,31 @@ const GROUND_ORIGIN: ReferenceFramewUnits = {
 const BANNER_NORTH_ORIGIN: ReferenceFramewUnits = {
   position: {
     x: Distance.centimeters(0),
-    y: Distance.centimeters(15.5),
-    z: Distance.centimeters(226.5),
+    y: Distance.centimeters(18),
+    z: Distance.centimeters(630.5),
   },
 };
 
 const BANNER_SOUTH_ORIGIN: ReferenceFramewUnits = {
   position: {
     x: Distance.centimeters(0),
-    y: Distance.centimeters(15.5),
-    z: Distance.centimeters(-126.5),
+    y: Distance.centimeters(18),
+    z: Distance.centimeters(-530.5), // Different from North by 100
   },
 };
 
 const BANNER_EAST_ORIGIN: ReferenceFramewUnits = {
   position: {
-    x: Distance.centimeters(176.5),
-    y: Distance.centimeters(15.5),
+    x: Distance.centimeters(580.5),
+    y: Distance.centimeters(18),
     z: Distance.centimeters(50),
   },
 };
 
 const BANNER_WEST_ORIGIN: ReferenceFramewUnits = {
   position: {
-    x: Distance.centimeters(-176.5),
-    y: Distance.centimeters(15.5),
+    x: Distance.centimeters(-580.5),
+    y: Distance.centimeters(18),
     z: Distance.centimeters(50),
   },
 };
@@ -94,9 +94,9 @@ export function createBaseSceneSurfaceA(): Scene {
       'ground': {
         type: 'box',
         size: {
-          x: Distance.meters(3.54),
+          x: Distance.meters(11.62), // OG 3.54
           y: Distance.meters(0.01),
-          z: Distance.meters(3.54),
+          z: Distance.meters(11.62), // OG 3.54 
         },
       },
       'mat': {
@@ -110,16 +110,16 @@ export function createBaseSceneSurfaceA(): Scene {
       'bannerN': { // Banner North
         type: 'box',
         size: {
-          x: Distance.meters(3.54),
-          y: Distance.meters(0.45),
+          x: Distance.meters(11.62),
+          y: Distance.meters(0.5),
           z: Distance.centimeters(1),
         }
       },
       'bannerS': {
         type: 'box',
         size: {
-          x: Distance.meters(3.54),
-          y: Distance.meters(0.45),
+          x: Distance.meters(11.62),
+          y: Distance.meters(0.5),
           z: Distance.centimeters(1),
         }
       },
@@ -127,16 +127,16 @@ export function createBaseSceneSurfaceA(): Scene {
         type: 'box',
         size: {
           x: Distance.centimeters(1),
-          y: Distance.meters(0.45),
-          z: Distance.meters(3.54),
+          y: Distance.meters(0.5),
+          z: Distance.meters(11.62),
         }
       },
       'bannerW': {
         type: 'box',
         size: {
           x: Distance.centimeters(1),
-          y: Distance.meters(0.45),
-          z: Distance.meters(3.54),
+          y: Distance.meters(0.5),
+          z: Distance.meters(11.62),
         }
       },
     },
