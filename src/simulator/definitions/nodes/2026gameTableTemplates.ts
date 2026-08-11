@@ -5,7 +5,16 @@ import { Mass } from "../../../util";
 import { PhysicsMotionType } from "@babylonjs/core";
 
 // TODO: Consider deep-freezing all of these objects
-
+const botballExplorerTable26Template: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'botballExplorerTable26',
+  physics: {
+    type: 'mesh',
+    motionType: PhysicsMotionType.STATIC,
+    restitution: .2,
+    friction: 1,
+  },
+};
 const fallTable26Template: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'fallTable26',
@@ -175,6 +184,7 @@ const gateTemplate: Node.TemplatedNode<Node.Obj> = {
 };
 
 export const BB2026Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
+  'botballExplorerTable26': botballExplorerTable26Template,
   'fallTable26': fallTable26Template,
   'springTable26': springTable26Template,
   'basket': basketTemplate,
@@ -197,6 +207,10 @@ export const BB2026Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
 
 
 export const BB2026Geometries = Object.freeze<Dict<Geometry>>({
+  'botballExplorerTable26': {
+    type: 'file',
+    uri: '/static/object_binaries/2026_Botball_Explorer_Game_Table.glb',
+  },
   'fallTable26': {
     type: 'file',
     uri: '/static/object_binaries/2026_Fall_Table.glb',
