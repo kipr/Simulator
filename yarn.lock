@@ -5090,9 +5090,9 @@ fast-png@^6.2.0:
     pako "^2.1.0"
 
 fast-uri@^3.0.1:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-3.1.2.tgz#8af3d4fc9d3e71b11572cc2673b514a7d1a8c8ec"
-  integrity sha512-rVjf7ArG3LTk+FS6Yw81V1DLuZl1bRbNrev6Tmd/9RaroeeRRJhAt7jg/6YFxbvAQXUCavSoZhPPj6oOx+5KjQ==
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-3.1.5.tgz#610f37419a030270430cecd68d74e3d4d96725d0"
+  integrity sha512-gHwA1O9LDIcKunMKhObS/HimwtehO1nPUECKAu5TpKgaO19fcWEl4bliWe1jWxVFvIXztJjjQ4L8XQ1EU9f7Jw==
 
 fast-xml-builder@^1.2.0:
   version "1.2.0"
@@ -6547,9 +6547,10 @@ isurl@^1.0.0-alpha5:
   dependencies:
     xmldom "^0.6.0"
 
-"ivygate@https://github.com/kipr/ivygate#5529f4e29e58fa227cb3820baa1322ef2c726906":
+"ivygate@https://github.com/kipr/ivygate#6ef276e35b9e455e2a83e9121fe7655d425ea731":
   version "0.1.5"
-  resolved "https://github.com/kipr/ivygate#5529f4e29e58fa227cb3820baa1322ef2c726906"
+  uid "6ef276e35b9e455e2a83e9121fe7655d425ea731"
+  resolved "https://github.com/kipr/ivygate#6ef276e35b9e455e2a83e9121fe7655d425ea731"
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.7.2"
     "@fortawesome/free-solid-svg-icons" "^6.7.2"
