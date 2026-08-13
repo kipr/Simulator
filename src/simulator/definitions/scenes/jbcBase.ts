@@ -7,6 +7,7 @@ import { Color } from '../../../state/State/Scene/Color';
 import AbstractRobot from '../../../programming/AbstractRobot';
 import Author from '../../../db/Author';
 import { PhysicsMotionType } from '@babylonjs/core';
+import Geometry from '../../../state/State/Scene/Geometry'; // Test import
 
 import tr from '@i18n';
 import { sprintf } from 'sprintf-js';
@@ -27,6 +28,38 @@ const ROBOT: Node.Robot = {
   origin: ROBOT_ORIGIN
 };
 
+export function wall1(x: number, y: number, z: number): Geometry { // Helper function to create a wall geometry for the base scene (N,S)
+  return {
+    type: 'box',
+    size: {
+      x: Distance.meters(x),
+      y: Distance.meters(y),
+      z: Distance.centimeters(z),
+    },
+  };
+}
+
+export function wall2(x: number, y: number, z: number): Geometry { // Helper function to create a wall geometry for the base scene (E,W)
+  return {
+    type: 'box',
+    size: {
+      x: Distance.centimeters(x),
+      y: Distance.meters(y),
+      z: Distance.meters(z),
+    },
+  };
+}
+
+export function wallOrigin(x: number, y: number, z: number): ReferenceFramewUnits { // Helper function to create a wall origin for the base scene
+  return {
+    position: {
+      x: Distance.centimeters(x),
+      y: Distance.centimeters(y),
+      z: Distance.centimeters(z),
+    },
+  };
+}
+
 
 export const JBC_MAT_ORIGIN: ReferenceFramewUnits = {
   position: {
@@ -45,37 +78,10 @@ const GROUND_ORIGIN: ReferenceFramewUnits = {
   },
 };
 
-const BANNER_NORTH_ORIGIN: ReferenceFramewUnits = {
-  position: {
-    x: Distance.centimeters(0),
-    y: Distance.centimeters(18),
-    z: Distance.centimeters(630.5),
-  },
-};
-
-const BANNER_SOUTH_ORIGIN: ReferenceFramewUnits = {
-  position: {
-    x: Distance.centimeters(0),
-    y: Distance.centimeters(18),
-    z: Distance.centimeters(-530.5), // Different from North by 100
-  },
-};
-
-const BANNER_EAST_ORIGIN: ReferenceFramewUnits = {
-  position: {
-    x: Distance.centimeters(580.5),
-    y: Distance.centimeters(18),
-    z: Distance.centimeters(50),
-  },
-};
-
-const BANNER_WEST_ORIGIN: ReferenceFramewUnits = {
-  position: {
-    x: Distance.centimeters(-580.5),
-    y: Distance.centimeters(18),
-    z: Distance.centimeters(50),
-  },
-};
+const BANNER_NORTH_ORIGIN = wallOrigin(0, 18, 630.5);
+const BANNER_SOUTH_ORIGIN = wallOrigin(0, 18, -530.5);
+const BANNER_EAST_ORIGIN = wallOrigin(580.5, 18, 50);
+const BANNER_WEST_ORIGIN = wallOrigin(-580.5, 18, 50);
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
   position: {
@@ -107,38 +113,10 @@ export function createBaseSceneSurfaceA(): Scene {
           z: Distance.feet(4),
         }
       },
-      'bannerN': { // Banner North
-        type: 'box',
-        size: {
-          x: Distance.meters(11.62),
-          y: Distance.meters(0.5),
-          z: Distance.centimeters(1),
-        }
-      },
-      'bannerS': {
-        type: 'box',
-        size: {
-          x: Distance.meters(11.62),
-          y: Distance.meters(0.5),
-          z: Distance.centimeters(1),
-        }
-      },
-      'bannerE': {
-        type: 'box',
-        size: {
-          x: Distance.centimeters(1),
-          y: Distance.meters(0.5),
-          z: Distance.meters(11.62),
-        }
-      },
-      'bannerW': {
-        type: 'box',
-        size: {
-          x: Distance.centimeters(1),
-          y: Distance.meters(0.5),
-          z: Distance.meters(11.62),
-        }
-      },
+      'bannerN': wall1(11.62, 0.5, 1),
+      'bannerS': wall1(11.62, 0.5, 1),
+      'bannerE': wall2(1, 0.5, 11.62),
+      'bannerW': wall2(1, 0.5, 11.62),
     },
     nodes: {
       'robot': ROBOT,
