@@ -9,15 +9,13 @@ import Author from '../../../db/Author';
 import tr from '@i18n';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(3, 0, 0),
-  // position: Vector3wUnits.centimeters(80, 0, 62.5),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  position: Vector3wUnits.centimeters(-13.6, -15, -4.5),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 0),
 };
 
 const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(45, -6, 100),
   orientation: RotationwUnits.eulerDegrees(0, 180, 0),
-  // scale: { x: 100, y: 100, z: 100 },
 };
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
