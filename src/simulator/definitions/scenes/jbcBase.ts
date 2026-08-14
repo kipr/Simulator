@@ -60,6 +60,78 @@ export function wallOrigin(x: number, y: number, z: number): ReferenceFramewUnit
   };
 }
 
+export function wallProp1(id: string, name: string, origin: ReferenceFramewUnits): Node { // Helper function to create a wall property for the base scene
+  return {
+    type: 'object',
+    geometryId: id,
+    name: tr(name),
+    startingOrigin: origin,
+    origin: origin,
+    visible: true,
+    physics: {
+      type: 'box',
+      motionType: PhysicsMotionType.STATIC,
+      restitution: .3,
+      friction: 1,
+    },
+    material: {
+      type: 'basic',
+      color: {
+        type: 'color3',
+        color: Color.rgb(0, 179, 161),
+      }
+    },
+  };
+}
+
+export function wallProp2(id: string, name: string, origin: ReferenceFramewUnits): Node { //temp for different colors 
+  return {
+    type: 'object',
+    geometryId: id,
+    name: tr(name),
+    startingOrigin: origin,
+    origin: origin,
+    visible: true,
+    physics: {
+      type: 'box',
+      motionType: PhysicsMotionType.STATIC,
+      restitution: .3,
+      friction: 1,
+    },
+    material: {
+      type: 'basic',
+      color: {
+        type: 'color3',
+        color: Color.rgb(179, 30, 0),
+      }
+    },
+  };
+}
+
+export function wallProp3(id: string, name: string, origin: ReferenceFramewUnits): Node { // temp for different colors
+  return {
+    type: 'object',
+    geometryId: id,
+    name: tr(name),
+    startingOrigin: origin,
+    origin: origin,
+    visible: true,
+    physics: {
+      type: 'box',
+      motionType: PhysicsMotionType.STATIC,
+      restitution: .3,
+      friction: 1,
+    },
+    material: {
+      type: 'basic',
+      color: {
+        type: 'color3',
+        color: Color.rgb(179, 0, 149),
+      }
+    },
+  };
+}
+
 
 export const JBC_MAT_ORIGIN: ReferenceFramewUnits = {
   position: {
@@ -78,10 +150,21 @@ const GROUND_ORIGIN: ReferenceFramewUnits = {
   },
 };
 
-const BANNER_NORTH_ORIGIN = wallOrigin(0, 18, 630.5);
-const BANNER_SOUTH_ORIGIN = wallOrigin(0, 18, -530.5);
-const BANNER_EAST_ORIGIN = wallOrigin(580.5, 18, 50);
-const BANNER_WEST_ORIGIN = wallOrigin(-580.5, 18, 50);
+const BANNER_NORTH_ORIGIN1 = wallOrigin(0, 18, 630.5); // x, y, z
+const BANNER_NORTH_ORIGIN2 = wallOrigin(387, 18, 630.5);
+const BANNER_NORTH_ORIGIN3 = wallOrigin(-387, 18, 630.5);
+
+const BANNER_SOUTH_ORIGIN1 = wallOrigin(0, 18, -530.5);
+const BANNER_SOUTH_ORIGIN2 = wallOrigin(387, 18, -530.5);
+const BANNER_SOUTH_ORIGIN3 = wallOrigin(-387, 18, -530.5);
+
+const BANNER_EAST_ORIGIN1 = wallOrigin(580.5, 18, 50);
+const BANNER_EAST_ORIGIN2 = wallOrigin(580.5, 18, 437);
+const BANNER_EAST_ORIGIN3 = wallOrigin(580.5, 18, -337);
+
+const BANNER_WEST_ORIGIN1 = wallOrigin(-580.5, 18, 50);
+const BANNER_WEST_ORIGIN2 = wallOrigin(-580.5, 18, 437);
+const BANNER_WEST_ORIGIN3 = wallOrigin(-580.5, 18, -337);
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
   position: {
@@ -113,10 +196,21 @@ export function createBaseSceneSurfaceA(): Scene {
           z: Distance.feet(4),
         }
       },
-      'bannerN': wall1(11.62, 0.5, 1),
-      'bannerS': wall1(11.62, 0.5, 1),
-      'bannerE': wall2(1, 0.5, 11.62),
-      'bannerW': wall2(1, 0.5, 11.62),
+      'bannerN1': wall1(3.87, 0.5, 1), // Divide by 3 = 3.87 // OG x:11.62, y:0.5, z:1
+      'bannerN2': wall1(3.87, 0.5, 1),
+      'bannerN3': wall1(3.87, 0.5, 1),
+
+      'bannerS1': wall1(3.87, 0.5, 1),
+      'bannerS2': wall1(3.87, 0.5, 1),
+      'bannerS3': wall1(3.87, 0.5, 1),
+
+      'bannerE1': wall2(1, 0.5, 3.87),
+      'bannerE2': wall2(1, 0.5, 3.87),
+      'bannerE3': wall2(1, 0.5, 3.87),
+
+      'bannerW1': wall2(1, 0.5, 3.87),
+      'bannerW2': wall2(1, 0.5, 3.87),
+      'bannerW3': wall2(1, 0.5, 3.87),
     },
     nodes: {
       'robot': ROBOT,
@@ -141,90 +235,22 @@ export function createBaseSceneSurfaceA(): Scene {
           },
         },
       },
-      'bannerN': {
-        type: 'object',
-        geometryId: 'bannerN',
-        name: tr('BannerN'),
-        startingOrigin: BANNER_NORTH_ORIGIN,
-        origin: BANNER_NORTH_ORIGIN,
-        visible: true,
-        physics: {
-          type: 'box',
-          motionType: PhysicsMotionType.STATIC,
-          restitution: .3,
-          friction: 1,
-        },
-        material: {
-          type: 'basic',
-          color: {
-            type: 'color3',
-            color: Color.rgb(0, 179, 161),
-          }
-        },
-      },
-      'bannerS': {
-        type: 'object',
-        geometryId: 'bannerS',
-        name: tr('BannerS'),
-        startingOrigin: BANNER_SOUTH_ORIGIN,
-        origin: BANNER_SOUTH_ORIGIN,
-        visible: true,
-        physics: {
-          type: 'box',
-          motionType: PhysicsMotionType.STATIC,
-          restitution: .3,
-          friction: 1,
-        },
-        material: {
-          type: 'basic',
-          color: {
-            type: 'color3',
-            color: Color.rgb(0, 179, 161),
-          }
-        },
-      },
-      'bannerE': {
-        type: 'object',
-        geometryId: 'bannerE',
-        name: tr('BannerE'),
-        startingOrigin: BANNER_EAST_ORIGIN,
-        origin: BANNER_EAST_ORIGIN,
-        visible: true,
-        physics: {
-          type: 'box',
-          motionType: PhysicsMotionType.STATIC,
-          restitution: .3,
-          friction: 1,
-        },
-        material: {
-          type: 'basic',
-          color: {
-            type: 'color3',
-            color: Color.rgb(0, 179, 161),
-          }
-        },
-      },
-      'bannerW': { // West Banner
-        type: 'object',
-        geometryId: 'bannerW',
-        name: tr('BannerW'),
-        startingOrigin: BANNER_WEST_ORIGIN,
-        origin: BANNER_WEST_ORIGIN,
-        visible: true,
-        physics: {
-          type: 'box',
-          motionType: PhysicsMotionType.STATIC,
-          restitution: .3,
-          friction: 1,
-        },
-        material: {
-          type: 'basic',
-          color: {
-            type: 'color3',
-            color: Color.rgb(0, 179, 161),
-          }
-        },
-      },
+      'bannerN1': wallProp1('bannerN1', 'BannerN1', BANNER_NORTH_ORIGIN1),
+      'bannerN2': wallProp2('bannerN2', 'BannerN2', BANNER_NORTH_ORIGIN2),
+      'bannerN3': wallProp3('bannerN3', 'BannerN3', BANNER_NORTH_ORIGIN3),
+
+      'bannerS1': wallProp1('bannerS1', 'BannerS1', BANNER_SOUTH_ORIGIN1),
+      'bannerS2': wallProp2('bannerS2', 'BannerS2', BANNER_SOUTH_ORIGIN2),
+      'bannerS3': wallProp3('bannerS3', 'BannerS3', BANNER_SOUTH_ORIGIN3),
+
+      'bannerE1': wallProp1('bannerE1', 'BannerE1', BANNER_EAST_ORIGIN1),
+      'bannerE2': wallProp2('bannerE2', 'BannerE2', BANNER_EAST_ORIGIN2),
+      'bannerE3': wallProp3('bannerE3', 'BannerE3', BANNER_EAST_ORIGIN3),
+
+      'bannerW1': wallProp1('bannerW1', 'BannerW1', BANNER_WEST_ORIGIN1),
+      'bannerW2': wallProp2('bannerW2', 'BannerW2', BANNER_WEST_ORIGIN2),
+      'bannerW3': wallProp3('bannerW3', 'BannerW3', BANNER_WEST_ORIGIN3),
+
       'light0': {
         type: 'point-light',
         intensity: 0.75,
