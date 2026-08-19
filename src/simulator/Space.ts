@@ -200,6 +200,25 @@ export class Space {
   }
 
   /**
+   * Attach gizmos for a selection change without pushing Redux physics poses
+   * back onto the robot (that re-apply is what spins the Explorer robot).
+   */
+  applySceneSelection(selectedNodeId: string | undefined, selectedScriptId?: string): void {
+    const live = this.sceneBinding_?.scene ?? this.scene_;
+    if (
+      live.selectedNodeId === selectedNodeId &&
+      live.selectedScriptId === selectedScriptId
+    ) {
+      return;
+    }
+    this.scene = {
+      ...live,
+      selectedNodeId,
+      selectedScriptId,
+    };
+  }
+
+  /**
    * Handles window resize events, updating the Babylon engine's size accordingly.
    */
   public handleResize(): void {
@@ -532,8 +551,19 @@ export class Space {
     }
 
     this.debounceUpdate_ = true;
-    if (setNodeBatch.nodeIds.length > 0 && this.onSetNodeBatch) {
-      flushSync(() => this.onSetNodeBatch?.(setNodeBatch));
+    if (setNodeBatch.nodeIds.length > 0) {
+      const nextNodes = { ...this.scene_.nodes };
+      for (const { id, node } of setNodeBatch.nodeIds) {
+        nextNodes[id] = node;
+      }
+      const nextScene = { ...this.scene_, nodes: nextNodes };
+      this.scene_ = nextScene;
+      if (this.sceneBinding_) {
+        this.sceneBinding_.scene = nextScene;
+      }
+      if (this.onSetNodeBatch) {
+        flushSync(() => this.onSetNodeBatch?.(setNodeBatch));
+      }
     }
     this.debounceUpdate_ = false;
   };
