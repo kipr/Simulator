@@ -25,6 +25,7 @@ export const CHALLENGE_LIST = {
   'jbc22': 'JBC Challenge 22',
   'jbc23': 'JBC Challenge 23',
   'jbc24': 'JBC Challenge 24',
+  'bex1': 'Botball Explorer 1',
 } as const;
 
 

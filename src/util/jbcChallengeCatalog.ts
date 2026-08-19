@@ -29,6 +29,7 @@ import { JBC_21 } from '../simulator/definitions/scenes/jbc21-Proximity';
 import { JBC_22 } from '../simulator/definitions/scenes/jbc22-Search-and-Rescue';
 import { JBC_23 } from '../simulator/definitions/scenes/jbc23-Find-the-Black-Line';
 import { JBC_24 } from '../simulator/definitions/scenes/jbc24-Walk-the-Line';
+import { BEX_1 } from '../simulator/definitions/scenes/bex26/bex1-Waypoint-Alpha';
 import { createCircleNode } from '../simulator/definitions/scenes/jbcBase';
 import { preBuiltGeometries } from '../simulator/definitions/nodes';
 
@@ -56,7 +57,7 @@ import jbc21 from '../simulator/definitions/challenges/jbc21-Proximity';
 import jbc22 from '../simulator/definitions/challenges/jbc22-Search-and-Rescue';
 import jbc23 from '../simulator/definitions/challenges/jbc23-Find-the-Black-Line';
 import jbc24 from '../simulator/definitions/challenges/jbc24-Walk-the-Line';
-
+import bex1 from '../simulator/definitions/challenges/bex26/bex1-Waypoint-Alpha';
 const JBC_CHALLENGE_SCENES: Record<ChallengeName, Scene> = {
   jbc0: JBC_0,
   jbc1: JBC_1,
@@ -82,6 +83,7 @@ const JBC_CHALLENGE_SCENES: Record<ChallengeName, Scene> = {
   jbc22: JBC_22,
   jbc23: JBC_23,
   jbc24: JBC_24,
+  bex1: BEX_1,
 };
 
 const JBC_CHALLENGES: Record<ChallengeName, Challenge> = {
@@ -109,6 +111,7 @@ const JBC_CHALLENGES: Record<ChallengeName, Challenge> = {
   jbc22,
   jbc23,
   jbc24,
+  bex1
 };
 
 export type JbcChallengeRefId = ChallengeName | 'custom';
@@ -181,8 +184,8 @@ export function isWorldSceneItemNode(nodeId: string, node: Node): boolean {
 
 /** Item entry for the World panel / sandbox scene (not the full JBC challenge catalog). */
 export type WorldSceneItem = Pick<
-JbcCatalogItem,
-'key' | 'nodeId' | 'displayName' | 'templateId'
+  JbcCatalogItem,
+  'key' | 'nodeId' | 'displayName' | 'templateId'
 >;
 
 function nodeDisplayName(node: Node, nodeId: string): string {
@@ -600,7 +603,6 @@ function buildCatalog(): {
       challengeId,
       challengeName: challengeLabel(challengeId, challenge),
     };
-
     Object.entries(challenge.events).forEach(([eventId, event]) => {
       const existing = eventsById.get(eventId);
       if (existing) {
