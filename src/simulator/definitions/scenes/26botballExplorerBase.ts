@@ -9,8 +9,8 @@ import Author from '../../../db/Author';
 import tr from '@i18n';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-13.6, -15, -4.5),
-  orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+  position: Vector3wUnits.centimeters(10, -15, 0),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 4),
 };
 
 const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
@@ -30,8 +30,9 @@ const LIGHT_ORIGIN: ReferenceFramewUnits = {
 const ROBOT: Node.Robot = {
   type: 'robot',
   name: tr('Robot'),
-  robotId: 'demobot_no_reflectance',
+  robotId: 'demobot',
   state: AbstractRobot.Stateless.NIL,
+  editable: true,
   visible: true,
   startingOrigin: ROBOT_ORIGIN,
   origin: ROBOT_ORIGIN

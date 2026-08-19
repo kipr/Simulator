@@ -346,6 +346,7 @@ const DEFAULT_SCENES: Scenes = {
   jbc24: Async.loaded({ value: JBC_SCENES.JBC_24 }),
   fall26TableSandbox: Async.loaded({ value: JBC_SCENES.FALL_26_SANDBOX }),
   tableSandbox: Async.loaded({ value: JBC_SCENES.Table_Sandbox }),
+  bex1: Async.loaded({ value: JBC_SCENES.BEX_1 })
 
   // Find_The_Black_Line: Async.loaded({ value: JBC_SCENES.Find_The_Black_Line }),
   // Sense_The_Can: Async.loaded({ value: JBC_SCENES.Sense_The_Can }),
