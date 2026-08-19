@@ -50,17 +50,18 @@ export function wall2(x: number, y: number, z: number): Geometry { // Helper fun
   };
 }
 
-export function wallOrigin(x: number, y: number, z: number): ReferenceFramewUnits { // Helper function to create a wall origin for the base scene
+export function wallOrigin(x: number, y: number, z: number, orientation?: RotationwUnits): ReferenceFramewUnits { // Helper function to create a wall origin for the base scene
   return {
     position: {
       x: Distance.centimeters(x),
       y: Distance.centimeters(y),
       z: Distance.centimeters(z),
     },
+    orientation: orientation ? orientation : RotationwUnits.eulerDegrees(0, 0, 0),
   };
 }
 
-export function wallProp1(id: string, name: string, origin: ReferenceFramewUnits): Node { // Helper function to create a wall property for the base scene
+export function wallBase(id: string, name: string, origin: ReferenceFramewUnits): Node { // Helper function to create a wall property for the base scene
   return {
     type: 'object',
     geometryId: id,
@@ -78,13 +79,13 @@ export function wallProp1(id: string, name: string, origin: ReferenceFramewUnits
       type: 'basic',
       color: {
         type: 'color3',
-        color: Color.rgb(0, 179, 161),
-      }
+        color: Color.rgb(193, 195, 195),
+      },
     },
   };
 }
 
-export function wallProp2(id: string, name: string, origin: ReferenceFramewUnits): Node { //temp for different colors 
+export function wallImg(id: string, name: string, origin: ReferenceFramewUnits, uri: string): Node {
   return {
     type: 'object',
     geometryId: id,
@@ -101,37 +102,12 @@ export function wallProp2(id: string, name: string, origin: ReferenceFramewUnits
     material: {
       type: 'basic',
       color: {
-        type: 'color3',
-        color: Color.rgb(179, 30, 0),
-      }
+        type: 'texture',
+        uri,
+      },
     },
   };
 }
-
-export function wallProp3(id: string, name: string, origin: ReferenceFramewUnits): Node { // temp for different colors
-  return {
-    type: 'object',
-    geometryId: id,
-    name: tr(name),
-    startingOrigin: origin,
-    origin: origin,
-    visible: true,
-    physics: {
-      type: 'box',
-      motionType: PhysicsMotionType.STATIC,
-      restitution: .3,
-      friction: 1,
-    },
-    material: {
-      type: 'basic',
-      color: {
-        type: 'color3',
-        color: Color.rgb(179, 0, 149),
-      }
-    },
-  };
-}
-
 
 export const JBC_MAT_ORIGIN: ReferenceFramewUnits = {
   position: {
@@ -150,21 +126,27 @@ const GROUND_ORIGIN: ReferenceFramewUnits = {
   },
 };
 
-const BANNER_NORTH_ORIGIN1 = wallOrigin(0, 18, 630.5); // x, y, z
-const BANNER_NORTH_ORIGIN2 = wallOrigin(387, 18, 630.5);
-const BANNER_NORTH_ORIGIN3 = wallOrigin(-387, 18, 630.5);
+const BANNER_NORTH_ORIGIN = wallOrigin(0, 18, 631.3);
+const BANNER_NORTH_IMG1_ORIGIN = wallOrigin(387, 18, 630.5, RotationwUnits.eulerDegrees(0, 0, 180));
+const BANNER_NORTH_IMG2_ORIGIN = wallOrigin(0, 18, 630.5, RotationwUnits.eulerDegrees(0, 0, 180));
+const BANNER_NORTH_IMG3_ORIGIN = wallOrigin(-387, 18, 630.5, RotationwUnits.eulerDegrees(0, 0, 180));
 
-const BANNER_SOUTH_ORIGIN1 = wallOrigin(0, 18, -530.5);
-const BANNER_SOUTH_ORIGIN2 = wallOrigin(387, 18, -530.5);
-const BANNER_SOUTH_ORIGIN3 = wallOrigin(-387, 18, -530.5);
+const BANNER_SOUTH_ORIGIN = wallOrigin(0, 18, -531.3);
+const BANNER_SOUTH_IMG1_ORIGIN = wallOrigin(387, 18, -530.5);
+const BANNER_SOUTH_IMG2_ORIGIN = wallOrigin(0, 18, -530.5);
+const BANNER_SOUTH_IMG3_ORIGIN = wallOrigin(-387, 18, -530.5);
 
-const BANNER_EAST_ORIGIN1 = wallOrigin(580.5, 18, 50);
-const BANNER_EAST_ORIGIN2 = wallOrigin(580.5, 18, 437);
-const BANNER_EAST_ORIGIN3 = wallOrigin(580.5, 18, -337);
+const BANNER_WEST_ORIGIN = wallOrigin(581.3, 18, 50);
+const BANNER_WEST_IMG1_ORIGIN = wallOrigin(580.5, 18, 50, RotationwUnits.eulerDegrees(90, 0, 0));
+const BANNER_WEST_IMG2_ORIGIN = wallOrigin(580.5, 18, 437, RotationwUnits.eulerDegrees(90, 0, 0));
+const BANNER_WEST_IMG3_ORIGIN = wallOrigin(580.5, 18, -337, RotationwUnits.eulerDegrees(90, 0, 0));
 
-const BANNER_WEST_ORIGIN1 = wallOrigin(-580.5, 18, 50);
-const BANNER_WEST_ORIGIN2 = wallOrigin(-580.5, 18, 437);
-const BANNER_WEST_ORIGIN3 = wallOrigin(-580.5, 18, -337);
+const BANNER_EAST_ORIGIN = wallOrigin(-581.3, 18, 50);
+const BANNER_EAST_IMG1_ORIGIN = wallOrigin(-580.5, 18, 50, RotationwUnits.eulerDegrees(-90, 0, 0));
+const BANNER_EAST_IMG2_ORIGIN = wallOrigin(-580.5, 18, 437, RotationwUnits.eulerDegrees(-90, 0, 0));
+const BANNER_EAST_IMG3_ORIGIN = wallOrigin(-580.5, 18, -337, RotationwUnits.eulerDegrees(-90, 0, 0));
+
+
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
   position: {
@@ -196,21 +178,27 @@ export function createBaseSceneSurfaceA(): Scene {
           z: Distance.feet(4),
         }
       },
-      'bannerN1': wall1(3.87, 0.5, 1), // Divide by 3 = 3.87 // OG x:11.62, y:0.5, z:1
-      'bannerN2': wall1(3.87, 0.5, 1),
-      'bannerN3': wall1(3.87, 0.5, 1),
+      'bannerN': wall1(11.62, 0.5, 0.7), // Divide by 3 = 3.87 // OG x:11.62, y:0.5, z:1
+      'bannerImgN1': wall1(3.87, 0.5, 1),
+      'bannerImgN2': wall1(3.87, 0.5, 1),
+      'bannerImgN3': wall1(3.87, 0.5, 1),
 
-      'bannerS1': wall1(3.87, 0.5, 1),
-      'bannerS2': wall1(3.87, 0.5, 1),
-      'bannerS3': wall1(3.87, 0.5, 1),
+      'bannerS': wall1(11.62, 0.5, 0.7),
+      'bannerImgS1': wall1(3.87, 0.5, 1),
+      'bannerImgS2': wall1(3.87, 0.5, 1),
+      'bannerImgS3': wall1(3.87, 0.5, 1),
 
-      'bannerE1': wall2(1, 0.5, 3.87),
-      'bannerE2': wall2(1, 0.5, 3.87),
-      'bannerE3': wall2(1, 0.5, 3.87),
+      'bannerW': wall2(0.7, 0.5, 11.62),
+      'bannerImgW1': wall2(1, 3.87, 0.5),
+      'bannerImgW2': wall2(1, 3.87, 0.5),
+      'bannerImgW3': wall2(1, 3.87, 0.5),
 
-      'bannerW1': wall2(1, 0.5, 3.87),
-      'bannerW2': wall2(1, 0.5, 3.87),
-      'bannerW3': wall2(1, 0.5, 3.87),
+      'bannerE': wall2(0.7, 0.5, 11.62),
+      'bannerImgE1': wall2(1, 3.87, 0.5),
+      'bannerImgE2': wall2(1, 3.87, 0.5),
+      'bannerImgE3': wall2(1, 3.87, 0.5),
+
+
     },
     nodes: {
       'robot': ROBOT,
@@ -235,21 +223,26 @@ export function createBaseSceneSurfaceA(): Scene {
           },
         },
       },
-      'bannerN1': wallProp1('bannerN1', 'BannerN1', BANNER_NORTH_ORIGIN1),
-      'bannerN2': wallProp2('bannerN2', 'BannerN2', BANNER_NORTH_ORIGIN2),
-      'bannerN3': wallProp3('bannerN3', 'BannerN3', BANNER_NORTH_ORIGIN3),
 
-      'bannerS1': wallProp1('bannerS1', 'BannerS1', BANNER_SOUTH_ORIGIN1),
-      'bannerS2': wallProp2('bannerS2', 'BannerS2', BANNER_SOUTH_ORIGIN2),
-      'bannerS3': wallProp3('bannerS3', 'BannerS3', BANNER_SOUTH_ORIGIN3),
+      'bannerN': wallBase('bannerN', 'BannerN', BANNER_NORTH_ORIGIN),
+      'bannerImgN1': wallImg('bannerImgN1', 'BannerImgN1', BANNER_NORTH_IMG1_ORIGIN, '/static/Banner logos/botguy logo.png'),
+      'bannerImgN2': wallImg('bannerImgN2', 'BannerImgN2', BANNER_NORTH_IMG2_ORIGIN, '/static/Banner logos/botball.png'),
+      'bannerImgN3': wallImg('bannerImgN3', 'BannerImgN3', BANNER_NORTH_IMG3_ORIGIN, '/static/Banner logos/language.png'),
 
-      'bannerE1': wallProp1('bannerE1', 'BannerE1', BANNER_EAST_ORIGIN1),
-      'bannerE2': wallProp2('bannerE2', 'BannerE2', BANNER_EAST_ORIGIN2),
-      'bannerE3': wallProp3('bannerE3', 'BannerE3', BANNER_EAST_ORIGIN3),
+      'bannerS': wallBase('bannerS', 'BannerS', BANNER_SOUTH_ORIGIN),
+      'bannerImgS1': wallImg('bannerImgS1', 'BannerImgS1', BANNER_SOUTH_IMG1_ORIGIN, '/static/Banner logos/language.png'),
+      'bannerImgS2': wallImg('bannerImgS2', 'BannerImgS2', BANNER_SOUTH_IMG2_ORIGIN, '/static/Banner logos/botball.png'),
+      'bannerImgS3': wallImg('bannerImgS3', 'BannerImgS3', BANNER_SOUTH_IMG3_ORIGIN, '/static/Banner logos/GCER.png'),
 
-      'bannerW1': wallProp1('bannerW1', 'BannerW1', BANNER_WEST_ORIGIN1),
-      'bannerW2': wallProp2('bannerW2', 'BannerW2', BANNER_WEST_ORIGIN2),
-      'bannerW3': wallProp3('bannerW3', 'BannerW3', BANNER_WEST_ORIGIN3),
+      'bannerW': wallBase('bannerW', 'BannerW', BANNER_WEST_ORIGIN),
+      'bannerImgW1': wallImg('bannerImgW1', 'BannerImgW1', BANNER_WEST_IMG1_ORIGIN, '/static/Banner logos/Sponsors.png'),
+      'bannerImgW2': wallImg('bannerImgW2', 'BannerImgW2', BANNER_WEST_IMG2_ORIGIN, '/static/Banner logos/GCER.png'),
+      'bannerImgW3': wallImg('bannerImgW3', 'BannerImgW3', BANNER_WEST_IMG3_ORIGIN, '/static/Banner logos/botguy logo.png'),
+
+      'bannerE': wallBase('bannerE', 'BannerE', BANNER_EAST_ORIGIN),
+      'bannerImgE1': wallImg('bannerImgE1', 'BannerImgE1', BANNER_EAST_IMG1_ORIGIN, '/static/Banner logos/GCER.png'),
+      'bannerImgE2': wallImg('bannerImgE2', 'BannerImgE2', BANNER_EAST_IMG2_ORIGIN, '/static/Banner logos/Sponsors.png'),
+      'bannerImgE3': wallImg('bannerImgE3', 'BannerImgE3', BANNER_EAST_IMG3_ORIGIN, '/static/Banner logos/botguy logo.png'),
 
       'light0': {
         type: 'point-light',
