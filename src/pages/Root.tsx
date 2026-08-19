@@ -102,7 +102,7 @@ import tr from '@i18n';
 import MatPlayZonesSceneOverlay from '../components/CustomChallenges/MatPlayZonesSceneOverlay';
 import { sceneHasLinkedChallenge, isCustomChallengeId } from '../util/customChallengeFactory';
 import { isClassroomSharedReadOnlyScene } from '../util/customChallengeClassroomShare';
-import { scenePropsRequireSimulatorReload } from '../util/scenePropsRequireSimulatorReload';
+import { isSelectionOnlySceneUpdate, scenePropsRequireSimulatorReload } from '../util/scenePropsRequireSimulatorReload';
 import { prepareCustomChallengeSceneForSimulator } from '../util/customChallengeSceneScripts';
 import { applyChallengeEventValueChange } from '../util/challengeEventUpdates';
 import { conditionGoalsFromChallenge } from '../util/customChallengePredicates';
@@ -300,7 +300,7 @@ class Root extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-
+    console.log("Root props:", this.props);
     this.state = {
       layout: Layout.Side,
       activeLanguage: 'c',
@@ -365,13 +365,14 @@ class Root extends React.Component<Props, State> {
     // this.props.onLoadProjects();
 
     await fetchTourIfNeeded(currentUser, TourDoc.IDS.SIMULATOR);
-
     space.sceneBinding.scriptManager.programStatus =
       this.state.simulatorState.type === SimulatorState.Type.Running
         ? 'running'
         : 'stopped';
     this.applyCustomChallengeGizmoMode_();
     this.syncChallengeEventHandler_();
+
+
   }
 
   componentWillUnmount() {
@@ -456,7 +457,14 @@ class Root extends React.Component<Props, State> {
         (sceneIdChanged || scenePropsRequireSimulatorReload(prevScene, latestScene))
       ) {
         if (Space.getInstance().scene !== latestScene) {
-          Space.getInstance().scene = latestScene;
+          if (!sceneIdChanged && isSelectionOnlySceneUpdate(prevScene, latestScene)) {
+            Space.getInstance().applySceneSelection(
+              latestScene.selectedNodeId,
+              latestScene.selectedScriptId,
+            );
+          } else {
+            Space.getInstance().scene = latestScene;
+          }
         }
       }
     }
@@ -937,8 +945,8 @@ class Root extends React.Component<Props, State> {
       ),
       robot:
         this.props.robots[
-          Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))
-            ?.robotId ?? 'demobot'
+        Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))
+          ?.robotId ?? 'demobot'
         ],
       locale: this.props.locale,
     });
@@ -1712,15 +1720,15 @@ class Root extends React.Component<Props, State> {
         )}
         {modal.type === Modal.Type.DeleteRecord &&
           modal.record.type === Record.Type.Scene && (
-          <DeleteDialog
-            name={Record.latestName(modal.record)}
-            theme={theme}
-            onClose={this.onModalClose_}
-            onAccept={this.onDeleteRecordAccept_(
-              Record.selector(modal.record),
-            )}
-          />
-        )}
+            <DeleteDialog
+              name={Record.latestName(modal.record)}
+              theme={theme}
+              onClose={this.onModalClose_}
+              onAccept={this.onDeleteRecordAccept_(
+                Record.selector(modal.record),
+              )}
+            />
+          )}
         {modal.type === Modal.Type.SettingsScene && (
           <SceneSettingsDialog
             scene={Async.latestValue(scene)}
@@ -1781,8 +1789,8 @@ const ConnectedRoot = connect(
   ) => {
     const builder = new Builder(state);
 
-    let sceneHasChallenge = true;
 
+    let sceneHasChallenge = true;
     if (challengeId) {
       const challenge = builder.challenge(challengeId);
       challenge.scene();
@@ -1801,7 +1809,6 @@ const ConnectedRoot = connect(
     }
 
     builder.dispatchLoads();
-
     return {
       scene: Dict.unique(builder.scenes),
       challenge: Dict.unique(builder.challenges),
