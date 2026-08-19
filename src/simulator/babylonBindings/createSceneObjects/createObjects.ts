@@ -12,7 +12,22 @@ import LocalizedString from '../../../util/LocalizedString';
 import apply from '../Apply';
 import { createMaterial } from './createMaterials';
 import { preBuiltGeometries } from "../../definitions/nodes";
+import { MeshoptCompression } from "@babylonjs/core/Meshes/Compression/meshoptCompression";
+import { KhronosTextureContainer2 } from '@babylonjs/core/Misc/khronosTextureContainer2';
+MeshoptCompression.Configuration = {
+  decoder: {
+    url: "../../../static/meshopt_decoder.js",
+  },
+};
 
+KhronosTextureContainer2.URLConfig.jsDecoderModule =
+  '../../../static/babylon.ktx2Decoder.js';
+
+KhronosTextureContainer2.URLConfig.jsMSCTranscoder =
+  '../../../static/ktx2Transcoders/msc_basis_transcoder.js';
+
+KhronosTextureContainer2.URLConfig.wasmMSCTranscoder =
+  '../../../static/ktx2Transcoders/msc_basis_transcoder.wasm';
 export type FrameLike = TransformNode | AbstractMesh;
 
 export interface meshPair {
