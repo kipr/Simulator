@@ -73,7 +73,8 @@ import Cover_Your_Bases from '../../simulator/definitions/challenges/gcer25/jbcG
 import Odd_Numbers from '../../simulator/definitions/challenges/gcer25/jbcGcer25-Odd-Numbers';
 import Bulldozer_Mania from '../../simulator/definitions/challenges/gcer25/jbcGcer25-Bulldozer-Mania';
 import Mountain_Rescue from '../../simulator/definitions/challenges/gcer25/jbcGcer25-Mountain-Rescue';
-import bex1 from '../../simulator/definitions/challenges/bex26/bex1-Waypoint-Alpha'
+import bex1 from '../../simulator/definitions/challenges/bex26/bex1-Waypoint-Alpha';
+import bex2 from '../../simulator/definitions/challenges/bex26/bex2-Relocate-the-Red-Cube';
 export namespace ChallengesAction {
   export interface LoadChallenge {
     type: 'challenges/load-challenge';
@@ -357,6 +358,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'bex1': Async.loaded({
     value: bex1,
     brief: ChallengeBrief.fromChallenge(bex1)
+  }),
+  'bex2': Async.loaded({
+    value: bex2,
+    brief: ChallengeBrief.fromChallenge(bex2)
   }),
   'Find_The_Black_Line': Async.loaded({
     value: Find_The_Black_Line,

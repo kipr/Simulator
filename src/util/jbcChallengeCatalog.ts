@@ -30,6 +30,25 @@ import { JBC_22 } from '../simulator/definitions/scenes/jbc22-Search-and-Rescue'
 import { JBC_23 } from '../simulator/definitions/scenes/jbc23-Find-the-Black-Line';
 import { JBC_24 } from '../simulator/definitions/scenes/jbc24-Walk-the-Line';
 import { BEX_1 } from '../simulator/definitions/scenes/bex26/bex1-Waypoint-Alpha';
+import { BEX_2 } from '../simulator/definitions/scenes/bex26/bex2-Relocate-the-Red-Cube';
+import { BEX_3 } from '../simulator/definitions/scenes/bex26/bex3-Mixed-Freight';
+import { BEX_4 } from '../simulator/definitions/scenes/bex26/bex4-Remove-the-Hazard';
+import { BEX_5 } from '../simulator/definitions/scenes/bex26/bex5-Top-Shelf-Delivery';
+import { BEX_6 } from '../simulator/definitions/scenes/bex26/bex6-Pallet-Builder';
+import { BEX_7 } from '../simulator/definitions/scenes/bex26/bex7-Hazard-Containment';
+import { BEX_8 } from '../simulator/definitions/scenes/bex26/bex8-Deliver-the-Red-Cube';
+import { BEX_9 } from '../simulator/definitions/scenes/bex26/bex9-Recover-Botguy';
+import { BEX_10 } from '../simulator/definitions/scenes/bex26/bex10-Waypoint-Bravo';
+import { BEX_11 } from '../simulator/definitions/scenes/bex26/bex11-Hazard-Disposal';
+import { BEX_12 } from '../simulator/definitions/scenes/bex26/bex12-Restack-the-Freight';
+import { BEX_13 } from '../simulator/definitions/scenes/bex26/bex13-Rebuild-the-Shipment';
+import { BEX_14 } from '../simulator/definitions/scenes/bex26/bex14-Traffic-Control';
+import { BEX_15 } from '../simulator/definitions/scenes/bex26/bex15-Hazard-Disoposal-2';
+import { BEX_16 } from '../simulator/definitions/scenes/bex26/bex16-Freight-Shelving';
+import { BEX_17 } from '../simulator/definitions/scenes/bex26/bex17-Freight-Racking';
+import { BEX_18 } from '../simulator/definitions/scenes/bex26/bex18-Safety-First';
+
+
 import { createCircleNode } from '../simulator/definitions/scenes/jbcBase';
 import { preBuiltGeometries } from '../simulator/definitions/nodes';
 
@@ -58,6 +77,24 @@ import jbc22 from '../simulator/definitions/challenges/jbc22-Search-and-Rescue';
 import jbc23 from '../simulator/definitions/challenges/jbc23-Find-the-Black-Line';
 import jbc24 from '../simulator/definitions/challenges/jbc24-Walk-the-Line';
 import bex1 from '../simulator/definitions/challenges/bex26/bex1-Waypoint-Alpha';
+import bex2 from '../simulator/definitions/challenges/bex26/bex2-Relocate-the-Red-Cube';
+import bex3 from '../simulator/definitions/challenges/bex26/bex3-Mixed-Freight';
+import bex4 from '../simulator/definitions/challenges/bex26/bex4-Remove-the-Hazard';
+import bex5 from '../simulator/definitions/challenges/bex26/bex5-Top-Shelf-Delivery';
+import bex6 from '../simulator/definitions/challenges/bex26/bex6-Pallet-Builder';
+import bex7 from '../simulator/definitions/challenges/bex26/bex7-Hazard-Containment';
+import bex8 from '../simulator/definitions/challenges/bex26/bex8-Deliver-the-Red-Cube';
+import bex9 from '../simulator/definitions/challenges/bex26/bex9-Recover-Botguy';
+import bex10 from '../simulator/definitions/challenges/bex26/bex10-Waypoint-Bravo';
+import bex11 from '../simulator/definitions/challenges/bex26/bex11-Hazard-Disposal';
+import bex12 from '../simulator/definitions/challenges/bex26/bex12-Restack-the-Freight';
+import bex13 from '../simulator/definitions/challenges/bex26/bex13-Rebuild-the-Shipment';
+import bex14 from '../simulator/definitions/challenges/bex26/bex14-Traffic-Control';
+import bex15 from '../simulator/definitions/challenges/bex26/bex15-Hazard-Disposal-2';
+import bex16 from '../simulator/definitions/challenges/bex26/bex16-Freight-Shelving';
+import bex17 from '../simulator/definitions/challenges/bex26/bex17-Freight-Racking';
+import bex18 from '../simulator/definitions/challenges/bex26/bex18-Safety-First';
+
 const JBC_CHALLENGE_SCENES: Record<ChallengeName, Scene> = {
   jbc0: JBC_0,
   jbc1: JBC_1,
@@ -84,6 +121,24 @@ const JBC_CHALLENGE_SCENES: Record<ChallengeName, Scene> = {
   jbc23: JBC_23,
   jbc24: JBC_24,
   bex1: BEX_1,
+  bex2: BEX_2,
+  bex3: BEX_3,
+  bex4: BEX_4,
+  bex5: BEX_5,
+  bex6: BEX_6,
+  bex7: BEX_7,
+  bex8: BEX_8,
+  bex9: BEX_9,
+  bex10: BEX_10,
+  bex11: BEX_11,
+  bex12: BEX_12,
+  bex13: BEX_13,
+  bex14: BEX_14,
+  bex15: BEX_15,
+  bex16: BEX_16,
+  bex17: BEX_17,
+  bex18: BEX_18
+
 };
 
 const JBC_CHALLENGES: Record<ChallengeName, Challenge> = {
@@ -111,7 +166,24 @@ const JBC_CHALLENGES: Record<ChallengeName, Challenge> = {
   jbc22,
   jbc23,
   jbc24,
-  bex1
+  bex1,
+  bex2,
+  bex3,
+  bex4,
+  bex5,
+  bex6,
+  bex7,
+  bex8,
+  bex9,
+  bex10,
+  bex11,
+  bex12,
+  bex13,
+  bex14,
+  bex15,
+  bex16,
+  bex17,
+  bex18
 };
 
 export type JbcChallengeRefId = ChallengeName | 'custom';
