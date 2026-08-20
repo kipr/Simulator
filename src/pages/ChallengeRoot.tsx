@@ -94,7 +94,7 @@ import {
 } from '../util/playAreaSuccessGoals';
 import { matPlayZonesFromScene } from '../util/jbcMatPlayArea';
 import { worldItemsFromScene } from '../util/jbcChallengeCatalog';
-import { scenePropsRequireSimulatorReload } from '../util/scenePropsRequireSimulatorReload';
+import { isSelectionOnlySceneUpdate, scenePropsRequireSimulatorReload } from '../util/scenePropsRequireSimulatorReload';
 
 
 import Motor from '../programming/AbstractRobot/Motor';
@@ -429,7 +429,8 @@ class Root extends React.Component<Props, State> {
   private onSelectNodeId_ = (nodeId?: string) => {
     if (this.state.modal.type !== Modal.Type.CustomChallengeSetup) return;
     if (!this.workingChallengeScene_) return;
-    this.workingChallengeScene = {
+    Space.getInstance().applySceneSelection(nodeId, undefined);
+    this.workingChallengeScene_ = {
       ...this.workingChallengeScene_,
       selectedNodeId: nodeId,
       selectedScriptId: undefined,
@@ -742,6 +743,18 @@ class Root extends React.Component<Props, State> {
     const prevLatestScene = Async.latestValue(prevProps.scene);
     const latestCompletion = Async.latestValue(this.props.challengeCompletion);
     const prevLatestCompletion = Async.latestValue(prevProps.challengeCompletion);
+
+    if (
+      latestScene &&
+      prevLatestScene &&
+      isSelectionOnlySceneUpdate(prevLatestScene, latestScene)
+    ) {
+      Space.getInstance().applySceneSelection(
+        latestScene.selectedNodeId,
+        latestScene.selectedScriptId,
+      );
+      return;
+    }
 
     if (
       latestScene &&

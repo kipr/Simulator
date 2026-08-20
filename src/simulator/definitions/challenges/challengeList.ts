@@ -25,6 +25,24 @@ export const CHALLENGE_LIST = {
   'jbc22': 'JBC Challenge 22',
   'jbc23': 'JBC Challenge 23',
   'jbc24': 'JBC Challenge 24',
+  'bex1': 'Botball Explorer 1',
+  'bex2': 'Botball Explorer 2',
+  'bex3': 'Botball Explorer 3',
+  'bex4': 'Botball Explorer 4',
+  'bex5': 'Botball Explorer 5',
+  'bex6': 'Botball Explorer 6',
+  'bex7': 'Botball Explorer 7',
+  'bex8': 'Botball Explorer 8',
+  'bex9': 'Botball Explorer 9',
+  'bex10': 'Botball Explorer 10',
+  'bex11': 'Botball Explorer 11',
+  'bex12': 'Botball Explorer 12',
+  'bex13': 'Botball Explorer 13',
+  'bex14': 'Botball Explorer 14',
+  'bex15': 'Botball Explorer 15',
+  'bex16': 'Botball Explorer 16',
+  'bex17': 'Botball Explorer 17',
+  'bex18': 'Botball Explorer 18'
 } as const;
 
 

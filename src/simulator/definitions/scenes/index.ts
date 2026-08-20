@@ -29,6 +29,7 @@ export * from './26fallTableSandbox';
 export * from './26springTableSandbox';
 export * from './gcer25';
 export * from './26botballExplorerSandbox';
+export * from './bex26';
 // export * from './jbcGcer25-Find-The-Black-Line';
 // export * from './jbcGcer25-Sense-The-Can';
 // export * from './jbcGcer25-Ice-Ice-Botguy';

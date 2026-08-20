@@ -13,11 +13,11 @@ const baseScene = createBaseSceneSurface();
 
 
 const LOW_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(42.9, -30, 17),
+  position: Vector3wUnits.centimeters(66.7, -15, 21.9),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const HIGH_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(42.9, -10, 17),
+  position: Vector3wUnits.centimeters(66.7, -5, 21.7),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const LOW_2INCH_RED_CUBE: Node = {
@@ -39,14 +39,14 @@ const HIGH_2INCH_RED_CUBE: Node = {
   origin: HIGH_2INCH_RED_CUBE_ORIGIN
 };
 const POM_ORIENTATION: RotationwUnits = RotationwUnits.eulerDegrees(0, 90, 0);
-const LO_Y = -27;
+const LO_Y = -15;
 const POM_Z_GAP = 6 * 2.61;
-const LO_Z_1 = 17.5 + POM_Z_GAP;
+const LO_Z_1 = 22.4 + POM_Z_GAP;
 
 const LO_ORANGE_POMS: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(9.5, LO_Y, LO_Z_1 + POM_Z_GAP * i),
+    position: Vector3wUnits.centimeters(33.3, LO_Y, LO_Z_1 + POM_Z_GAP * i),
     orientation: POM_ORIENTATION
   };
   LO_ORANGE_POMS[`loOrange${i}`] = {
@@ -62,7 +62,7 @@ for (let i = 0; i < 6; i++) {
 const LO_BLUE_POMS: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(42, LO_Y, LO_Z_1 + POM_Z_GAP * i),
+    position: Vector3wUnits.centimeters(66.3, LO_Y, LO_Z_1 + POM_Z_GAP * i),
     orientation: POM_ORIENTATION
   };
   LO_BLUE_POMS[`loBlue${i}`] = {
@@ -77,7 +77,7 @@ for (let i = 0; i < 6; i++) {
 }
 
 const RED_4INCH_CUBE_PALLET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(15.6, -30, 1.2),
+  position: Vector3wUnits.centimeters(39.5, -15, 6),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const RED_4INCH_CUBE_PALLET: Node = {
@@ -91,7 +91,7 @@ const RED_4INCH_CUBE_PALLET: Node = {
 };
 
 const RED_4INCH_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(15.6, -15, 1.2),
+  position: Vector3wUnits.centimeters(39.5, -5, 6),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const RED_4INCH_CUBE: Node = {
@@ -105,12 +105,12 @@ const RED_4INCH_CUBE: Node = {
 };
 
 const TOP_GREEN_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-5.9, -30, LO_Z_1 - 0.6),
+  position: Vector3wUnits.centimeters(17.9, -15, LO_Z_1 - 0.5),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
 const LOW_GREEN_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-22.2, -30, LO_Z_1 - 0.6),
+  position: Vector3wUnits.centimeters(1.6, -15, LO_Z_1 - 0.5),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
@@ -134,12 +134,12 @@ const TOP_GREEN_2IN_CUBE: Node = {
 };
 
 const TOP_YELLOW_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-5.9, -30, (LO_Z_1 + POM_Z_GAP) - 0.5),
+  position: Vector3wUnits.centimeters(17.9, -15, (LO_Z_1 + POM_Z_GAP) - 0.5),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
 const LOW_YELLOW_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-22.2, -30, (LO_Z_1 + POM_Z_GAP) - 0.5),
+  position: Vector3wUnits.centimeters(1.6, -15, (LO_Z_1 + POM_Z_GAP) - 0.5),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
@@ -163,7 +163,7 @@ const TOP_YELLOW_2IN_CUBE: Node = {
 };
 
 const MIDDLE_PALLET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-14.1, -30, (LO_Z_1 + POM_Z_GAP * 2) + 2.2),
+  position: Vector3wUnits.centimeters(9.6, -15, (LO_Z_1 + POM_Z_GAP * 2) + 2.2),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const MIDDLE_PALLET: Node = {
@@ -177,7 +177,7 @@ const MIDDLE_PALLET: Node = {
 };
 
 const BROWN_4IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-27.6, -30, 119.2),
+  position: Vector3wUnits.centimeters(-3.8, -15, 124.1),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const BROWN_4IN_CUBE: Node = {
@@ -191,17 +191,17 @@ const BROWN_4IN_CUBE: Node = {
 };
 
 const MIDDLE_RED_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-5.9, -30, 129.7),
+  position: Vector3wUnits.centimeters(17.9, -15, 134.6),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
 const MIDDLE_GREEN_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-11.4, -30, 127.2),
+  position: Vector3wUnits.centimeters(12.4, -15, 132.1),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
 const MIDDLE_YELLOW_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-16.7, -30, 129.7),
+  position: Vector3wUnits.centimeters(7, -15, 134.7),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
@@ -236,7 +236,7 @@ const MIDDLE_YELLOW_2IN_CUBE: Node = {
 };
 
 const MIDDLE_GREEN_4IN_PALLET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(26.5, -30, 150.6),
+  position: Vector3wUnits.centimeters(50.3, -15, 155.7),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const MIDDLE_GREEN_4IN_PALLET: Node = {
@@ -250,7 +250,7 @@ const MIDDLE_GREEN_4IN_PALLET: Node = {
 };
 
 const MIDDLE_GREEN_4IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(26.5, -15, 150.6),
+  position: Vector3wUnits.centimeters(50.3, -5, 155.7),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const MIDDLE_GREEN_4IN_CUBE: Node = {
@@ -264,7 +264,7 @@ const MIDDLE_GREEN_4IN_CUBE: Node = {
 };
 
 const LEFT_BASKET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-19.9, -30, 182.8),
+  position: Vector3wUnits.centimeters(4, -15, 188),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0)
 };
 const LEFT_BASKET: Node = {
@@ -278,7 +278,7 @@ const LEFT_BASKET: Node = {
 };
 
 const RIGHT_BASKET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-19.9, -30, 215.3),
+  position: Vector3wUnits.centimeters(4, -14, 219.8),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0)
 };
 const RIGHT_BASKET: Node = {
@@ -292,7 +292,7 @@ const RIGHT_BASKET: Node = {
 };
 
 const LEFT_CONE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(42.9, -30, 132.2),
+  position: Vector3wUnits.centimeters(66.6, -15, 137.2),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const LEFT_CONE: Node = {
@@ -306,7 +306,7 @@ const LEFT_CONE: Node = {
 };
 
 const RIGHT_CONE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(42.9, -30, 169.1),
+  position: Vector3wUnits.centimeters(66.6, -15, 174),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const RIGHT_CONE: Node = {
@@ -320,7 +320,7 @@ const RIGHT_CONE: Node = {
 };
 
 const BOTGUY_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(80.6, -25, 105.7),
+  position: Vector3wUnits.centimeters(104.4, -10, 110.7),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0)
 };
 const BOTGUY: Node = {
@@ -334,7 +334,7 @@ const BOTGUY: Node = {
 };
 
 const RIGHT_STACK_YELLOW_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(59.1, -30, 195.2),
+  position: Vector3wUnits.centimeters(82.9, -15, 200.4),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const RIGHT_STACK_YELLOW_2IN_CUBE: Node = {
@@ -348,7 +348,7 @@ const RIGHT_STACK_YELLOW_2IN_CUBE: Node = {
 };
 
 const RIGHT_STACK_GREEN_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(59.2, -15, 200.5),
+  position: Vector3wUnits.centimeters(82.9, -5, 205.5),
   orientation: RotationwUnits.eulerDegrees(45, 0, 0)
 };
 const RIGHT_STACK_GREEN_2IN_CUBE: Node = {
@@ -362,7 +362,7 @@ const RIGHT_STACK_GREEN_2IN_CUBE: Node = {
 };
 
 const RIGHT_STACK_RED_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(59.1, -30, 205.7),
+  position: Vector3wUnits.centimeters(82.9, -15, 210.5),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const RIGHT_STACK_RED_2IN_CUBE: Node = {

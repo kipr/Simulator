@@ -249,7 +249,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
 
     const sceneColumn_ = (
       <div>
-        {this.createCreateYourOwnSceneName()}
+        {/* {this.createCreateYourOwnSceneName()} */}
         {loadedScenesArray.map(s => this.createSceneName(s[0], s[1]))}
       </div>);
 

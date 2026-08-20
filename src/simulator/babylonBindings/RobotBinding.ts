@@ -728,11 +728,9 @@ class RobotBinding {
   }
 
   // Entry point for actually setting up a robot
-  async setRobot(sceneRobot: SceneNode.Robot, robot: Robot, robotSceneId: string) {
+  async setRobot(_sceneRobot: SceneNode.Robot, robot: Robot, robotSceneId: string) {
     if (this.robot_) throw new Error('Robot already set');
     this.robotSceneId_ = robotSceneId;
-    robot.origin = sceneRobot.origin;
-
     this.robot_ = robot;
 
     // Set Root
