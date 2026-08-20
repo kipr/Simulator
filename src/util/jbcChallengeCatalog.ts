@@ -256,8 +256,8 @@ export function isWorldSceneItemNode(nodeId: string, node: Node): boolean {
 
 /** Item entry for the World panel / sandbox scene (not the full JBC challenge catalog). */
 export type WorldSceneItem = Pick<
-  JbcCatalogItem,
-  'key' | 'nodeId' | 'displayName' | 'templateId'
+JbcCatalogItem,
+'key' | 'nodeId' | 'displayName' | 'templateId'
 >;
 
 function nodeDisplayName(node: Node, nodeId: string): string {

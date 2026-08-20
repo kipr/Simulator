@@ -1,8 +1,8 @@
 import Scene from '../../../../state/State/Scene';
 import { Distance } from '../../../../util';
 import Script from '../../../../state/State/Scene/Script';
-//import { createBaseSceneSurfaceB } from './jbcBase';
-//import { setNodeVisible } from './jbcCommonComponents';
+// import { createBaseSceneSurfaceB } from './jbcBase';
+// import { setNodeVisible } from './jbcCommonComponents';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
@@ -165,4 +165,4 @@ export const BEX_1: Scene = {
       },
     }
   }
-}
+};
