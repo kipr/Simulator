@@ -402,8 +402,7 @@ class Root extends React.Component<Props, State> {
       this.applyCustomChallengeGizmoMode_();
     }
 
-    if (this.props.scene != prevProps.scene && isCustomChallengeId(sceneId))
-    {
+    if (this.props.scene !== prevProps.scene && isCustomChallengeId(sceneId)) {
       const prevScene = Async.latestValue(prevProps.scene) || Scene.EMPTY;
       let latestScene = Async.latestValue(this.props.scene) || Scene.EMPTY;
       const sceneId = this.props.params.sceneId ?? this.props.params.challengeId;
