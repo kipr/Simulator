@@ -389,6 +389,11 @@ class Root extends React.Component<Props, State> {
     prevProps: Readonly<Props>,
     prevState: Readonly<RootState>,
   ): void {
+    const sceneId = this.props.params.sceneId ?? this.props.params.challengeId;
+    if (this.props.scene !== prevProps.scene) {
+      Space.getInstance().scene =
+        Async.latestValue(this.props.scene) || Scene.EMPTY;
+    }
     if (
       prevState.modal !== this.state.modal ||
       prevProps.params.sceneId !== this.props.params.sceneId ||
@@ -397,7 +402,7 @@ class Root extends React.Component<Props, State> {
       this.applyCustomChallengeGizmoMode_();
     }
 
-    if (this.props.scene !== prevProps.scene) {
+    if (this.props.scene !== prevProps.scene && isCustomChallengeId(sceneId)) {
       const prevScene = Async.latestValue(prevProps.scene) || Scene.EMPTY;
       let latestScene = Async.latestValue(this.props.scene) || Scene.EMPTY;
       const sceneId = this.props.params.sceneId ?? this.props.params.challengeId;
@@ -1831,6 +1836,7 @@ const ConnectedRoot = connect(
     onNodeRemove: (nodeId: string) =>
       dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
     onNodeChange: (nodeId: string, node: Node) => {
+      console.log("onNodeChange: ", nodeId, node);
       dispatch(ScenesAction.setNode({ sceneId, nodeId, node }));
       const origin = node.origin;
       const updateOrigin = true;
