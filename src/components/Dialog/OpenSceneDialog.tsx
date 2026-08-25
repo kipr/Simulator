@@ -24,10 +24,14 @@ import { withNavigate, WithNavigateProps } from '../../util/withNavigate';
 import TourTarget from "../Tours/TourTarget";
 import { TourRegistry } from "../../tours/TourRegistry";
 import {
+  ARCHIVED_SCENES,
+  BEX_SANDBOX_SCENE_ID,
   CREATE_YOUR_OWN_SCENE_OPTION_ID,
   JBC_SANDBOX_SCENE_ID,
 } from '../constants/defaultScene';
 import { isCustomChallengeId } from '../../util/customChallengeFactory';
+import { Card } from "../../components/interface/Card";
+import ChallengeCard from "../../components/interface/ChallengeCard";
 export interface OpenSceneDialogPublicProps extends ThemeProps {
   onClose: () => void;
   onStartCustomChallengeSetup?: () => void;
@@ -50,12 +54,13 @@ interface SelectSceneDialogState {
   showCreateYourOwnInstructions: boolean;
   selectedDeleteSceneIds: string[];
   deleteSceneIds: string[] | null;
+  folderSelected: string | null;
 }
 
 const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
-  minHeight: '300px',
+  minHeight: '25em',
 }));
 
 const SceneColumn = styled(ScrollArea, (props: ThemeProps) => ({
@@ -75,6 +80,7 @@ const SceneName = styled('span', (props: ThemeProps & SectionProps) => ({
   padding: `${props.theme.itemPadding * 2}px`,
   fontWeight: props.selected ? 400 : undefined,
   userSelect: 'none',
+  width: '100%',
   display: 'block',
 }));
 
@@ -103,14 +109,28 @@ const MultiSelectToggle = styled('button', (props: ThemeProps & { $selected: boo
 
 const InfoColumn = styled('div', {
   flex: '1 1',
+  alignContent: 'center',
+  // height:'100%'
 });
 
 const InfoContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
   flex: '1 0',
+  height: '100%',
 }));
+const ChallengeItemContainer = styled('div', (props: ThemeProps) => ({
+  display: 'grid',
+  backgroundColor: props.theme.backgroundColor,
+  color: props.theme.color,
+  alignContent: 'center',
+  justifyItems: 'center',
+  minWidth: '200px',
+  // minHeight: '60vh',
 
+  rowGap: '15px',
+  gridTemplateColumns: "repeat(3, 1fr)",
+}));
 const InfoText = styled('span', (props: ThemeProps) => ({
   userSelect: 'none',
   padding: `${props.theme.itemPadding * 2}px`,
@@ -144,6 +164,10 @@ const DialogBarButton = styled('div', (props: ThemeProps & { $muted?: boolean })
   },
 }));
 
+const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
+  flex: 1,
+}));
+
 interface SectionProps {
   selected?: boolean;
 }
@@ -156,6 +180,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
       showCreateYourOwnInstructions: false,
       selectedDeleteSceneIds: [],
       deleteSceneIds: null,
+      folderSelected: null,
     };
   }
 
@@ -199,6 +224,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
       showCreateYourOwnInstructions,
       selectedDeleteSceneIds,
       deleteSceneIds,
+      folderSelected
     } = this.state;
 
     const dialogName = showCreateYourOwnInstructions
@@ -247,16 +273,55 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
       loadedScenesArray.push([key, underlying]);
     });
 
+    const jbc_scenes = loadedScenesArray.filter(([sceneId, scene]) => sceneId.startsWith('jbc') && sceneId !== JBC_SANDBOX_SCENE_ID);
+    const bex_scenes = loadedScenesArray.filter(([sceneId, scene]) => sceneId.startsWith('bex') && sceneId !== BEX_SANDBOX_SCENE_ID);
+    const archived_scenes = loadedScenesArray.filter(([sceneId, scene]) => ARCHIVED_SCENES.includes(sceneId));
+    const sandbox_scenes = loadedScenesArray.filter(([sceneId, scene]) => sceneId.includes('Sandbox') && !ARCHIVED_SCENES.includes(sceneId));
+    const remainderScenes = loadedScenesArray.filter(([sceneId, scene]) => !sceneId.startsWith('jbc') && !sceneId.startsWith('bex'));
+    const folderScenes = {
+      'JBC Challenges': jbc_scenes,
+      'Botball Explorer 2026 Challenges': bex_scenes,
+      'Archived Scenes': archived_scenes,
+    };
+
     const sceneColumn_ = (
       <div>
         {/* {this.createCreateYourOwnSceneName()} */}
-        {loadedScenesArray.map(s => this.createSceneName(s[0], s[1]))}
-      </div>);
+        {
+          sandbox_scenes.map(([sceneId, scene]) => this.createSceneName(sceneId, scene))
+        }
+        {Object.entries(folderScenes).map(([folderName, scenes]) => (
+          <div key={scenes.map(s => s[0]).join('-')}>
+            <SceneName onClick={() => this.handleFolderSelect(folderName)} key={folderName} theme={theme} selected={false}>
+              <strong>{folderName}</strong>
+
+            </SceneName>
+            {folderSelected === folderName && (
+              <div style={{ paddingLeft: '20px' }}>
+                {scenes.map(s => this.createSceneName(s[0], s[1]))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
 
     const infoColumn_ = (<InfoContainer theme={theme}>
       {selectedSceneId === null
         ? this.createNoSceneInfo()
         : this.createSelectedSceneInfo(scenes)}
+      {/* <StyledScrollArea theme={theme}>
+        <ChallengeItemContainer theme={theme}>
+          {jbc_scenes.map(([sceneId, scene]) => (
+            // <div key={sceneId}>
+            //   {sceneId}
+            //   <img style={{ maxWidth: '9em' }} src='../../static/assets/challenge-0.png' />
+
+            // </div>
+            <ChallengeCard cardContent={{ title: scene.name, description: scene.description }} key={sceneId} onClick={() => { }} theme={theme} customheight='150px' customwidth='150px' />
+          ))}
+        </ChallengeItemContainer>
+      </StyledScrollArea> */}
     </InfoContainer>);
 
     const canDeleteSelected = selectedDeleteSceneIds.length > 0;
@@ -468,6 +533,11 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
     );
   };
 
+  private handleFolderSelect = (folderName: string) => {
+    this.setState(prevState => ({
+      folderSelected: prevState.folderSelected === folderName ? null : folderName,
+    }));
+  };
   private createSceneName = (sceneId: string, scene: Scene) => {
     const { theme, locale } = this.props;
     const { selectedSceneId, selectedDeleteSceneIds } = this.state;
