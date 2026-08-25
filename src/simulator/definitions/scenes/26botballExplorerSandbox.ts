@@ -40,8 +40,8 @@ const HIGH_2INCH_RED_CUBE: Node = {
 };
 const POM_ORIENTATION: RotationwUnits = RotationwUnits.eulerDegrees(0, 90, 0);
 const LO_Y = -15;
-const POM_Z_GAP = 6 * 2.61;
-const LO_Z_1 = 22.4 + POM_Z_GAP;
+export const POM_Z_GAP = 6 * 2.61;
+export const LO_Z_1 = 22.4 + POM_Z_GAP;
 
 const LO_ORANGE_POMS: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
@@ -114,7 +114,7 @@ const LOW_GREEN_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
-const LOW_GREEN_2IN_CUBE: Node = {
+export const LOW_GREEN_2IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Low Green Cube'),
   templateId: 'cubeGreen2In',
@@ -123,7 +123,7 @@ const LOW_GREEN_2IN_CUBE: Node = {
   startingOrigin: LOW_GREEN_2IN_CUBE_ORIGIN,
   origin: LOW_GREEN_2IN_CUBE_ORIGIN
 };
-const TOP_GREEN_2IN_CUBE: Node = {
+export const TOP_GREEN_2IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Top Green Cube'),
   templateId: 'cubeGreen2In',
@@ -143,7 +143,7 @@ const LOW_YELLOW_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
-const LOW_YELLOW_2IN_CUBE: Node = {
+export const LOW_YELLOW_2IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Low Yellow Cube'),
   templateId: 'cubeYellow2In',
@@ -152,7 +152,7 @@ const LOW_YELLOW_2IN_CUBE: Node = {
   startingOrigin: LOW_YELLOW_2IN_CUBE_ORIGIN,
   origin: LOW_YELLOW_2IN_CUBE_ORIGIN
 };
-const TOP_YELLOW_2IN_CUBE: Node = {
+export const TOP_YELLOW_2IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Top Yellow Cube'),
   templateId: 'cubeYellow2In',
@@ -166,7 +166,7 @@ const MIDDLE_PALLET_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(9.6, -15, (LO_Z_1 + POM_Z_GAP * 2) + 2.2),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
-const MIDDLE_PALLET: Node = {
+export const MIDDLE_PALLET: Node = {
   type: 'from-bb-template',
   name: tr('Middle Pallet'),
   templateId: 'pallet',
