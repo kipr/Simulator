@@ -19,124 +19,124 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
-    inStartBox: {
-      name: tr('In Start Box'),
-      description: tr('Robot is in the start box'),
+    palletTouchBlackLine: {
+      name: tr('Pallet Touch Black Line'),
+      description: tr('Pallet touched the black line'),
     },
-    notInStartBox: {
-      name: tr('Not In Start Box'),
-      description: tr('Robot is not in the start box'),
+    largeRedCubeNotTouchBlackLine: {
+      name: tr('Large Red Cube Not Touch Black Line'),
+      description: tr('Large Red Cube did not touch the black line'),
     },
-    reachedEnd: {
-      name: tr('Robot Reached End'),
-      description: tr('Robot reached the end of the mat'),
+    lowRedCubeNotTouchBlackLine: {
+      name: tr('Low Red Cube Not Touch Black Line'),
+      description: tr('Low Red Cube did not touch the black line'),
     },
-    noStop: {
-      name: tr('Robot Did Not Stop'),
-      description: tr('Robot did not stop in the adjacent zone'),
+    highRedCubeNotTouchBlackLine: {
+      name: tr('High Red Cube Not Touch Black Line'),
+      description: tr('High Red Cube did not touch the black line'),
     },
-    returnToStartBox: {
-      name: tr('Robot Returned to Start Box'),
-      description: tr('Robot returned to the start box'),
-    },
+
   },
   success: {
     exprs: {
 
-      // End of Mat Events
-      reachedEnd: {
+      palletNotTouchBlackLine: {
         type: Expr.Type.Event,
-        eventId: 'reachedEnd',
-      },
-      reachedEndOnce: {
-        type: Expr.Type.Once,
-        argId: 'reachedEnd',
+        eventId: 'palletNotTouchBlackLine',
       },
 
-      // Start Box Events
 
-      notInStartBox: {
+      largeRedCubeNotTouchBlackLine: {
         type: Expr.Type.Event,
-        eventId: 'notInStartBox',
-      },
-      inStartBox: {
-        type: Expr.Type.Not,
-        argId: 'notInStartBox',
-      },
-      inStartBoxOnce: {
-        type: Expr.Type.Once,
-        argId: "inStartBox",
+        eventId: 'largeRedCubeNotTouchBlackLine',
       },
 
-      notOutOfStartBox: {
-        type: Expr.Type.Not,
-        argId: 'notInStartBox',
-      },
-      startedInStartBox: {
-        type: Expr.Type.And,
-        argIds: ['inStartBox', 'notOutOfStartBox'],
-      },
-      startedInStartBoxOnce: {
-        type: Expr.Type.Once,
-        argId: 'startedInStartBox',
-      },
-      returnToStartBox: {
+      lowRedCubeNotTouchBlackLine: {
         type: Expr.Type.Event,
-        eventId: 'returnToStartBox'
+        eventId: 'lowRedCubeNotTouchBlackLine',
       },
-      returnToStartBoxOnce: {
+
+      lowRedCubeNotTouchBlackLineOnce: {
         type: Expr.Type.Once,
-        argId: 'returnToStartBox'
+        argId: 'lowRedCubeNotTouchBlackLine',
       },
-      bonusReturn: {
-        type: Expr.Type.And,
-        argIds: ['startedInStartBoxOnce', 'reachedEndOnce', 'returnToStartBoxOnce'],
+      highRedCubeNotTouchBlackLine: {
+        type: Expr.Type.Event,
+        eventId: 'highRedCubeNotTouchBlackLine',
+      },
+
+      highRedCubeNotTouchBlackLineOnce: {
+        type: Expr.Type.Once,
+        argId: 'highRedCubeNotTouchBlackLine',
       },
       completion: {
         type: Expr.Type.And,
-        argIds: ['startedInStartBoxOnce', 'reachedEndOnce'],
+        argIds: ['palletNotTouchBlackLine', 'largeRedCubeNotTouchBlackLine'],
       },
     },
     rootId: 'completion',
   },
   failure: {
     exprs: {
-      noStop: {
+
+      palletNotTouchBlackLine: {
         type: Expr.Type.Event,
-        eventId: 'noStop',
+        eventId: 'palletNotTouchBlackLine',
       },
-      noStopOnce: {
-        type: Expr.Type.Once,
-        argId: 'noStop',
+      palletTouchBlackLine: {
+        type: Expr.Type.Not,
+        argId: 'palletNotTouchBlackLine',
       },
+
+      largeRedCubeNotTouchBlackLine: {
+        type: Expr.Type.Event,
+        eventId: 'largeRedCubeNotTouchBlackLine',
+      },
+
+      largeRedCubeTouchBlackLine: {
+        type: Expr.Type.Not,
+        argId: 'largeRedCubeNotTouchBlackLine',
+      },
+
+
 
       failure: {
         type: Expr.Type.And,
-        argIds: ['noStopOnce'],
+        argIds: ['palletTouchBlackLine', 'largeRedCubeTouchBlackLine'],
       }
     },
     rootId: 'failure',
   },
   successGoals: [
-    {
-      exprId: 'startedInStartBoxOnce',
-      name: tr('Start in the Start Box'),
-    },
-    {
-      exprId: 'reachedEndOnce',
-      name: tr('Reach the end other zone'),
-    },
-    {
-      exprId: 'returnToStartBoxOnce',
-      name: tr('Bonus: Return to starting box'),
 
+    {
+      exprId: 'palletNotTouchBlackLine',
+      name: tr('Pallet Not Touching the Black Line'),
+    },
+    {
+      exprId: 'largeRedCubeNotTouchBlackLine',
+      name: tr('Large Red Cube Not Touching the Black Line'),
+    },
+    {
+      exprId: 'lowRedCubeNotTouchBlackLine',
+      name: tr('Bonus: Low Red Cube Not Touching the Black Line'),
+    },
+    {
+      exprId: 'highRedCubeNotTouchBlackLine',
+      name: tr('Bonus: High Red Cube Not Touching the Black Line'),
     }
+
   ],
   failureGoals: [
     {
-      exprId: 'noStop',
-      name: tr('Did not stop in the adjacent zone'),
+      exprId: 'palletTouchBlackLine',
+      name: tr('Pallet Touching the Black Line'),
+    },
+    {
+      exprId: 'largeRedCubeTouchBlackLine',
+      name: tr('Large Red Cube Touching the Black Line'),
     }
+
   ],
   sceneId: 'bex2'
 

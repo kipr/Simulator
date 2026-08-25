@@ -1,5 +1,6 @@
 import Scene from '../../../../state/State/Scene';
 import { Distance } from '../../../../util';
+import Node from '../../../../state/State/Scene/Node';
 import Script from '../../../../state/State/Scene/Script';
 // import { createBaseSceneSurfaceB } from './jbcBase';
 // import { setNodeVisible } from './jbcCommonComponents';
@@ -7,162 +8,179 @@ import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
 import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../../util/math/unitMath';
 const baseScene = createBaseSceneSurface();
 
-const reachedEnd = `
-// If the robot reaches the end, it completes the challenge
-${setNodeVisible}
 
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot reached end!', type, otherNodeId, scene.programStatus);
-  const visible = type === 'start';
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('reachedEnd', type==='start');
-    //setNodeVisible('endBox', visible);
-  }
-}, 'endBox');
-`;
-
-const noStop = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot did not stop!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('noStop', type === 'start');
-  }
-}, 'stopBox');
-`;
-const enterStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot returned start box!', type, otherNodeId, scene.programStatus);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('returnToStartBox', type === 'start');
-  }
-}, 'startBox');
+const palletLeftBlackLine = `
+scene.addOnIntersectionListener('redCubePallet', (type, otherNodeId) => {
+  //console.log('Red Cube Pallet left black line!', type, otherNodeId, scene.programStatus);
+  scene.setChallengeEventValue('palletNotTouchBlackLine', type === 'end');
+},[ 'blackLine1', 'blackLine2', 'blackLine3']);
 `;
 
 
+const largeRedCubeLeftBlackLine = `
+scene.addOnIntersectionListener('redCube', (type, otherNodeId) => {
+  //console.log('Red Cube left black line!', type, otherNodeId, scene.programStatus);
+   scene.setChallengeEventValue('largeRedCubeNotTouchBlackLine', type === 'end');
+},[ 'blackLine1', 'blackLine2', 'blackLine3']);
+`;
+
+
+const lowRedCubeLeftBlackLine = `
+scene.addOnIntersectionListener('lowRedCube', (type, otherNodeId) => {
+  //console.log('Low Red Cube left black line!', type, otherNodeId, scene.programStatus);
+   scene.setChallengeEventValue('lowRedCubeNotTouchBlackLine', type === 'end');
+},[ 'blackLine1', 'blackLine2', 'blackLine3']);
+`;
+
+const highRedCubeLeftBlackLine = `
+scene.addOnIntersectionListener('highRedCube', (type, otherNodeId) => {
+  //console.log('High Red Cube left black line!', type, otherNodeId, scene.programStatus);
+  scene.setChallengeEventValue('highRedCubeNotTouchBlackLine', type === 'end');
+},[ 'blackLine1', 'blackLine2', 'blackLine3']);
+`;
+
+
+const LOW_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(66.7, -15, 21.9),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0)
+};
+const HIGH_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(66.7, -5, 21.7),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0)
+};
+const LOW_2INCH_RED_CUBE: Node = {
+  type: 'from-bb-template',
+  name: tr('Low Red Cube'),
+  templateId: 'cubeRed2In',
+  visible: true,
+  editable: true,
+  startingOrigin: LOW_2INCH_RED_CUBE_ORIGIN,
+  origin: LOW_2INCH_RED_CUBE_ORIGIN
+};
+const HIGH_2INCH_RED_CUBE: Node = {
+  type: 'from-bb-template',
+  name: tr('High Red Cube'),
+  templateId: 'cubeRed2In',
+  visible: true,
+  editable: true,
+  startingOrigin: HIGH_2INCH_RED_CUBE_ORIGIN,
+  origin: HIGH_2INCH_RED_CUBE_ORIGIN
+};
+const RED_4INCH_CUBE_PALLET_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(39.5, -15, 6),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0)
+};
+const RED_4INCH_CUBE_PALLET: Node = {
+  type: 'from-bb-template',
+  name: tr('Red Cube Pallet'),
+  templateId: 'pallet',
+  visible: true,
+  editable: true,
+  startingOrigin: RED_4INCH_CUBE_PALLET_ORIGIN,
+  origin: RED_4INCH_CUBE_PALLET_ORIGIN
+};
+
+const RED_4INCH_CUBE_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(39.5, -5, 6),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0)
+};
+const RED_4INCH_CUBE: Node = {
+  type: 'from-bb-template',
+  name: tr('Red Cube'),
+  templateId: 'cubeRed4In',
+  visible: true,
+  editable: true,
+  startingOrigin: RED_4INCH_CUBE_ORIGIN,
+  origin: RED_4INCH_CUBE_ORIGIN
+};
 export const BEX_2: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 2'),
   description: tr('Botball Explorer Mission 2: Relocate the Red Cube'),
   scripts: {
-    notInStartBox: Script.ecmaScript('Not In Start Box', notInStartBox),
-    reachedEnd: Script.ecmaScript('Robot Reached End', reachedEnd),
-    noStop: Script.ecmaScript('No Stop', noStop),
-    enterStartBox: Script.ecmaScript('Bonus Return', enterStartBox),
+    largeRedCubeLeftBlackLine: Script.ecmaScript('Large Red Cube Left Black Line', largeRedCubeLeftBlackLine),
+    lowRedCubeLeftBlackLine: Script.ecmaScript('Low Red Cube Left Black Line', lowRedCubeLeftBlackLine),
+    highRedCubeLeftBlackLine: Script.ecmaScript('High Red Cube Left Black Line', highRedCubeLeftBlackLine),
+    palletLeftBlackLine: Script.ecmaScript('Pallet Left Black Line', palletLeftBlackLine),
   },
   geometry: {
     ...baseScene.geometry,
-    startBox_geom: {
+    blackLine_geom: {
       type: 'box',
       size: {
-        x: Distance.centimeters(60),
-        y: Distance.centimeters(1),
-        z: Distance.centimeters(32),
-      },
-    },
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
-      },
-    },
-    endBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(27),
-        y: Distance.centimeters(0.1),
-        z: Distance.centimeters(32),
-      },
-    },
-    stopBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(1),
-        y: Distance.centimeters(10),
-        z: Distance.centimeters(32),
+        x: Distance.centimeters(5),
+        y: Distance.centimeters(12),
+        z: Distance.meters(2),
       }
-    }
+    },
+
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: {
+    lowRedCube: LOW_2INCH_RED_CUBE,
+    highRedCube: HIGH_2INCH_RED_CUBE,
+    redCubePallet: RED_4INCH_CUBE_PALLET,
+    redCube: RED_4INCH_CUBE,
+    blackLine1: {
       type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
+      geometryId: 'blackLine_geom',
+      name: tr('Black Line 1'),
       origin: {
         position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-21),
-          z: Distance.centimeters(3.2),
+          x: Distance.centimeters(34.1),
+          y: Distance.centimeters(-22),
+          z: Distance.meters(0.878),
         },
       },
       material: {
         type: 'basic',
         color: {
           type: 'color3',
-          color: Color.rgb(0, 0, 255),
+          color: Color.rgb(126, 2, 163),
         },
       },
     },
-    notStartBox: {
+    blackLine2: {
       type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
+      geometryId: 'blackLine_geom',
+      name: tr('Black Line 2'),
       origin: {
         position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.262),
+          x: Distance.centimeters(66.62),
+          y: Distance.centimeters(-22),
+          z: Distance.meters(0.878),
         },
       },
       material: {
         type: 'basic',
         color: {
           type: 'color3',
-          color: Color.rgb(255, 0, 0),
+          color: Color.rgb(126, 2, 163),
         },
       },
     },
-    endBox: {
+    blackLine3: {
       type: 'object',
-      geometryId: 'endBox_geom',
-      name: tr('End Box'),
+      geometryId: 'blackLine_geom',
+      name: tr('Black Line 3'),
       origin: {
         position: {
-          x: Distance.centimeters(50.3),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
+          x: Distance.centimeters(66.62),
+          y: Distance.centimeters(-22),
+          z: Distance.meters(0.221),
         },
+        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
       },
       material: {
-        type: 'pbr',
-        emissive: {
+        type: 'basic',
+        color: {
           type: 'color3',
-          color: Color.rgb(0, 255, 0),
+          color: Color.rgb(126, 2, 163),
         },
       },
     },
-    stopBox: {
-      type: 'object',
-      geometryId: 'stopBox_geom',
-      name: tr('Stop Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(70.4),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(255, 255, 0),
-        },
-      },
-    }
   }
 };
