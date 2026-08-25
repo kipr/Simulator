@@ -301,8 +301,13 @@ export type ScenesAction = (
 const DEFAULT_SCENES: Scenes = {
   jbcSandbox: Async.loaded({ value: JBC_SCENES.JBC_Sandbox }),
   moonSandbox: Async.loaded({ value: JBC_SCENES.Moon_Sandbox }),
+
+  spring25TableSandbox: Async.loaded({ value: JBC_SCENES.Table_Sandbox }),
   spring26TableSandbox: Async.loaded({ value: JBC_SCENES.SPRING_26_SANDBOX }),
   botballExplorer26Sandbox: Async.loaded({ value: JBC_SCENES.BOTBALL_EXPLORER_26_SANDBOX }),
+  fall26TableSandbox: Async.loaded({ value: JBC_SCENES.FALL_26_SANDBOX }),
+
+
   jbc0: Async.loaded({ value: JBC_SCENES.JBC_0 }),
   jbc1: Async.loaded({ value: JBC_SCENES.JBC_1 }),
   jbc2: Async.loaded({ value: JBC_SCENES.JBC_2 }),
@@ -344,11 +349,10 @@ const DEFAULT_SCENES: Scenes = {
   jbc22: Async.loaded({ value: JBC_SCENES.JBC_22 }),
   jbc23: Async.loaded({ value: JBC_SCENES.JBC_23 }),
   jbc24: Async.loaded({ value: JBC_SCENES.JBC_24 }),
-  fall26TableSandbox: Async.loaded({ value: JBC_SCENES.FALL_26_SANDBOX }),
-  tableSandbox: Async.loaded({ value: JBC_SCENES.Table_Sandbox }),
+
   bex1: Async.loaded({ value: JBC_SCENES.BEX_1 }),
-  // bex2: Async.loaded({ value: JBC_SCENES.BEX_2 }),
-  // bex3: Async.loaded({ value: JBC_SCENES.BEX_3 }),
+  bex2: Async.loaded({ value: JBC_SCENES.BEX_2 }),
+  bex3: Async.loaded({ value: JBC_SCENES.BEX_3 }),
   // bex4: Async.loaded({ value: JBC_SCENES.BEX_4 }),
   // bex5: Async.loaded({ value: JBC_SCENES.BEX_5 }),
   // bex6: Async.loaded({ value: JBC_SCENES.BEX_6 }),
@@ -366,16 +370,16 @@ const DEFAULT_SCENES: Scenes = {
   // bex18: Async.loaded({ value: JBC_SCENES.BEX_18 }),
 
 
-  // Find_The_Black_Line: Async.loaded({ value: JBC_SCENES.Find_The_Black_Line }),
-  // Sense_The_Can: Async.loaded({ value: JBC_SCENES.Sense_The_Can }),
-  // Ice_Ice_Botguy: Async.loaded({ value: JBC_SCENES.Ice_Ice_Botguy }),
-  // Thirst_Quencher: Async.loaded({ value: JBC_SCENES.Thirst_Quencher }),
-  // Entree_Express: Async.loaded({ value: JBC_SCENES.Entree_Express }),
-  // Special_Sauce: Async.loaded({ value: JBC_SCENES.Special_Sauce }),
-  // Cover_Your_Bases: Async.loaded({ value: JBC_SCENES.Cover_Your_Bases }),
-  // Odd_Numbers: Async.loaded({ value: JBC_SCENES.Odd_Numbers }),
-  // Bulldozer_Mania: Async.loaded({ value: JBC_SCENES.Bulldozer_Mania }),
-  // Mountain_Rescue: Async.loaded({ value: JBC_SCENES.Mountain_Rescue }),
+  Find_The_Black_Line: Async.loaded({ value: JBC_SCENES.Find_The_Black_Line }),
+  Sense_The_Can: Async.loaded({ value: JBC_SCENES.Sense_The_Can }),
+  Ice_Ice_Botguy: Async.loaded({ value: JBC_SCENES.Ice_Ice_Botguy }),
+  Thirst_Quencher: Async.loaded({ value: JBC_SCENES.Thirst_Quencher }),
+  Entree_Express: Async.loaded({ value: JBC_SCENES.Entree_Express }),
+  Special_Sauce: Async.loaded({ value: JBC_SCENES.Special_Sauce }),
+  Cover_Your_Bases: Async.loaded({ value: JBC_SCENES.Cover_Your_Bases }),
+  Odd_Numbers: Async.loaded({ value: JBC_SCENES.Odd_Numbers }),
+  Bulldozer_Mania: Async.loaded({ value: JBC_SCENES.Bulldozer_Mania }),
+  Mountain_Rescue: Async.loaded({ value: JBC_SCENES.Mountain_Rescue }),
   // scriptPlayground: Async.loaded({ value: JBC_SCENES.scriptPlayground }),
   // lightSensorTest: Async.loaded({ value: JBC_SCENES.lightSensorTest }),
 };
