@@ -15,7 +15,7 @@ import { withNavigate, WithNavigateProps } from '../util/withNavigate';
 import { AsyncClassroom, Classroom, ClassroomAssignment } from '../state/State/Classroom';
 import { CreateClassroomDialog } from '../components/Dialog/CreateClassroomDialog';
 import Dict from '../util/objectOps/Dict';
-import { nativeScrollbarChrome } from '../util/nativeScrollbarChrome';
+import NativeScrollContainer from '../components/interface/NativeScrollContainer';
 import { ClassroomsAction, listChallengesByStudentId, deleteClassroom } from 'state/reducer/classrooms';
 import { auth } from '../firebase/firebase';
 import { User } from 'ivygate/dist/src/types/user';
@@ -178,12 +178,9 @@ const ClassroomsCardContainer = styled('div', (props: ThemeProps) => ({
   margin: '20px 20px 0px 20px',
 }));
 
-const ClassroomCardScrollContainer = styled('div', (props: { collapsed: boolean }) => ({
-  width: '100%',
-  overflow: 'auto',
-  height: props.collapsed ? '3%' : '33%',
-  ...nativeScrollbarChrome,
-}));
+const ClassroomCardsScroller = styled(NativeScrollContainer, {
+  height: '33%',
+});
 
 const CardWrapper = styled('div', (props: ThemeProps & { selected?: boolean }) => ({
   borderRadius: `${props.theme.itemPadding * 4}px`,
@@ -920,7 +917,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
               <ClassroomsContainer style={style} theme={theme}>
 
                 {this.state.cardContainerVisible
-                  ? (<ClassroomCardScrollContainer collapsed={!this.state.cardContainerVisible}>
+                  ? (<ClassroomCardsScroller>
 
                     <TourTarget registry={this.registry} targetKey="teacher-classroom-cards-strip" style={{ display: 'contents' }}>
                       <ClassroomsCardContainer style={style} theme={theme}>
@@ -947,7 +944,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                     <StickyButtonWrap>
                       <Icon icon={this.state.cardContainerVisible ? faAngleUp : faAngleDown} onClick={() => this.setState({ cardContainerVisible: !this.state.cardContainerVisible })} />
                     </StickyButtonWrap>
-                  </ClassroomCardScrollContainer>) : (
+                  </ClassroomCardsScroller>) : (
                     <div style={{ height: '3%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                       <div>{LocalizedString.lookup(tr('See Classroom Cards'), locale)}</div>
                       <Icon icon={faAngleDown} onClick={() => this.setState({ cardContainerVisible: true })} style={{ marginLeft: '10px' }} />
