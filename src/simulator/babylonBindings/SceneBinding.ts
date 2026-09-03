@@ -1524,7 +1524,10 @@ class SceneBinding {
       const objNode = this.resolveObjectNode_(node);
       if (!objNode) continue;
 
-      const bNode = this.findSceneMeshForNode_(nodeId);
+      const cached = this.nodes_[nodeId];
+      const bNode = cached instanceof AbstractMesh
+        ? cached
+        : this.findSceneMeshForNode_(nodeId);
       if (!(bNode instanceof AbstractMesh)) continue;
 
       this.updateNodePosition_(objNode, bNode, nodeId, scene);
