@@ -76,6 +76,22 @@ import Mountain_Rescue from '../../simulator/definitions/challenges/gcer25/jbcGc
 import bex1 from '../../simulator/definitions/challenges/bex26/bex1-Waypoint-Alpha';
 import bex2 from '../../simulator/definitions/challenges/bex26/bex2-Relocate-the-Red-Cube';
 import bex3 from '../../simulator/definitions/challenges/bex26/bex3-Mixed-Freight';
+import bex4 from '../../simulator/definitions/challenges/bex26/bex4-Remove-the-Hazard';
+import bex5 from '../../simulator/definitions/challenges/bex26/bex5-Top-Shelf-Delivery';
+import bex6 from '../../simulator/definitions/challenges/bex26/bex6-Pallet-Builder';
+import bex7 from '../../simulator/definitions/challenges/bex26/bex7-Hazard-Containment';
+import bex8 from '../../simulator/definitions/challenges/bex26/bex8-Deliver-the-Red-Cube';
+import bex9 from '../../simulator/definitions/challenges/bex26/bex9-Recover-Botguy';
+import bex10 from '../../simulator/definitions/challenges/bex26/bex10-Waypoint-Bravo';
+import bex11 from '../../simulator/definitions/challenges/bex26/bex11-Hazard-Disposal';
+import bex12 from '../../simulator/definitions/challenges/bex26/bex12-Restack-the-Freight';
+import bex13 from '../../simulator/definitions/challenges/bex26/bex13-Rebuild-the-Shipment';
+import bex14 from '../../simulator/definitions/challenges/bex26/bex14-Traffic-Control';
+import bex15 from '../../simulator/definitions/challenges/bex26/bex15-Hazard-Disposal-2';
+import bex16 from '../../simulator/definitions/challenges/bex26/bex16-Freight-Shelving';
+import bex17 from '../../simulator/definitions/challenges/bex26/bex17-Freight-Racking';
+import bex18 from '../../simulator/definitions/challenges/bex26/bex18-Safety-First';
+
 export namespace ChallengesAction {
   export interface LoadChallenge {
     type: 'challenges/load-challenge';
@@ -367,6 +383,66 @@ const DEFAULT_CHALLENGES: Challenges = {
   'bex3': Async.loaded({
     value: bex3,
     brief: ChallengeBrief.fromChallenge(bex3)
+  }),
+  'bex4': Async.loaded({
+    value: bex4,
+    brief: ChallengeBrief.fromChallenge(bex4)
+  }),
+  'bex5': Async.loaded({
+    value: bex5,
+    brief: ChallengeBrief.fromChallenge(bex5)
+  }),
+  'bex6': Async.loaded({
+    value: bex6,
+    brief: ChallengeBrief.fromChallenge(bex6)
+  }),
+  'bex7': Async.loaded({
+    value: bex7,
+    brief: ChallengeBrief.fromChallenge(bex7)
+  }),
+  'bex8': Async.loaded({
+    value: bex8,
+    brief: ChallengeBrief.fromChallenge(bex8)
+  }),
+  'bex9': Async.loaded({
+    value: bex9,
+    brief: ChallengeBrief.fromChallenge(bex9)
+  }),
+  'bex10': Async.loaded({
+    value: bex10,
+    brief: ChallengeBrief.fromChallenge(bex10)
+  }),
+  'bex11': Async.loaded({
+    value: bex11,
+    brief: ChallengeBrief.fromChallenge(bex11)
+  }),
+  'bex12': Async.loaded({
+    value: bex12,
+    brief: ChallengeBrief.fromChallenge(bex12)
+  }),
+  'bex13': Async.loaded({
+    value: bex13,
+    brief: ChallengeBrief.fromChallenge(bex13)
+  }),
+  'bex14': Async.loaded({
+    value: bex14,
+    brief: ChallengeBrief.fromChallenge(bex14)
+  }),
+  'bex15': Async.loaded({
+    value: bex15,
+    brief: ChallengeBrief.fromChallenge(bex15)
+  }),
+  'bex16': Async.loaded({
+    value: bex16,
+    brief: ChallengeBrief.fromChallenge(bex16)
+  }),
+  'bex17': Async.loaded({
+    value: bex17,
+    brief: ChallengeBrief.fromChallenge(bex17)
+  }),
+  'bex18': Async.loaded({
+    value: bex18,
+    brief: ChallengeBrief.fromChallenge(bex18)
   }),
   'Find_The_Black_Line': Async.loaded({
     value: Find_The_Black_Line,

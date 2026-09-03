@@ -19,10 +19,30 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
-
+    bothConesOffBlackLine: {
+      name: tr('Both Cones Off Black Line'),
+      description: tr('Both cones are off the black line')
+    },
+    bonus: {
+      name: tr('Bonus'),
+      description: tr('One cone is in the Loading Zone')
+    }
   },
   success: {
     exprs: {
+      bothConesOffBlackLine: {
+        type: Expr.Type.Event,
+        eventId: 'bothConesOffBlackLine',
+      },
+
+      bonus: {
+        type: Expr.Type.Event,
+        eventId: 'bonus',
+      },
+      completion: {
+        type: Expr.Type.And,
+        argIds: ['bothConesOffBlackLine'],
+      }
     },
     rootId: 'completion',
   },
@@ -33,7 +53,14 @@ export default {
     rootId: 'failure',
   },
   successGoals: [
-
+    {
+      exprId: 'bothConesOffBlackLine',
+      name: tr('Both Cones Off Black Line'),
+    },
+    {
+      exprId: 'bonus',
+      name: tr('One Cone in Loading Zone'),
+    }
   ],
   failureGoals: [
 

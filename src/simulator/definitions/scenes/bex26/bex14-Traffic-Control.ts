@@ -7,37 +7,48 @@ import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
 import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
+import { blackLineNodes, BLACK_LINE_GEOMETRY } from './bexCommonComponents';
+import { RIGHT_CONE, LEFT_CONE } from '../26botballExplorerSandbox';
+
+
 const baseScene = createBaseSceneSurface();
 
-const reachedEnd = `
-// If the robot reaches the end, it completes the challenge
-${setNodeVisible}
+const conesOnBlackLine = `
 
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot reached end!', type, otherNodeId, scene.programStatus);
-  const visible = type === 'start';
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('reachedEnd', type==='start');
-    //setNodeVisible('endBox', visible);
+  const cones = ['RIGHT_CONE', 'LEFT_CONE'];
+  let conesOnBlackLine = {
+    RIGHT_CONE: true,
+    LEFT_CONE: true
   }
-}, 'endBox');
+
+  cones.forEach((cone,index) => {
+    scene.addOnIntersectionListener(cone, (type, otherNodeId) => {
+      type === 'start' ? conesOnBlackLine[cone] = true : type === 'end' ? conesOnBlackLine[cone] = false : null;
+
+      const bothConesOffBlackLine =
+        Object.values(conesOnBlackLine).some(value => value);
+      scene.setChallengeEventValue('bothConesOffBlackLine', bothConesOffBlackLine === false);
+
+    }, ['blackLine1', 'blackLine2', 'blackLine3', 'blackLine4', 'blackLine5']);
+  });
+
 `;
 
-const noStop = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot did not stop!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('noStop', type === 'start');
-  }
-}, 'stopBox');
-`;
-const enterStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot returned start box!', type, otherNodeId, scene.programStatus);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('returnToStartBox', type === 'start');
-  }
-}, 'startBox');
+const coneInLoadingZone = `
+  const cones = ['RIGHT_CONE', 'LEFT_CONE'];
+  let coneInLoadingZone = [];
+
+  cones.forEach((cone,index) => {
+    scene.addOnIntersectionListener(cone, (type, otherNodeId) => {
+      type === 'start' ? coneInLoadingZone.push(cone) : type === 'end' ? coneInLoadingZone = coneInLoadingZone.filter(c => c !== cone) : null;
+
+      const oneConeInLoadingZone =
+        coneInLoadingZone.length > 0;
+      scene.setChallengeEventValue('bonus', (scene.getChallengeEventValue('bothConesOffBlackLine') && oneConeInLoadingZone));
+
+    }, 'loadingZone');
+  });
+
 `;
 
 
@@ -46,121 +57,45 @@ export const BEX_14: Scene = {
   name: tr('Botball Explorer 14'),
   description: tr('Botball Explorer Mission 14: Traffic Control'),
   scripts: {
-    notInStartBox: Script.ecmaScript('Not In Start Box', notInStartBox),
-    reachedEnd: Script.ecmaScript('Robot Reached End', reachedEnd),
-    noStop: Script.ecmaScript('No Stop', noStop),
-    enterStartBox: Script.ecmaScript('Bonus Return', enterStartBox),
+    conesOnBlackLine: Script.ecmaScript('Cones On Black Line', conesOnBlackLine),
+    coneInLoadingZone: Script.ecmaScript('Cones In Loading Zone', coneInLoadingZone),
   },
   geometry: {
     ...baseScene.geometry,
-    startBox_geom: {
+    BLACK_LINE_GEOMETRY,
+    loadingZone_geom: {
       type: 'box',
       size: {
-        x: Distance.centimeters(60),
-        y: Distance.centimeters(1),
-        z: Distance.centimeters(32),
-      },
-    },
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
-      },
-    },
-    endBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(27),
+        x: Distance.centimeters(57),
         y: Distance.centimeters(0.1),
-        z: Distance.centimeters(32),
+        z: Distance.centimeters(43)
       },
-    },
-    stopBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(1),
-        y: Distance.centimeters(10),
-        z: Distance.centimeters(32),
-      }
     }
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: {
+    ...blackLineNodes,
+    RIGHT_CONE,
+    LEFT_CONE,
+    loadingZone: {
       type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
+      geometryId: 'loadingZone_geom',
+      name: tr('Loading Zone'),
+      visible: true,
+      editable: true,
       origin: {
         position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-21),
-          z: Distance.centimeters(3.2),
+          x: Distance.meters(-0.927),
+          y: Distance.meters(-0.156),
+          z: Distance.centimeters(-5.168)
         },
+
       },
       material: {
         type: 'basic',
         color: {
           type: 'color3',
-          color: Color.rgb(0, 0, 255),
-        },
-      },
-    },
-    notStartBox: {
-      type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.262),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(255, 0, 0),
-        },
-      },
-    },
-    endBox: {
-      type: 'object',
-      geometryId: 'endBox_geom',
-      name: tr('End Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(50.3),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(0, 255, 0),
-        },
-      },
-    },
-    stopBox: {
-      type: 'object',
-      geometryId: 'stopBox_geom',
-      name: tr('Stop Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(70.4),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(255, 255, 0),
+          color: Color.rgb(84, 228, 132),
         },
       },
     }

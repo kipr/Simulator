@@ -19,10 +19,29 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
-
+    blueAndOrangePomsInPVC: {
+      name: tr('Blue and Orange Poms in PVC'),
+      description: tr('Blue and Orange Poms in PVC'),
+    },
+    blueAndOrangePomsInDifferentPVC: {
+      name: tr('Blue and Orange Poms in Different PVC'),
+      description: tr('Blue and Orange Poms in Different PVC'),
+    },
   },
   success: {
     exprs: {
+      blueAndOrangePomsInPVC: {
+        type: Expr.Type.Event,
+        eventId: 'blueAndOrangePomsInPVC',
+      },
+      blueAndOrangePomsInDifferentPVC: {
+        type: Expr.Type.Event,
+        eventId: 'blueAndOrangePomsInDifferentPVC',
+      },
+      completion: {
+        type: Expr.Type.And,
+        argIds: ['blueAndOrangePomsInPVC', 'blueAndOrangePomsInDifferentPVC'],
+      },
     },
     rootId: 'completion',
   },
@@ -33,7 +52,14 @@ export default {
     rootId: 'failure',
   },
   successGoals: [
-
+    {
+      exprId: 'blueAndOrangePomsInPVC',
+      name: tr('One Blue and one Orange Poms in PVC'),
+    },
+    {
+      exprId: 'blueAndOrangePomsInDifferentPVC',
+      name: tr('Bonus: One Blue and one Orange Poms in Different PVC'),
+    }
   ],
   failureGoals: [
 

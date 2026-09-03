@@ -19,10 +19,31 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
+    largeCubeAndPalletOnLoadingDock: {
+      name: tr('Large Red Cube and Pallet on Loading Dock'),
+      description: tr('Large Red Cube and Pallet on Loading Dock'),
+    },
+    bonus: {
+      name: tr('Bonus: Small Red Cube on Large Red Cube on Loading Dock'),
+      description: tr('Small Red Cube on Large Red Cube on Loading Dock'),
+    }
+
 
   },
   success: {
     exprs: {
+      largeCubeAndPalletOnLoadingDock: {
+        type: Expr.Type.Event,
+        eventId: 'largeCubeAndPalletOnLoadingDock',
+      },
+      bonus: {
+        type: Expr.Type.Event,
+        eventId: 'bonus',
+      },
+      completion: {
+        type: Expr.Type.Event,
+        eventId: 'largeCubeAndPalletOnLoadingDock',
+      },
     },
     rootId: 'completion',
   },
@@ -33,7 +54,14 @@ export default {
     rootId: 'failure',
   },
   successGoals: [
-
+    {
+      exprId: 'largeCubeAndPalletOnLoadingDock',
+      name: tr('Large Red Cube and Pallet on Loading Dock'),
+    },
+    {
+      exprId: 'bonus',
+      name: tr('Bonus: Small Red Cube on Large Red Cube on Loading Dock'),
+    }
   ],
   failureGoals: [
 

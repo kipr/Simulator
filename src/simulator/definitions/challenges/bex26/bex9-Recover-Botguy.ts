@@ -19,10 +19,39 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
+    robotTouchBotguy: {
+      name: tr('Robot Touch Botguy'),
+      description: tr('The Robot touched Botguy')
+    },
+    bonus: {
+      name: tr('Bonus'),
+      description: tr('Botguy is completely outside the enclosure AND is touching the warehouse floor')
+    }
 
   },
   success: {
     exprs: {
+      robotTouchBotguy: {
+        type: Expr.Type.Event,
+        eventId: 'robotTouchBotguy',
+      },
+      robotTouchBotguyOnce: {
+        type: Expr.Type.Once,
+        argId: 'robotTouchBotguy',
+      },
+      bonus: {
+        type: Expr.Type.Event,
+        eventId: 'bonus',
+      },
+      bonusOnce: {
+        type: Expr.Type.Once,
+        argId: 'bonus',
+      },
+      completion: {
+        type: Expr.Type.And,
+        argIds: ['robotTouchBotguyOnce'],
+      },
+
     },
     rootId: 'completion',
   },
@@ -33,7 +62,14 @@ export default {
     rootId: 'failure',
   },
   successGoals: [
-
+    {
+      exprId: 'robotTouchBotguyOnce',
+      name: tr('Robot Touch Botguy'),
+    },
+    {
+      exprId: 'bonusOnce',
+      name: tr('Bonus: Botguy is completely outside the enclosure AND is touching the warehouse floor'),
+    }
   ],
   failureGoals: [
 

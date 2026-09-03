@@ -2,14 +2,16 @@ import Scene from '../../../../state/State/Scene';
 import { Distance } from '../../../../util';
 import Node from '../../../../state/State/Scene/Node';
 import Script from '../../../../state/State/Scene/Script';
-// import { createBaseSceneSurfaceB } from './jbcBase';
-// import { setNodeVisible } from './jbcCommonComponents';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
 import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../../util/math/unitMath';
+import { RED_4INCH_CUBE, LOW_2INCH_RED_CUBE, HIGH_2INCH_RED_CUBE, RED_4INCH_CUBE_PALLET } from '../26botballExplorerSandbox';
+
 const baseScene = createBaseSceneSurface();
+
+
 
 
 const palletLeftBlackLine = `
@@ -42,60 +44,6 @@ scene.addOnIntersectionListener('highRedCube', (type, otherNodeId) => {
 },[ 'blackLine1', 'blackLine2', 'blackLine3']);
 `;
 
-
-const LOW_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(66.7, -15, 21.9),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0)
-};
-const HIGH_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(66.7, -5, 21.7),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0)
-};
-const LOW_2INCH_RED_CUBE: Node = {
-  type: 'from-bb-template',
-  name: tr('Low Red Cube'),
-  templateId: 'cubeRed2In',
-  visible: true,
-  editable: true,
-  startingOrigin: LOW_2INCH_RED_CUBE_ORIGIN,
-  origin: LOW_2INCH_RED_CUBE_ORIGIN
-};
-const HIGH_2INCH_RED_CUBE: Node = {
-  type: 'from-bb-template',
-  name: tr('High Red Cube'),
-  templateId: 'cubeRed2In',
-  visible: true,
-  editable: true,
-  startingOrigin: HIGH_2INCH_RED_CUBE_ORIGIN,
-  origin: HIGH_2INCH_RED_CUBE_ORIGIN
-};
-const RED_4INCH_CUBE_PALLET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(39.5, -15, 6),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0)
-};
-const RED_4INCH_CUBE_PALLET: Node = {
-  type: 'from-bb-template',
-  name: tr('Red Cube Pallet'),
-  templateId: 'pallet',
-  visible: true,
-  editable: true,
-  startingOrigin: RED_4INCH_CUBE_PALLET_ORIGIN,
-  origin: RED_4INCH_CUBE_PALLET_ORIGIN
-};
-
-const RED_4INCH_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(39.5, -5, 6),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0)
-};
-const RED_4INCH_CUBE: Node = {
-  type: 'from-bb-template',
-  name: tr('Red Cube'),
-  templateId: 'cubeRed4In',
-  visible: true,
-  editable: true,
-  startingOrigin: RED_4INCH_CUBE_ORIGIN,
-  origin: RED_4INCH_CUBE_ORIGIN
-};
 export const BEX_2: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 2'),

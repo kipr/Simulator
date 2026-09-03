@@ -7,38 +7,124 @@ import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
 import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
+import { LO_BLUE_POMS, LO_ORANGE_POMS } from '../26botballExplorerSandbox';
+import { RotationwUnits } from '../../../../util/math/unitMath';
+
+
+
 const baseScene = createBaseSceneSurface();
 
-const reachedEnd = `
-// If the robot reaches the end, it completes the challenge
-${setNodeVisible}
+const pomEnteredPVC = `
+const orangePoms = ['loOrange0', 'loOrange1', 'loOrange2', 'loOrange3', 'loOrange4', 'loOrange5', ];
+const bluePoms = ['loBlue0', 'loBlue1', 'loBlue2', 'loBlue3', 'loBlue4', 'loBlue5'];
 
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot reached end!', type, otherNodeId, scene.programStatus);
-  const visible = type === 'start';
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('reachedEnd', type==='start');
-    //setNodeVisible('endBox', visible);
+const leftPVCSet = new Set();
+const middlePVCSet = new Set();
+const rightPVCSet = new Set();
+
+const setsEqual = (a, b) =>
+  a.size === b.size && [...a].every(x => b.has(x));
+
+
+function checkPomsInDifferentPVC() {
+  const leftPVCHasOrange = [...leftPVCSet].some(item => item.startsWith('loOrange'));
+  const leftPVCHasBlue = [...leftPVCSet].some(item => item.startsWith('loBlue'));
+
+  const middlePVCHasOrange = [...middlePVCSet].some(item => item.startsWith('loOrange'));
+  const middlePVCHasBlue = [...middlePVCSet].some(item => item.startsWith('loBlue'));
+
+  const rightPVCHasOrange = [...rightPVCSet].some(item => item.startsWith('loOrange'));
+  const rightPVCHasBlue = [...rightPVCSet].some(item => item.startsWith('loBlue'));
+
+  const leftEnclosureFull = leftPVCHasOrange && leftPVCHasBlue;
+  const middleEnclosureFull = middlePVCHasOrange && middlePVCHasBlue;
+  const rightEnclosureFull = rightPVCHasOrange && rightPVCHasBlue;
+
+  if (leftEnclosureFull || middleEnclosureFull || rightEnclosureFull) {
+    console.log('blueAndOrangePomsInPVC', true);
+
+    scene.setChallengeEventValue('blueAndOrangePomsInPVC', true);
+
+    if((leftEnclosureFull && middleEnclosureFull) || (leftEnclosureFull && rightEnclosureFull) || (middleEnclosureFull && rightEnclosureFull)) {
+      console.log('blueAndOrangePomsInDifferentPVC', true);
+      scene.setChallengeEventValue('blueAndOrangePomsInDifferentPVC', true);
+    } else {
+      console.log('blueAndOrangePomsInDifferentPVC', false);
+      scene.setChallengeEventValue('blueAndOrangePomsInDifferentPVC', false);
+    }
+  } else {
+    console.log('blueAndOrangePomsInPVC', false);
+    scene.setChallengeEventValue('blueAndOrangePomsInPVC', false);
   }
-}, 'endBox');
+} 
+
+orangePoms.forEach(pom => {
+  scene.addOnIntersectionListener(pom, (type, otherNodeId) => {
+    if (type === 'start') {
+      switch(otherNodeId) {
+        case 'pvcEncloseLeft':
+          leftPVCSet.add(pom);
+          break;
+        case 'pvcEncloseMiddle':
+          middlePVCSet.add(pom);
+          break;
+        case 'pvcEncloseRight':
+          rightPVCSet.add(pom);
+          break;
+      }
+    }
+    else if (type === 'end') {
+      switch(otherNodeId) {
+        case 'pvcEncloseLeft':
+          leftPVCSet.delete(pom);
+          break;
+        case 'pvcEncloseMiddle':
+          middlePVCSet.delete(pom);
+          break;
+        case 'pvcEncloseRight':
+          rightPVCSet.delete(pom);
+          break;
+      }
+    }
+    console.log('orangePoms', pom, type, otherNodeId, leftPVCSet, middlePVCSet, rightPVCSet);
+    checkPomsInDifferentPVC();
+  }, ['pvcEncloseLeft', 'pvcEncloseMiddle', 'pvcEncloseRight']);
+});
+
+bluePoms.forEach(pom => {
+  scene.addOnIntersectionListener(pom, (type, otherNodeId) => {
+    if (type === 'start') {
+      switch(otherNodeId) {
+        case 'pvcEncloseLeft':
+          leftPVCSet.add(pom);
+          break;
+        case 'pvcEncloseMiddle':
+          middlePVCSet.add(pom);
+          break;
+        case 'pvcEncloseRight':
+          rightPVCSet.add(pom);
+          break;
+      }
+    }
+    else if (type === 'end') {
+      switch(otherNodeId) {
+        case 'pvcEncloseLeft':
+          leftPVCSet.delete(pom);
+          break;
+        case 'pvcEncloseMiddle':
+          middlePVCSet.delete(pom);
+          break;
+        case 'pvcEncloseRight':
+          rightPVCSet.delete(pom);
+          break;
+      }
+    }
+      checkPomsInDifferentPVC();
+    console.log('bluePoms', pom, type, otherNodeId, leftPVCSet, middlePVCSet, rightPVCSet);
+  }, ['pvcEncloseLeft', 'pvcEncloseMiddle', 'pvcEncloseRight']);
+});
 `;
 
-const noStop = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot did not stop!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('noStop', type === 'start');
-  }
-}, 'stopBox');
-`;
-const enterStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot returned start box!', type, otherNodeId, scene.programStatus);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('returnToStartBox', type === 'start');
-  }
-}, 'startBox');
-`;
 
 
 export const BEX_7: Scene = {
@@ -46,123 +132,91 @@ export const BEX_7: Scene = {
   name: tr('Botball Explorer 7'),
   description: tr('Botball Explorer Mission 7: Hazard Containment'),
   scripts: {
-    notInStartBox: Script.ecmaScript('Not In Start Box', notInStartBox),
-    reachedEnd: Script.ecmaScript('Robot Reached End', reachedEnd),
-    noStop: Script.ecmaScript('No Stop', noStop),
-    enterStartBox: Script.ecmaScript('Bonus Return', enterStartBox),
+
+    pomEnteredPVC: Script.ecmaScript('Pom Entered PVC', pomEnteredPVC),
   },
   geometry: {
     ...baseScene.geometry,
-    startBox_geom: {
+    pvcEnclose_geom: {
       type: 'box',
       size: {
-        x: Distance.centimeters(60),
-        y: Distance.centimeters(1),
-        z: Distance.centimeters(32),
-      },
-    },
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
+        x: Distance.centimeters(70),
         y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
+        z: Distance.centimeters(9),
       },
     },
-    endBox_geom: {
+    pvcEncloseRight_geom: {
       type: 'box',
       size: {
-        x: Distance.centimeters(27),
-        y: Distance.centimeters(0.1),
-        z: Distance.centimeters(32),
-      },
-    },
-    stopBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(1),
+        x: Distance.centimeters(78),
         y: Distance.centimeters(10),
-        z: Distance.centimeters(32),
-      }
-    }
+        z: Distance.centimeters(9),
+      },
+    },
+
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: {
+    ...LO_BLUE_POMS,
+    ...LO_ORANGE_POMS,
+    pvcEncloseLeft: {
       type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
+      geometryId: 'pvcEnclose_geom',
+      name: tr('PVC Enclosure Left'),
       origin: {
         position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-21),
-          z: Distance.centimeters(3.2),
+          x: Distance.centimeters(72.73),
+          y: Distance.centimeters(-16.15),
+          z: Distance.centimeters(90.43),
         },
       },
       material: {
         type: 'basic',
         color: {
           type: 'color3',
-          color: Color.rgb(0, 0, 255),
+          color: Color.rgb(255, 255, 255),
         },
       },
     },
-    notStartBox: {
+    pvcEncloseMiddle: {
       type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
+      geometryId: 'pvcEnclose_geom',
+      name: tr('PVC Enclosure Middle'),
       origin: {
         position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.262),
+          x: Distance.centimeters(-0.62),
+          y: Distance.centimeters(-16.15),
+          z: Distance.centimeters(90.43),
         },
       },
       material: {
         type: 'basic',
         color: {
           type: 'color3',
-          color: Color.rgb(255, 0, 0),
+          color: Color.rgb(255, 255, 255),
         },
       },
     },
-    endBox: {
+
+    pvcEncloseRight: {
       type: 'object',
-      geometryId: 'endBox_geom',
-      name: tr('End Box'),
+      geometryId: 'pvcEncloseRight_geom',
+      name: tr('PVC Enclosure Right'),
       origin: {
         position: {
-          x: Distance.centimeters(50.3),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
+          x: Distance.centimeters(-78.95),
+          y: Distance.centimeters(-16.15),
+          z: Distance.centimeters(90.43),
         },
       },
       material: {
-        type: 'pbr',
-        emissive: {
+        type: 'basic',
+        color: {
           type: 'color3',
-          color: Color.rgb(0, 255, 0),
+          color: Color.rgb(255, 255, 255),
         },
       },
     },
-    stopBox: {
-      type: 'object',
-      geometryId: 'stopBox_geom',
-      name: tr('Stop Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(70.4),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(255, 255, 0),
-        },
-      },
-    }
+
   }
 };

@@ -19,10 +19,59 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
-
+    topGreenCubeOnPallet: {
+      name: tr('Top Green Cube on Pallet'),
+      description: tr('Top Green Cube stacked on Pallet'),
+    },
+    topYellowCubeOnPallet: {
+      name: tr('Top Yellow Cube on Pallet'),
+      description: tr('Top Yellow Cube stacked on Pallet'),
+    },
+    bottomGreenCubeOnPallet: {
+      name: tr('Bottom Green Cube on Pallet'),
+      description: tr('Bottom Green Cube stacked on Pallet'),
+    },
+    bottomYellowCubeOnPallet: {
+      name: tr('Bottom Yellow Cube on Pallet'),
+      description: tr('Bottom Yellow Cube stacked on Pallet'),
+    },
+    bonus: {
+      name: tr('Bonus: Pallet fully within Start Box A or Start Box B'),
+      description: tr('Pallet fully within Start Box A or Start Box B'),
+    }
   },
   success: {
     exprs: {
+
+      topGreenCubeOnPallet: {
+        type: Expr.Type.Event,
+        eventId: 'topGreenCubeOnPallet',
+      },
+      topYellowCubeOnPallet: {
+        type: Expr.Type.Event,
+        eventId: 'topYellowCubeOnPallet',
+      },
+      bottomGreenCubeOnPallet: {
+        type: Expr.Type.Event,
+        eventId: 'bottomGreenCubeOnPallet',
+      },
+      bottomYellowCubeOnPallet: {
+        type: Expr.Type.Event,
+        eventId: 'bottomYellowCubeOnPallet',
+      },
+      bonus: {
+        type: Expr.Type.Event,
+        eventId: 'bonus',
+      },
+      completion: {
+        type: Expr.Type.And,
+        argIds: [
+          'topGreenCubeOnPallet',
+          'topYellowCubeOnPallet',
+          'bottomGreenCubeOnPallet',
+          'bottomYellowCubeOnPallet'
+        ],
+      },
     },
     rootId: 'completion',
   },
@@ -33,7 +82,26 @@ export default {
     rootId: 'failure',
   },
   successGoals: [
-
+    {
+      exprId: 'topGreenCubeOnPallet',
+      name: tr('Top Green Cube stacked on Pallet'),
+    },
+    {
+      exprId: 'topYellowCubeOnPallet',
+      name: tr('Top Yellow Cube stacked on Pallet'),
+    },
+    {
+      exprId: 'bottomGreenCubeOnPallet',
+      name: tr('Bottom Green Cube stacked on Pallet'),
+    },
+    {
+      exprId: 'bottomYellowCubeOnPallet',
+      name: tr('Bottom Yellow Cube stacked on Pallet'),
+    },
+    {
+      exprId: 'bonus',
+      name: tr('Bonus: Pallet fully within Start Box A or Start Box B'),
+    }
   ],
   failureGoals: [
 

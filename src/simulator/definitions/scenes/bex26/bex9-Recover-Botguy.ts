@@ -7,37 +7,27 @@ import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
 import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
+import { BOTGUY } from '../26botballExplorerSandbox';
+
+
 const baseScene = createBaseSceneSurface();
 
-const reachedEnd = `
-// If the robot reaches the end, it completes the challenge
-${setNodeVisible}
-
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot reached end!', type, otherNodeId, scene.programStatus);
-  const visible = type === 'start';
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('reachedEnd', type==='start');
-    //setNodeVisible('endBox', visible);
-  }
-}, 'endBox');
+const robotTouchingBotguy = `
+scene.addOnCollisionListener('robot', (type, otherNodeId) => {
+  scene.setChallengeEventValue('robotTouchBotguy', true);
+}, 'BOTGUY');
 `;
 
-const noStop = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot did not stop!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('noStop', type === 'start');
-  }
-}, 'stopBox');
-`;
-const enterStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot returned start box!', type, otherNodeId, scene.programStatus);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('returnToStartBox', type === 'start');
-  }
-}, 'startBox');
+const bonus = `
+  let botguyOutsideEnclosure = false;
+  let botguyTouchingWarehouseFloor = false;
+  scene.addOnIntersectionListener('BOTGUY', (type, otherNodeId) => {
+
+    (otherNodeId === 'warehouseFloor' && type === 'start') ? botguyTouchingWarehouseFloor = true : botguyTouchingWarehouseFloor = false;
+    (otherNodeId === 'pvcEncloseLeft' || otherNodeId === 'pvcEncloseMiddle' || otherNodeId === 'pvcEncloseRight') && type === 'start' ? botguyOutsideEnclosure = false : botguyOutsideEnclosure = true;
+    (botguyOutsideEnclosure && botguyTouchingWarehouseFloor) ? scene.setChallengeEventValue('bonus', true) : scene.setChallengeEventValue('bonus', false);
+
+  }, ['warehouseFloor', 'pvcEncloseLeft', 'pvcEncloseMiddle', 'pvcEncloseRight']);
 `;
 
 
@@ -46,123 +36,117 @@ export const BEX_9: Scene = {
   name: tr('Botball Explorer 9'),
   description: tr('Botball Explorer Mission 9: Recover Botguy'),
   scripts: {
-    notInStartBox: Script.ecmaScript('Not In Start Box', notInStartBox),
-    reachedEnd: Script.ecmaScript('Robot Reached End', reachedEnd),
-    noStop: Script.ecmaScript('No Stop', noStop),
-    enterStartBox: Script.ecmaScript('Bonus Return', enterStartBox),
+    robotTouchingBotguy: Script.ecmaScript('Robot Touching Botguy', robotTouchingBotguy),
+    bonus: Script.ecmaScript('Bonus', bonus),
   },
   geometry: {
     ...baseScene.geometry,
-    startBox_geom: {
+    pvcEnclose_geom: {
       type: 'box',
       size: {
-        x: Distance.centimeters(60),
-        y: Distance.centimeters(1),
-        z: Distance.centimeters(32),
-      },
-    },
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
+        x: Distance.centimeters(73),
         y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
+        z: Distance.centimeters(13),
       },
     },
-    endBox_geom: {
+    pvcEncloseRight_geom: {
       type: 'box',
       size: {
-        x: Distance.centimeters(27),
+        x: Distance.centimeters(82),
+        y: Distance.centimeters(10),
+        z: Distance.centimeters(13),
+      },
+    },
+    warehouseFloor_geom: {
+      type: 'box',
+      size: {
+        x: Distance.centimeters(250),
         y: Distance.centimeters(0.1),
-        z: Distance.centimeters(32),
+        z: Distance.centimeters(110),
       },
     },
-    stopBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(1),
-        y: Distance.centimeters(10),
-        z: Distance.centimeters(32),
-      }
-    }
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: {
+    BOTGUY,
+    warehouseFloor: {
       type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
+      geometryId: 'warehouseFloor_geom',
+      name: tr('Warehouse Floor'),
       origin: {
         position: {
           x: Distance.centimeters(0),
-          y: Distance.centimeters(-21),
-          z: Distance.centimeters(3.2),
+          y: Distance.centimeters(-15.59),
+          z: Distance.centimeters(27.305),
         },
       },
       material: {
         type: 'basic',
         color: {
           type: 'color3',
-          color: Color.rgb(0, 0, 255),
+          color: Color.rgb(130, 60, 223),
         },
       },
     },
-    notStartBox: {
+
+    pvcEncloseLeft: {
       type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
+      geometryId: 'pvcEnclose_geom',
+      name: tr('PVC Enclosure Left'),
       origin: {
         position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.262),
+          x: Distance.centimeters(72.73),
+          y: Distance.centimeters(-16.15),
+          z: Distance.centimeters(89.244),
         },
       },
       material: {
         type: 'basic',
         color: {
           type: 'color3',
-          color: Color.rgb(255, 0, 0),
+          color: Color.rgb(255, 255, 255),
         },
       },
     },
-    endBox: {
+    pvcEncloseMiddle: {
       type: 'object',
-      geometryId: 'endBox_geom',
-      name: tr('End Box'),
+      geometryId: 'pvcEnclose_geom',
+      name: tr('PVC Enclosure Middle'),
       origin: {
         position: {
-          x: Distance.centimeters(50.3),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
+          x: Distance.centimeters(-0.62),
+          y: Distance.centimeters(-16.15),
+          z: Distance.centimeters(89.244),
         },
       },
       material: {
-        type: 'pbr',
-        emissive: {
+        type: 'basic',
+        color: {
           type: 'color3',
-          color: Color.rgb(0, 255, 0),
+          color: Color.rgb(255, 255, 255),
         },
       },
     },
-    stopBox: {
+
+    pvcEncloseRight: {
       type: 'object',
-      geometryId: 'stopBox_geom',
-      name: tr('Stop Box'),
+      geometryId: 'pvcEncloseRight_geom',
+      name: tr('PVC Enclosure Right'),
       origin: {
         position: {
-          x: Distance.centimeters(70.4),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
+          x: Distance.centimeters(-78.95),
+          y: Distance.centimeters(-16.15),
+          z: Distance.centimeters(89.244),
         },
       },
       material: {
-        type: 'pbr',
-        emissive: {
+        type: 'basic',
+        color: {
           type: 'color3',
-          color: Color.rgb(255, 255, 0),
+          color: Color.rgb(255, 255, 255),
         },
       },
-    }
+    },
+
   }
 };
