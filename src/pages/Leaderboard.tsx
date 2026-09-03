@@ -395,9 +395,14 @@ class Leaderboard extends React.Component<Props, State> {
 
     let users: Record<string, User> = {};
     const challenges: Record<string, Challenge> = {};
+    
+    // Regex to match `custom-<UUID>`
+    const customChallengeRegex = /^custom-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
     for (const [_, attemptedChallenges] of Object.entries(groupData)) {
       for (const [challengeId, challenge] of Object.entries(attemptedChallenges as ChallengeData[])) {
-        if (!categoryForChallengeId(challengeId)) {
+        // TEMP: Ignore custom challenges
+        if (!categoryForChallengeId(challengeId) || customChallengeRegex.test(challengeId)) {
           continue;
         }
         const challenge = {
