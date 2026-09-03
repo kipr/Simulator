@@ -7,7 +7,7 @@ import { Color } from '../../../state/State/Scene/Color';
 import AbstractRobot from '../../../programming/AbstractRobot';
 import Author from '../../../db/Author';
 import { PhysicsMotionType } from '@babylonjs/core';
-import Geometry from '../../../state/State/Scene/Geometry'; // Test import
+import Geometry from '../../../state/State/Scene/Geometry';
 
 import tr from '@i18n';
 import { sprintf } from 'sprintf-js';
@@ -28,7 +28,10 @@ const ROBOT: Node.Robot = {
   origin: ROBOT_ORIGIN
 };
 
-export function wall1(x: number, y: number, z: number): Geometry { // Helper function to create a wall geometry for the base scene (N,S)
+/** Helper function to create a wall geometry for the base scene (N,S).
+ * x, y, z parameters are the dimensions of the wall.
+*/
+export function wall1(x: number, y: number, z: number): Geometry {
   return {
     type: 'box',
     size: {
@@ -39,7 +42,10 @@ export function wall1(x: number, y: number, z: number): Geometry { // Helper fun
   };
 }
 
-export function wall2(x: number, y: number, z: number): Geometry { // Helper function to create a wall geometry for the base scene (E,W)
+/** Helper function to create a wall geometry for the base scene (E,W).
+ * x, y, z parameters are the dimensions of the wall.
+*/
+export function wall2(x: number, y: number, z: number): Geometry {
   return {
     type: 'box',
     size: {
@@ -50,7 +56,8 @@ export function wall2(x: number, y: number, z: number): Geometry { // Helper fun
   };
 }
 
-export function wallOrigin(x: number, y: number, z: number, orientation?: RotationwUnits): ReferenceFramewUnits { // Helper function to create a wall origin for the base scene
+/** Helper function to create a wall origin for the base scene. */
+export function wallOrigin(x: number, y: number, z: number, orientation?: RotationwUnits): ReferenceFramewUnits {
   return {
     position: {
       x: Distance.centimeters(x),
@@ -61,7 +68,8 @@ export function wallOrigin(x: number, y: number, z: number, orientation?: Rotati
   };
 }
 
-export function wallBase(id: string, name: string, origin: ReferenceFramewUnits): Node { // Helper function to create a wall property for the base scene
+/** Helper function to create a wall property for the base scene */
+export function wallBase(id: string, name: string, origin: ReferenceFramewUnits): Node {
   return {
     type: 'object',
     geometryId: id,
@@ -178,7 +186,8 @@ export function createBaseSceneSurfaceA(): Scene {
           z: Distance.feet(4),
         }
       },
-      'bannerN': wall1(11.62, 0.5, 0.7), // Divide by 3 = 3.87 // OG x:11.62, y:0.5, z:1
+      // Divide by 3 = 3.87 // OG x:11.62, y:0.5, z:1
+      'bannerN': wall1(11.62, 0.5, 0.7),
       'bannerImgN1': wall1(3.87, 0.5, 1),
       'bannerImgN2': wall1(3.87, 0.5, 1),
       'bannerImgN3': wall1(3.87, 0.5, 1),
