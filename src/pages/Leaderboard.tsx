@@ -390,7 +390,6 @@ class Leaderboard extends React.Component<Props, State> {
 
   private onLog = async () => {
     const res = await db.list('challenge_completion');
-    console.log("Raw leaderboard data: ", res);
     const groupData = res.groupData;
     const userData = res.userData;
 
@@ -401,7 +400,6 @@ class Leaderboard extends React.Component<Props, State> {
     const customChallengeRegex = /^custom-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     for (const [_, attemptedChallenges] of Object.entries(groupData)) {
       for (const [challengeId, challenge] of Object.entries(attemptedChallenges as ChallengeData[])) {
-        console.log(challengeId);
         // TEMP: Ignore custom challenges
         if (customChallengeRegex.test(challengeId)) {
           continue;
