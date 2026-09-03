@@ -242,6 +242,38 @@ namespace Scene {
     return { ...scene, nodes };
   };
 
+  /**
+   * Copy robot `startingOrigin` from `source` onto `target`, and set those robots'
+   * `origin` to match. Used so challenge Reset World keeps an edited start pose,
+   * like regular-scene soft reset.
+   */
+  export const copyRobotStartingOrigins = (source: Scene, target: Scene): Scene => {
+    const sourceRobots = robots(source);
+    let nodes = target.nodes;
+    let changed = false;
+    for (const robotId of Object.keys(sourceRobots)) {
+      const src = sourceRobots[robotId];
+      const dst = nodes[robotId];
+      if (!dst || dst.type !== 'robot') continue;
+      const startingOrigin = src.startingOrigin;
+      if (!startingOrigin) continue;
+      changed = true;
+      nodes = {
+        ...nodes,
+        [robotId]: {
+          ...dst,
+          startingOrigin,
+          origin: {
+            position: startingOrigin.position,
+            orientation: startingOrigin.orientation,
+            scale: startingOrigin.scale,
+          },
+        },
+      };
+    }
+    return changed ? { ...target, nodes } : target;
+  };
+
   export const addObject = (scene: Scene, nodeId: string, obj: Node.Obj, geometry: Geometry): Scene => ({
     ...scene,
     nodes: {
