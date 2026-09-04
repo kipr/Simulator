@@ -5,7 +5,7 @@ import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
 import { LOW_2INCH_RED_CUBE, HIGH_2INCH_RED_CUBE, RED_4INCH_CUBE, RED_4INCH_CUBE_PALLET } from '../26botballExplorerSandbox';
-import { createCubeEndNode } from './bexCommonComponents';
+import { createCubeEndNode, getLowestFaceScript, getHighestFaceScript, isCubeOnTopOfScript } from './bexCommonComponents';
 
 const cubesStacked = `
 const highRedCubeFaces = ['hSmallRedCubeTop', 'hSmallRedCubeBottom', 'hSmallRedCubeLeft', 'hSmallRedCubeRight', 'hSmallRedCubeFront', 'hSmallRedCubeBack'];
@@ -27,86 +27,58 @@ const largeRedCube = {
   faces: largeRedCubeFaces
 };
 
+const allCubes = [...smallRedCubes, largeRedCube];
+
 const activeIntersections = new Set();
+const largeCubeIntersections = new Set();
 
-function getHighestFace(faces) {
-  let highestFace = null;
-  let highestY = -Infinity;
+${getLowestFaceScript}
+${getHighestFaceScript}
+${isCubeOnTopOfScript}
 
-  faces.forEach(face => {
-    const position = scene.getNodeWorldCm(face);
 
-    if (!position) {
-      return;
-    }
 
-    if (position.y > highestY) {
-      highestY = position.y;
-      highestFace = face;
-    }
-  });
+  function getCube(cubeId) {
+    return allCubes.find(cube => cube.id === cubeId);
+  }
 
-  return highestFace;
-} 
 
-function getLowestFace(faces) {
-  let lowestFace = null;
-  let lowestY = Infinity;
 
-  faces.forEach(face => {
-    const position = scene.getNodeWorldCm(face);
+function updateChallengeState() {
+   
+   const supportedCubes = new Set(largeCubeIntersections);
+   let changed = true;
 
-    if (!position) {
-      return;
-    }
+   while(changed) {
+     changed = false;
+     activeIntersections.forEach(cubeId => {
+       if(!supportedCubes.has(cubeId) && isCubeOnTopOf(cubeId, largeRedCube.id)){
+         supportedCubes.add(cubeId);
+         changed = true;
+       }
+     });
+   }
 
-    if (position.y < lowestY) {
-      lowestY = position.y;
-      lowestFace = face;
-    }
-  });
-
-  return lowestFace;
-} 
-
-function getLargeCubeHighestFace() {
-  return getHighestFace(largeRedCubeFaces);
+  scene.setChallengeEventValue('smallRedOnLargeRed', supportedCubes.size >= 1);
+  scene.setChallengeEventValue('bonus', supportedCubes.size >= 2);
 }
 
-function checkStackedCubes() {
-  let highestCubeFace = null;
-  let lowestCubeFace = null;
-  highestCubeFace = getLargeCubeHighestFace();
-
-  smallRedCubes.forEach(cube => {
-    const lowestFace = getLowestFace(cube.faces);
-
-    if (lowestFace && highestCubeFace) {
-      const lowestFacePosition = scene.getNodeWorldCm(lowestFace);
-      const highestFacePosition = scene.getNodeWorldCm(highestCubeFace);
-
-      if (lowestFacePosition && highestFacePosition) {
-        if (lowestFacePosition.y > highestFacePosition.y) {
-          activeIntersections.add(cube.id);
-        } else {
-          activeIntersections.delete(cube.id);
-        }
-      }
-    }
-  });
-} 
-
+// Large Red Cube Intersections
 scene.addOnIntersectionListener('RED_4INCH_CUBE', (type, otherNodeId) => {
-  if (type === 'start') {
-    checkStackedCubes();
-  } else if (type === 'end') {
-    activeIntersections.clear();
-  }
-  scene.setChallengeEventValue('smallRedOnLargeRed', activeIntersections.size > 0);
-  if(activeIntersections.size === 2) {
-    scene.setChallengeEventValue('bonus', true);
-  }
+  type === 'start' ? largeCubeIntersections.add(otherNodeId) : largeCubeIntersections.delete(otherNodeId);
+  updateChallengeState();
 }, ['HIGH_2INCH_RED_CUBE', 'LOW_2INCH_RED_CUBE']);
+
+//Small Cube Intersections
+smallRedCubes.forEach((cube,index) => {
+  for (let i=index + 1; i < smallRedCubes.length; i++) {
+    const otherCube = smallRedCubes[i];
+    scene.addOnIntersectionListener(cube.id, (type, otherNodeId) => {
+      type === 'start' ? activeIntersections.add(otherNodeId) : activeIntersections.delete(otherNodeId);
+      updateChallengeState();
+    }, [otherCube.id]);
+  }
+});
 `;
 
 
