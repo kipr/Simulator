@@ -13,7 +13,7 @@ import {
 } from '../../../util/math/unitMath';
 import tr from '@i18n';
 
-const TABLE_POSITION = RawVector3.create(45, -6, 100);
+const TABLE_POSITION = RawVector3.create(75, -4, 100);
 const TABLE_ROTATION = RawQuaternion.create(0, 1, 0, 0);
 const IDENTITY_ROTATION = RawQuaternion.IDENTITY;
 
