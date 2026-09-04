@@ -7,7 +7,10 @@ import Geometry from "../../../../state/State/Scene/Geometry";
 import tr from '@i18n';
 import Dict from '../../../../util/objectOps/Dict';
 
-//Scripts
+
+/*************** 
+    Scripts
+****************/
 export const getLowestFaceScript = `
   function getLowestFace(faces) {
     let lowestFace = null;
@@ -54,7 +57,8 @@ export const getHighestFaceScript = `
 
 export const isCubeOnTopOfScript =
   `
-function isCubeOnTopOf(cubeId, otherCubeId) {
+    
+  function isCubeOnTopOf(cubeId, otherCubeId) {
     const cube = getCube(cubeId);
     const otherCube = getCube(otherCubeId);
 
@@ -75,10 +79,14 @@ function isCubeOnTopOf(cubeId, otherCubeId) {
     if (!lowestPosition || !highestPosition) {
       return false;
     }
-
+    console.log("isCubeONTopOfScript: ", lowestPosition.y>highestPosition.y);
     return lowestPosition.y > highestPosition.y;
   }
 `;
+
+/*************** 
+    FUNCTIONS
+****************/
 
 function nodeFacePosition(side: string, geometryId: string): { position: Vector3wUnits, orientation?: RotationwUnits } {
   let position: Vector3wUnits;
@@ -162,6 +170,9 @@ export function createCubeEndNode(name: LocalizedString, parentId: string, side:
   };
 }
 
+/*************** 
+    GEOMETRIES
+****************/
 export const BLACK_LINE_GEOMETRY: Geometry = {
   type: 'box',
   size: {
@@ -188,6 +199,53 @@ export const largeCubeEnd_geom: Geometry = {
     z: Distance.inches(3.8)
   }
 };
+
+export const pallet_geom: Geometry = {
+  type: 'box',
+  size: {
+    x: Distance.inches(3.8),
+    y: Distance.centimeters(0.1),
+    z: Distance.inches(3.8),
+  },
+}
+
+export const loadingZone_geom: Geometry = {
+  type: 'box',
+  size: {
+    x: Distance.centimeters(57),
+    y: Distance.centimeters(0.1),
+    z: Distance.centimeters(43)
+  },
+}
+
+
+/*************** 
+      NODES
+****************/
+
+export const loadingZone: Node = {
+  type: 'object',
+  geometryId: 'loadingZone_geom',
+  name: tr('Loading Zone'),
+  visible: true,
+  origin: {
+    position: {
+      x: Distance.meters(-0.927),
+      y: Distance.meters(-0.156),
+      z: Distance.centimeters(-5.168)
+    },
+
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'color3',
+      color: Color.rgb(84, 228, 132),
+    },
+  },
+}
+
+
 export const blackLineNodes: Dict<Node> = {
   blackLine1: {
     type: 'object',
