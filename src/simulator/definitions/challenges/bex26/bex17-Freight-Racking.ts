@@ -19,10 +19,30 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
+    oneCubeOnLargeBrownCube: {
+      name: tr('One Cube on Large Brown Cube'),
+      description: tr('One cube is on top of the large brown cube')
+    },
 
+    bonus: {
+      name: tr('Bonus'),
+      description: tr('Two or more cubes are on top of the large brown cube')
+    }
   },
   success: {
     exprs: {
+      oneCubeOnLargeBrownCube: {
+        type: Expr.Type.Event,
+        eventId: 'oneCubeOnLargeBrownCube',
+      },
+      bonus: {
+        type: Expr.Type.Event,
+        eventId: 'bonus',
+      },
+      completion: {
+        type: Expr.Type.And,
+        argIds: ['oneCubeOnLargeBrownCube'],
+      }
     },
     rootId: 'completion',
   },
@@ -33,7 +53,14 @@ export default {
     rootId: 'failure',
   },
   successGoals: [
-
+    {
+      exprId: 'oneCubeOnLargeBrownCube',
+      name: tr('One Cube on Large Brown Cube'),
+    },
+    {
+      exprId: 'bonus',
+      name: tr('Two or More Cubes on Large Brown Cube'),
+    }
   ],
   failureGoals: [
 
