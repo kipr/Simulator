@@ -7,162 +7,106 @@ import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
 import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
+import { LO_BLUE_POMS, RIGHT_BASKET, LEFT_BASKET } from '../26botballExplorerSandbox';
+
+
 const baseScene = createBaseSceneSurface();
 
-const reachedEnd = `
-// If the robot reaches the end, it completes the challenge
-${setNodeVisible}
+const pomInBasket = `
+const bluePoms = ['loBlue0', 'loBlue1', 'loBlue2', 'loBlue3', 'loBlue4', 'loBlue5'];
 
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot reached end!', type, otherNodeId, scene.programStatus);
-  const visible = type === 'start';
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('reachedEnd', type==='start');
-    //setNodeVisible('endBox', visible);
-  }
-}, 'endBox');
-`;
+const blueInLeftBasket = new Set();
+const blueInRightBasket = new Set();
 
-const noStop = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot did not stop!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('noStop', type === 'start');
-  }
-}, 'stopBox');
-`;
-const enterStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot returned start box!', type, otherNodeId, scene.programStatus);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('returnToStartBox', type === 'start');
-  }
-}, 'startBox');
-`;
+function updateChallenge() {
+  const blueInLeftBasketCount = blueInLeftBasket.size;
+  const blueInRightBasketCount = blueInRightBasket.size
 
+  const base = blueInLeftBasketCount >= 1 || blueInRightBasketCount >= 1;
+  const bonus = blueInLeftBasketCount >= 2 || blueInRightBasketCount >= 2;
+
+  scene.setChallengeEventValue('bluePomInBasket',base);
+
+  scene.setChallengeEventValue('bonus',bonus);
+};
+
+bluePoms.forEach(pom => {
+  scene.addOnIntersectionListener(pom, (type, otherNodeId) => {
+    if (type === 'start') {
+      otherNodeId === 'insideRightBasket' ? blueInRightBasket.add(pom) : blueInLeftBasket.add(pom);
+    } else {
+      otherNodeId === 'insideRightBasket' ? blueInRightBasket.delete(pom) : blueInLeftBasket.delete(pom);
+    }
+
+    updateChallenge();
+  }, ['insideRightBasket', 'insideLeftBasket']);
+});
+`;
 
 export const BEX_15: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 15'),
   description: tr('Botball Explorer Mission 15: Hazard Disposal #2'),
   scripts: {
-    notInStartBox: Script.ecmaScript('Not In Start Box', notInStartBox),
-    reachedEnd: Script.ecmaScript('Robot Reached End', reachedEnd),
-    noStop: Script.ecmaScript('No Stop', noStop),
-    enterStartBox: Script.ecmaScript('Bonus Return', enterStartBox),
+    pomInBasket: Script.ecmaScript('Pom In Basket', pomInBasket),
   },
   geometry: {
     ...baseScene.geometry,
-    startBox_geom: {
+    insideBasket_geom: {
       type: 'box',
       size: {
-        x: Distance.centimeters(60),
-        y: Distance.centimeters(1),
-        z: Distance.centimeters(32),
+        x: Distance.centimeters(16),
+        y: Distance.centimeters(5),
+        z: Distance.centimeters(25),
       },
     },
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
-      },
-    },
-    endBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(27),
-        y: Distance.centimeters(0.1),
-        z: Distance.centimeters(32),
-      },
-    },
-    stopBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(1),
-        y: Distance.centimeters(10),
-        z: Distance.centimeters(32),
-      }
-    }
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: {
+    ...LO_BLUE_POMS,
+    RIGHT_BASKET,
+    insideRightBasket: {
       type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
+      geometryId: 'insideBasket_geom',
+      name: tr('Inside Right Basket'),
+      parentId: 'RIGHT_BASKET',
       origin: {
         position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-21),
-          z: Distance.centimeters(3.2),
-        },
+          x: Distance.centimeters(-0.039),
+          y: Distance.centimeters(2.781),
+          z: Distance.centimeters(0),
+        }
+
       },
       material: {
         type: 'basic',
         color: {
           type: 'color3',
-          color: Color.rgb(0, 0, 255),
+          color: Color.rgb(84, 228, 132),
         },
       },
     },
-    notStartBox: {
+    LEFT_BASKET,
+    insideLeftBasket: {
       type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
+      geometryId: 'insideBasket_geom',
+      name: tr('Inside Left Basket'),
+      parentId: 'LEFT_BASKET',
       origin: {
         position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.262),
-        },
+          x: Distance.centimeters(-0.039),
+          y: Distance.centimeters(2.781),
+          z: Distance.centimeters(0),
+        }
+
       },
       material: {
         type: 'basic',
         color: {
           type: 'color3',
-          color: Color.rgb(255, 0, 0),
+          color: Color.rgb(84, 228, 132),
         },
       },
     },
-    endBox: {
-      type: 'object',
-      geometryId: 'endBox_geom',
-      name: tr('End Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(50.3),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(0, 255, 0),
-        },
-      },
-    },
-    stopBox: {
-      type: 'object',
-      geometryId: 'stopBox_geom',
-      name: tr('Stop Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(70.4),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(255, 255, 0),
-        },
-      },
-    }
   }
 };
