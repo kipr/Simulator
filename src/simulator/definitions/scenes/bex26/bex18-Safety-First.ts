@@ -7,163 +7,72 @@ import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
 import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
+import { BOTGUY, LEFT_CONE, RIGHT_CONE, } from '../26botballExplorerSandbox';
+import { loadingZone, loadingZone_geom, BLACK_LINE_GEOMETRY, blackLineNodes } from './bexCommonComponents';
+
 const baseScene = createBaseSceneSurface();
 
-const reachedEnd = `
-// If the robot reaches the end, it completes the challenge
-${setNodeVisible}
 
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot reached end!', type, otherNodeId, scene.programStatus);
-  const visible = type === 'start';
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('reachedEnd', type==='start');
-    //setNodeVisible('endBox', visible);
-  }
-}, 'endBox');
-`;
+const loadingZoneBlackLines = `
+ const objects = ['RIGHT_CONE', 'LEFT_CONE', 'BOTGUY'];
 
-const noStop = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot did not stop!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('noStop', type === 'start');
+  let objectsOnBlackLine = {
+    RIGHT_CONE: new Set(),
+    LEFT_CONE: new Set()
   }
-}, 'stopBox');
-`;
-const enterStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot returned start box!', type, otherNodeId, scene.programStatus);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('returnToStartBox', type === 'start');
+ let objectsInLoadingZone = {
+    RIGHT_CONE: false,
+    LEFT_CONE: false,
+    BOTGUY: false
   }
-}, 'startBox');
-`;
 
+  objects.forEach((object,index) => {
+
+    scene.addOnIntersectionListener(object, (type, otherNodeId) => {
+      if(otherNodeId === 'loadingZone'){
+        type === 'start' ? objectsInLoadingZone[object] = true : type === 'end' ? objectsInLoadingZone[object] = false : null;
+      }
+      else {
+        type === 'start' && objectsOnBlackLine[object] ? objectsOnBlackLine[object].add(otherNodeId) : type === 'end' && objectsOnBlackLine[object] ? objectsOnBlackLine[object].delete(otherNodeId) : null;
+      }
+      const allObjectsInLoadingZone = Object.values(objectsInLoadingZone).every(value => value);
+      const allObjectsOffBlackLine = Object.values(objectsOnBlackLine).every(set => set.size === 0);
+      const oneConeFully = (objectsInLoadingZone['RIGHT_CONE'] && objectsOnBlackLine['RIGHT_CONE'].size === 0) || (objectsInLoadingZone['LEFT_CONE'] && objectsOnBlackLine['LEFT_CONE'].size === 0);
+     
+      const base = objectsInLoadingZone['BOTGUY'];
+      const bonus = oneConeFully && base;
+      const advancedBonus = bonus && (allObjectsOffBlackLine === true) && allObjectsInLoadingZone === true;
+
+      scene.setChallengeEventValue('botguyInLoadingZone', base);
+      scene.setChallengeEventValue('bonus', bonus);
+      scene.setChallengeEventValue('advancedBonus', advancedBonus);
+    
+    }, ['blackLine1', 'blackLine2', 'blackLine3', 'blackLine4', 'blackLine5', 'loadingZone']); 
+  
+  });
+
+`;
 
 export const BEX_18: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 18'),
   description: tr('Botball Explorer Mission 18: Safety First, All Hands on Deck'),
   scripts: {
-    notInStartBox: Script.ecmaScript('Not In Start Box', notInStartBox),
-    reachedEnd: Script.ecmaScript('Robot Reached End', reachedEnd),
-    noStop: Script.ecmaScript('No Stop', noStop),
-    enterStartBox: Script.ecmaScript('Bonus Return', enterStartBox),
+    loadingZoneBlackLines: Script.ecmaScript('Loading Zone and Black Lines', loadingZoneBlackLines),
   },
   geometry: {
     ...baseScene.geometry,
-    startBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(60),
-        y: Distance.centimeters(1),
-        z: Distance.centimeters(32),
-      },
-    },
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
-      },
-    },
-    endBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(27),
-        y: Distance.centimeters(0.1),
-        z: Distance.centimeters(32),
-      },
-    },
-    stopBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(1),
-        y: Distance.centimeters(10),
-        z: Distance.centimeters(32),
-      }
-    }
+    loadingZone_geom,
+    BLACK_LINE_GEOMETRY
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: {
-      type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-21),
-          z: Distance.centimeters(3.2),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(0, 0, 255),
-        },
-      },
-    },
-    notStartBox: {
-      type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.262),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(255, 0, 0),
-        },
-      },
-    },
-    endBox: {
-      type: 'object',
-      geometryId: 'endBox_geom',
-      name: tr('End Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(50.3),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(0, 255, 0),
-        },
-      },
-    },
-    stopBox: {
-      type: 'object',
-      geometryId: 'stopBox_geom',
-      name: tr('Stop Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(70.4),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(255, 255, 0),
-        },
-      },
-    }
+    BOTGUY,
+    LEFT_CONE,
+    RIGHT_CONE,
+    loadingZone,
+    ...blackLineNodes
+
   }
 
 };
