@@ -45,6 +45,7 @@ export const POM_X_GAP = 6 * 2.61;
 export const LO_Z_1 = 35.82 + POM_Z_GAP;
 export const LO_X_1 = 72.4;
 
+
 export const LO_ORANGE_POMS: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
@@ -65,6 +66,7 @@ export const LO_BLUE_POMS: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(LO_X_1 - POM_X_GAP * i, LO_Y, 51.52),
+
     orientation: POM_ORIENTATION
   };
   LO_BLUE_POMS[`loBlue${i}`] = {
@@ -179,7 +181,7 @@ export const MIDDLE_PALLET: Node = {
 };
 
 const BROWN_4IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-14, -12, -19),
+  position: Vector3wUnits.centimeters(-14, -10, -19),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 export const BROWN_4IN_CUBE: Node = {
