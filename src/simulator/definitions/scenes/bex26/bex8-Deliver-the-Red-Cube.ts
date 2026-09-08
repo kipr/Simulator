@@ -1,14 +1,12 @@
 import Scene from '../../../../state/State/Scene';
 import { Distance } from '../../../../util';
 import Script from '../../../../state/State/Scene/Script';
-
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
 import { RED_4INCH_CUBE, RED_4INCH_CUBE_PALLET, HIGH_2INCH_RED_CUBE, LOW_2INCH_RED_CUBE } from '../26botballExplorerSandbox';
 import { Vector3wUnits } from '../../../../util/math/unitMath';
-import { createCubeEndNode, smallCubeEnd_geom, largeCubeEnd_geom, getLowestFaceScript, getHighestFaceScript } from './bexCommonComponents';
+import { createCubeEndNode, pallet_geom, smallCubeEnd_geom, largeCubeEnd_geom, isCubeOnTopOfScript, getLowestFaceScript, getHighestFaceScript } from './bexCommonComponents';
 
 
 const baseScene = createBaseSceneSurface();
@@ -22,6 +20,7 @@ const cubesStacked = `
 
   ${getLowestFaceScript}
   ${getHighestFaceScript}
+  ${isCubeOnTopOfScript}
   const smallRedCubes = [
     {
       id: 'HIGH_2INCH_RED_CUBE',
@@ -32,7 +31,9 @@ const cubesStacked = `
       faces: lowRedCubeFaces
     },
   ];
-  let largeRedCubeOnPallet = false;
+
+  const allCubes = [...smallRedCubes, { id: 'RED_4INCH_CUBE', faces: largeRedCubeFaces }];
+  let largeRedCubeOnPallet = true;
   let palletOnLoadingDock = false;
   const activeIntersections = new Set();
 
@@ -47,7 +48,6 @@ const cubesStacked = `
     const palletHighestY = scene.getNodeWorldCm(palletHighestFace).y;
 
     const isLargeRedCubeonPallet = largeCubeLowestY > palletHighestY;
-
     largeRedCubeOnPallet = isLargeRedCubeonPallet;
   }
 
@@ -62,12 +62,10 @@ const cubesStacked = `
     const loadingDockTopY = scene.getNodeWorldCm(loadingDockTopFace).y;
 
     const isPalletOnLoadingDock = palletHighestY > loadingDockTopY;
-
     palletOnLoadingDock = isPalletOnLoadingDock;
   }
 
   function checkLargeCubeAndPalletOnLoadingDock() {
-
     if(largeRedCubeOnPallet && palletOnLoadingDock){
       scene.setChallengeEventValue('largeCubeAndPalletOnLoadingDock', true);
     }
@@ -76,30 +74,9 @@ const cubesStacked = `
     }
   }
 
-
-
-  function checkStackedCubes() {
-    let highestCubeFace = null;
-    let lowestCubeFace = null;
-    highestCubeFace = getHighestFace(largeRedCubeFaces);
-    smallRedCubes.forEach(cube => {
-      const lowestFace = getLowestFace(cube.faces);
-
-      if (lowestFace && highestCubeFace) {
-        const lowestFacePosition = scene.getNodeWorldCm(lowestFace);
-        const highestFacePosition = scene.getNodeWorldCm(highestCubeFace);
-
-        if (lowestFacePosition && highestFacePosition) {
-          if (lowestFacePosition.y > highestFacePosition.y) {
-            activeIntersections.add(cube.id);
-          } else {
-            activeIntersections.delete(cube.id);
-          }
-        }
-      }
-    });
-  } 
-
+ function getCube(cubeId) {
+    return allCubes.find(cube => cube.id === cubeId);
+  }
 
   //Bonus true if small red cube is on large red cube and large red cube is on pallet and pallet is on loading dock
   function checkBonus() {
@@ -113,16 +90,18 @@ const cubesStacked = `
   }
 
   scene.addOnIntersectionListener('RED_4INCH_CUBE', (type, otherNodeId) => {
-    if (type === 'start') {
-      checkStackedCubes();
+  const stackCheck = isCubeOnTopOf(otherNodeId, 'RED_4INCH_CUBE');
+     if (type === 'start') {
+      stackCheck ? activeIntersections.add(otherNodeId) : activeIntersections.delete(otherNodeId);
+      
     } else if (type === 'end') {
-      activeIntersections.clear();
+      activeIntersections.has(otherNodeId) ? activeIntersections.delete(otherNodeId) : null;
     }
     checkBonus();
   }, ['HIGH_2INCH_RED_CUBE', 'LOW_2INCH_RED_CUBE']);
 
   scene.addOnIntersectionListener('RED_4INCH_CUBE_PALLET', (type, otherNodeId) => {
-    if(type === 'start'){
+  if(type === 'start'){
       checkLargeCubeOnPallet();
     }
     else if(type === 'end'){
@@ -163,14 +142,7 @@ export const BEX_8: Scene = {
         z: Distance.centimeters(27.5),
       },
     },
-    pallet_geom: {
-      type: 'box',
-      size: {
-        x: Distance.inches(3.8),
-        y: Distance.centimeters(0.1),
-        z: Distance.inches(3.8),
-      },
-    }
+    pallet_geom,
 
   },
   nodes: {
