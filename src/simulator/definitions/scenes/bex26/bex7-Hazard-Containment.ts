@@ -1,16 +1,10 @@
 import Scene from '../../../../state/State/Scene';
 import { Distance } from '../../../../util';
 import Script from '../../../../state/State/Scene/Script';
-// import { createBaseSceneSurfaceB } from './jbcBase';
-// import { setNodeVisible } from './jbcCommonComponents';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
 import { LO_BLUE_POMS, LO_ORANGE_POMS } from '../26botballExplorerSandbox';
-import { RotationwUnits } from '../../../../util/math/unitMath';
-
-
 
 const baseScene = createBaseSceneSurface();
 
@@ -21,10 +15,6 @@ const bluePoms = ['loBlue0', 'loBlue1', 'loBlue2', 'loBlue3', 'loBlue4', 'loBlue
 const leftPVCSet = new Set();
 const middlePVCSet = new Set();
 const rightPVCSet = new Set();
-
-const setsEqual = (a, b) =>
-  a.size === b.size && [...a].every(x => b.has(x));
-
 
 function checkPomsInDifferentPVC() {
   const leftPVCHasOrange = [...leftPVCSet].some(item => item.startsWith('loOrange'));
@@ -41,19 +31,14 @@ function checkPomsInDifferentPVC() {
   const rightEnclosureFull = rightPVCHasOrange && rightPVCHasBlue;
 
   if (leftEnclosureFull || middleEnclosureFull || rightEnclosureFull) {
-    console.log('blueAndOrangePomsInPVC', true);
-
     scene.setChallengeEventValue('blueAndOrangePomsInPVC', true);
 
     if((leftEnclosureFull && middleEnclosureFull) || (leftEnclosureFull && rightEnclosureFull) || (middleEnclosureFull && rightEnclosureFull)) {
-      console.log('blueAndOrangePomsInDifferentPVC', true);
       scene.setChallengeEventValue('blueAndOrangePomsInDifferentPVC', true);
     } else {
-      console.log('blueAndOrangePomsInDifferentPVC', false);
       scene.setChallengeEventValue('blueAndOrangePomsInDifferentPVC', false);
     }
   } else {
-    console.log('blueAndOrangePomsInPVC', false);
     scene.setChallengeEventValue('blueAndOrangePomsInPVC', false);
   }
 } 
@@ -86,7 +71,6 @@ orangePoms.forEach(pom => {
           break;
       }
     }
-    console.log('orangePoms', pom, type, otherNodeId, leftPVCSet, middlePVCSet, rightPVCSet);
     checkPomsInDifferentPVC();
   }, ['pvcEncloseLeft', 'pvcEncloseMiddle', 'pvcEncloseRight']);
 });
@@ -120,7 +104,6 @@ bluePoms.forEach(pom => {
       }
     }
       checkPomsInDifferentPVC();
-    console.log('bluePoms', pom, type, otherNodeId, leftPVCSet, middlePVCSet, rightPVCSet);
   }, ['pvcEncloseLeft', 'pvcEncloseMiddle', 'pvcEncloseRight']);
 });
 `;

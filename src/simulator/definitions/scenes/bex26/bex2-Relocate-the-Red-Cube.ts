@@ -1,18 +1,13 @@
 import Scene from '../../../../state/State/Scene';
 import { Distance } from '../../../../util';
-import Node from '../../../../state/State/Scene/Node';
 import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../../util/math/unitMath';
+import { RotationwUnits } from '../../../../util/math/unitMath';
 import { RED_4INCH_CUBE, LOW_2INCH_RED_CUBE, HIGH_2INCH_RED_CUBE, RED_4INCH_CUBE_PALLET } from '../26botballExplorerSandbox';
 
 const baseScene = createBaseSceneSurface();
-
-
-
 
 const palletLeftBlackLine = `
 scene.addOnIntersectionListener('redCubePallet', (type, otherNodeId) => {

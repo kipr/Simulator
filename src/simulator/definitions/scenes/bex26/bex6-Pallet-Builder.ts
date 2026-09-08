@@ -1,13 +1,10 @@
 import Scene from '../../../../state/State/Scene';
 import { Distance } from '../../../../util';
 import Script from '../../../../state/State/Scene/Script';
-// import { createBaseSceneSurfaceB } from './jbcBase';
-// import { setNodeVisible } from './jbcCommonComponents';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
-import { getHighestFaceScript, getLowestFaceScript, createCubeEndNode, blackLineNodes, BLACK_LINE_GEOMETRY, smallCubeEnd_geom } from './bexCommonComponents';
+import { getHighestFaceScript, getLowestFaceScript, isCubeOnTopOfScript, createCubeEndNode, blackLineNodes, pallet_geom, BLACK_LINE_GEOMETRY, smallCubeEnd_geom } from './bexCommonComponents';
 import { MIDDLE_PALLET, TOP_GREEN_2IN_CUBE, LOW_GREEN_2IN_CUBE, TOP_YELLOW_2IN_CUBE, LOW_YELLOW_2IN_CUBE } from '../26botballExplorerSandbox';
 import { RotationwUnits } from '../../../../util/math/unitMath';
 
@@ -81,32 +78,7 @@ const cubesOnPallet = `
 
   ${getLowestFaceScript}
   ${getHighestFaceScript}
-
-
-  function isCubeOnTopOf(cubeId, otherCubeId) {
-    const cube = getCube(cubeId);
-    const otherCube = getCube(otherCubeId);
-
-    if (!cube || !otherCube) {
-      return false;
-    }
-
-    const lowestFace = getLowestFace(cube.faces);
-    const highestFace = getHighestFace(otherCube.faces);
-
-    if (!lowestFace || !highestFace) {
-      return false;
-    }
-
-    const lowestPosition = scene.getNodeWorldCm(lowestFace);
-    const highestPosition = scene.getNodeWorldCm(highestFace);
-
-    if (!lowestPosition || !highestPosition) {
-      return false;
-    }
-
-    return lowestPosition.y > highestPosition.y;
-  }
+  ${isCubeOnTopOfScript}
 
 
   function intersectionKey(a, b) {
@@ -247,14 +219,7 @@ export const BEX_6: Scene = {
         z: Distance.centimeters(32),
       },
     },
-    pallet_geom: {
-      type: 'box',
-      size: {
-        x: Distance.inches(3.8),
-        y: Distance.centimeters(0.1),
-        z: Distance.inches(3.8),
-      },
-    }
+    pallet_geom
   },
   nodes: {
     ...baseScene.nodes,

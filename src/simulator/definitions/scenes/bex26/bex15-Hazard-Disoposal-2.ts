@@ -1,12 +1,9 @@
 import Scene from '../../../../state/State/Scene';
 import { Distance } from '../../../../util';
 import Script from '../../../../state/State/Scene/Script';
-// import { createBaseSceneSurfaceB } from './jbcBase';
-// import { setNodeVisible } from './jbcCommonComponents';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
 import { LO_BLUE_POMS, RIGHT_BASKET, LEFT_BASKET } from '../26botballExplorerSandbox';
 
 

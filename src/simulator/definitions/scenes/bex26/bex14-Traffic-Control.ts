@@ -1,13 +1,8 @@
 import Scene from '../../../../state/State/Scene';
-import { Distance } from '../../../../util';
 import Script from '../../../../state/State/Scene/Script';
-// import { createBaseSceneSurfaceB } from './jbcBase';
-// import { setNodeVisible } from './jbcCommonComponents';
-import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
-import { blackLineNodes, BLACK_LINE_GEOMETRY } from './bexCommonComponents';
+import { blackLineNodes, BLACK_LINE_GEOMETRY, loadingZone, loadingZone_geom } from './bexCommonComponents';
 import { RIGHT_CONE, LEFT_CONE } from '../26botballExplorerSandbox';
 
 
@@ -63,41 +58,13 @@ export const BEX_14: Scene = {
   geometry: {
     ...baseScene.geometry,
     BLACK_LINE_GEOMETRY,
-    loadingZone_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(57),
-        y: Distance.centimeters(0.1),
-        z: Distance.centimeters(43)
-      },
-    }
+    loadingZone_geom,
   },
   nodes: {
     ...baseScene.nodes,
     ...blackLineNodes,
     RIGHT_CONE,
     LEFT_CONE,
-    loadingZone: {
-      type: 'object',
-      geometryId: 'loadingZone_geom',
-      name: tr('Loading Zone'),
-      visible: true,
-      editable: true,
-      origin: {
-        position: {
-          x: Distance.meters(-0.927),
-          y: Distance.meters(-0.156),
-          z: Distance.centimeters(-5.168)
-        },
-
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(84, 228, 132),
-        },
-      },
-    }
-  }
+    loadingZone,
+  },
 };

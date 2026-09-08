@@ -1,12 +1,8 @@
 import Scene from '../../../../state/State/Scene';
-import { Distance } from '../../../../util';
 import Script from '../../../../state/State/Scene/Script';
-// import { createBaseSceneSurfaceB } from './jbcBase';
-// import { setNodeVisible } from './jbcCommonComponents';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
 import { MIDDLE_GREEN_2IN_CUBE, MIDDLE_RED_2IN_CUBE, MIDDLE_YELLOW_2IN_CUBE } from '../26botballExplorerSandbox';
 import { smallCubeEnd_geom, blackLineNodes, BLACK_LINE_GEOMETRY, getLowestFaceScript, getHighestFaceScript, isCubeOnTopOfScript, createCubeEndNode } from './bexCommonComponents';
 
