@@ -9,13 +9,14 @@ import Author from '../../../db/Author';
 import tr from '@i18n';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(10, -15, 0),
-  orientation: RotationwUnits.eulerDegrees(0, 90, 4),
+  position: Vector3wUnits.centimeters(108, -10, -5), //Start A
+  //position: Vector3wUnits.centimeters(-45.26, -10, -5.17), //Start B
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(45, -6, 100),
-  orientation: RotationwUnits.eulerDegrees(0, 180, 0),
+  position: Vector3wUnits.centimeters(10, 0, 30),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 0),
 };
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
@@ -75,10 +76,10 @@ export function createBaseSceneSurface(): Scene {
         z: Distance.meters(0),
       },
       position: {
-        x: Distance.meters(-0.75),
-        y: Distance.meters(0.75),
-        z: Distance.meters(-1.25),
-      }
+        x: Distance.meters(0),
+        y: Distance.meters(2),
+        z: Distance.meters(-1),
+      },
     }),
     gravity: {
       x: Distance.meters(0),
