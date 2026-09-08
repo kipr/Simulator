@@ -155,7 +155,6 @@ export function createCubeEndNode(name: LocalizedString, parentId: string, side:
       position,
       orientation
     },
-    visible: true,
     origin: {
       position,
       orientation,
@@ -227,7 +226,6 @@ export const loadingZone: Node = {
   type: 'object',
   geometryId: 'loadingZone_geom',
   name: tr('Loading Zone'),
-  visible: true,
   origin: {
     position: {
       x: Distance.meters(-0.927),
@@ -251,7 +249,6 @@ export const blackLineNodes: Dict<Node> = {
     type: 'object',
     geometryId: 'BLACK_LINE_GEOMETRY',
     name: tr('Black Line 1'),
-    visible: true,
     origin: {
       position: {
         x: Distance.centimeters(-27.1),
@@ -271,7 +268,6 @@ export const blackLineNodes: Dict<Node> = {
     type: 'object',
     geometryId: 'BLACK_LINE_GEOMETRY',
     name: tr('Black Line 2'),
-    visible: true,
     origin: {
       position: {
         x: Distance.centimeters(88.34),
@@ -291,7 +287,6 @@ export const blackLineNodes: Dict<Node> = {
     type: 'object',
     geometryId: 'BLACK_LINE_GEOMETRY',
     name: tr('Black Line 3'),
-    visible: true,
     origin: {
       position: {
         x: Distance.centimeters(-63.6),
@@ -312,7 +307,6 @@ export const blackLineNodes: Dict<Node> = {
     type: 'object',
     geometryId: 'BLACK_LINE_GEOMETRY',
     name: tr('Black Line 4'),
-    visible: true,
     origin: {
       position: {
         x: Distance.centimeters(-5.46),
@@ -333,7 +327,6 @@ export const blackLineNodes: Dict<Node> = {
     type: 'object',
     geometryId: 'BLACK_LINE_GEOMETRY',
     name: tr('Black Line 5'),
-    visible: true,
     origin: {
       position: {
         x: Distance.centimeters(-5.46),
