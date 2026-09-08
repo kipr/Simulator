@@ -17,7 +17,7 @@ const LOW_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const HIGH_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(66.7, -5, 21.7),
+  position: Vector3wUnits.centimeters(66.7, -8, 21.7),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const LOW_2INCH_RED_CUBE: Node = {

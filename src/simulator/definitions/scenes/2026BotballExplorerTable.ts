@@ -2,9 +2,7 @@ import { PhysicsMotionType } from '@babylonjs/core';
 
 import Geometry from '../../../state/State/Scene/Geometry';
 import Node from '../../../state/State/Scene/Node';
-import { Color } from '../../../state/State/Scene/Color';
 import Dict from '../../../util/objectOps/Dict';
-import { Distance } from '../../../util';
 import { RawQuaternion, RawVector3 } from '../../../util/math/math';
 import {
   ReferenceFramewUnits,
@@ -62,11 +60,6 @@ const STATIC_BOX: Node.Physics = {
   type: 'box',
 };
 
-const STATIC_CYLINDER: Node.Physics = {
-  ...STATIC_MESH,
-  type: 'cylinder',
-};
-
 const component = (
   name: string,
   geometryId: string,
@@ -85,51 +78,23 @@ const component = (
   origin: tableOrigin(position, orientation, scale),
 });
 
-const EXPLORER_PVC_MATERIAL: Node.Obj['material'] = {
-  type: 'basic',
-  color: {
-    type: 'color3',
-    color: Color.rgb(242, 242, 238),
-  },
-};
-
-const PVC_RADIUS_CM = 1.651;
-const PVC_REFERENCE_LENGTH_CM = 7.62;
-
-const pipeCenter = (
-  origin: RawVector3,
-  rotation: RawQuaternion,
-  centerAlongLocalXCm: number,
-): RawVector3 => RawVector3.add(
-  origin,
-  RawVector3.applyQuaternion(RawVector3.create(centerAlongLocalXCm, 0, 0), rotation),
-);
-
-/** Quaternion rotating Babylon's cylinder Y axis onto the source model's local X axis. */
-const pipeRotation = (sourceRotation: RawQuaternion): RawQuaternion => {
-  const axis = RawVector3.normalize(
-    RawVector3.applyQuaternion(RawVector3.create(1, 0, 0), sourceRotation),
-  );
-  return normalizeQuaternion(RawQuaternion.create(axis.z, 0, -axis.x, 1 + axis.y));
-};
+// pipe.glb is centered at its origin and authored along Z as the full long run.
+const PIPE_MESH_LENGTH_CM = 225.75;
 
 const pipe = (
   name: string,
-  sourceOrigin: RawVector3,
-  sourceRotation: RawQuaternion,
+  center: RawVector3,
   lengthCm: number,
-  centerAlongLocalXCm: number,
+  orientation: RawQuaternion = IDENTITY_ROTATION,
 ): Node.Obj => {
-  const ret = component(
+  const scale = RawVector3.create(1, 1, lengthCm / PIPE_MESH_LENGTH_CM);
+  return component(
     name,
     'botballExplorerTable26_pvc',
-    pipeCenter(sourceOrigin, sourceRotation, centerAlongLocalXCm),
-    pipeRotation(sourceRotation),
-    RawVector3.create(1, lengthCm / PVC_REFERENCE_LENGTH_CM, 1),
-    STATIC_CYLINDER,
+    center,
+    orientation,
+    scale,
   );
-  ret.material = EXPLORER_PVC_MATERIAL;
-  return ret;
 };
 
 export const BOTBALL_EXPLORER_TABLE_26_GEOMETRY: Dict<Geometry> = {
@@ -164,22 +129,20 @@ export const BOTBALL_EXPLORER_TABLE_26_GEOMETRY: Dict<Geometry> = {
     resetPosition: true,
   },
   botballExplorerTable26_pvc: {
-    type: 'cylinder',
-    radius: Distance.centimeters(PVC_RADIUS_CM),
-    height: Distance.centimeters(PVC_REFERENCE_LENGTH_CM),
+    type: 'file',
+    uri: '/static/object_binaries/build_components/pipe.glb',
+    resetPosition: true,
   },
 };
 
 const ID = IDENTITY_ROTATION;
 const Y_90 = RawQuaternion.create(0, Math.SQRT1_2, 0, Math.SQRT1_2);
 const Y_180 = RawQuaternion.create(0, 1, 0, 0);
-const PVC_Y_90 = RawQuaternion.create(0, 0.70710688829422, 0, 0.7071067094802856);
-const PVC_ANGLED = RawQuaternion.create(
-  0.0635659471154213,
-  -0.7042438387870789,
-  0.0635659471154213,
-  0.7042438387870789,
-);
+const SHORT_PIPE_LENGTH_CM = 7.62;
+const LONG_PIPE_TOP_CM = 66.73779678344727 + 68.2625 / 2;
+const LONG_PIPE_BOTTOM_CM = -124.2384262084961;
+const LONG_PIPE_LENGTH_CM = LONG_PIPE_TOP_CM - LONG_PIPE_BOTTOM_CM;
+const LONG_PIPE_CENTER_CM = (LONG_PIPE_TOP_CM + LONG_PIPE_BOTTOM_CM) / 2;
 
 export const BOTBALL_EXPLORER_TABLE_26_NODES: Dict<Node> = {
   botball_explorer_game_table_2026: {
@@ -263,53 +226,33 @@ export const BOTBALL_EXPLORER_TABLE_26_NODES: Dict<Node> = {
     'botballExplorerTable26_tConnector',
     RawVector3.create(-15.43501615524292, -13.350078582763672, 26.57408332824707),
   ),
+  explorer_table_pvc_long: pipe(
+    '2026 Botball Explorer long PVC',
+    RawVector3.create(-15.43501615524292, -13.350078582763672, LONG_PIPE_CENTER_CM),
+    LONG_PIPE_LENGTH_CM,
+  ),
   explorer_table_pvc_short_low: pipe(
     '2026 Botball Explorer short lower PVC',
-    RawVector3.create(-24.80126142501831, -13.350078582763672, -43.11716842651367),
-    ID,
-    7.62,
-    3.81,
+    RawVector3.create(-20.99126142501831, -13.350078582763672, -43.11716842651367),
+    SHORT_PIPE_LENGTH_CM,
+    Y_90,
   ),
   explorer_table_pvc_short_high: pipe(
     '2026 Botball Explorer short upper PVC',
-    RawVector3.create(-17.181270122528076, -13.350078582763672, 30.860334396362305),
-    Y_180,
-    7.62,
-    3.81,
+    RawVector3.create(-20.991270122528077, -13.350078582763672, 30.860334396362305),
+    SHORT_PIPE_LENGTH_CM,
+    Y_90,
   ),
   explorer_table_pvc_short_top: pipe(
     '2026 Botball Explorer short top PVC',
-    RawVector3.create(-17.181270122528076, -13.350078582763672, 103.30431365966797),
-    Y_180,
-    7.62,
-    3.81,
+    RawVector3.create(-20.991270122528077, -13.350078582763672, 103.30431365966797),
+    SHORT_PIPE_LENGTH_CM,
+    Y_90,
   ),
   explorer_table_pvc_short_bottom: pipe(
     '2026 Botball Explorer short bottom PVC',
-    RawVector3.create(-17.181270122528076, -13.350078582763672, -125.38945770263672),
-    Y_180,
-    7.62,
-    3.81,
-  ),
-  explorer_table_pvc_26_875: pipe(
-    '2026 Botball Explorer 26.875 inch PVC',
-    RawVector3.create(-15.43501615524292, -13.350078582763672, 66.73779678344727),
-    PVC_Y_90,
-    68.2625,
-    0,
-  ),
-  explorer_table_pvc_27_75: pipe(
-    '2026 Botball Explorer 27.75 inch PVC',
-    RawVector3.create(-15.43501615524292, -13.350078582763672, 29.114084243774414),
-    PVC_Y_90,
-    70.485,
-    35.2425,
-  ),
-  explorer_table_pvc_31_25: pipe(
-    '2026 Botball Explorer 31.25 inch PVC',
-    RawVector3.create(-15.43501615524292, -13.350078582763672, -124.2384262084961),
-    PVC_ANGLED,
-    79.375,
-    39.6875,
+    RawVector3.create(-20.991270122528077, -13.350078582763672, -125.38945770263672),
+    SHORT_PIPE_LENGTH_CM,
+    Y_90,
   ),
 };
