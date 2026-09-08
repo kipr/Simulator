@@ -79,7 +79,7 @@ const component = (
 });
 
 // pipe.glb is centered at its origin and authored along Z as the full long run.
-const PIPE_MESH_LENGTH_CM = 225.75;
+const PIPE_MESH_LENGTH_CM = 225.750;
 
 const pipe = (
   name: string,
@@ -138,9 +138,9 @@ export const BOTBALL_EXPLORER_TABLE_26_GEOMETRY: Dict<Geometry> = {
 const ID = IDENTITY_ROTATION;
 const Y_90 = RawQuaternion.create(0, Math.SQRT1_2, 0, Math.SQRT1_2);
 const Y_180 = RawQuaternion.create(0, 1, 0, 0);
-const SHORT_PIPE_LENGTH_CM = 7.62;
-const LONG_PIPE_TOP_CM = 66.73779678344727 + 68.2625 / 2;
-const LONG_PIPE_BOTTOM_CM = -124.2384262084961;
+const SHORT_PIPE_LENGTH_CM = 7.620;
+const LONG_PIPE_TOP_CM = 66.738 + 68.263 / 2;
+const LONG_PIPE_BOTTOM_CM = -124.238;
 const LONG_PIPE_LENGTH_CM = LONG_PIPE_TOP_CM - LONG_PIPE_BOTTOM_CM;
 const LONG_PIPE_CENTER_CM = (LONG_PIPE_TOP_CM + LONG_PIPE_BOTTOM_CM) / 2;
 
@@ -149,14 +149,14 @@ export const BOTBALL_EXPLORER_TABLE_26_NODES: Dict<Node> = {
     ...component(
       '2026 Botball Explorer particle board',
       'botballExplorerTable26_particleBoard',
-      RawVector3.create(34.88873481750488, -17.60936222076416, -5.1800994873046875),
+      RawVector3.create(34.889, -17.609, -5.180),
     ),
     physics: undefined,
   },
   explorer_table_mat: component(
     '2026 Botball Explorer mat',
     'botballExplorerTable26_mat',
-    RawVector3.create(34.88873481750488, -15.595561027526855, -5.1800994873046875),
+    RawVector3.create(34.889, -15.596, -5.180),
     ID,
     RawVector3.ONE,
     STATIC_MESH,
@@ -165,7 +165,7 @@ export const BOTBALL_EXPLORER_TABLE_26_NODES: Dict<Node> = {
   explorer_table_2x4_left: component(
     '2026 Botball Explorer left 2x4',
     'botballExplorerTable26_2x4',
-    RawVector3.create(34.91424560546875, -11.175169944763184, 118.6752700805664),
+    RawVector3.create(34.914, -11.175, 118.675),
     ID,
     RawVector3.ONE,
     STATIC_BOX,
@@ -173,15 +173,15 @@ export const BOTBALL_EXPLORER_TABLE_26_NODES: Dict<Node> = {
   explorer_table_2x4_low: component(
     '2026 Botball Explorer lower 2x4',
     'botballExplorerTable26_2x4',
-    RawVector3.create(97.765953540802, -11.175169944763184, -5.1800994873046875),
+    RawVector3.create(97.766, -11.175, -5.180),
     Y_90,
-    RawVector3.create(1.8834857940673828, 1, 1),
+    RawVector3.create(1.883, 1, 1),
     STATIC_BOX,
   ),
   explorer_table_2x4_right: component(
     '2026 Botball Explorer right 2x4',
     'botballExplorerTable26_2x4',
-    RawVector3.create(34.91424560546875, -11.175169944763184, -129.00533294677734),
+    RawVector3.create(34.914, -11.175, -129.005),
     ID,
     RawVector3.ONE,
     STATIC_BOX,
@@ -189,16 +189,16 @@ export const BOTBALL_EXPLORER_TABLE_26_NODES: Dict<Node> = {
   explorer_table_2x4_top: component(
     '2026 Botball Explorer upper 2x4',
     'botballExplorerTable26_2x4',
-    RawVector3.create(-27.842219829559326, -11.175169944763184, -5.1800994873046875),
+    RawVector3.create(-27.842, -11.175, -5.180),
     Y_90,
-    RawVector3.create(1.8834857940673828, 1, 1),
+    RawVector3.create(1.883, 1, 1),
     STATIC_BOX,
   ),
 
   explorer_table_loading_dock: component(
     '2026 Botball Explorer loading dock',
     'botballExplorerTable26_loadingDock',
-    RawVector3.create(0.2569279670715332, -12.481172561645508, 110.75975799560547),
+    RawVector3.create(0.257, -12.481, 110.760),
     ID,
     RawVector3.ONE,
     STATIC_BOX,
@@ -207,51 +207,51 @@ export const BOTBALL_EXPLORER_TABLE_26_NODES: Dict<Node> = {
   explorer_table_elbow_low: component(
     '2026 Botball Explorer lower elbow connector',
     'botballExplorerTable26_elbow',
-    RawVector3.create(-17.187068462371826, -13.350078582763672, -123.29010009765625),
+    RawVector3.create(-17.187, -13.350, -123.290),
     Y_90,
   ),
   explorer_table_elbow_high: component(
     '2026 Botball Explorer upper elbow connector',
     'botballExplorerTable26_elbow',
-    RawVector3.create(-17.187068462371826, -13.350078582763672, 101.55863952636719),
+    RawVector3.create(-17.187, -13.350, 101.559),
   ),
 
   explorer_table_t_low: component(
     '2026 Botball Explorer lower T connector',
     'botballExplorerTable26_tConnector',
-    RawVector3.create(-15.43501615524292, -13.350078582763672, -47.40341567993164),
+    RawVector3.create(-15.435, -13.350, -47.403),
   ),
   explorer_table_t_high: component(
     '2026 Botball Explorer upper T connector',
     'botballExplorerTable26_tConnector',
-    RawVector3.create(-15.43501615524292, -13.350078582763672, 26.57408332824707),
+    RawVector3.create(-15.435, -13.350, 26.574),
   ),
   explorer_table_pvc_long: pipe(
     '2026 Botball Explorer long PVC',
-    RawVector3.create(-15.43501615524292, -13.350078582763672, LONG_PIPE_CENTER_CM),
+    RawVector3.create(-15.435, -13.350, LONG_PIPE_CENTER_CM),
     LONG_PIPE_LENGTH_CM,
   ),
   explorer_table_pvc_short_low: pipe(
     '2026 Botball Explorer short lower PVC',
-    RawVector3.create(-20.99126142501831, -13.350078582763672, -43.11716842651367),
+    RawVector3.create(-20.991, -13.350, -43.117),
     SHORT_PIPE_LENGTH_CM,
     Y_90,
   ),
   explorer_table_pvc_short_high: pipe(
     '2026 Botball Explorer short upper PVC',
-    RawVector3.create(-20.991270122528077, -13.350078582763672, 30.860334396362305),
+    RawVector3.create(-20.991, -13.350, 30.860),
     SHORT_PIPE_LENGTH_CM,
     Y_90,
   ),
   explorer_table_pvc_short_top: pipe(
     '2026 Botball Explorer short top PVC',
-    RawVector3.create(-20.991270122528077, -13.350078582763672, 103.30431365966797),
+    RawVector3.create(-20.991, -13.350, 103.304),
     SHORT_PIPE_LENGTH_CM,
     Y_90,
   ),
   explorer_table_pvc_short_bottom: pipe(
     '2026 Botball Explorer short bottom PVC',
-    RawVector3.create(-20.991270122528077, -13.350078582763672, -125.38945770263672),
+    RawVector3.create(-20.991, -13.350, -125.389),
     SHORT_PIPE_LENGTH_CM,
     Y_90,
   ),
