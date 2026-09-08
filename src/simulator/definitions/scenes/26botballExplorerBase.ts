@@ -13,7 +13,7 @@ import {
 import tr from '@i18n';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, -15, 0),
+  position: Vector3wUnits.centimeters(-4, -15, 0),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0),
 };
 
