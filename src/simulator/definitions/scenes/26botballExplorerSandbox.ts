@@ -375,7 +375,7 @@ const RIGHT_STACK_RED_2IN_CUBE: Node = {
   origin: RIGHT_STACK_RED_2IN_CUBE_ORIGIN
 };
 
-const GAME_PIECE_OFFSET = Vector3wUnits.centimeters(-9, 0, -4.5);
+const GAME_PIECE_OFFSET = Vector3wUnits.centimeters(-5, 15, -4.5);
 
 const offsetOrigin = (origin: ReferenceFramewUnits): ReferenceFramewUnits => {
   if (!origin) return origin;

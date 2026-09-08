@@ -13,12 +13,12 @@ import {
 import tr from '@i18n';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-4, -15, 0),
+  position: Vector3wUnits.centimeters(0, 0, 0),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0),
 };
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(50, 90, 50)
+  position: Vector3wUnits.centimeters(54, 105, 50)
 };
 
 /**
@@ -58,13 +58,13 @@ export function createBaseSceneSurface(): Scene {
     camera: Camera.arcRotate({
       radius: Distance.meters(5),
       target: {
-        x: Distance.meters(0),
-        y: Distance.meters(0.05),
+        x: Distance.meters(0.04),
+        y: Distance.meters(0.2),
         z: Distance.meters(0),
       },
       position: {
-        x: Distance.meters(-0.75),
-        y: Distance.meters(0.75),
+        x: Distance.meters(-0.71),
+        y: Distance.meters(0.9),
         z: Distance.meters(-1.25),
       }
     }),
