@@ -416,10 +416,10 @@ const DEFAULT_CHALLENGES: Challenges = {
     value: bex11,
     brief: ChallengeBrief.fromChallenge(bex11)
   }),
-  'bex12': Async.loaded({
-    value: bex12,
-    brief: ChallengeBrief.fromChallenge(bex12)
-  }),
+  // 'bex12': Async.loaded({
+  //   value: bex12,
+  //   brief: ChallengeBrief.fromChallenge(bex12)
+  // }),
   'bex13': Async.loaded({
     value: bex13,
     brief: ChallengeBrief.fromChallenge(bex13)
