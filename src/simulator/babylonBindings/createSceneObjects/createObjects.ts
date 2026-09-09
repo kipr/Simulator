@@ -14,6 +14,7 @@ import { createMaterial } from './createMaterials';
 import { preBuiltGeometries } from "../../definitions/nodes";
 import { MeshoptCompression } from "@babylonjs/core/Meshes/Compression/meshoptCompression";
 import { KhronosTextureContainer2 } from '@babylonjs/core/Misc/khronosTextureContainer2';
+import type { SceneMeshMetadata } from '../SceneMeshMetadata';
 MeshoptCompression.Configuration = {
   decoder: {
     url: "../../../static/meshopt_decoder.js",
@@ -176,13 +177,13 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
    * If so, we save significant resources by using instancing and we avoid building and storing multiple copies of the same geometry.
    * For more on instances see: https://doc.babylonjs.com/features/featuresDeepDive/mesh/copies/instances
    */
-  const match = bScene_.meshes.filter(m => {
-    const md = m.metadata as { matPlayZoneOverlay?: boolean } | undefined;
+  const match = bScene_.meshes.find(m => {
+    const md = m.metadata as (SceneMeshMetadata & { matPlayZoneOverlay?: boolean }) | undefined;
     if (md?.matPlayZoneOverlay) return false;
     if (m.name.startsWith('matPlayZone')) return false;
-    return m.name.startsWith(node.geometryId);
-  })[0];
-  if (match && match instanceof Mesh) {
+    return m instanceof Mesh && !m.isDisposed() && md?.sourceGeometryId === node.geometryId;
+  });
+  if (match instanceof Mesh) {
     ret.visual = match.createInstance(`${match.name}-instance`);
 
     if (!node.visible) {
@@ -206,6 +207,12 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
   if (node.material) {
     const material = createMaterial(node.name[LocalizedString.EN_US], node.material, bScene_);
     apply(ret.visual, m => m.material = material);
+  }
+  if (ret.visual instanceof Mesh) {
+    ret.visual.metadata = {
+      ...(ret.visual.metadata as SceneMeshMetadata | undefined),
+      sourceGeometryId: node.geometryId,
+    } as SceneMeshMetadata;
   }
   ret.visual.setParent(parent);
   return ret.visual;

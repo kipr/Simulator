@@ -57,13 +57,11 @@ import { createDirectionalLight, createPointLight, createSpotLight } from './cre
 import { createCamera } from './createSceneObjects/createCameras';
 import { createObject, createEmpty } from './createSceneObjects/createObjects';
 import apply from './Apply';
+import { SceneMeshMetadata, withSceneNodeId } from './SceneMeshMetadata';
+
+export type { SceneMeshMetadata } from './SceneMeshMetadata';
 
 export type FrameLike = TransformNode | AbstractMesh;
-
-export interface SceneMeshMetadata {
-  id: string;
-  selected?: boolean;
-}
 
 class SceneBinding {
   private bScene_: babylonScene;
@@ -585,11 +583,11 @@ class SceneBinding {
     this.updateNodePosition_(nodeToCreate, ret, id, nextScene);
     ret.id = id;
 
-    ret.metadata = { id } as SceneMeshMetadata;
+    ret.metadata = withSceneNodeId(ret.metadata as SceneMeshMetadata | undefined, id);
 
     if (ret instanceof AbstractMesh || ret instanceof TransformNode) {
       apply(ret, m => {
-        m.metadata = { id } as SceneMeshMetadata;
+        m.metadata = withSceneNodeId(m.metadata as SceneMeshMetadata | undefined, id);
         this.restorePhysicsToObject(m, nodeToCreate as Node.Obj, null, nextScene);
       });
     }
