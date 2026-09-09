@@ -4,9 +4,10 @@ import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { RED_4INCH_CUBE, RED_4INCH_CUBE_PALLET, HIGH_2INCH_RED_CUBE, LOW_2INCH_RED_CUBE } from '../26botballExplorerSandbox';
-import { Vector3wUnits } from '../../../../util/math/unitMath';
+import { offsetGamePiece, RED_4INCH_CUBE, RED_4INCH_CUBE_PALLET, HIGH_2INCH_RED_CUBE, LOW_2INCH_RED_CUBE } from '../26botballExplorerSandbox';
+import { RotationwUnits, Vector3wUnits } from '../../../../util/math/unitMath';
 import { createCubeEndNode, pallet_geom, smallCubeEnd_geom, largeCubeEnd_geom, isCubeOnTopOfScript, getLowestFaceScript, getHighestFaceScript } from './bexCommonComponents';
+import Dict from '../../../../util/objectOps/Dict';
 
 
 const baseScene = createBaseSceneSurface();
@@ -147,13 +148,11 @@ export const BEX_8: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    RED_4INCH_CUBE_PALLET,
     palletTop: {
       type: 'object',
       parentId: 'RED_4INCH_CUBE_PALLET',
       geometryId: 'pallet_geom',
       name: tr('Pallet Top'),
-      visible: true,
       origin: {
         position: {
           x: Distance.centimeters(0),
@@ -175,7 +174,6 @@ export const BEX_8: Scene = {
       parentId: 'RED_4INCH_CUBE_PALLET',
       geometryId: 'pallet_geom',
       name: tr('Pallet Bottom'),
-      visible: true,
       origin: {
         position: {
           x: Distance.centimeters(0),
@@ -191,21 +189,26 @@ export const BEX_8: Scene = {
         },
       },
     },
-    HIGH_2INCH_RED_CUBE,
+    ...Dict.map({
+      RED_4INCH_CUBE_PALLET,
+      HIGH_2INCH_RED_CUBE,
+      LOW_2INCH_RED_CUBE,
+      RED_4INCH_CUBE,
+    }, offsetGamePiece),
     hSmallRedCubeTop: createCubeEndNode(tr('High 2-inch Red Cube Top'), 'HIGH_2INCH_RED_CUBE', 'top', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     hSmallRedCubeBottom: createCubeEndNode(tr('High 2-inch Red Cube Bottom'), 'HIGH_2INCH_RED_CUBE', 'bottom', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     hSmallRedCubeLeft: createCubeEndNode(tr('High 2-inch Red Cube Left'), 'HIGH_2INCH_RED_CUBE', 'left', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     hSmallRedCubeBack: createCubeEndNode(tr('High 2-inch Red Cube Back'), 'HIGH_2INCH_RED_CUBE', 'back', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     hSmallRedCubeFront: createCubeEndNode(tr('High 2-inch Red Cube Front'), 'HIGH_2INCH_RED_CUBE', 'front', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     hSmallRedCubeRight: createCubeEndNode(tr('High 2-inch Red Cube Right'), 'HIGH_2INCH_RED_CUBE', 'right', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
-    LOW_2INCH_RED_CUBE,
+
     lSmallRedCubeTop: createCubeEndNode(tr('Low 2-inch Red Cube Top'), 'LOW_2INCH_RED_CUBE', 'top', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     lSmallRedCubeBottom: createCubeEndNode(tr('Low 2-inch Red Cube Bottom'), 'LOW_2INCH_RED_CUBE', 'bottom', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     lSmallRedCubeLeft: createCubeEndNode(tr('Low 2-inch Red Cube Left'), 'LOW_2INCH_RED_CUBE', 'left', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     lSmallRedCubeBack: createCubeEndNode(tr('Low 2-inch Red Cube Back'), 'LOW_2INCH_RED_CUBE', 'back', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     lSmallRedCubeFront: createCubeEndNode(tr('Low 2-inch Red Cube Front'), 'LOW_2INCH_RED_CUBE', 'front', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     lSmallRedCubeRight: createCubeEndNode(tr('Low 2-inch Red Cube Right'), 'LOW_2INCH_RED_CUBE', 'right', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
-    RED_4INCH_CUBE,
+
     largeRedCubeTop: createCubeEndNode(tr('4-inch Red Cube Top'), 'RED_4INCH_CUBE', 'top', 'largeCubeEnd_geom', Color.rgb(255, 0, 0)),
     largeRedCubeBottom: createCubeEndNode(tr('4-inch Red Cube Bottom'), 'RED_4INCH_CUBE', 'bottom', 'largeCubeEnd_geom', Color.rgb(255, 0, 0)),
     largeRedCubeLeft: createCubeEndNode(tr('4-inch Red Cube Left'), 'RED_4INCH_CUBE', 'left', 'largeCubeEnd_geom', Color.rgb(255, 0, 0)),
@@ -218,7 +221,8 @@ export const BEX_8: Scene = {
       geometryId: 'loadingDock_geom',
       name: tr('Loading Dock Top'),
       origin: {
-        position: Vector3wUnits.centimeters(116.36, -9.52, 68.67),
+        position: Vector3wUnits.centimeters(78.708, -9.262, -100.797),
+        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
       },
       material: {
         type: 'basic',

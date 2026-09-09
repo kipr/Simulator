@@ -175,7 +175,7 @@ export function createCubeEndNode(name: LocalizedString, parentId: string, side:
 export const BLACK_LINE_GEOMETRY: Geometry = {
   type: 'box',
   size: {
-    x: Distance.centimeters(3.5),
+    x: Distance.centimeters(4.5),
     y: Distance.centimeters(12),
     z: Distance.meters(3),
   }
@@ -217,10 +217,63 @@ export const loadingZone_geom: Geometry = {
   },
 }
 
+export const startBox_geom: Geometry = {
+  type: 'box',
+  size: {
+    x: Distance.centimeters(45),
+    y: Distance.centimeters(0.1),
+    z: Distance.centimeters(32),
+  },
+}
 
 /*************** 
       NODES
 ****************/
+export const startBoxA: Node = {
+  type: 'object',
+  geometryId: 'startBox_geom',
+  name: tr('Start Box A'),
+  visible: true,
+  editable: true,
+  origin: {
+    position: {
+      x: Distance.centimeters(4.134),
+      y: Distance.centimeters(-15.504),
+      z: Distance.centimeters(-91.2),
+    },
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'color3',
+      color: Color.rgb(0, 0, 255),
+    },
+  },
+}
+
+export const startBoxB: Node = {
+  type: 'object',
+  geometryId: 'startBox_geom',
+  name: tr('Start Box B'),
+  visible: true,
+  editable: true,
+  origin: {
+    position: {
+      x: Distance.centimeters(4.08),
+      y: Distance.centimeters(-15),
+      z: Distance.centimeters(60.955),
+    },
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'color3',
+      color: Color.rgb(0, 0, 255),
+    },
+  },
+}
 
 export const loadingZone: Node = {
   type: 'object',
@@ -228,10 +281,11 @@ export const loadingZone: Node = {
   name: tr('Loading Zone'),
   origin: {
     position: {
-      x: Distance.meters(-0.927),
+      x: Distance.meters(0.053),
       y: Distance.meters(-0.156),
-      z: Distance.centimeters(-5.168)
+      z: Distance.centimeters(110.441)
     },
+    orientation: RotationwUnits.eulerDegrees(0, 90, 0),
 
   },
   material: {
@@ -251,16 +305,16 @@ export const blackLineNodes: Dict<Node> = {
     name: tr('Black Line 1'),
     origin: {
       position: {
-        x: Distance.centimeters(-27.1),
+        x: Distance.centimeters(29.46),
         y: Distance.centimeters(-14.4),
-        z: Distance.meters(0.878),
+        z: Distance.meters(0.133),
       },
     },
     material: {
       type: 'basic',
       color: {
         type: 'color3',
-        color: Color.rgb(126, 2, 163),
+        color: Color.rgb(233, 255, 33),
       },
     },
   },
@@ -270,16 +324,16 @@ export const blackLineNodes: Dict<Node> = {
     name: tr('Black Line 2'),
     origin: {
       position: {
-        x: Distance.centimeters(88.34),
+        x: Distance.centimeters(61.619),
         y: Distance.centimeters(-14.4),
-        z: Distance.meters(0.878),
+        z: Distance.meters(0.29),
       },
     },
     material: {
       type: 'basic',
       color: {
         type: 'color3',
-        color: Color.rgb(126, 2, 163),
+        color: Color.rgb(53, 255, 221),
       },
     },
   },
@@ -289,17 +343,17 @@ export const blackLineNodes: Dict<Node> = {
     name: tr('Black Line 3'),
     origin: {
       position: {
-        x: Distance.centimeters(-63.6),
+        x: Distance.centimeters(-12.1),
         y: Distance.centimeters(-14.4),
-        z: Distance.meters(0.222),
+        z: Distance.meters(-0.725),
       },
-      orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+      orientation: RotationwUnits.eulerDegrees(0, 90, 0),
     },
     material: {
       type: 'basic',
       color: {
         type: 'color3',
-        color: Color.rgb(126, 2, 163),
+        color: Color.rgb(22, 87, 207),
       },
     },
   },
@@ -311,7 +365,7 @@ export const blackLineNodes: Dict<Node> = {
       position: {
         x: Distance.centimeters(-5.46),
         y: Distance.centimeters(-14.4),
-        z: Distance.meters(0.189),
+        z: Distance.meters(0.428),
       },
       orientation: RotationwUnits.eulerDegrees(0, 90, 0),
     },
@@ -319,7 +373,7 @@ export const blackLineNodes: Dict<Node> = {
       type: 'basic',
       color: {
         type: 'color3',
-        color: Color.rgb(2, 85, 163),
+        color: Color.rgb(203, 228, 62),
       },
     },
   },
@@ -331,7 +385,7 @@ export const blackLineNodes: Dict<Node> = {
       position: {
         x: Distance.centimeters(-5.46),
         y: Distance.centimeters(-14.4),
-        z: Distance.meters(0.517),
+        z: Distance.meters(0.794),
       },
       orientation: RotationwUnits.eulerDegrees(0, 90, 0),
     },
@@ -339,7 +393,7 @@ export const blackLineNodes: Dict<Node> = {
       type: 'basic',
       color: {
         type: 'color3',
-        color: Color.rgb(126, 2, 163),
+        color: Color.rgb(11, 161, 104),
       },
     },
   }

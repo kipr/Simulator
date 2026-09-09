@@ -4,7 +4,8 @@ import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { LO_BLUE_POMS, RIGHT_BASKET, LEFT_BASKET } from '../26botballExplorerSandbox';
+import { LO_BLUE_POMS, RIGHT_BASKET, LEFT_BASKET, offsetGamePiece } from '../26botballExplorerSandbox';
+import Dict from '../../../../util/objectOps/Dict';
 
 
 const baseScene = createBaseSceneSurface();
@@ -60,8 +61,11 @@ export const BEX_15: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    ...LO_BLUE_POMS,
-    RIGHT_BASKET,
+    ...Dict.map({
+      ...LO_BLUE_POMS,
+      RIGHT_BASKET,
+      LEFT_BASKET,
+    }, offsetGamePiece),
     insideRightBasket: {
       type: 'object',
       geometryId: 'insideBasket_geom',
@@ -83,7 +87,7 @@ export const BEX_15: Scene = {
         },
       },
     },
-    LEFT_BASKET,
+
     insideLeftBasket: {
       type: 'object',
       geometryId: 'insideBasket_geom',

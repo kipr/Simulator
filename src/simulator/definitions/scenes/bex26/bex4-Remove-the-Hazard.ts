@@ -1,11 +1,10 @@
 import Scene from '../../../../state/State/Scene';
-import { Distance } from '../../../../util';
 import Script from '../../../../state/State/Scene/Script';
-import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { LO_ORANGE_POMS, LO_BLUE_POMS } from '../26botballExplorerSandbox';
-import { RotationwUnits } from '../../../../util/math/unitMath';
+import { LO_ORANGE_POMS, LO_BLUE_POMS, offsetGamePiece } from '../26botballExplorerSandbox';
+import { BLACK_LINE_GEOMETRY, blackLineNodes } from './bexCommonComponents';
+import Dict from '../../../../util/objectOps/Dict';
 
 
 const pomLeftBlackLine = `
@@ -67,76 +66,14 @@ export const BEX_4: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    blackLine_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(4),
-        y: Distance.centimeters(1),
-        z: Distance.meters(2),
-      }
-    },
+    BLACK_LINE_GEOMETRY
   },
   nodes: {
     ...baseScene.nodes,
-    ...LO_ORANGE_POMS,
-    ...LO_BLUE_POMS,
-    blackLine1: {
-      type: 'object',
-      geometryId: 'blackLine_geom',
-      name: tr('Black Line 1'),
-      origin: {
-        position: {
-          x: Distance.centimeters(34.1),
-          y: Distance.centimeters(-22),
-          z: Distance.meters(0.878),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(126, 2, 163),
-        },
-      },
-    },
-    blackLine2: {
-      type: 'object',
-      geometryId: 'blackLine_geom',
-      name: tr('Black Line 2'),
-      origin: {
-        position: {
-          x: Distance.centimeters(66.62),
-          y: Distance.centimeters(-22),
-          z: Distance.meters(0.878),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(126, 2, 163),
-        },
-      },
-    },
-    blackLine3: {
-      type: 'object',
-      geometryId: 'blackLine_geom',
-      name: tr('Black Line 3'),
-      origin: {
-        position: {
-          x: Distance.centimeters(66.62),
-          y: Distance.centimeters(-22),
-          z: Distance.meters(0.221),
-        },
-        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(126, 2, 163),
-        },
-      },
-    },
+    ...blackLineNodes,
+    ...Dict.map({
+      ...LO_ORANGE_POMS,
+      ...LO_BLUE_POMS,
+    }, offsetGamePiece)
   }
 };

@@ -4,7 +4,8 @@ import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { LO_BLUE_POMS, LO_ORANGE_POMS } from '../26botballExplorerSandbox';
+import { LO_BLUE_POMS, LO_ORANGE_POMS, offsetGamePiece } from '../26botballExplorerSandbox';
+import Dict from '../../../../util/objectOps/Dict';
 
 const baseScene = createBaseSceneSurface();
 
@@ -140,8 +141,10 @@ export const BEX_7: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    ...LO_BLUE_POMS,
-    ...LO_ORANGE_POMS,
+    ...Dict.map({
+      ...LO_BLUE_POMS,
+      ...LO_ORANGE_POMS,
+    }, offsetGamePiece),
     pvcEncloseLeft: {
       type: 'object',
       geometryId: 'pvcEnclose_geom',

@@ -3,8 +3,9 @@ import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { MIDDLE_GREEN_2IN_CUBE, MIDDLE_RED_2IN_CUBE, MIDDLE_YELLOW_2IN_CUBE } from '../26botballExplorerSandbox';
+import { MIDDLE_GREEN_2IN_CUBE, MIDDLE_RED_2IN_CUBE, MIDDLE_YELLOW_2IN_CUBE, offsetGamePiece } from '../26botballExplorerSandbox';
 import { smallCubeEnd_geom, blackLineNodes, BLACK_LINE_GEOMETRY, getLowestFaceScript, getHighestFaceScript, isCubeOnTopOfScript, createCubeEndNode } from './bexCommonComponents';
+import Dict from '../../../../util/objectOps/Dict';
 
 const baseScene = createBaseSceneSurface();
 
@@ -132,21 +133,25 @@ export const BEX_13: Scene = {
   nodes: {
     ...baseScene.nodes,
     ...blackLineNodes,
-    MIDDLE_GREEN_2IN_CUBE,
+    ...Dict.map({
+      MIDDLE_GREEN_2IN_CUBE,
+      MIDDLE_RED_2IN_CUBE,
+      MIDDLE_YELLOW_2IN_CUBE,
+    }, offsetGamePiece),
     greenCubeTop: createCubeEndNode(tr('Green Cube Top'), 'MIDDLE_GREEN_2IN_CUBE', 'top', 'smallCubeEnd_geom', Color.rgb(0, 255, 0)),
     greenCubeBottom: createCubeEndNode(tr('Green Cube Bottom'), 'MIDDLE_GREEN_2IN_CUBE', 'bottom', 'smallCubeEnd_geom', Color.rgb(0, 255, 0)),
     greenCubeLeft: createCubeEndNode(tr('Green Cube Left'), 'MIDDLE_GREEN_2IN_CUBE', 'left', 'smallCubeEnd_geom', Color.rgb(0, 255, 0)),
     greenCubeRight: createCubeEndNode(tr('Green Cube Right'), 'MIDDLE_GREEN_2IN_CUBE', 'right', 'smallCubeEnd_geom', Color.rgb(0, 255, 0)),
     greenCubeFront: createCubeEndNode(tr('Green Cube Front'), 'MIDDLE_GREEN_2IN_CUBE', 'front', 'smallCubeEnd_geom', Color.rgb(0, 255, 0)),
     greenCubeBack: createCubeEndNode(tr('Green Cube Back'), 'MIDDLE_GREEN_2IN_CUBE', 'back', 'smallCubeEnd_geom', Color.rgb(0, 255, 0)),
-    MIDDLE_RED_2IN_CUBE,
+
     redCubeTop: createCubeEndNode(tr('Red Cube Top'), 'MIDDLE_RED_2IN_CUBE', 'top', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     redCubeBottom: createCubeEndNode(tr('Red Cube Bottom'), 'MIDDLE_RED_2IN_CUBE', 'bottom', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     redCubeLeft: createCubeEndNode(tr('Red Cube Left'), 'MIDDLE_RED_2IN_CUBE', 'left', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     redCubeRight: createCubeEndNode(tr('Red Cube Right'), 'MIDDLE_RED_2IN_CUBE', 'right', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     redCubeFront: createCubeEndNode(tr('Red Cube Front'), 'MIDDLE_RED_2IN_CUBE', 'front', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
     redCubeBack: createCubeEndNode(tr('Red Cube Back'), 'MIDDLE_RED_2IN_CUBE', 'back', 'smallCubeEnd_geom', Color.rgb(255, 0, 0)),
-    MIDDLE_YELLOW_2IN_CUBE,
+
     yellowCubeTop: createCubeEndNode(tr('Yellow Cube Top'), 'MIDDLE_YELLOW_2IN_CUBE', 'top', 'smallCubeEnd_geom', Color.rgb(255, 255, 0)),
     yellowCubeBottom: createCubeEndNode(tr('Yellow Cube Bottom'), 'MIDDLE_YELLOW_2IN_CUBE', 'bottom', 'smallCubeEnd_geom', Color.rgb(255, 255, 0)),
     yellowCubeLeft: createCubeEndNode(tr('Yellow Cube Left'), 'MIDDLE_YELLOW_2IN_CUBE', 'left', 'smallCubeEnd_geom', Color.rgb(255, 255, 0)),

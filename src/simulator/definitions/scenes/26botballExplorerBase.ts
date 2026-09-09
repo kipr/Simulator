@@ -13,7 +13,7 @@ import {
 import tr from '@i18n';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, 0, 0),
+  position: Vector3wUnits.centimeters(5, -8, -95),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0),
 };
 
@@ -58,14 +58,14 @@ export function createBaseSceneSurface(): Scene {
     camera: Camera.arcRotate({
       radius: Distance.meters(5),
       target: {
-        x: Distance.meters(0.04),
-        y: Distance.meters(0.2),
+        x: Distance.meters(0),
+        y: Distance.meters(0.05),
         z: Distance.meters(0),
       },
       position: {
-        x: Distance.meters(-0.71),
-        y: Distance.meters(0.9),
-        z: Distance.meters(-1.25),
+        x: Distance.meters(-1.5),
+        y: Distance.meters(1.25),
+        z: Distance.meters(0),
       }
     }),
     gravity: {

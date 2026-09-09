@@ -4,7 +4,9 @@ import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { BOTGUY } from '../26botballExplorerSandbox';
+import { BOTGUY, offsetGamePiece } from '../26botballExplorerSandbox';
+import Dict from '../../../../util/objectOps/Dict';
+import { RotationwUnits } from '../../../../util/math/unitMath';
 
 
 const baseScene = createBaseSceneSurface();
@@ -65,17 +67,20 @@ export const BEX_9: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    BOTGUY,
+    ...Dict.map({
+      BOTGUY,
+    }, offsetGamePiece),
     warehouseFloor: {
       type: 'object',
       geometryId: 'warehouseFloor_geom',
       name: tr('Warehouse Floor'),
       origin: {
         position: {
-          x: Distance.centimeters(0),
+          x: Distance.centimeters(38.147),
           y: Distance.centimeters(-15.59),
-          z: Distance.centimeters(27.305),
+          z: Distance.centimeters(17.287),
         },
+        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
       },
       material: {
         type: 'basic',
@@ -92,10 +97,11 @@ export const BEX_9: Scene = {
       name: tr('PVC Enclosure Left'),
       origin: {
         position: {
-          x: Distance.centimeters(72.73),
+          x: Distance.centimeters(99.43),
           y: Distance.centimeters(-16.15),
-          z: Distance.centimeters(89.244),
+          z: Distance.centimeters(-56.669),
         },
+        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
       },
       material: {
         type: 'basic',
@@ -109,12 +115,14 @@ export const BEX_9: Scene = {
       type: 'object',
       geometryId: 'pvcEnclose_geom',
       name: tr('PVC Enclosure Middle'),
+
       origin: {
         position: {
-          x: Distance.centimeters(-0.62),
+          x: Distance.centimeters(99.43),
           y: Distance.centimeters(-16.15),
-          z: Distance.centimeters(89.244),
+          z: Distance.centimeters(16.568),
         },
+        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
       },
       material: {
         type: 'basic',
@@ -131,10 +139,12 @@ export const BEX_9: Scene = {
       name: tr('PVC Enclosure Right'),
       origin: {
         position: {
-          x: Distance.centimeters(-78.95),
+          x: Distance.centimeters(99.43),
           y: Distance.centimeters(-16.15),
-          z: Distance.centimeters(89.244),
+          z: Distance.centimeters(94.334),
         },
+        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+
       },
       material: {
         type: 'basic',

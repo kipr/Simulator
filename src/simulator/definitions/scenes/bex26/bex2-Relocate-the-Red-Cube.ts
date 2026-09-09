@@ -1,11 +1,10 @@
 import Scene from '../../../../state/State/Scene';
-import { Distance } from '../../../../util';
 import Script from '../../../../state/State/Scene/Script';
-import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { RotationwUnits } from '../../../../util/math/unitMath';
-import { RED_4INCH_CUBE, LOW_2INCH_RED_CUBE, HIGH_2INCH_RED_CUBE, RED_4INCH_CUBE_PALLET } from '../26botballExplorerSandbox';
+import { RED_4INCH_CUBE, LOW_2INCH_RED_CUBE, HIGH_2INCH_RED_CUBE, RED_4INCH_CUBE_PALLET, offsetGamePiece } from '../26botballExplorerSandbox';
+import { BLACK_LINE_GEOMETRY, blackLineNodes } from './bexCommonComponents';
+import Dict from '../../../../util/objectOps/Dict';
 
 const baseScene = createBaseSceneSurface();
 
@@ -51,79 +50,18 @@ export const BEX_2: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    blackLine_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(5),
-        y: Distance.centimeters(12),
-        z: Distance.meters(2),
-      }
-    },
+    BLACK_LINE_GEOMETRY
 
   },
   nodes: {
     ...baseScene.nodes,
-    lowRedCube: LOW_2INCH_RED_CUBE,
-    highRedCube: HIGH_2INCH_RED_CUBE,
-    redCubePallet: RED_4INCH_CUBE_PALLET,
-    redCube: RED_4INCH_CUBE,
-    blackLine1: {
-      type: 'object',
-      geometryId: 'blackLine_geom',
-      name: tr('Black Line 1'),
-      origin: {
-        position: {
-          x: Distance.centimeters(34.1),
-          y: Distance.centimeters(-22),
-          z: Distance.meters(0.878),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(126, 2, 163),
-        },
-      },
-    },
-    blackLine2: {
-      type: 'object',
-      geometryId: 'blackLine_geom',
-      name: tr('Black Line 2'),
-      origin: {
-        position: {
-          x: Distance.centimeters(66.62),
-          y: Distance.centimeters(-22),
-          z: Distance.meters(0.878),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(126, 2, 163),
-        },
-      },
-    },
-    blackLine3: {
-      type: 'object',
-      geometryId: 'blackLine_geom',
-      name: tr('Black Line 3'),
-      origin: {
-        position: {
-          x: Distance.centimeters(66.62),
-          y: Distance.centimeters(-22),
-          z: Distance.meters(0.221),
-        },
-        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(126, 2, 163),
-        },
-      },
-    },
+    ...blackLineNodes,
+    ...Dict.map({
+      lowRedCube: LOW_2INCH_RED_CUBE,
+      highRedCube: HIGH_2INCH_RED_CUBE,
+      redCubePallet: RED_4INCH_CUBE_PALLET,
+      redCube: RED_4INCH_CUBE,
+
+    }, offsetGamePiece)
   }
 };

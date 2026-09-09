@@ -4,7 +4,8 @@ import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { blackLineNodes, BLACK_LINE_GEOMETRY } from './bexCommonComponents';
+import { blackLineNodes, BLACK_LINE_GEOMETRY, startBoxB, startBox_geom } from './bexCommonComponents';
+import { RotationwUnits } from '../../../../util/math/unitMath';
 
 
 const baseScene = createBaseSceneSurface();
@@ -122,7 +123,7 @@ const touchingBlackLine = `
   insideStartBox = type === 'start';
   updateChallengeState();
 
-}, ['startBox']);
+}, ['startBoxB']);
 
 `;
 export const BEX_10: Scene = {
@@ -130,23 +131,13 @@ export const BEX_10: Scene = {
   name: tr('Botball Explorer 10'),
   description: tr('Botball Explorer Mission 10: Waypoint Bravo'),
   scripts: {
-    // notInStartBox: Script.ecmaScript('Not In Start Box', notInStartBox),
-    // reachedEnd: Script.ecmaScript('Robot Reached End', reachedEnd),
     noStop: Script.ecmaScript('No Stop', noStop),
-    //enterStartBox: Script.ecmaScript('Bonus Return', enterStartBox),
     touchingBlackLine: Script.ecmaScript('Touching Black Line', touchingBlackLine),
   },
   geometry: {
     ...baseScene.geometry,
     BLACK_LINE_GEOMETRY,
-    startBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(32),
-        y: Distance.centimeters(0.1),
-        z: Distance.centimeters(43),
-      },
-    },
+    startBox_geom,
     notStartBox_geom: {
       type: 'box',
       size: {
@@ -183,7 +174,7 @@ export const BEX_10: Scene = {
         position: {
           x: Distance.centimeters(-5.46),
           y: Distance.centimeters(-14.4),
-          z: Distance.meters(0.186),
+          z: Distance.meters(0.428),
         }
 
       },
@@ -196,31 +187,13 @@ export const BEX_10: Scene = {
         position: {
           x: Distance.centimeters(-5.46),
           y: Distance.centimeters(-14.4),
-          z: Distance.meters(0.519),
+          z: Distance.meters(0.794),
         }
 
       },
     },
 
-    startBox: {
-      type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(-45.26),
-          y: Distance.centimeters(-15.83),
-          z: Distance.centimeters(-5.17),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(0, 0, 255),
-        },
-      },
-    },
+    startBoxB,
 
     endBox: {
       type: 'object',
@@ -228,10 +201,11 @@ export const BEX_10: Scene = {
       name: tr('End Box'),
       origin: {
         position: {
-          x: Distance.centimeters(-45.5),
-          y: Distance.centimeters(-15.8),
-          z: Distance.centimeters(35.24),
+          x: Distance.centimeters(45.276),
+          y: Distance.centimeters(-15),
+          z: Distance.centimeters(60.995),
         },
+        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
       },
       material: {
         type: 'basic',
@@ -247,10 +221,11 @@ export const BEX_10: Scene = {
       name: tr('Stop Box'),
       origin: {
         position: {
-          x: Distance.centimeters(-45.9),
-          y: Distance.centimeters(-10.28),
-          z: Distance.centimeters(54.34),
+          x: Distance.centimeters(63.744),
+          y: Distance.centimeters(-10.6),
+          z: Distance.centimeters(60.974),
         },
+        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
       },
       material: {
         type: 'basic',

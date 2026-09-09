@@ -5,6 +5,7 @@ import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
 import { setNodeVisible, notInStartBox } from '../jbcCommonComponents';
+import { startBox_geom, startBoxA } from './bexCommonComponents';
 const baseScene = createBaseSceneSurface();
 
 const reachedEnd = `
@@ -35,7 +36,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('returnToStartBox', type === 'start');
   }
-}, 'startBox');
+}, 'startBoxA');
 `;
 
 
@@ -51,14 +52,7 @@ export const BEX_1: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    startBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(60),
-        y: Distance.centimeters(1),
-        z: Distance.centimeters(32),
-      },
-    },
+    startBox_geom,
     notStartBox_geom: {
       type: 'box',
       size: {
@@ -86,25 +80,7 @@ export const BEX_1: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: {
-      type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-21),
-          z: Distance.centimeters(3.2),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(0, 0, 255),
-        },
-      },
-    },
+    startBoxA,
     notStartBox: {
       type: 'object',
       geometryId: 'notStartBox_geom',
@@ -113,7 +89,7 @@ export const BEX_1: Scene = {
         position: {
           x: Distance.centimeters(0),
           y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.262),
+          z: Distance.meters(0.345),
         },
       },
       material: {
@@ -130,9 +106,9 @@ export const BEX_1: Scene = {
       name: tr('End Box'),
       origin: {
         position: {
-          x: Distance.centimeters(50.3),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
+          x: Distance.centimeters(45.5),
+          y: Distance.centimeters(-15.3),
+          z: Distance.centimeters(-90.9),
         },
       },
       material: {
@@ -149,9 +125,9 @@ export const BEX_1: Scene = {
       name: tr('Stop Box'),
       origin: {
         position: {
-          x: Distance.centimeters(70.4),
+          x: Distance.centimeters(64.652),
           y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
+          z: Distance.centimeters(-90.9),
         },
       },
       material: {

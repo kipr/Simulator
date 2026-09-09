@@ -11,7 +11,7 @@ import {
 } from '../../../util/math/unitMath';
 import tr from '@i18n';
 
-const TABLE_POSITION = RawVector3.create(79, 11, 100);
+const TABLE_POSITION = RawVector3.create(79, 0, 10);
 const TABLE_ROTATION = RawQuaternion.create(0, 1, 0, 0);
 const IDENTITY_ROTATION = RawQuaternion.IDENTITY;
 
@@ -73,7 +73,6 @@ const component = (
   geometryId,
   physics,
   visible: true,
-  editable: false,
   startingOrigin: tableOrigin(position, orientation, scale),
   origin: tableOrigin(position, orientation, scale),
 });

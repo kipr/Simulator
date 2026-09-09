@@ -2,8 +2,9 @@ import Scene from '../../../../state/State/Scene';
 import Script from '../../../../state/State/Scene/Script';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { BOTGUY, LEFT_CONE, RIGHT_CONE, } from '../26botballExplorerSandbox';
+import { offsetGamePiece, BOTGUY, LEFT_CONE, RIGHT_CONE, } from '../26botballExplorerSandbox';
 import { loadingZone, loadingZone_geom, BLACK_LINE_GEOMETRY, blackLineNodes } from './bexCommonComponents';
+import Dict from '../../../../util/objectOps/Dict';
 
 const baseScene = createBaseSceneSurface();
 
@@ -62,9 +63,11 @@ export const BEX_18: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    BOTGUY,
-    LEFT_CONE,
-    RIGHT_CONE,
+    ...Dict.map({
+      BOTGUY,
+      LEFT_CONE,
+      RIGHT_CONE,
+    }, offsetGamePiece),
     loadingZone,
     ...blackLineNodes
 

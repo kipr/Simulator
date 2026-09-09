@@ -8,18 +8,26 @@ import { sprintf } from 'sprintf-js';
 
 import tr from '@i18n';
 import { setNodeVisible } from './jbcCommonComponents';
+import { RawVector3 } from '../../../util/math/math';
+import Geometry from '../../../state/State/Scene/Geometry';
+import { Distance } from '../../../util/math/Value';
 
 const baseScene = createBaseSceneSurface();
 
+//const MAT_CENTER = RawVector3.create(34.889, -17.609, -5.180);
+const MAT_CENTER = Vector3wUnits.centimeters(44.111, -15.59, 15.18);
+// const CORD_DIFF = Vector3wUnits.centimeters(15.4, -13.896, -187.89);
+const CORD_DIFF = Vector3wUnits.centimeters(-21.572, -10, -119.622);
 
 const LOW_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(88.2, -13.2, 51.5),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(22.77, -7, -83.3), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const HIGH_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(66.7, -8, 21.7),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(22.77, -1, -83.3), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
+
 export const LOW_2INCH_RED_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Low Red Cube'),
@@ -39,17 +47,16 @@ export const HIGH_2INCH_RED_CUBE: Node = {
   origin: HIGH_2INCH_RED_CUBE_ORIGIN
 };
 const POM_ORIENTATION: RotationwUnits = RotationwUnits.eulerDegrees(0, 90, 0);
-const LO_Y = -12;
+const LO_Y = -23;
 export const POM_Z_GAP = 6 * 2.61;
 export const POM_X_GAP = 6 * 2.61;
-export const LO_Z_1 = 35.82 + POM_Z_GAP;
-export const LO_X_1 = 72.4;
+export const LO_Z_1 = -52;
 
 
 export const LO_ORANGE_POMS: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(LO_X_1 - POM_X_GAP * i, LO_Y, 18.9),
+    position: Vector3wUnits.centimeters(34.4, LO_Y, LO_Z_1 + POM_Z_GAP * i),
     orientation: POM_ORIENTATION
   };
   LO_ORANGE_POMS[`loOrange${i}`] = {
@@ -65,7 +72,7 @@ for (let i = 0; i < 6; i++) {
 export const LO_BLUE_POMS: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(LO_X_1 - POM_X_GAP * i, LO_Y, 51.52),
+    position: Vector3wUnits.centimeters(66.8, LO_Y, LO_Z_1 + POM_Z_GAP * i),
 
     orientation: POM_ORIENTATION
   };
@@ -80,8 +87,10 @@ for (let i = 0; i < 6; i++) {
   };
 }
 
+
 const RED_4INCH_CUBE_PALLET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(104, -10.7, 24.5),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-4.5, -10, -99), MAT_CENTER),
+
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 export const RED_4INCH_CUBE_PALLET: Node = {
@@ -95,7 +104,7 @@ export const RED_4INCH_CUBE_PALLET: Node = {
 };
 
 const RED_4INCH_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(104, 0, 24.5),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-4.5, -1, -99), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 export const RED_4INCH_CUBE: Node = {
@@ -109,12 +118,12 @@ export const RED_4INCH_CUBE: Node = {
 };
 
 const TOP_GREEN_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(LO_X_1 + 0.15, -12, 2.72),
+  position: Vector3wUnits.centimeters(18, -25, -52.4),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
 const LOW_GREEN_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(LO_X_1 + 0.15, -12, -13.48),
+  position: Vector3wUnits.centimeters(1.6, -25, -52.4),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
@@ -138,12 +147,12 @@ export const TOP_GREEN_2IN_CUBE: Node = {
 };
 
 const TOP_YELLOW_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(LO_X_1 - POM_X_GAP, -12, 2.72),
+  position: Vector3wUnits.centimeters(18, -25, -36.6),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
 const LOW_YELLOW_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(LO_X_1 - POM_X_GAP, -12, -13.48),
+  position: Vector3wUnits.centimeters(1.6, -25, -36.6),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
@@ -167,7 +176,7 @@ export const TOP_YELLOW_2IN_CUBE: Node = {
 };
 
 const MIDDLE_PALLET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(38.51, -15, -5.4),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-34.2, -10, -33.5), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 export const MIDDLE_PALLET: Node = {
@@ -181,7 +190,7 @@ export const MIDDLE_PALLET: Node = {
 };
 
 const BROWN_4IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-14, -10, -19),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-47.9, -3, 19), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 export const BROWN_4IN_CUBE: Node = {
@@ -195,17 +204,17 @@ export const BROWN_4IN_CUBE: Node = {
 };
 
 const MIDDLE_RED_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-24.5, -12, 2.75),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-26.1, -10, 29.5), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
 const MIDDLE_GREEN_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-21.85, -12, -2.55),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-31.5, -10, 27), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
 const MIDDLE_YELLOW_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-24.6, -12, -7.9),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-36.9, -10, 29.5), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
@@ -242,7 +251,7 @@ export const MIDDLE_YELLOW_2IN_CUBE: Node = {
 };
 
 const MIDDLE_GREEN_4IN_PALLET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-45.47, -15, 35.35),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(6.3, -10, 50.5), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 export const MIDDLE_GREEN_4IN_PALLET: Node = {
@@ -256,7 +265,7 @@ export const MIDDLE_GREEN_4IN_PALLET: Node = {
 };
 
 const MIDDLE_GREEN_4IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-45.47, -5, 35.35),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(6.3, -3, 50.5), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 export const MIDDLE_GREEN_4IN_CUBE: Node = {
@@ -270,8 +279,8 @@ export const MIDDLE_GREEN_4IN_CUBE: Node = {
 };
 
 const LEFT_BASKET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-77.4, -12, -10.75),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0)
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-39.7, -10, 82.8), MAT_CENTER),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 0)
 };
 export const LEFT_BASKET: Node = {
   type: 'from-bb-template',
@@ -284,8 +293,8 @@ export const LEFT_BASKET: Node = {
 };
 
 const RIGHT_BASKET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-110.37, -12, -10.72),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0)
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-39.7, -10, 115), MAT_CENTER),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 0)
 };
 export const RIGHT_BASKET: Node = {
   type: 'from-bb-template',
@@ -298,7 +307,7 @@ export const RIGHT_BASKET: Node = {
 };
 
 const LEFT_CONE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-27.05, -12, 51.53),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(22.77, -13, 32), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 export const LEFT_CONE: Node = {
@@ -312,7 +321,7 @@ export const LEFT_CONE: Node = {
 };
 
 const RIGHT_CONE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-63.9, -12, 51.53),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(22.77, -13, 69), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 export const RIGHT_CONE: Node = {
@@ -326,8 +335,8 @@ export const RIGHT_CONE: Node = {
 };
 
 const BOTGUY_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-0.54, -2.5, 89.43),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0)
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(60.45, -2, 5.4), MAT_CENTER),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 0)
 };
 export const BOTGUY: Node = {
   type: 'from-bb-template',
@@ -340,7 +349,7 @@ export const BOTGUY: Node = {
 };
 
 const RIGHT_STACK_YELLOW_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-90.16, -12, 67.71),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(38.9, -10, 95), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 export const RIGHT_STACK_YELLOW_2IN_CUBE: Node = {
@@ -354,8 +363,8 @@ export const RIGHT_STACK_YELLOW_2IN_CUBE: Node = {
 };
 
 const RIGHT_STACK_GREEN_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-95.39, -8, 67.71),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 45)
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(38.9, -3, 100), MAT_CENTER),
+  orientation: RotationwUnits.eulerDegrees(45, 0, 0)
 };
 export const RIGHT_STACK_GREEN_2IN_CUBE: Node = {
   type: 'from-bb-template',
@@ -368,7 +377,7 @@ export const RIGHT_STACK_GREEN_2IN_CUBE: Node = {
 };
 
 const RIGHT_STACK_RED_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-100.47, -12, 67.71),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(38.9, -10, 105.5), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 export const RIGHT_STACK_RED_2IN_CUBE: Node = {
@@ -381,9 +390,9 @@ export const RIGHT_STACK_RED_2IN_CUBE: Node = {
   origin: RIGHT_STACK_RED_2IN_CUBE_ORIGIN
 };
 
-const GAME_PIECE_OFFSET = Vector3wUnits.centimeters(-5, 15, -4.5);
+export const GAME_PIECE_OFFSET = Vector3wUnits.centimeters(-5, 15, -4.5);
 
-const offsetOrigin = (origin: ReferenceFramewUnits): ReferenceFramewUnits => {
+export const offsetOrigin = (origin: ReferenceFramewUnits): ReferenceFramewUnits => {
   if (!origin) return origin;
   return {
     ...origin,
@@ -394,7 +403,31 @@ const offsetOrigin = (origin: ReferenceFramewUnits): ReferenceFramewUnits => {
   };
 };
 
-const offsetGamePiece = (node: Node): Node => ({
+const matCenter_geom: Geometry = {
+  type: 'box',
+  size: {
+    x: Distance.centimeters(1),
+    y: Distance.centimeters(1),
+    z: Distance.centimeters(1)
+  }
+}
+
+const matCenter: Node = {
+  type: 'object',
+  name: tr('Mat Center'),
+  geometryId: 'matCenter_geom',
+  visible: true,
+  editable: true,
+  startingOrigin: {
+    position: MAT_CENTER,
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0)
+  },
+  origin: {
+    position: MAT_CENTER,
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0)
+  }
+};
+export const offsetGamePiece = (node: Node): Node => ({
   ...node,
   startingOrigin: offsetOrigin(node.startingOrigin),
   origin: offsetOrigin(node.origin),
@@ -404,12 +437,13 @@ export const BOTBALL_EXPLORER_26_SANDBOX: Scene = {
   ...baseScene,
   name: tr('2026 Botball Explorer Sandbox'),
   description: tr('A sandbox scene for 2026 Botball Explorer.'),
-  geometry: { ...baseScene.geometry },
+  geometry: { ...baseScene.geometry, matCenter_geom },
   scripts: {},
   nodes: {
     ...baseScene.nodes,
+    matCenter,
     ...Dict.map({
-      low2InchRedCube: LOW_2INCH_RED_CUBE,
+      LOW_2INCH_RED_CUBE,
       high2InchRedCube: HIGH_2INCH_RED_CUBE,
       ...LO_ORANGE_POMS,
       ...LO_BLUE_POMS,

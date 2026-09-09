@@ -5,7 +5,8 @@ import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
 import { LO_ORANGE_POMS, RIGHT_BASKET, LEFT_BASKET } from '../26botballExplorerSandbox';
-
+import { offsetGamePiece } from '../26botballExplorerSandbox';
+import Dict from '../../../../util/objectOps/Dict';
 const baseScene = createBaseSceneSurface();
 
 const pomInBasket = `
@@ -62,8 +63,11 @@ export const BEX_11: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    ...LO_ORANGE_POMS,
-    RIGHT_BASKET,
+    ...Dict.map({
+      ...LO_ORANGE_POMS,
+      RIGHT_BASKET,
+      LEFT_BASKET,
+    }, offsetGamePiece),
     insideRightBasket: {
       type: 'object',
       geometryId: 'insideBasket_geom',
@@ -85,7 +89,7 @@ export const BEX_11: Scene = {
         },
       },
     },
-    LEFT_BASKET,
+
     insideLeftBasket: {
       type: 'object',
       geometryId: 'insideBasket_geom',
