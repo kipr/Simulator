@@ -296,7 +296,11 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
     if (!challengeCompletion) return;
 
     this.onStopClick_();
-    this.workingChallengeScene = Async.latestValue(scene);
+    const previousWorking = this.workingChallengeScene_;
+    const latestScene = Async.latestValue(scene);
+    this.workingChallengeScene = previousWorking && latestScene
+      ? Scene.copyRobotStartingOrigins(previousWorking, latestScene)
+      : latestScene;
 
     const latestChallenge = Async.latestValue(challenge);
     const latestChallengeCompletion = Async.latestValue(challengeCompletion);

@@ -34,7 +34,7 @@ export const DEMOBOT: Robot = {
       parentId: 'chassis',
       mass: grams(300),
       origin: {
-        position: Vector3wUnits.meters(-0.06, -0.019, 0),
+        position: Vector3wUnits.meters(0, -0.019, -0.06),
       },
     }),
     left_wheel: Node.motor({
@@ -42,8 +42,8 @@ export const DEMOBOT: Robot = {
       parentAxis: RawVector3.NEGATIVE_Y,
       childAxis: RawVector3.NEGATIVE_Z,
       parentPerpAxis: RawVector3.NEGATIVE_Z,
-      childPerpAxis: RawVector3.NEGATIVE_X,
-      childRotationQuaternion: Quaternion.FromEulerAngles(0, 0, Math.PI / -2),
+      childPerpAxis: RawVector3.X,
+      childRotationQuaternion: Quaternion.FromEulerAngles(0, 0, Math.PI / 2),
       motorPort: 0,
       parentId: 'chassis',
       plug: Node.Motor.Plug.Inverted

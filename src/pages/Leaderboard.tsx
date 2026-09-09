@@ -390,15 +390,20 @@ class Leaderboard extends React.Component<Props, State> {
 
   private onLog = async () => {
     const res = await db.list('challenge_completion');
-    console.log("Raw leaderboard data: ", res);
     const groupData = res.groupData;
     const userData = res.userData;
 
     let users: Record<string, User> = {};
     const challenges: Record<string, Challenge> = {};
-
+    // Regex to match `custom-<UUID>`
+    
+    const customChallengeRegex = /^custom-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     for (const [_, attemptedChallenges] of Object.entries(groupData)) {
       for (const [challengeId, challenge] of Object.entries(attemptedChallenges as ChallengeData[])) {
+        // TEMP: Ignore custom challenges
+        if (customChallengeRegex.test(challengeId)) {
+          continue;
+        }
         const challenge = {
           name: tr(challengeId),
           description: tr(challengeId),
@@ -435,6 +440,11 @@ class Leaderboard extends React.Component<Props, State> {
       };
 
       for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
+        // TEMP: Ignore custom challenges
+        if (customChallengeRegex.test(challengeId)) {
+          continue;
+        }
+
         const score: Score = {
           name: tr(challengeId),
           completed: challengeCompletion(challenge)
@@ -467,6 +477,11 @@ class Leaderboard extends React.Component<Props, State> {
       };
 
       for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
+        // TEMP: Ignore custom challenges
+        if (customChallengeRegex.test(challengeId)) {
+          continue;
+        }
+
         const score: Score = {
           name: tr(challengeId),
           completed: challengeCompletion(challenge)

@@ -292,6 +292,10 @@ class Root extends React.Component<Props, State> {
       );
     }
 
+    if (this.workingChallengeScene_) {
+      sceneToLoad = Scene.copyRobotStartingOrigins(this.workingChallengeScene_, sceneToLoad);
+    }
+
     const latestChallengeCompletion =
       Async.latestValue(store.getState().challengeCompletions[challengeId]) ??
       Async.latestValue(this.props.challengeCompletion);
@@ -367,14 +371,28 @@ class Root extends React.Component<Props, State> {
     reinstantiateCustomChallengeRuntimeScript(binding.scriptManager, scene);
   };
 
+  private incrementNonce_ = () => {
+    this.setState({
+      nonce: (this.state.nonce + 1) % 100000
+    });
+  };
+
   private onNodeChange_ = (nodeId: string, node: Node) => {
     if (!this.workingChallengeScene_) return;
     this.workingChallengeScene_ = Scene.setNode(this.workingChallengeScene_, nodeId, node);
-    const binding = Space.getInstance().sceneBinding;
-    if (binding) {
-      binding.applyNodeFromScript(nodeId, node);
-      binding.scriptManager.scene = Scene.setNode(binding.scriptManager.scene, nodeId, node);
+    const space = Space.getInstance();
+    const binding = space.sceneBinding;
+    if (!binding) return;
+
+    if (node.type === 'robot') {
+      space.replaceSceneState(this.workingChallengeScene_);
+      binding.syncNodeOriginsFromScene(this.workingChallengeScene_);
+      this.incrementNonce_();
+      return;
     }
+
+    binding.applyNodeFromScript(nodeId, node);
+    binding.scriptManager.scene = Scene.setNode(binding.scriptManager.scene, nodeId, node);
   };
 
   private onNodeAdd_ = this.onNodeChange_;
@@ -737,6 +755,7 @@ class Root extends React.Component<Props, State> {
     if (this.props.params.challengeId !== prevProps.params.challengeId) {
       this.appliedCompletionSceneDiff_ = false;
       this.lastSyncedPropsScene_ = undefined;
+      this.workingChallengeScene_ = undefined;
     }
 
     const latestScene = Async.latestValue(this.props.scene);

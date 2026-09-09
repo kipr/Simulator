@@ -17,7 +17,7 @@ const LOW_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const HIGH_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(88.2, -5, 51.5),
+  position: Vector3wUnits.centimeters(66.7, -8, 21.7),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 export const LOW_2INCH_RED_CUBE: Node = {
@@ -381,6 +381,25 @@ export const RIGHT_STACK_RED_2IN_CUBE: Node = {
   origin: RIGHT_STACK_RED_2IN_CUBE_ORIGIN
 };
 
+const GAME_PIECE_OFFSET = Vector3wUnits.centimeters(-5, 15, -4.5);
+
+const offsetOrigin = (origin: ReferenceFramewUnits): ReferenceFramewUnits => {
+  if (!origin) return origin;
+  return {
+    ...origin,
+    position: Vector3wUnits.add(
+      origin.position ?? Vector3wUnits.zero('centimeters'),
+      GAME_PIECE_OFFSET,
+    ),
+  };
+};
+
+const offsetGamePiece = (node: Node): Node => ({
+  ...node,
+  startingOrigin: offsetOrigin(node.startingOrigin),
+  origin: offsetOrigin(node.origin),
+} as Node);
+
 export const BOTBALL_EXPLORER_26_SANDBOX: Scene = {
   ...baseScene,
   name: tr('2026 Botball Explorer Sandbox'),
@@ -389,31 +408,32 @@ export const BOTBALL_EXPLORER_26_SANDBOX: Scene = {
   scripts: {},
   nodes: {
     ...baseScene.nodes,
-    low2InchRedCube: LOW_2INCH_RED_CUBE,
-    high2InchRedCube: HIGH_2INCH_RED_CUBE,
-    ...LO_ORANGE_POMS,
-    ...LO_BLUE_POMS,
-    red4InchCubePallet: RED_4INCH_CUBE_PALLET,
-    red4InchCube: RED_4INCH_CUBE,
-    topGreen2InCube: TOP_GREEN_2IN_CUBE,
-    lowGreen2InCube: LOW_GREEN_2IN_CUBE,
-    topYellow2InCube: TOP_YELLOW_2IN_CUBE,
-    lowYellow2InCube: LOW_YELLOW_2IN_CUBE,
-    middlePallet: MIDDLE_PALLET,
-    brown4InCube: BROWN_4IN_CUBE,
-    middleRed2InCube: MIDDLE_RED_2IN_CUBE,
-    middleGreen2InCube: MIDDLE_GREEN_2IN_CUBE,
-    middleYellow2InCube: MIDDLE_YELLOW_2IN_CUBE,
-    middleGreen4InPallet: MIDDLE_GREEN_4IN_PALLET,
-    middleGreen4InCube: MIDDLE_GREEN_4IN_CUBE,
-    leftBasket: LEFT_BASKET,
-    rightBasket: RIGHT_BASKET,
-    leftCone: LEFT_CONE,
-    rightCone: RIGHT_CONE,
-    botguy: BOTGUY,
-    rightStackYellow2InCube: RIGHT_STACK_YELLOW_2IN_CUBE,
-    rightStackGreen2InCube: RIGHT_STACK_GREEN_2IN_CUBE,
-    rightStackRed2InCube: RIGHT_STACK_RED_2IN_CUBE
-
+    ...Dict.map({
+      low2InchRedCube: LOW_2INCH_RED_CUBE,
+      high2InchRedCube: HIGH_2INCH_RED_CUBE,
+      ...LO_ORANGE_POMS,
+      ...LO_BLUE_POMS,
+      red4InchCubePallet: RED_4INCH_CUBE_PALLET,
+      red4InchCube: RED_4INCH_CUBE,
+      topGreen2InCube: TOP_GREEN_2IN_CUBE,
+      lowGreen2InCube: LOW_GREEN_2IN_CUBE,
+      topYellow2InCube: TOP_YELLOW_2IN_CUBE,
+      lowYellow2InCube: LOW_YELLOW_2IN_CUBE,
+      middlePallet: MIDDLE_PALLET,
+      brown4InCube: BROWN_4IN_CUBE,
+      middleRed2InCube: MIDDLE_RED_2IN_CUBE,
+      middleGreen2InCube: MIDDLE_GREEN_2IN_CUBE,
+      middleYellow2InCube: MIDDLE_YELLOW_2IN_CUBE,
+      middleGreen4InPallet: MIDDLE_GREEN_4IN_PALLET,
+      middleGreen4InCube: MIDDLE_GREEN_4IN_CUBE,
+      leftBasket: LEFT_BASKET,
+      rightBasket: RIGHT_BASKET,
+      leftCone: LEFT_CONE,
+      rightCone: RIGHT_CONE,
+      botguy: BOTGUY,
+      rightStackYellow2InCube: RIGHT_STACK_YELLOW_2IN_CUBE,
+      rightStackGreen2InCube: RIGHT_STACK_GREEN_2IN_CUBE,
+      rightStackRed2InCube: RIGHT_STACK_RED_2IN_CUBE,
+    }, offsetGamePiece),
   },
 };
