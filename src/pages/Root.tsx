@@ -292,6 +292,7 @@ const STDERR_STYLE = (theme: Theme) => ({
   color: 'red',
 });
 
+
 class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
   private overlayLayoutRef: React.MutableRefObject<OverlayLayout>;
@@ -325,7 +326,6 @@ class Root extends React.Component<Props, State> {
           tr('Welcome to the KIPR Simulator!\n'),
           props.locale,
         ),
-        style: STDOUT_STYLE(DARK),
       }),
       theme: DARK,
       messages: [],
@@ -594,7 +594,6 @@ class Root extends React.Component<Props, State> {
           this.state.console,
           StyledText.text({
             text,
-            style: STDOUT_STYLE(this.state.theme),
           }),
           300,
         ),
@@ -626,7 +625,6 @@ class Root extends React.Component<Props, State> {
           console,
           StyledText.text({
             text: LocalizedString.lookup(tr('Compiling...\n'), locale),
-            style: STDOUT_STYLE(this.state.theme),
           }),
         );
 
@@ -673,7 +671,6 @@ class Root extends React.Component<Props, State> {
                           tr('Compilation succeeded.\n'),
                           locale,
                         ),
-                      style: STDOUT_STYLE(this.state.theme),
                     }),
                   );
 
@@ -689,7 +686,6 @@ class Root extends React.Component<Props, State> {
                       nextConsole,
                       StyledText.text({
                         text: `${compileResult.stderr}\n`,
-                        style: STDERR_STYLE(this.state.theme),
                       }),
                     );
                   }
@@ -701,7 +697,6 @@ class Root extends React.Component<Props, State> {
                         tr('Compilation failed.\n'),
                         locale,
                       ),
-                      style: STDERR_STYLE(this.state.theme),
                     }),
                   );
                 }
@@ -727,7 +722,6 @@ class Root extends React.Component<Props, State> {
                       tr('Something went wrong during compilation.\n'),
                       locale,
                     ),
-                    style: STDERR_STYLE(this.state.theme),
                   }),
                 );
 
@@ -746,7 +740,6 @@ class Root extends React.Component<Props, State> {
           console,
           StyledText.text({
             text: LocalizedString.lookup(tr('Loading Python...\n'), locale),
-            style: STDOUT_STYLE(this.state.theme),
           }),
         );
 
@@ -1786,6 +1779,7 @@ class Root extends React.Component<Props, State> {
     );
   }
 }
+
 
 const ConnectedRoot = connect(
   (
