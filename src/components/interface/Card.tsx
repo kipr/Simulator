@@ -33,6 +33,7 @@ const Container = styled('div', (props: ThemeProps & {
   customwidth: string;
   customheight: string;
   custommargin: string;
+  selected: boolean;
 }) => ({
   width: '100%',
   height: '100%',
@@ -55,7 +56,8 @@ const Container = styled('div', (props: ThemeProps & {
   backgroundImage: props.backgroundimage ? props.backgroundimage : 'none',
   backgroundPosition: props.backgroundposition ? props.backgroundposition : 'center',
   backgroundRepeat: 'no-repeat',
-  backgroundSize: props.backgroundsize ? props.backgroundsize : '100%',
+  //backgroundSize: props.backgroundsize ? props.backgroundsize : '100%',
+  backgroundSize: props.selected ? '115%' : '100%',
   transition: 'all 0.5s ease',
   ':hover': {
     backgroundSize: props.hoverbackgroundsize ? props.hoverbackgroundsize : '115%',
@@ -116,7 +118,6 @@ export class Card extends React.Component<Props, State> {
       theme,
       onClick
     } = this.props;
-
     return (
       <Container
         theme={theme}
@@ -129,6 +130,7 @@ export class Card extends React.Component<Props, State> {
         customheight={this.props.customheight}
         onClick={onClick}
         custommargin={this.props.custommargin}
+        selected={this.props.selected}
       >
         <Gradient theme={theme} />
         <Header theme={theme}>{title}</Header>
