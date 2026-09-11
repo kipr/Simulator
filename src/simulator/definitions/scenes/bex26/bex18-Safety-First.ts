@@ -53,6 +53,12 @@ export const BEX_18: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 18'),
   description: tr('Botball Explorer Mission 18: Safety First, All Hands on Deck'),
+  summary: {
+    skill: tr('Precision driving and servo use for multi-object delivery.'),
+    baseMission: tr('Botguy is in the Loading Zone.'),
+    bonusMission: tr('Botguy is in the Loading Zone and least one Traffic Cone is fully within the Loading Zone.'),
+    advancedBonusMission: tr('Botguy and both Traffic Cones are fully within the Loading Zone.')
+  },
   scripts: {
     loadingZoneBlackLines: Script.ecmaScript('Loading Zone and Black Lines', loadingZoneBlackLines),
   },

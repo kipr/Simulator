@@ -128,6 +128,11 @@ export const BEX_8: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 8'),
   description: tr('Botball Explorer Mission 8: Deliver the Red Cube'),
+  summary: {
+    skill: tr('Lifting palletized cubes up onto a platform.'),
+    baseMission: tr('The pallet with the Large Red Cube is on top of the Loading Dock.'),
+    bonusMission: tr('One or more Small Red Cubes are on top of the Large Red Cube while the pallet is on the Loading Dock.')
+  },
   scripts: {
     cubesStacked: Script.ecmaScript('Cubes Stacked', cubesStacked),
   },

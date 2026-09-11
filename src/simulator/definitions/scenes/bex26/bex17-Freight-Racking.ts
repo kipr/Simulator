@@ -104,6 +104,11 @@ export const BEX_17: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 17'),
   description: tr('Botball Explorer Mission 17: Freight Racking'),
+  summary: {
+    skill: tr('Articulating a small cube onto a tall platform.'),
+    baseMission: tr('At least one cube originating from the Unstraight Cube are is on top of the Large Brown Cube.'),
+    bonusMission: tr('Two or more cubes originating from the Unstraight Cube area are on top of the Large Brown Cube.')
+  },
   scripts: {
     cubesStacked: Script.ecmaScript('Cubes Stacked', cubesStacked),
   },

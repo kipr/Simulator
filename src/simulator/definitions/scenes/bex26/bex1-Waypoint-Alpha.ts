@@ -44,6 +44,11 @@ export const BEX_1: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 1'),
   description: tr('Botball Explorer Mission 1: Waypoint Alpha'),
+  summary: {
+    skill: tr('Basic autonomous navigation and stopping at a specific location.'),
+    baseMission: tr('The robot must drive forward into the zone adjacent to Start Box A.'),
+    bonusMission: tr('The robot must stop in the zone adjacent to Start Box A and then return to Start Box A.'),
+  },
   scripts: {
     notInStartBox: Script.ecmaScript('Not In Start Box', notInStartBox),
     reachedEnd: Script.ecmaScript('Robot Reached End', reachedEnd),

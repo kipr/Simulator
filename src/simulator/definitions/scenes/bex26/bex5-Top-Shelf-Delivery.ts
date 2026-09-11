@@ -88,6 +88,11 @@ export const BEX_5: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 5'),
   description: tr('Botball Explorer Mission 5: Top Shelf Delivery'),
+  summary: {
+    skill: tr('Object manipulation, vertical placement, and end-effector design.'),
+    baseMission: tr('A Small Red Cube is on top of the Large Red Cube.'),
+    bonusMission: tr('Both Small Red Cubes are on top of the Large Red Cube.'),
+  },
   scripts: {
     cubesStacked: Script.ecmaScript('Cubes Stacked', cubesStacked),
   },

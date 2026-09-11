@@ -99,6 +99,11 @@ export const BEX_12: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 12'),
   description: tr('Botball Explorer Mission 12: Restack the Freight'),
+  summary: {
+    skill: tr('Precise driving and articulating cubes into a stack.'),
+    baseMission: tr('Two spilled cubes form a scoring stack - one spilled cube is on top of another spilled cube.'),
+    bonusMission: tr('The scoring stack remains intact and the lower cube of the stack is touching the black line.')
+  },
   scripts: {
     cubesStacked: Script.ecmaScript('Cubes Stacked', cubesStacked),
   },

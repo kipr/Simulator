@@ -99,6 +99,12 @@ export const BEX_3: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 3'),
   description: tr('Botball Explorer Mission 3: Mixed Freight'),
+  summary: {
+    skill: tr('Object manipulation, placement accuracy, and stacking.'),
+    baseMission: tr('Create one stack consisting of a Green Cube on top of a Yellow Cube, or a Yellow Cube on top of a Green Cube.'),
+    bonusMission: tr('Create a second stack consisting of a Green Cube and a Yellow Cube.'),
+    advancedBonusMission: tr('Create 2 stacks: 1) Green Cube on top of a Yellow Cube, and 2)Yellow Cube on top of a Green Cube (opposite color arrangements).')
+  },
   scripts: {
     cubesStacked: Script.ecmaScript('Top Green Cube Stacked', cubesStacked),
   },

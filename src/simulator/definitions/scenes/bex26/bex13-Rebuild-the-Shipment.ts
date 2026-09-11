@@ -121,6 +121,12 @@ export const BEX_13: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 13'),
   description: tr('Botball Explorer Mission 13: Rebuild the Shipment'),
+  summary: {
+    skill: tr('Bulldozing and multi-object stacking.'),
+    baseMission: tr('All three Unstraight Cubes are off the black line.'),
+    bonusMission: tr('Two Unstraight Cubes form a scoring stack - one Unstraight Cube is on top of another Unstraight Cube.'),
+    advancedBonusMission: tr('All three Unstraight Cubes form a scoring stack.')
+  },
   scripts: {
     cubesOnBlackLine: Script.ecmaScript('Cubes On Black Line', cubesOnBlackLine),
     cubesStacked: Script.ecmaScript('Cubes Stacked', cubesStacked),

@@ -115,6 +115,11 @@ export const BEX_7: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 7'),
   description: tr('Botball Explorer Mission 7: Hazard Containment'),
+  summary: {
+    skill: tr('Lifting poms and moving them into enclosures.'),
+    baseMission: tr('One Blue Pom and One Orange Poom are fully within the same PVC enclosure.'),
+    bonusMission: tr('A second PVC enclosure contains at least one Blue Pom and one Orange Pom, each fully within the enclosure. The Base and Bonus must use different enclosures.'),
+  },
   scripts: {
 
     pomEnteredPVC: Script.ecmaScript('Pom Entered PVC', pomEnteredPVC),

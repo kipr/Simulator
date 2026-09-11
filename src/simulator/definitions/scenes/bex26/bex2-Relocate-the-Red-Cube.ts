@@ -42,6 +42,11 @@ export const BEX_2: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 2'),
   description: tr('Botball Explorer Mission 2: Relocate the Red Cube'),
+  summary: {
+    skill: tr('Object displacement and bulldozing.'),
+    baseMission: tr('The Large Red cube and its pallet are both off the black line.'),
+    bonusMission: tr('Both Small Red Cubes are off the black line. The Small Red Cubes are not required to remain stacked.')
+  },
   scripts: {
     largeRedCubeLeftBlackLine: Script.ecmaScript('Large Red Cube Left Black Line', largeRedCubeLeftBlackLine),
     lowRedCubeLeftBlackLine: Script.ecmaScript('Low Red Cube Left Black Line', lowRedCubeLeftBlackLine),

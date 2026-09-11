@@ -203,6 +203,11 @@ export const BEX_6: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 6'),
   description: tr('Botball Explorer Mission 6: Pallet Builder'),
+  summary: {
+    skill: tr('Multi-object manipulation, spatial reasoning, cargo management, and palletized transport.'),
+    baseMission: tr('Place a 4 Green and Yellow Cubes onto a single pallet. A cube is on the pallet if touching the upper surface or ontop of another cube that is on the pallet.'),
+    bonusMission: tr('The pallet is fully within a starting box and is not touching any black line.')
+  },
   scripts: {
 
     palletInStartBox: Script.ecmaScript('Pallet In Start Box', palletInStartBox),

@@ -130,6 +130,11 @@ export const BEX_10: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 10'),
   description: tr('Botball Explorer Mission 10: Waypoint Bravo'),
+  summary: {
+    skill: tr('Basic autonomous navigation and stopping at a specific location.'),
+    baseMission: tr('The robot enters the zone adjacent to Starting Box B and comes to a clear and complete stop.'),
+    bonusMission: tr('The robot subsequently returns fully within Starting Box B and comes to a clear and complete stop.'),
+  },
   scripts: {
     noStop: Script.ecmaScript('No Stop', noStop),
     touchingBlackLine: Script.ecmaScript('Touching Black Line', touchingBlackLine),
