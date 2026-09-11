@@ -17,7 +17,7 @@ import { SimulatorState } from '../components/Challenge/SimulatorState';
 import ExceptionDialog from '../components/Challenge/ExceptionDialog';
 
 import { DEFAULT_SETTINGS, Settings } from '../components/constants/Settings';
-import { DARK, Theme } from '../components/constants/theme';
+import { DARK, LIGHT, Theme } from '../components/constants/theme';
 import { DEFAULT_SCENE } from '../components/constants/defaultScene';
 import CustomChallengeSetupDialog from '../components/Dialog/CustomChallengeSetupDialog';
 
@@ -1426,7 +1426,7 @@ class Root extends React.Component<Props, State> {
       simulatorRootTourSteps,
     } = state;
 
-    const theme = DARK;
+    const theme = settings.ideEditorDarkMode ? DARK : LIGHT;
 
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
@@ -1776,7 +1776,7 @@ class Root extends React.Component<Props, State> {
           />
         )}
         <AiWindow
-          theme={DARK}
+          theme={theme}
           code={code[activeLanguage]}
           language={activeLanguage}
           console={StyledText.toString(console)}
