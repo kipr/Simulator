@@ -4,8 +4,7 @@ import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { LO_ORANGE_POMS, RIGHT_BASKET, LEFT_BASKET } from '../26botballExplorerSandbox';
-import { offsetGamePiece } from '../26botballExplorerSandbox';
+import { offsetGamePiece, LO_ORANGE_POMS, RIGHT_BASKET, LEFT_BASKET } from '../26botballExplorerSandbox';
 import Dict from '../../../../util/objectOps/Dict';
 const baseScene = createBaseSceneSurface();
 

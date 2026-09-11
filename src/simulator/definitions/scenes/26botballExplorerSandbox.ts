@@ -14,7 +14,7 @@ import { Distance } from '../../../util/math/Value';
 
 const baseScene = createBaseSceneSurface();
 
-//const MAT_CENTER = RawVector3.create(34.889, -17.609, -5.180);
+// const MAT_CENTER = RawVector3.create(34.889, -17.609, -5.180);
 const MAT_CENTER = Vector3wUnits.centimeters(44.111, -15.59, 15.18);
 // const CORD_DIFF = Vector3wUnits.centimeters(15.4, -13.896, -187.89);
 const CORD_DIFF = Vector3wUnits.centimeters(-21.572, -10, -119.622);
@@ -410,7 +410,7 @@ const matCenter_geom: Geometry = {
     y: Distance.centimeters(1),
     z: Distance.centimeters(1)
   }
-}
+};
 
 const matCenter: Node = {
   type: 'object',

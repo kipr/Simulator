@@ -8,7 +8,7 @@ import tr from '@i18n';
 import Dict from '../../../../util/objectOps/Dict';
 
 
-/*************** 
+/** ************* 
     Scripts
 ****************/
 export const getLowestFaceScript = `
@@ -84,7 +84,7 @@ export const isCubeOnTopOfScript =
   }
 `;
 
-/*************** 
+/** ************* 
     FUNCTIONS
 ****************/
 
@@ -169,7 +169,7 @@ export function createCubeEndNode(name: LocalizedString, parentId: string, side:
   };
 }
 
-/*************** 
+/** ************* 
     GEOMETRIES
 ****************/
 export const BLACK_LINE_GEOMETRY: Geometry = {
@@ -206,7 +206,7 @@ export const pallet_geom: Geometry = {
     y: Distance.centimeters(0.1),
     z: Distance.inches(3.8),
   },
-}
+};
 
 export const loadingZone_geom: Geometry = {
   type: 'box',
@@ -215,7 +215,7 @@ export const loadingZone_geom: Geometry = {
     y: Distance.centimeters(0.1),
     z: Distance.centimeters(43)
   },
-}
+};
 
 export const startBox_geom: Geometry = {
   type: 'box',
@@ -224,9 +224,9 @@ export const startBox_geom: Geometry = {
     y: Distance.centimeters(0.1),
     z: Distance.centimeters(32),
   },
-}
+};
 
-/*************** 
+/** ************* 
       NODES
 ****************/
 export const startBoxA: Node = {
@@ -250,7 +250,7 @@ export const startBoxA: Node = {
       color: Color.rgb(0, 0, 255),
     },
   },
-}
+};
 
 export const startBoxB: Node = {
   type: 'object',
@@ -273,7 +273,7 @@ export const startBoxB: Node = {
       color: Color.rgb(0, 0, 255),
     },
   },
-}
+};
 
 export const loadingZone: Node = {
   type: 'object',
@@ -295,7 +295,7 @@ export const loadingZone: Node = {
       color: Color.rgb(84, 228, 132),
     },
   },
-}
+};
 
 
 export const blackLineNodes: Dict<Node> = {
@@ -398,4 +398,4 @@ export const blackLineNodes: Dict<Node> = {
     },
   }
 
-}
+};

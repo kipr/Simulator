@@ -22,7 +22,7 @@ type Props = ChallengeCardProps & ChallengeCardPrivateProps;
 const SvgOverlay = styled('svg', (props: ThemeProps) => ({
   borderRadius: `${props.theme.itemPadding * 4}px`,
   overflow: 'hidden',
-  //left: '11px',
+  // left: '11px',
   position: 'absolute',
   inset: 0,
   width: '100%',
