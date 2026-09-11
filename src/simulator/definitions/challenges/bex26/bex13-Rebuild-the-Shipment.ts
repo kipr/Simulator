@@ -19,10 +19,38 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
+    allCubesOffBlackLine: {
+      name: tr('All Cubes Off Black Line'),
+      description: tr('All cubes are off the black line')
+    },
+    bonus: {
+      name: tr('Bonus'),
+      description: tr('Two cubes are stacked on top of each other')
+    },
+    advancedBonus: {
+      name: tr('Advanced Bonus'),
+      description: tr('All three cubes are stacked on top of each other')
+    }
 
   },
   success: {
     exprs: {
+      allCubesOffBlackLine: {
+        type: Expr.Type.Event,
+        eventId: 'allCubesOffBlackLine',
+      },
+      allCubesOffBlackLineOnce: {
+        type: Expr.Type.Once,
+        argId: 'allCubesOffBlackLine',
+      },
+
+
+
+
+      completion: {
+        type: Expr.Type.And,
+        argIds: ['allCubesOffBlackLineOnce'],
+      }
     },
     rootId: 'completion',
   },
@@ -33,6 +61,18 @@ export default {
     rootId: 'failure',
   },
   successGoals: [
+    {
+      exprId: 'completion',
+      name: tr('All Cubes Off Black Line'),
+    },
+    {
+      exprId: 'bonus',
+      name: tr('Bonus: Two Cubes Stacked on Top of Each Other'),
+    },
+    {
+      exprId: 'advancedBonus',
+      name: tr('Advanced Bonus: All Three Cubes Stacked on Top of Each Other'),
+    }
 
   ],
   failureGoals: [

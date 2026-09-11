@@ -5,21 +5,20 @@ import Camera from '../../../state/State/Scene/Camera';
 import Scene from '../../../state/State/Scene';
 import AbstractRobot from '../../../programming/AbstractRobot';
 import Author from '../../../db/Author';
+import {
+  BOTBALL_EXPLORER_TABLE_26_GEOMETRY,
+  BOTBALL_EXPLORER_TABLE_26_NODES,
+} from './2026BotballExplorerTable';
 
 import tr from '@i18n';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(10, -15, 0),
-  orientation: RotationwUnits.eulerDegrees(0, 90, 4),
-};
-
-const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(45, -6, 100),
-  orientation: RotationwUnits.eulerDegrees(0, 180, 0),
+  position: Vector3wUnits.centimeters(5, -8, -95),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 0),
 };
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(50, 90, 50)
+  position: Vector3wUnits.centimeters(54, 105, 50)
 };
 
 /**
@@ -38,26 +37,15 @@ const ROBOT: Node.Robot = {
   origin: ROBOT_ORIGIN
 };
 
-const BOTBALL_EXPLORER_GAME_TABLE_2026: Node.FromBBTemplate = {
-  type: 'from-bb-template',
-  name: tr('2026 Botball Explorer Game Table'),
-  templateId: 'botballExplorerTable26',
-  visible: true,
-  editable: false,
-  startingOrigin: GAME_TABLE_ORIGIN,
-  origin: GAME_TABLE_ORIGIN
-};
-
-
 export function createBaseSceneSurface(): Scene {
   return {
     name: tr('Base Scene - 2026 Botball Explorer Game Table'),
     description: tr('A base scene. Intended to be augmented to create the full Botball Explorer game table'),
     author: Author.organization('kipr'),
-    geometry: {},
+    geometry: { ...BOTBALL_EXPLORER_TABLE_26_GEOMETRY },
     nodes: {
       'robot': ROBOT,
-      'botball_explorer_game_table_2026': BOTBALL_EXPLORER_GAME_TABLE_2026,
+      ...BOTBALL_EXPLORER_TABLE_26_NODES,
       'light0': {
         type: 'point-light',
         intensity: 0.8,
@@ -75,9 +63,9 @@ export function createBaseSceneSurface(): Scene {
         z: Distance.meters(0),
       },
       position: {
-        x: Distance.meters(-0.75),
-        y: Distance.meters(0.75),
-        z: Distance.meters(-1.25),
+        x: Distance.meters(-1.5),
+        y: Distance.meters(1.25),
+        z: Distance.meters(0),
       }
     }),
     gravity: {

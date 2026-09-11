@@ -24,7 +24,7 @@ export * from './jbc22-Search-and-Rescue';
 export * from './jbc23-Find-the-Black-Line';
 export * from './jbc24-Walk-the-Line';
 export * from './moonSandbox';
-export * from './tableSandbox';
+export * from './25springTableSandbox';
 export * from './26fallTableSandbox';
 export * from './26springTableSandbox';
 export * from './gcer25';

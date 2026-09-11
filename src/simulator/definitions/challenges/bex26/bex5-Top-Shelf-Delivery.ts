@@ -19,10 +19,39 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
+    smallRedOnLargeRed: {
+      name: tr('Small Red Cube on Large Red Cube'),
+      description: tr('Small Red Cube stacked on Large Red Cube'),
+    },
+
+    bonus: {
+      name: tr('Bonus: Both Small Red Cubes stacked on Large Red Cube'),
+      description: tr('Both Small Red Cubes stacked on Large Red Cube'),
+    }
 
   },
   success: {
     exprs: {
+      smallRedOnLargeRed: {
+        type: Expr.Type.Event,
+        eventId: 'smallRedOnLargeRed',
+      },
+      smallRedOnLargeRedOnce: {
+        type: Expr.Type.Once,
+        argId: 'smallRedOnLargeRed',
+      },
+      bonus: {
+        type: Expr.Type.Event,
+        eventId: 'bonus',
+      },
+      bonusOnce: {
+        type: Expr.Type.Once,
+        argId: 'bonus',
+      },
+      completion: {
+        type: Expr.Type.And,
+        argIds: ['smallRedOnLargeRedOnce'],
+      },
     },
     rootId: 'completion',
   },
@@ -33,7 +62,14 @@ export default {
     rootId: 'failure',
   },
   successGoals: [
-
+    {
+      exprId: 'smallRedOnLargeRedOnce',
+      name: tr('Small Red Cube stacked on Large Red Cube'),
+    },
+    {
+      exprId: 'bonusOnce',
+      name: tr('Both Small Red Cubes stacked on Large Red Cube'),
+    }
   ],
   failureGoals: [
 

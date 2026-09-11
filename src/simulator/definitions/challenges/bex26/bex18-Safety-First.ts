@@ -19,10 +19,41 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
-
+    botguyInLoadingZone: {
+      name: tr('Botguy in Loading Zone'),
+      description: tr('Botguy is in the Loading Zone')
+    },
+    bonus: {
+      name: tr('Bonus'),
+      description: tr('Bonus: Botguy is in AND at least one Traffic Cone FULLY WITHIN the Loading Zone')
+    },
+    advancedBonus: {
+      name: tr('Advanced Bonus'),
+      description: tr('Advanced Bonus: Botguy is in AND both Traffic Cones FULLY WITHIN the Loading Zone')
+    },
   },
   success: {
     exprs: {
+      allObjectsOffBlackLine: {
+        type: Expr.Type.Event,
+        eventId: 'allObjectsOffBlackLine',
+      },
+      botguyInLoadingZone: {
+        type: Expr.Type.Event,
+        eventId: 'botguyInLoadingZone',
+      },
+      bonus: {
+        type: Expr.Type.Event,
+        eventId: 'bonus',
+      },
+      advancedBonus: {
+        type: Expr.Type.Event,
+        eventId: 'advancedBonus',
+      },
+      completion: {
+        type: Expr.Type.And,
+        argIds: ['botguyInLoadingZone'],
+      }
     },
     rootId: 'completion',
   },
@@ -33,6 +64,18 @@ export default {
     rootId: 'failure',
   },
   successGoals: [
+    {
+      exprId: 'botguyInLoadingZone',
+      name: tr('Botguy in Loading Zone'),
+    },
+    {
+      exprId: 'bonus',
+      name: tr('Bonus: Botguy is in AND at least one Traffic Cone FULLY WITHIN the Loading Zone'),
+    },
+    {
+      exprId: 'advancedBonus',
+      name: tr('Advanced Bonus: Botguy is in AND both Traffic Cones FULLY WITHIN the Loading Zone'),
+    },
 
   ],
   failureGoals: [

@@ -9,7 +9,7 @@ import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../ut
 import { Distance } from '../../../util';
 import Dict from '../../../util/objectOps/Dict';
 
-import { createBaseSceneSurface } from './tableBase';
+import { createBaseSceneSurface } from './25springTableBase';
 
 import { sprintf } from 'sprintf-js';
 

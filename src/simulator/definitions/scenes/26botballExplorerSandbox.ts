@@ -8,19 +8,27 @@ import { sprintf } from 'sprintf-js';
 
 import tr from '@i18n';
 import { setNodeVisible } from './jbcCommonComponents';
+import { RawVector3 } from '../../../util/math/math';
+import Geometry from '../../../state/State/Scene/Geometry';
+import { Distance } from '../../../util/math/Value';
 
 const baseScene = createBaseSceneSurface();
 
+// const MAT_CENTER = RawVector3.create(34.889, -17.609, -5.180);
+const MAT_CENTER = Vector3wUnits.centimeters(44.111, -15.59, 15.18);
+// const CORD_DIFF = Vector3wUnits.centimeters(15.4, -13.896, -187.89);
+const CORD_DIFF = Vector3wUnits.centimeters(-21.572, -10, -119.622);
 
 const LOW_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(66.7, -15, 21.9),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(22.77, -7, -83.3), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 const HIGH_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(66.7, -5, 21.7),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(22.77, -1, -83.3), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
-const LOW_2INCH_RED_CUBE: Node = {
+
+export const LOW_2INCH_RED_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Low Red Cube'),
   templateId: 'cubeRed2In',
@@ -29,7 +37,7 @@ const LOW_2INCH_RED_CUBE: Node = {
   startingOrigin: LOW_2INCH_RED_CUBE_ORIGIN,
   origin: LOW_2INCH_RED_CUBE_ORIGIN
 };
-const HIGH_2INCH_RED_CUBE: Node = {
+export const HIGH_2INCH_RED_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('High Red Cube'),
   templateId: 'cubeRed2In',
@@ -39,14 +47,16 @@ const HIGH_2INCH_RED_CUBE: Node = {
   origin: HIGH_2INCH_RED_CUBE_ORIGIN
 };
 const POM_ORIENTATION: RotationwUnits = RotationwUnits.eulerDegrees(0, 90, 0);
-const LO_Y = -15;
-const POM_Z_GAP = 6 * 2.61;
-const LO_Z_1 = 22.4 + POM_Z_GAP;
+const LO_Y = -23;
+export const POM_Z_GAP = 6 * 2.61;
+export const POM_X_GAP = 6 * 2.61;
+export const LO_Z_1 = -52;
 
-const LO_ORANGE_POMS: Dict<Node> = {};
+
+export const LO_ORANGE_POMS: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(33.3, LO_Y, LO_Z_1 + POM_Z_GAP * i),
+    position: Vector3wUnits.centimeters(34.4, LO_Y, LO_Z_1 + POM_Z_GAP * i),
     orientation: POM_ORIENTATION
   };
   LO_ORANGE_POMS[`loOrange${i}`] = {
@@ -59,10 +69,11 @@ for (let i = 0; i < 6; i++) {
     origin
   };
 }
-const LO_BLUE_POMS: Dict<Node> = {};
+export const LO_BLUE_POMS: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(66.3, LO_Y, LO_Z_1 + POM_Z_GAP * i),
+    position: Vector3wUnits.centimeters(66.8, LO_Y, LO_Z_1 + POM_Z_GAP * i),
+
     orientation: POM_ORIENTATION
   };
   LO_BLUE_POMS[`loBlue${i}`] = {
@@ -76,11 +87,13 @@ for (let i = 0; i < 6; i++) {
   };
 }
 
+
 const RED_4INCH_CUBE_PALLET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(39.5, -15, 6),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-4.5, -10, -99), MAT_CENTER),
+
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
-const RED_4INCH_CUBE_PALLET: Node = {
+export const RED_4INCH_CUBE_PALLET: Node = {
   type: 'from-bb-template',
   name: tr('Red Cube Pallet'),
   templateId: 'pallet',
@@ -91,10 +104,10 @@ const RED_4INCH_CUBE_PALLET: Node = {
 };
 
 const RED_4INCH_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(39.5, -5, 6),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-4.5, -1, -99), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
-const RED_4INCH_CUBE: Node = {
+export const RED_4INCH_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Red Cube'),
   templateId: 'cubeRed4In',
@@ -105,16 +118,16 @@ const RED_4INCH_CUBE: Node = {
 };
 
 const TOP_GREEN_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(17.9, -15, LO_Z_1 - 0.5),
+  position: Vector3wUnits.centimeters(18, -25, -52.4),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
 const LOW_GREEN_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(1.6, -15, LO_Z_1 - 0.5),
+  position: Vector3wUnits.centimeters(1.6, -25, -52.4),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
-const LOW_GREEN_2IN_CUBE: Node = {
+export const LOW_GREEN_2IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Low Green Cube'),
   templateId: 'cubeGreen2In',
@@ -123,7 +136,7 @@ const LOW_GREEN_2IN_CUBE: Node = {
   startingOrigin: LOW_GREEN_2IN_CUBE_ORIGIN,
   origin: LOW_GREEN_2IN_CUBE_ORIGIN
 };
-const TOP_GREEN_2IN_CUBE: Node = {
+export const TOP_GREEN_2IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Top Green Cube'),
   templateId: 'cubeGreen2In',
@@ -134,16 +147,16 @@ const TOP_GREEN_2IN_CUBE: Node = {
 };
 
 const TOP_YELLOW_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(17.9, -15, (LO_Z_1 + POM_Z_GAP) - 0.5),
+  position: Vector3wUnits.centimeters(18, -25, -36.6),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
 const LOW_YELLOW_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(1.6, -15, (LO_Z_1 + POM_Z_GAP) - 0.5),
+  position: Vector3wUnits.centimeters(1.6, -25, -36.6),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
-const LOW_YELLOW_2IN_CUBE: Node = {
+export const LOW_YELLOW_2IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Low Yellow Cube'),
   templateId: 'cubeYellow2In',
@@ -152,7 +165,7 @@ const LOW_YELLOW_2IN_CUBE: Node = {
   startingOrigin: LOW_YELLOW_2IN_CUBE_ORIGIN,
   origin: LOW_YELLOW_2IN_CUBE_ORIGIN
 };
-const TOP_YELLOW_2IN_CUBE: Node = {
+export const TOP_YELLOW_2IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Top Yellow Cube'),
   templateId: 'cubeYellow2In',
@@ -163,10 +176,10 @@ const TOP_YELLOW_2IN_CUBE: Node = {
 };
 
 const MIDDLE_PALLET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(9.6, -15, (LO_Z_1 + POM_Z_GAP * 2) + 2.2),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-34.2, -10, -33.5), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
-const MIDDLE_PALLET: Node = {
+export const MIDDLE_PALLET: Node = {
   type: 'from-bb-template',
   name: tr('Middle Pallet'),
   templateId: 'pallet',
@@ -177,10 +190,10 @@ const MIDDLE_PALLET: Node = {
 };
 
 const BROWN_4IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-3.8, -15, 124.1),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-47.9, -3, 19), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
-const BROWN_4IN_CUBE: Node = {
+export const BROWN_4IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Brown Cube'),
   templateId: 'cubeBrown4In',
@@ -191,21 +204,23 @@ const BROWN_4IN_CUBE: Node = {
 };
 
 const MIDDLE_RED_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(17.9, -15, 134.6),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-26.1, -10, 29.5), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
 const MIDDLE_GREEN_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(12.4, -15, 132.1),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-31.5, -10, 27), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
 const MIDDLE_YELLOW_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(7, -15, 134.7),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-36.9, -10, 29.5), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
-const MIDDLE_RED_2IN_CUBE: Node = {
+
+
+export const MIDDLE_RED_2IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Middle Red Cube'),
   templateId: 'cubeRed2In',
@@ -215,7 +230,7 @@ const MIDDLE_RED_2IN_CUBE: Node = {
   origin: MIDDLE_RED_2IN_CUBE_ORIGIN
 };
 
-const MIDDLE_GREEN_2IN_CUBE: Node = {
+export const MIDDLE_GREEN_2IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Middle Green Cube'),
   templateId: 'cubeGreen2In',
@@ -225,7 +240,7 @@ const MIDDLE_GREEN_2IN_CUBE: Node = {
   origin: MIDDLE_GREEN_2IN_CUBE_ORIGIN
 };
 
-const MIDDLE_YELLOW_2IN_CUBE: Node = {
+export const MIDDLE_YELLOW_2IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Middle Yellow Cube'),
   templateId: 'cubeYellow2In',
@@ -236,10 +251,10 @@ const MIDDLE_YELLOW_2IN_CUBE: Node = {
 };
 
 const MIDDLE_GREEN_4IN_PALLET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(50.3, -15, 155.7),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(6.3, -10, 50.5), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
-const MIDDLE_GREEN_4IN_PALLET: Node = {
+export const MIDDLE_GREEN_4IN_PALLET: Node = {
   type: 'from-bb-template',
   name: tr('Middle Green Pallet'),
   templateId: 'pallet',
@@ -250,12 +265,12 @@ const MIDDLE_GREEN_4IN_PALLET: Node = {
 };
 
 const MIDDLE_GREEN_4IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(50.3, -5, 155.7),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(6.3, -3, 50.5), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
-const MIDDLE_GREEN_4IN_CUBE: Node = {
+export const MIDDLE_GREEN_4IN_CUBE: Node = {
   type: 'from-bb-template',
-  name: tr('Middle Green Cube'),
+  name: tr('4in Green Cube'),
   templateId: 'cubeGreen4In',
   visible: true,
   editable: true,
@@ -264,10 +279,10 @@ const MIDDLE_GREEN_4IN_CUBE: Node = {
 };
 
 const LEFT_BASKET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(4, -15, 188),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-39.7, -10, 82.8), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0)
 };
-const LEFT_BASKET: Node = {
+export const LEFT_BASKET: Node = {
   type: 'from-bb-template',
   name: tr('Left Basket'),
   templateId: 'basket',
@@ -278,10 +293,10 @@ const LEFT_BASKET: Node = {
 };
 
 const RIGHT_BASKET_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(4, -14, 219.8),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(-39.7, -10, 115), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0)
 };
-const RIGHT_BASKET: Node = {
+export const RIGHT_BASKET: Node = {
   type: 'from-bb-template',
   name: tr('Right Basket'),
   templateId: 'basket',
@@ -292,10 +307,10 @@ const RIGHT_BASKET: Node = {
 };
 
 const LEFT_CONE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(66.6, -15, 137.2),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(22.77, -13, 32), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
-const LEFT_CONE: Node = {
+export const LEFT_CONE: Node = {
   type: 'from-bb-template',
   name: tr('Left Cone'),
   templateId: 'trafficCone',
@@ -306,10 +321,10 @@ const LEFT_CONE: Node = {
 };
 
 const RIGHT_CONE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(66.6, -15, 174),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(22.77, -13, 69), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
-const RIGHT_CONE: Node = {
+export const RIGHT_CONE: Node = {
   type: 'from-bb-template',
   name: tr('Right Cone'),
   templateId: 'trafficCone',
@@ -320,10 +335,10 @@ const RIGHT_CONE: Node = {
 };
 
 const BOTGUY_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(104.4, -10, 110.7),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(60.45, -2, 5.4), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0)
 };
-const BOTGUY: Node = {
+export const BOTGUY: Node = {
   type: 'from-bb-template',
   name: tr('Botguy'),
   templateId: 'botguy_gamepiece',
@@ -334,10 +349,10 @@ const BOTGUY: Node = {
 };
 
 const RIGHT_STACK_YELLOW_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(82.9, -15, 200.4),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(38.9, -10, 95), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
-const RIGHT_STACK_YELLOW_2IN_CUBE: Node = {
+export const RIGHT_STACK_YELLOW_2IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Right Stack Yellow Cube'),
   templateId: 'cubeYellow2In',
@@ -348,10 +363,10 @@ const RIGHT_STACK_YELLOW_2IN_CUBE: Node = {
 };
 
 const RIGHT_STACK_GREEN_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(82.9, -5, 205.5),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(38.9, -3, 100), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(45, 0, 0)
 };
-const RIGHT_STACK_GREEN_2IN_CUBE: Node = {
+export const RIGHT_STACK_GREEN_2IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Right Stack Green Cube'),
   templateId: 'cubeGreen2In',
@@ -362,10 +377,10 @@ const RIGHT_STACK_GREEN_2IN_CUBE: Node = {
 };
 
 const RIGHT_STACK_RED_2IN_CUBE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(82.9, -15, 210.5),
+  position: Vector3wUnits.add(Vector3wUnits.centimeters(38.9, -10, 105.5), MAT_CENTER),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
-const RIGHT_STACK_RED_2IN_CUBE: Node = {
+export const RIGHT_STACK_RED_2IN_CUBE: Node = {
   type: 'from-bb-template',
   name: tr('Right Stack Red Cube'),
   templateId: 'cubeRed2In',
@@ -375,39 +390,84 @@ const RIGHT_STACK_RED_2IN_CUBE: Node = {
   origin: RIGHT_STACK_RED_2IN_CUBE_ORIGIN
 };
 
+export const GAME_PIECE_OFFSET = Vector3wUnits.centimeters(-5, 15, -4.5);
+
+export const offsetOrigin = (origin: ReferenceFramewUnits): ReferenceFramewUnits => {
+  if (!origin) return origin;
+  return {
+    ...origin,
+    position: Vector3wUnits.add(
+      origin.position ?? Vector3wUnits.zero('centimeters'),
+      GAME_PIECE_OFFSET,
+    ),
+  };
+};
+
+const matCenter_geom: Geometry = {
+  type: 'box',
+  size: {
+    x: Distance.centimeters(1),
+    y: Distance.centimeters(1),
+    z: Distance.centimeters(1)
+  }
+};
+
+const matCenter: Node = {
+  type: 'object',
+  name: tr('Mat Center'),
+  geometryId: 'matCenter_geom',
+  visible: true,
+  editable: true,
+  startingOrigin: {
+    position: MAT_CENTER,
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0)
+  },
+  origin: {
+    position: MAT_CENTER,
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0)
+  }
+};
+export const offsetGamePiece = (node: Node): Node => ({
+  ...node,
+  startingOrigin: offsetOrigin(node.startingOrigin),
+  origin: offsetOrigin(node.origin),
+} as Node);
+
 export const BOTBALL_EXPLORER_26_SANDBOX: Scene = {
   ...baseScene,
   name: tr('2026 Botball Explorer Sandbox'),
   description: tr('A sandbox scene for 2026 Botball Explorer.'),
-  geometry: { ...baseScene.geometry },
+  geometry: { ...baseScene.geometry, matCenter_geom },
   scripts: {},
   nodes: {
     ...baseScene.nodes,
-    low2InchRedCube: LOW_2INCH_RED_CUBE,
-    high2InchRedCube: HIGH_2INCH_RED_CUBE,
-    ...LO_ORANGE_POMS,
-    ...LO_BLUE_POMS,
-    red4InchCubePallet: RED_4INCH_CUBE_PALLET,
-    red4InchCube: RED_4INCH_CUBE,
-    topGreen2InCube: TOP_GREEN_2IN_CUBE,
-    lowGreen2InCube: LOW_GREEN_2IN_CUBE,
-    topYellow2InCube: TOP_YELLOW_2IN_CUBE,
-    lowYellow2InCube: LOW_YELLOW_2IN_CUBE,
-    middlePallet: MIDDLE_PALLET,
-    brown4InCube: BROWN_4IN_CUBE,
-    middleRed2InCube: MIDDLE_RED_2IN_CUBE,
-    middleGreen2InCube: MIDDLE_GREEN_2IN_CUBE,
-    middleYellow2InCube: MIDDLE_YELLOW_2IN_CUBE,
-    middleGreen4InPallet: MIDDLE_GREEN_4IN_PALLET,
-    middleGreen4InCube: MIDDLE_GREEN_4IN_CUBE,
-    leftBasket: LEFT_BASKET,
-    rightBasket: RIGHT_BASKET,
-    leftCone: LEFT_CONE,
-    rightCone: RIGHT_CONE,
-    botguy: BOTGUY,
-    rightStackYellow2InCube: RIGHT_STACK_YELLOW_2IN_CUBE,
-    rightStackGreen2InCube: RIGHT_STACK_GREEN_2IN_CUBE,
-    rightStackRed2InCube: RIGHT_STACK_RED_2IN_CUBE
-
+    matCenter,
+    ...Dict.map({
+      LOW_2INCH_RED_CUBE,
+      high2InchRedCube: HIGH_2INCH_RED_CUBE,
+      ...LO_ORANGE_POMS,
+      ...LO_BLUE_POMS,
+      red4InchCubePallet: RED_4INCH_CUBE_PALLET,
+      red4InchCube: RED_4INCH_CUBE,
+      topGreen2InCube: TOP_GREEN_2IN_CUBE,
+      lowGreen2InCube: LOW_GREEN_2IN_CUBE,
+      topYellow2InCube: TOP_YELLOW_2IN_CUBE,
+      lowYellow2InCube: LOW_YELLOW_2IN_CUBE,
+      middlePallet: MIDDLE_PALLET,
+      brown4InCube: BROWN_4IN_CUBE,
+      middleRed2InCube: MIDDLE_RED_2IN_CUBE,
+      middleGreen2InCube: MIDDLE_GREEN_2IN_CUBE,
+      middleYellow2InCube: MIDDLE_YELLOW_2IN_CUBE,
+      middleGreen4InPallet: MIDDLE_GREEN_4IN_PALLET,
+      middleGreen4InCube: MIDDLE_GREEN_4IN_CUBE,
+      leftBasket: LEFT_BASKET,
+      rightBasket: RIGHT_BASKET,
+      leftCone: LEFT_CONE,
+      rightCone: RIGHT_CONE,
+      botguy: BOTGUY,
+      rightStackYellow2InCube: RIGHT_STACK_YELLOW_2IN_CUBE,
+      rightStackGreen2InCube: RIGHT_STACK_GREEN_2IN_CUBE,
+      rightStackRed2InCube: RIGHT_STACK_RED_2IN_CUBE,
+    }, offsetGamePiece),
   },
 };

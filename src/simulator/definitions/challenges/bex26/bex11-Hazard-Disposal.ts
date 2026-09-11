@@ -19,10 +19,30 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
-
+    orangePomInBasket: {
+      name: tr('Orange Pom in Basket'),
+      description: tr('One orange pom in the basket')
+    },
+    bonus: {
+      name: tr('Bonus'),
+      description: tr('2 or more orange poms are in the basket')
+    }
   },
   success: {
     exprs: {
+
+      orangePomInBasket: {
+        type: Expr.Type.Event,
+        eventId: 'orangePomInBasket',
+      },
+      bonus: {
+        type: Expr.Type.Event,
+        eventId: 'bonus',
+      },
+      completion: {
+        type: Expr.Type.And,
+        argIds: ['orangePomInBasket'],
+      }
     },
     rootId: 'completion',
   },
@@ -33,7 +53,14 @@ export default {
     rootId: 'failure',
   },
   successGoals: [
-
+    {
+      exprId: 'orangePomInBasket',
+      name: tr('One Orange Pom in Basket'),
+    },
+    {
+      exprId: 'bonus',
+      name: tr('Bonus: 2 or more Orange Poms in Basket'),
+    }
   ],
   failureGoals: [
 

@@ -1,168 +1,67 @@
 import Scene from '../../../../state/State/Scene';
-import { Distance } from '../../../../util';
 import Script from '../../../../state/State/Scene/Script';
-// import { createBaseSceneSurfaceB } from './jbcBase';
-// import { setNodeVisible } from './jbcCommonComponents';
-import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from '../jbcCommonComponents';
+import { RED_4INCH_CUBE, LOW_2INCH_RED_CUBE, HIGH_2INCH_RED_CUBE, RED_4INCH_CUBE_PALLET, offsetGamePiece } from '../26botballExplorerSandbox';
+import { BLACK_LINE_GEOMETRY, blackLineNodes } from './bexCommonComponents';
+import Dict from '../../../../util/objectOps/Dict';
+
 const baseScene = createBaseSceneSurface();
 
-const reachedEnd = `
-// If the robot reaches the end, it completes the challenge
-${setNodeVisible}
-
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot reached end!', type, otherNodeId, scene.programStatus);
-  const visible = type === 'start';
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('reachedEnd', type==='start');
-    //setNodeVisible('endBox', visible);
-  }
-}, 'endBox');
+const palletLeftBlackLine = `
+scene.addOnIntersectionListener('redCubePallet', (type, otherNodeId) => {
+  //console.log('Red Cube Pallet left black line!', type, otherNodeId, scene.programStatus);
+  scene.setChallengeEventValue('palletNotTouchBlackLine', type === 'end');
+},[ 'blackLine1', 'blackLine2', 'blackLine3']);
 `;
 
-const noStop = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot did not stop!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('noStop', type === 'start');
-  }
-}, 'stopBox');
-`;
-const enterStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot returned start box!', type, otherNodeId, scene.programStatus);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('returnToStartBox', type === 'start');
-  }
-}, 'startBox');
+
+const largeRedCubeLeftBlackLine = `
+scene.addOnIntersectionListener('redCube', (type, otherNodeId) => {
+  //console.log('Red Cube left black line!', type, otherNodeId, scene.programStatus);
+   scene.setChallengeEventValue('largeRedCubeNotTouchBlackLine', type === 'end');
+},[ 'blackLine1', 'blackLine2', 'blackLine3']);
 `;
 
+
+const lowRedCubeLeftBlackLine = `
+scene.addOnIntersectionListener('lowRedCube', (type, otherNodeId) => {
+  //console.log('Low Red Cube left black line!', type, otherNodeId, scene.programStatus);
+   scene.setChallengeEventValue('lowRedCubeNotTouchBlackLine', type === 'end');
+},[ 'blackLine1', 'blackLine2', 'blackLine3']);
+`;
+
+const highRedCubeLeftBlackLine = `
+scene.addOnIntersectionListener('highRedCube', (type, otherNodeId) => {
+  //console.log('High Red Cube left black line!', type, otherNodeId, scene.programStatus);
+  scene.setChallengeEventValue('highRedCubeNotTouchBlackLine', type === 'end');
+},[ 'blackLine1', 'blackLine2', 'blackLine3']);
+`;
 
 export const BEX_2: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 2'),
   description: tr('Botball Explorer Mission 2: Relocate the Red Cube'),
   scripts: {
-    notInStartBox: Script.ecmaScript('Not In Start Box', notInStartBox),
-    reachedEnd: Script.ecmaScript('Robot Reached End', reachedEnd),
-    noStop: Script.ecmaScript('No Stop', noStop),
-    enterStartBox: Script.ecmaScript('Bonus Return', enterStartBox),
+    largeRedCubeLeftBlackLine: Script.ecmaScript('Large Red Cube Left Black Line', largeRedCubeLeftBlackLine),
+    lowRedCubeLeftBlackLine: Script.ecmaScript('Low Red Cube Left Black Line', lowRedCubeLeftBlackLine),
+    highRedCubeLeftBlackLine: Script.ecmaScript('High Red Cube Left Black Line', highRedCubeLeftBlackLine),
+    palletLeftBlackLine: Script.ecmaScript('Pallet Left Black Line', palletLeftBlackLine),
   },
   geometry: {
     ...baseScene.geometry,
-    startBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(60),
-        y: Distance.centimeters(1),
-        z: Distance.centimeters(32),
-      },
-    },
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
-      },
-    },
-    endBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(27),
-        y: Distance.centimeters(0.1),
-        z: Distance.centimeters(32),
-      },
-    },
-    stopBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(1),
-        y: Distance.centimeters(10),
-        z: Distance.centimeters(32),
-      }
-    }
+    BLACK_LINE_GEOMETRY
+
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: {
-      type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-21),
-          z: Distance.centimeters(3.2),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(0, 0, 255),
-        },
-      },
-    },
-    notStartBox: {
-      type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.262),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(255, 0, 0),
-        },
-      },
-    },
-    endBox: {
-      type: 'object',
-      geometryId: 'endBox_geom',
-      name: tr('End Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(50.3),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(0, 255, 0),
-        },
-      },
-    },
-    stopBox: {
-      type: 'object',
-      geometryId: 'stopBox_geom',
-      name: tr('Stop Box'),
-      origin: {
-        position: {
-          x: Distance.centimeters(70.4),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(3.2),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(255, 255, 0),
-        },
-      },
-    }
+    ...blackLineNodes,
+    ...Dict.map({
+      lowRedCube: LOW_2INCH_RED_CUBE,
+      highRedCube: HIGH_2INCH_RED_CUBE,
+      redCubePallet: RED_4INCH_CUBE_PALLET,
+      redCube: RED_4INCH_CUBE,
+
+    }, offsetGamePiece)
   }
 };

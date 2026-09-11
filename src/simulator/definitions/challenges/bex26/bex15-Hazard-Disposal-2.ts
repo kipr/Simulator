@@ -19,10 +19,30 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
-
+    bluePomInBasket: {
+      name: tr('Blue Pom in Basket'),
+      description: tr('One blue pom in the basket')
+    },
+    bonus: {
+      name: tr('Bonus'),
+      description: tr('2 or more blue poms are in the basket')
+    }
   },
   success: {
     exprs: {
+
+      bluePomInBasket: {
+        type: Expr.Type.Event,
+        eventId: 'bluePomInBasket',
+      },
+      bonus: {
+        type: Expr.Type.Event,
+        eventId: 'bonus',
+      },
+      completion: {
+        type: Expr.Type.And,
+        argIds: ['bluePomInBasket'],
+      }
     },
     rootId: 'completion',
   },
@@ -33,7 +53,14 @@ export default {
     rootId: 'failure',
   },
   successGoals: [
-
+    {
+      exprId: 'bluePomInBasket',
+      name: tr('One Blue Pom in Basket'),
+    },
+    {
+      exprId: 'bonus',
+      name: tr('Bonus: 2 or more Blue Poms in Basket'),
+    }
   ],
   failureGoals: [
 

@@ -157,6 +157,13 @@ namespace Geometry {
   export interface File {
     type: 'file';
     uri: string;
+
+    /**
+     * Remove the translations stored on imported mesh nodes before combining
+     * them. This is useful for reusable component exports whose mesh data is
+     * correct, but whose Blender scene placement was retained in the GLB.
+     */
+    resetPosition?: boolean;
     
     // If the file contains multiple objects, we can use these to include/exclude them.
     include?: string[];
@@ -175,6 +182,7 @@ namespace Geometry {
       return Patch.innerChange(prev, next, {
         type: Patch.none(prev.type),
         uri: Patch.diff(prev.uri, next.uri),
+        resetPosition: Patch.diff(prev.resetPosition, next.resetPosition),
         include: Patch.diff(prev.include, next.include),
         exclude: Patch.diff(prev.exclude, next.exclude)
       });
