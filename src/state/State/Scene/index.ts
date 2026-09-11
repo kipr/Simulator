@@ -44,10 +44,17 @@ export interface PredefinedLocation {
   origin: ReferenceFramewUnits;
 }
 
+interface Summary {
+  skill: LocalizedString;
+  baseMission: LocalizedString;
+  bonusMission: LocalizedString;
+  advancedBonusMission?: LocalizedString;
+}
 interface Scene {
   name: LocalizedString;
   author: Author;
   description: LocalizedString;
+  summary?: Summary;
   selectedNodeId?: string;
   selectedScriptId?: string;
 
@@ -87,13 +94,14 @@ interface Scene {
   };
 }
 
-export type SceneBrief = Pick<Scene, 'name' | 'author' | 'description'>;
+export type SceneBrief = Pick<Scene, 'name' | 'author' | 'description' | 'summary'>;
 
 export namespace SceneBrief {
   export const fromScene = (scene: Scene): SceneBrief => ({
     name: scene.name,
     description: scene.description,
     author: scene.author,
+    summary: scene.summary,
   });
 }
 
@@ -110,6 +118,7 @@ export namespace AsyncScene {
     brief: {
       name: scene.name,
       description: scene.description,
+      summary: scene.summary,
       author: scene.author,
     },
     value: scene,
@@ -120,6 +129,7 @@ export interface PatchScene {
   name: Patch<LocalizedString>;
   author: Patch<Author>;
   description: Patch<LocalizedString>;
+  summary?: Patch<Summary>;
   selectedNodeId: Patch<string>;
   selectedScriptId: Patch<string>;
 
@@ -172,7 +182,7 @@ namespace Scene {
     const queue = [...rootNodes];
     const visited = new Set<string>();
     const ret: string[] = [];
-    
+
 
     while (queue.length > 0) {
       const next = queue.shift();
@@ -184,7 +194,7 @@ namespace Scene {
       const c = children.get(next);
       if (c) ret.push(...c);
     }
-    
+
     return ret;
   };
 
@@ -340,8 +350,8 @@ namespace Scene {
   };
 
   export const diff = (a: Scene, b: Scene): PatchScene => {
-    const predefinedLocationsDiff = (a.predefinedLocations || b.predefinedLocations) 
-      ? Patch.diffDict(a.predefinedLocations || {}, b.predefinedLocations || {}, (prev, next) => 
+    const predefinedLocationsDiff = (a.predefinedLocations || b.predefinedLocations)
+      ? Patch.diffDict(a.predefinedLocations || {}, b.predefinedLocations || {}, (prev, next) =>
         Patch.diff(prev, next)
       )
       : undefined;
@@ -350,6 +360,7 @@ namespace Scene {
       name: Patch.diff(a.name, b.name),
       author: Patch.diff(a.author, b.author),
       description: Patch.diff(a.description, b.description),
+      summary: Patch.diff(a.summary, b.summary),
       hdriUri: Patch.diff(a.hdriUri, b.hdriUri),
       selectedNodeId: Patch.diff(a.selectedNodeId, b.selectedNodeId),
       selectedScriptId: Patch.diff(a.selectedScriptId, b.selectedScriptId),
@@ -373,6 +384,7 @@ namespace Scene {
   export const apply = (scene: Scene, patch: PatchScene): Scene => ({
     name: Patch.apply(patch.name, scene.name),
     description: Patch.apply(patch.description, scene.description),
+    summary: Patch.apply(patch.summary, scene.summary),
     author: Patch.apply(patch.author, scene.author),
     hdriUri: Patch.apply(patch.hdriUri, scene.hdriUri),
     selectedNodeId: Patch.apply(patch.selectedNodeId, scene.selectedNodeId),
@@ -382,7 +394,7 @@ namespace Scene {
     nodes: Patch.applyDict(patch.nodes, scene.nodes),
     geometry: Patch.applyDict(patch.geometry, scene.geometry),
     scripts: Patch.applyDict(patch.scripts, scene.scripts || {}),
-    predefinedLocations: patch.predefinedLocations 
+    predefinedLocations: patch.predefinedLocations
       ? Patch.applyDict(patch.predefinedLocations, scene.predefinedLocations || {})
       : scene.predefinedLocations,
     matPlayArea: Patch.apply(patch.matPlayArea, scene.matPlayArea),
@@ -401,6 +413,12 @@ namespace Scene {
   export const EMPTY: Scene = {
     author: Author.user(''),
     description: { [LocalizedString.EN_US]: '' },
+    summary: {
+      skill: { [LocalizedString.EN_US]: '' },
+      baseMission: { [LocalizedString.EN_US]: '' },
+      bonusMission: { [LocalizedString.EN_US]: '' },
+      advancedBonusMission: { [LocalizedString.EN_US]: '' },
+    },
     geometry: {},
     name: { [LocalizedString.EN_US]: '' },
     nodes: {},
