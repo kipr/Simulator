@@ -10,10 +10,18 @@ import tr from '@i18n';
 import { jsPDF } from "jspdf";
 import db from '../db';
 import { createRef } from 'react';
-import { LeaderboardEntry } from 'state/State/LimitedChallengeLeaderboard';
+import { TabBar } from '../components/Layout/TabBar';
+import NativeScrollContainer from '../components/interface/NativeScrollContainer';
+import {
+  LEADERBOARD_CATEGORIES,
+  LeaderboardCategoryId,
+  categoryForChallengeId,
+  challengeIdsForCategory,
+  rankUsersForCategory,
+  scoresForCategory,
+} from '../util/leaderboardCategories';
 
 let SELFIDENTIFIER: string;
-let currentUser: User;
 
 interface Challenge {
   name: LocalizedString;
@@ -23,6 +31,7 @@ interface Challenge {
 }
 
 interface Score {
+  challengeId: string;
   name: LocalizedString; // Challenge name
   completed: boolean;
   score?: number;
@@ -46,15 +55,9 @@ interface LeaderboardPrivateProps {
 }
 
 interface LeaderboardState {
-  topEntries: User[];
-  userContext?: User;
-  sortedUsers?: User[];
-  topTen?: User[];
-  currentUserEntry?: LeaderboardEntry;
   loading: boolean;
   error?: string;
-  totalParticipants: number;
-  selected: string;
+  selectedCategory: LeaderboardCategoryId;
   users: Record<string, User>;
   challenges: Record<string, Challenge>;
   showFullLeaderboard: boolean;
@@ -164,30 +167,21 @@ const Table = styled('table', () => ({
   overflow: 'visible'
 
 }));
-const LeaderboardScrollContainer = styled('div', {
-  width: '100%',
-  overflow: 'auto',
-  WebkitOverflowScrolling: 'touch',
-  height: '85%',
-
-  scrollbarWidth: 'thin',
-  scrollbarColor: 'rgba(121,121,121,0.6) transparent',
-
-  '::-webkit-scrollbar': {
-    width: '14px',
-    height: '14px',
-  },
-  '::-webkit-scrollbar-track': {
-    background: 'transparent',
-  },
-  '::-webkit-scrollbar-thumb': {
-    backgroundColor: 'rgba(121,121,121,0.4)',
-    borderRadius: '8px',
-  },
-  '::-webkit-scrollbar-thumb:hover': {
-    backgroundColor: 'rgba(121,121,121,0.7)',
-  },
+const LeaderboardScrollContainer = styled(NativeScrollContainer, {
+  flex: 1,
+  minHeight: 0,
 });
+
+const CategoryTabsScrollContainer = styled(NativeScrollContainer, {
+  flexShrink: 0,
+  overflowY: 'hidden',
+});
+
+const CategoryTabBar = styled(TabBar, (props: ThemeProps) => ({
+  minWidth: '640px',
+  height: '48px',
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+}));
 
 const TableHeader = styled('th', (props: ThemeProps) => ({
   padding: '12px 16px',
@@ -253,6 +247,15 @@ const ErrorState = styled('div', (props: ThemeProps) => ({
   justifyContent: 'center',
   padding: '48px',
   color: '#f44336',
+}));
+
+const EmptyState = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '48px',
+  color: props.theme.color,
+  opacity: 0.7,
 }));
 
 const ButtonContainer = styled('div', {
@@ -354,11 +357,8 @@ class Leaderboard extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      topEntries: [],
-      userContext: undefined,
-      totalParticipants: 0,
       loading: true,
-      selected: '',
+      selectedCategory: 'jbc',
       users: {},
       challenges: {},
       showFullLeaderboard: false
@@ -395,13 +395,14 @@ class Leaderboard extends React.Component<Props, State> {
 
     let users: Record<string, User> = {};
     const challenges: Record<string, Challenge> = {};
-    // Regex to match `custom-<UUID>`
     
+    // Regex to match `custom-<UUID>`
     const customChallengeRegex = /^custom-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
     for (const [_, attemptedChallenges] of Object.entries(groupData)) {
       for (const [challengeId, challenge] of Object.entries(attemptedChallenges as ChallengeData[])) {
         // TEMP: Ignore custom challenges
-        if (customChallengeRegex.test(challengeId)) {
+        if (!categoryForChallengeId(challengeId) || customChallengeRegex.test(challengeId)) {
           continue;
         }
         const challenge = {
@@ -440,12 +441,12 @@ class Leaderboard extends React.Component<Props, State> {
       };
 
       for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
-        // TEMP: Ignore custom challenges
-        if (customChallengeRegex.test(challengeId)) {
+        if (!categoryForChallengeId(challengeId)) {
           continue;
         }
 
         const score: Score = {
+          challengeId,
           name: tr(challengeId),
           completed: challengeCompletion(challenge)
         };
@@ -477,12 +478,12 @@ class Leaderboard extends React.Component<Props, State> {
       };
 
       for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
-        // TEMP: Ignore custom challenges
-        if (customChallengeRegex.test(challengeId)) {
+        if (!categoryForChallengeId(challengeId)) {
           continue;
         }
 
         const score: Score = {
+          challengeId,
           name: tr(challengeId),
           completed: challengeCompletion(challenge)
         };
@@ -494,11 +495,7 @@ class Leaderboard extends React.Component<Props, State> {
       }
     }
 
-    const sortedUsers = this.orderUsersByCompletedChallenges(users);
-    const topTen = sortedUsers.slice(0, 10);
-    currentUser = this.getCurrentUser();
-    const me = sortedUsers.find(user => user.id === currentUser.id);
-    const usersById: Record<string, User> = sortedUsers.reduce(
+    const usersById: Record<string, User> = Object.values(users).reduce(
       (acc, user) => {
         acc[user.id] = user;
         return acc;
@@ -508,28 +505,12 @@ class Leaderboard extends React.Component<Props, State> {
     this.setState({
       users: usersById,
       challenges,
-      topTen,
-      userContext: me ? me : undefined,
-      sortedUsers,
       loading: false,
-      totalParticipants: sortedUsers.length
     });
 
     return { users, challenges };
   };
 
-
-  private orderUsersByCompletedChallenges = (users: Record<string, User>): User[] => {
-    const userArray = Object.values(users);
-
-    userArray.sort((a, b) => {
-      const completedChallengesA = a.scores.filter(score => score.completed).length * 100 + a.scores.length;
-      const completedChallengesB = b.scores.filter(score => score.completed).length * 100 + b.scores.length;
-
-      return completedChallengesB - completedChallengesA;
-    });
-    return userArray;
-  };
 
   private anonomizeUsers = (users: Record<string, User>): Record<string, User> => {
     const anonomizedUsers: Record<string, User> = {};
@@ -567,7 +548,8 @@ class Leaderboard extends React.Component<Props, State> {
       anonomizedUsers[user.id] = {
         id: user.id,
         name: `${color}-${element}-${animal}-${number}`,
-        scores: user.scores
+        scores: user.scores,
+        altId: user.altId,
       };
     });
 
@@ -591,49 +573,19 @@ class Leaderboard extends React.Component<Props, State> {
     return anonomizedUsers;
   };
 
-  private customSort = (list: string[]): string[] => {
-    const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
-
-    const isJbc = (s: string) => /^jbc\d+/i.test(s); // case-insensitive test
-
-    return list.sort((a, b) => {
-      const aIsJbc = isJbc(a);
-      const bIsJbc = isJbc(b);
-
-      // 1. Prioritize jbc-prefixed items
-      if (aIsJbc && !bIsJbc) return -1;
-      if (!aIsJbc && bIsJbc) return 1;
-
-      // 2. If both are jbc-prefixed, sort numerically by suffix
-      if (aIsJbc && bIsJbc) {
-        const numA = parseInt(a.replace(/^jbc/i, ""), 10);
-        const numB = parseInt(b.replace(/^jbc/i, ""), 10);
-        return numA - numB;
-      }
-
-      // 3. Otherwise natural alphabetical sort
-      return collator.compare(a, b);
-    });
-  };
-
-  private getCurrentUser = (): User => {
+  private getCurrentUser = (): User | null => {
     const { users } = this.state;
-    let currentUser: User;
     const tokenManager = db.tokenManager;
-    if (tokenManager) {
-      const auth_ = tokenManager.auth();
-      const currentUserAuth_ = auth_.currentUser;
-      currentUser = {
-        id: currentUserAuth_.uid,
-        name: currentUserAuth_.displayName || 'Unknown',
-        scores: Object.values(users).find(u => u.id === currentUserAuth_.uid)?.scores || [],
-        altId: Object.values(users).find(u => u.id === currentUserAuth_.uid)?.altId || 'Unknown'
-      };
+    const currentUserAuth = tokenManager?.auth().currentUser;
+    if (!currentUserAuth) return null;
 
-    }
-
-
-    return currentUser || null;
+    const leaderboardUser = users[currentUserAuth.uid];
+    return {
+      id: currentUserAuth.uid,
+      name: currentUserAuth.displayName || 'Unknown',
+      scores: leaderboardUser?.scores || [],
+      altId: leaderboardUser?.altId || leaderboardUser?.name || 'Unknown'
+    };
   };
 
   private getCurrentUserEmail = (): string | null => {
@@ -650,7 +602,7 @@ class Leaderboard extends React.Component<Props, State> {
     return null;
   };
 
-  // Export current user's JBC scores to PDF - very simple, completed or not completed with timestamp
+  // Export the current user's scores for the selected challenge category.
 
   private exportUserScores = (user: User) => {
     const { locale } = this.props;
@@ -666,7 +618,7 @@ class Leaderboard extends React.Component<Props, State> {
     pdfDoc.text(`Alias: ${user.altId || 'Unknown'}`, 20, 50);
     pdfDoc.text(`Email: ${this.getCurrentUserEmail() || 'Unknown'}`, 20, 60);
 
-    const sortedScores = this.customSort(user.scores.map(s => s.name['en-US'])).map(name => user.scores.find(s => s.name['en-US'] === name));
+    const sortedScores = scoresForCategory(user.scores, this.state.selectedCategory);
 
     // Scores
     pdfDoc.setFontSize(12);
@@ -686,23 +638,31 @@ class Leaderboard extends React.Component<Props, State> {
   };
 
   private handleToggleView = () => {
-    this.setState(
-      prevState => ({
-        showFullLeaderboard: !prevState.showFullLeaderboard,
-        loading: false, // Show loading immediately
-      }),
-      () => {
-        // Fetch new data
+    this.setState(prevState => ({
+      showFullLeaderboard: !prevState.showFullLeaderboard,
+    }));
+  };
 
-      }
-    );
+  private handleCategoryChange = (index: number) => {
+    const category = LEADERBOARD_CATEGORIES[index];
+    if (!category || category.id === this.state.selectedCategory) return;
+
+    this.setState({ selectedCategory: category.id }, () => {
+      this.leaderboardScrollRef.current?.scrollTo({ top: 0, left: 0 });
+    });
   };
 
   private renderLeaderboard = () => {
 
     const { locale, theme } = this.props;
-    const { topEntries, userContext, loading, error, users, challenges, topTen, sortedUsers } = this.state;
-    const challengeArray = this.customSort(Object.keys(challenges));
+    const { loading, error, users, challenges, selectedCategory, showFullLeaderboard } = this.state;
+    const challengeArray = challengeIdsForCategory(Object.keys(challenges), selectedCategory);
+    const sortedUsers = rankUsersForCategory(users, selectedCategory);
+    const topTen = sortedUsers.slice(0, 10);
+    const currentUser = this.getCurrentUser();
+    const userContext = currentUser
+      ? sortedUsers.find(user => user.id === currentUser.id)
+      : undefined;
 
     if (loading) {
       return (
@@ -721,10 +681,17 @@ class Leaderboard extends React.Component<Props, State> {
       );
     }
 
-    // Check if user is in top entries (to avoid duplicate display)
-    const userInTopEntries = userContext && topEntries.some(e => e.id === userContext.id);
-    // Show user context section only if user has a completion and is not in top N
-    const showUserContextSection = userContext && !userInTopEntries;
+    if (sortedUsers.length === 0) {
+      return (
+        <EmptyState theme={theme}>
+          {LocalizedString.lookup(tr('No completions in this challenge category yet.'), locale)}
+        </EmptyState>
+      );
+    }
+
+    const userInTopTen = userContext && topTen.some(entry => entry.id === userContext.id);
+    const showUserContextSection = !showFullLeaderboard && userContext && !userInTopTen;
+    const tableUsers = showFullLeaderboard ? sortedUsers : topTen;
     return (
       <LeaderboardScrollContainer ref={this.leaderboardScrollRef}>
         <Table>
@@ -743,37 +710,29 @@ class Leaderboard extends React.Component<Props, State> {
 
             </tr>
           </thead>
-          {this.state.showFullLeaderboard
-            ? <tbody>
-              {sortedUsers.map((entry, index) => {
-                const rank = index + 1;
-                const isCurrentUser = currentUser.id === entry.id;
-                return this.renderLeaderboardRow(entry, rank, isCurrentUser, challengeArray);
-              })}
-            </tbody>
-            : <tbody>
-              {/* Top ten entries */}
-              {topTen.map((entry, index) => {
-                const rank = index + 1;
-                const isCurrentUser = currentUser.id === entry.id;
-                return this.renderLeaderboardRow(entry, rank, isCurrentUser, challengeArray);
-              })}
+          <tbody>
+            {tableUsers.map((entry, index) => {
+              const rank = index + 1;
+              const isCurrentUser = currentUser?.id === entry.id;
+              return this.renderLeaderboardRow(entry, rank, isCurrentUser, challengeArray);
+            })}
 
-              {/* Separator and user context section */}
-              {showUserContextSection && (
-                <>
-                  <SectionSeparator theme={theme}>
-                    <SeparatorCell theme={theme} colSpan={4}>
-                      ··· {LocalizedString.lookup(tr('Your position'), locale)} ···
-                    </SeparatorCell>
-                  </SectionSeparator>
-                  {/* User's entry */}
-                  {this.renderLeaderboardRow(userContext, sortedUsers.findIndex(user => user.id === currentUser.id) + 1, true, challengeArray)}
-
-                </>
-              )}
-            </tbody>
-          }
+            {showUserContextSection && (
+              <>
+                <SectionSeparator theme={theme}>
+                  <SeparatorCell theme={theme} colSpan={challengeArray.length + 2}>
+                    ··· {LocalizedString.lookup(tr('Your position'), locale)} ···
+                  </SeparatorCell>
+                </SectionSeparator>
+                {this.renderLeaderboardRow(
+                  userContext,
+                  sortedUsers.findIndex(user => user.id === userContext.id) + 1,
+                  true,
+                  challengeArray
+                )}
+              </>
+            )}
+          </tbody>
         </Table>
       </LeaderboardScrollContainer>
 
@@ -788,9 +747,8 @@ class Leaderboard extends React.Component<Props, State> {
   };
   private renderLeaderboardRow = (entry: User, rank: number, isCurrentUser: boolean, challengeArray: string[]) => {
     const { theme, locale } = this.props;
-    const { challenges } = this.state;
     return (
-      <TableRow key={`${entry.id}-${rank}`} theme={theme} $highlight={isCurrentUser} ref={entry.name === SELFIDENTIFIER ? this.myScoresRef : null}>
+      <TableRow key={`${entry.id}-${rank}`} theme={theme} $highlight={isCurrentUser} ref={isCurrentUser ? this.myScoresRef : null}>
 
         <StickyRankTd theme={theme} rank={rank} $highlight={isCurrentUser} >#{rank}</StickyRankTd>
         <StickyNameTd theme={theme} $highlight={isCurrentUser}>
@@ -798,7 +756,7 @@ class Leaderboard extends React.Component<Props, State> {
           {isCurrentUser && ` (${LocalizedString.lookup(tr('You'), locale)})`}
         </StickyNameTd>
         {challengeArray.map((id) => {
-          const userScore = entry.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
+          const userScore = entry.scores.find(score => score.challengeId === id);
           return (
             <TableCell key={id} theme={theme}>
               {!userScore && '-'}
@@ -820,15 +778,25 @@ class Leaderboard extends React.Component<Props, State> {
   private renderClassroomLeaderboardNew = () => {
     const { theme, locale } = this.props;
     const currentUser = this.getCurrentUser();
+    const selectedCategoryIndex = LEADERBOARD_CATEGORIES.findIndex(
+      category => category.id === this.state.selectedCategory
+    );
+    const totalParticipants = rankUsersForCategory(
+      this.state.users,
+      this.state.selectedCategory
+    ).length;
+    const categoryTabs: TabBar.TabDescription[] = LEADERBOARD_CATEGORIES.map(category => ({
+      name: LocalizedString.lookup(category.label, locale),
+    }));
     return (
       <ContentContainer theme={theme}>
         <LeaderboardContainer theme={theme}>
           <LeaderboardHeader theme={theme}>
             <LeaderboardTitle theme={theme}>
               {LocalizedString.lookup(tr('Leaderboard'), locale)}
-              {this.state.totalParticipants > 0 && (
+              {totalParticipants > 0 && (
                 <span style={{ fontSize: '0.7em', fontWeight: 'normal', opacity: 0.7, marginLeft: '8px' }}>
-                  ({this.state.totalParticipants} {LocalizedString.lookup(tr('participants'), locale)})
+                  ({totalParticipants} {LocalizedString.lookup(tr('participants'), locale)})
                 </span>
               )}
             </LeaderboardTitle>
@@ -844,6 +812,14 @@ class Leaderboard extends React.Component<Props, State> {
               </LeaderboardViewToggleButton>
             </LeaderboardViewToggle>
           </LeaderboardHeader>
+          <CategoryTabsScrollContainer>
+            <CategoryTabBar
+              tabs={categoryTabs}
+              index={selectedCategoryIndex}
+              onIndexChange={this.handleCategoryChange}
+              theme={theme}
+            />
+          </CategoryTabsScrollContainer>
           {currentUser && (
             <YourNameContainer theme={theme}>
               <YourNameLabel theme={theme}>
@@ -862,7 +838,7 @@ class Leaderboard extends React.Component<Props, State> {
   render() {
     const { props, } = this;
     const { style, theme } = props;
-    currentUser = this.getCurrentUser();
+    const currentUser = this.getCurrentUser();
 
     return (
       <PageContainer style={style} theme={theme}>
@@ -872,7 +848,7 @@ class Leaderboard extends React.Component<Props, State> {
             <h1>{LocalizedString.lookup(tr('KIPR All Time Leaderboard'), props.locale)}</h1>
 
             <ButtonContainer>
-              <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr('Export My Scores!'), props.locale)}</Button>
+              <Button theme={DARK} onClick={() => currentUser && this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr('Export My Scores!'), props.locale)}</Button>
               <Button theme={DARK} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr('Scroll to My Scores!'), props.locale)}</Button>
             </ButtonContainer>
 
