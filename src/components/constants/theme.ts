@@ -118,6 +118,7 @@ export interface Theme {
   noButtonColor: ButtonColor;
   leaderboardHighlightBackground: string;
   leaderboardHighlightHoverBackground: string;
+  cardTextColor: string;
 
   borderColor: string;
   borderRadius: number;
@@ -179,6 +180,7 @@ export const COMMON: Theme = {
   boxShadow: undefined,
   selectedClassBackground: undefined,
   hoverButtonBackground: undefined,
+  cardTextColor: undefined,
   borderRadius: 10,
   widget: {
     padding: 10
@@ -256,6 +258,8 @@ export const LIGHT: Theme = {
   runButtonColor: LIGHTMODE_GREEN,
   stopButtonColor: LIGHTMODE_RED,
 
+  cardTextColor: '#ffffff',
+
   transparentBackgroundColor: (a) => `rgba(255, 255, 255, ${a})`,
   switch: {
     on: {
@@ -320,11 +324,12 @@ export const DARK: Theme = {
   leaderboardHighlightBackground: '#2c482f',
   leaderboardHighlightHoverBackground: 'rgba(76, 175, 80, 0.2)',
 
-
   yesButtonColor: DARKMODE_YES,
   noButtonColor: DARKMODE_NO,
   runButtonColor: GREEN,
   stopButtonColor: RED,
+
+  cardTextColor: '#ffffff',
 
   transparentBackgroundColor: (a) => `rgba(${0x21}, ${0x21}, ${0x21}, ${a})`,
   switch: {
