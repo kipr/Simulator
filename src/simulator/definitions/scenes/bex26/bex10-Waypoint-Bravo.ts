@@ -172,9 +172,9 @@ export const BEX_10: Scene = {
       origin: {
         orientation: blackLineNodes.blackLine4.origin.orientation,
         position: {
-          x: Distance.centimeters(-5.46),
-          y: Distance.centimeters(-14.4),
-          z: Distance.meters(0.428),
+          x: Distance.centimeters(-137.8),
+          y: Distance.centimeters(-6.4),
+          z: Distance.centimeters(-10.46),
         }
 
       },
@@ -185,9 +185,9 @@ export const BEX_10: Scene = {
       origin: {
         orientation: blackLineNodes.blackLine5.origin.orientation,
         position: {
-          x: Distance.centimeters(-5.46),
-          y: Distance.centimeters(-14.4),
-          z: Distance.meters(0.794),
+          x: Distance.centimeters(-174.4),
+          y: Distance.centimeters(-6.4),
+          z: Distance.centimeters(-10.46),
         }
 
       },
@@ -201,11 +201,11 @@ export const BEX_10: Scene = {
       name: tr('End Box'),
       origin: {
         position: {
-          x: Distance.centimeters(45.276),
-          y: Distance.centimeters(-15),
-          z: Distance.centimeters(60.995),
+          x: Distance.centimeters(-155.995),
+          y: Distance.centimeters(-7),
+          z: Distance.centimeters(40.276),
         },
-        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+        orientation: RotationwUnits.eulerDegrees(0, 0, 0),
       },
       material: {
         type: 'basic',
@@ -221,11 +221,11 @@ export const BEX_10: Scene = {
       name: tr('Stop Box'),
       origin: {
         position: {
-          x: Distance.centimeters(63.744),
-          y: Distance.centimeters(-10.6),
-          z: Distance.centimeters(60.974),
+          x: Distance.centimeters(-155.974),
+          y: Distance.centimeters(-2.6),
+          z: Distance.centimeters(58.744),
         },
-        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+        orientation: RotationwUnits.eulerDegrees(0, 0, 0),
       },
       material: {
         type: 'basic',

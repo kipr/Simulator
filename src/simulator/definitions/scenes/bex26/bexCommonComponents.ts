@@ -1,11 +1,12 @@
 import LocalizedString from "../../../../util/LocalizedString";
-import { RotationwUnits, Vector3wUnits } from "../../../../util/math/unitMath";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../../../util/math/unitMath";
 import Node from '../../../../state/State/Scene/Node';
 import { Color } from '../../../../state/State/Scene/Color';
 import { Distance } from '../../../../util';
 import Geometry from "../../../../state/State/Scene/Geometry";
 import tr from '@i18n';
 import Dict from '../../../../util/objectOps/Dict';
+import { offsetGamePiece } from '../26botballExplorerSandbox';
 
 
 /** ************* 
@@ -169,6 +170,32 @@ export function createCubeEndNode(name: LocalizedString, parentId: string, side:
   };
 }
 
+const CHILD_GAME_PIECE_OFFSET = Vector3wUnits.centimeters(-5, 15, -4.5);
+
+const offsetChildOrigin = (origin: ReferenceFramewUnits): ReferenceFramewUnits => {
+  if (!origin) return origin;
+  return {
+    ...origin,
+    position: Vector3wUnits.add(
+      origin.position ?? Vector3wUnits.zero('centimeters'),
+      CHILD_GAME_PIECE_OFFSET,
+    ),
+  };
+};
+
+/**
+ * Root nodes use the rebased game-piece offset. Child origins are parent-local,
+ * so their pre-rebase offset must remain unchanged.
+ */
+export const offsetChallengeNode = (node: Node): Node => {
+  if (!('parentId' in node) || !node.parentId) return offsetGamePiece(node);
+  return {
+    ...node,
+    startingOrigin: offsetChildOrigin(node.startingOrigin),
+    origin: offsetChildOrigin(node.origin),
+  } as Node;
+};
+
 /** ************* 
     GEOMETRIES
 ****************/
@@ -237,11 +264,11 @@ export const startBoxA: Node = {
   editable: true,
   origin: {
     position: {
-      x: Distance.centimeters(4.134),
-      y: Distance.centimeters(-15.504),
-      z: Distance.centimeters(-91.2),
+      x: Distance.centimeters(-3.8),
+      y: Distance.centimeters(-7.504),
+      z: Distance.centimeters(-0.866),
     },
-    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+    orientation: RotationwUnits.eulerDegrees(0, -90, 0),
   },
   material: {
     type: 'basic',
@@ -260,11 +287,11 @@ export const startBoxB: Node = {
   editable: true,
   origin: {
     position: {
-      x: Distance.centimeters(4.08),
-      y: Distance.centimeters(-15),
-      z: Distance.centimeters(60.955),
+      x: Distance.centimeters(-155.955),
+      y: Distance.centimeters(-7),
+      z: Distance.centimeters(-0.92),
     },
-    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+    orientation: RotationwUnits.eulerDegrees(0, -90, 0),
   },
   material: {
     type: 'basic',
@@ -281,11 +308,11 @@ export const loadingZone: Node = {
   name: tr('Loading Zone'),
   origin: {
     position: {
-      x: Distance.meters(0.053),
-      y: Distance.meters(-0.156),
-      z: Distance.centimeters(110.441)
+      x: Distance.centimeters(-205.441),
+      y: Distance.centimeters(-7.6),
+      z: Distance.centimeters(0.3)
     },
-    orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 
   },
   material: {
@@ -305,10 +332,11 @@ export const blackLineNodes: Dict<Node> = {
     name: tr('Black Line 1'),
     origin: {
       position: {
-        x: Distance.centimeters(29.46),
-        y: Distance.centimeters(-14.4),
-        z: Distance.meters(0.133),
+        x: Distance.centimeters(-108.3),
+        y: Distance.centimeters(-6.4),
+        z: Distance.centimeters(24.46),
       },
+      orientation: RotationwUnits.eulerDegrees(0, -90, 0),
     },
     material: {
       type: 'basic',
@@ -324,10 +352,11 @@ export const blackLineNodes: Dict<Node> = {
     name: tr('Black Line 2'),
     origin: {
       position: {
-        x: Distance.centimeters(61.619),
-        y: Distance.centimeters(-14.4),
-        z: Distance.meters(0.29),
+        x: Distance.centimeters(-124),
+        y: Distance.centimeters(-6.4),
+        z: Distance.centimeters(56.619),
       },
+      orientation: RotationwUnits.eulerDegrees(0, -90, 0),
     },
     material: {
       type: 'basic',
@@ -343,11 +372,11 @@ export const blackLineNodes: Dict<Node> = {
     name: tr('Black Line 3'),
     origin: {
       position: {
-        x: Distance.centimeters(-12.1),
-        y: Distance.centimeters(-14.4),
-        z: Distance.meters(-0.725),
+        x: Distance.centimeters(-22.5),
+        y: Distance.centimeters(-6.4),
+        z: Distance.centimeters(-17.1),
       },
-      orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+      orientation: RotationwUnits.eulerDegrees(0, 0, 0),
     },
     material: {
       type: 'basic',
@@ -363,11 +392,11 @@ export const blackLineNodes: Dict<Node> = {
     name: tr('Black Line 4'),
     origin: {
       position: {
-        x: Distance.centimeters(-5.46),
-        y: Distance.centimeters(-14.4),
-        z: Distance.meters(0.428),
+        x: Distance.centimeters(-137.8),
+        y: Distance.centimeters(-6.4),
+        z: Distance.centimeters(-10.46),
       },
-      orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+      orientation: RotationwUnits.eulerDegrees(0, 0, 0),
     },
     material: {
       type: 'basic',
@@ -383,11 +412,11 @@ export const blackLineNodes: Dict<Node> = {
     name: tr('Black Line 5'),
     origin: {
       position: {
-        x: Distance.centimeters(-5.46),
-        y: Distance.centimeters(-14.4),
-        z: Distance.meters(0.794),
+        x: Distance.centimeters(-174.4),
+        y: Distance.centimeters(-6.4),
+        z: Distance.centimeters(-10.46),
       },
-      orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+      orientation: RotationwUnits.eulerDegrees(0, 0, 0),
     },
     material: {
       type: 'basic',

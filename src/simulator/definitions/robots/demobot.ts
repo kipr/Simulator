@@ -46,7 +46,6 @@ export const DEMOBOT: Robot = {
       childRotationQuaternion: Quaternion.FromEulerAngles(0, 0, Math.PI / 2),
       motorPort: 0,
       parentId: 'chassis',
-      plug: Node.Motor.Plug.Inverted
     }),
     left_wheel_link: Node.link({
       parentId: 'left_wheel',

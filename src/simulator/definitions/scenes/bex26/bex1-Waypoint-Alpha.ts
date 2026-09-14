@@ -6,6 +6,7 @@ import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
 import { setNodeVisible, notInStartBox } from '../jbcCommonComponents';
 import { startBox_geom, startBoxA } from './bexCommonComponents';
+import { RotationwUnits } from '../../../../util/math/unitMath';
 const baseScene = createBaseSceneSurface();
 
 const reachedEnd = `
@@ -87,10 +88,11 @@ export const BEX_1: Scene = {
       name: tr('Not Start Box'),
       origin: {
         position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(0.345),
+          x: Distance.centimeters(-129.5),
+          y: Distance.centimeters(6.1),
+          z: Distance.centimeters(-5),
         },
+        orientation: RotationwUnits.eulerDegrees(0, -90, 0),
       },
       material: {
         type: 'basic',
@@ -106,10 +108,11 @@ export const BEX_1: Scene = {
       name: tr('End Box'),
       origin: {
         position: {
-          x: Distance.centimeters(45.5),
-          y: Distance.centimeters(-15.3),
-          z: Distance.centimeters(-90.9),
+          x: Distance.centimeters(-4.1),
+          y: Distance.centimeters(-7.3),
+          z: Distance.centimeters(40.5),
         },
+        orientation: RotationwUnits.eulerDegrees(0, -90, 0),
       },
       material: {
         type: 'pbr',
@@ -125,10 +128,11 @@ export const BEX_1: Scene = {
       name: tr('Stop Box'),
       origin: {
         position: {
-          x: Distance.centimeters(64.652),
-          y: Distance.centimeters(-20),
-          z: Distance.centimeters(-90.9),
+          x: Distance.centimeters(-4.1),
+          y: Distance.centimeters(-12),
+          z: Distance.centimeters(59.652),
         },
+        orientation: RotationwUnits.eulerDegrees(0, -90, 0),
       },
       material: {
         type: 'pbr',

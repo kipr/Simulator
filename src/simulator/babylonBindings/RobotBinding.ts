@@ -38,6 +38,7 @@ import SensorObject from './sensors/SensorObject';
 import SensorParameters from './sensors/SensorParameters';
 import LightSensor from './sensors/LightSensor';
 import LocalizedString from '../../util/LocalizedString';
+import { incrementalHingeRotation, parentRelativeOrientation } from './motorPosition';
 
 /** Max mesh vertices sampled per link when building mat footprints. */
 const MAX_PROJECTED_VERTICES_PER_LINK_ = 800;
@@ -86,7 +87,12 @@ class RobotBinding {
   get createBinding() { return this.createBinding_; }
 
   private lastTick_ = 0;
-  private lastMotorAngles_: [number, number, number, number] = [0, 0, 0, 0];
+  private lastMotorOrientations_: [RawQuaternion?, RawQuaternion?, RawQuaternion?, RawQuaternion?] = [
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+  ];
 
   // Getting sensor values is async. We store the pending promises in these dictionaries.
   private outstandingDigitalGetValues_: Dict<RobotBinding.OutstandingPromise<boolean>> = {};
@@ -168,20 +174,15 @@ class RobotBinding {
     };
   };
 
-  /**
-   * Gets the angle between the parent and child links.
-   * Currently only supports angles between -90 and 90 degrees.
-   * TODO: Fix this to support angles between -180 and 180 degrees.
-   * @param id
-   * @param parentId
-   * @returns
-   */
-  private hingeAngle_ = (id: string, parentId: string): number => {
+  private motorOrientation_ = (id: string, parentId: string): RawQuaternion => {
     const { bParent, bChild } = this.bParentChild_(id, parentId);
-    const parentZ = bParent.rotationQuaternion.toEulerAngles().x;
-    const childZ = bChild.rotationQuaternion.toEulerAngles().x;
-    const diff = childZ - parentZ; // Between -90 and 90 degrees
-    return diff;
+    bParent.computeWorldMatrix(true);
+    bChild.computeWorldMatrix(true);
+
+    return parentRelativeOrientation(
+      RawQuaternion.fromBabylon(bParent.absoluteRotationQuaternion),
+      RawQuaternion.fromBabylon(bChild.absoluteRotationQuaternion),
+    );
   };
 
 
@@ -251,31 +252,22 @@ class RobotBinding {
       const bMotor = this.motors_[motorId]; // The actual motor object. (Physics6DoFConstraint)
       const ticksPerRevolution = motorNode.ticksPerRevolution ?? 2048;
 
-      // TODO: Fix wheel orientation in MotorBindings so plug is needed.
-      // const plug = (motorNode.plug === undefined || motorNode.plug === 'normal') ? 1 : -1;
-      const plug = 1;
-
-      const currentAngle = this.hingeAngle_(motorId, motorNode.parentId);
-      const lastMotorAngle = this.lastMotorAngles_[port];
+      const plug = motorNode.plug === Node.Motor.Plug.Inverted ? -1 : 1;
+      const currentOrientation = this.motorOrientation_(motorId, motorNode.parentId);
+      const lastMotorOrientation = this.lastMotorOrientations_[port];
+      const hingeAxis = RawVector3.cross(motorNode.parentAxis, motorNode.parentPerpAxis);
 
       let deltaAngle = 0;
-      if (lastMotorAngle > Math.PI / 2 && currentAngle < -Math.PI / 2) {
-        deltaAngle = currentAngle + 2 * Math.PI - lastMotorAngle;
-      } else if (lastMotorAngle < -Math.PI / 2 && currentAngle > Math.PI / 2) {
-        deltaAngle = currentAngle - 2 * Math.PI - lastMotorAngle;
-      } else {
-        deltaAngle = currentAngle - lastMotorAngle;
+      if (lastMotorOrientation) {
+        deltaAngle = incrementalHingeRotation(
+          lastMotorOrientation,
+          currentOrientation,
+          hingeAxis,
+        );
       }
-      this.lastMotorAngles_[port] = currentAngle;
+      this.lastMotorOrientations_[port] = currentOrientation;
 
-      const angularVelocity = deltaAngle / delta;
-
-      // if speedgoal is positive make deltaAngle positive
-      if (speedGoal > 0) {
-        deltaAngle = Math.abs(deltaAngle);
-      } else if (speedGoal < 0) {
-        deltaAngle = -1 * Math.abs(deltaAngle);
-      }
+      const angularVelocity = delta > 0 ? deltaAngle / delta : 0;
 
       // Convert to ticks
       const positionDeltaRaw = plug * deltaAngle / (2 * Math.PI) * ticksPerRevolution + this.positionDeltaFracs_[port];
@@ -410,7 +402,6 @@ class RobotBinding {
         }
       }
 
-      const currentAngle = this.hingeAngle_(servoId, servo.parentId);
       const targetAangle = this.lastServoEnabledAngle_[i];
 
       let cur_angle = 0;
@@ -661,6 +652,9 @@ class RobotBinding {
     this.lastPErrs_ = [0, 0, 0, 0];
     this.iErrs_ = [0, 0, 0, 0];
     this.brakeAt_ = [undefined, undefined, undefined, undefined];
+    this.lastMotorOrientations_ = [undefined, undefined, undefined, undefined];
+    this.positionDeltaFracs_ = [0, 0, 0, 0];
+    this.lastTick_ = performance.now();
 
     const rawOrigin = ReferenceFramewUnits.toRaw(newOrigin, RENDER_SCALE);
     const rawInternalOrigin = ReferenceFramewUnits.toRaw(this.robot_.origin || ReferenceFramewUnits.IDENTITY, RENDER_SCALE);
