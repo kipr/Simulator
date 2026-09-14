@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { DARK, LIGHT, ThemeProps } from '../components/constants/theme';
 import MainMenu from '../components/MainMenu';
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
@@ -115,9 +115,9 @@ const StickyRankTd = styled('td', (props: ThemeProps & { rank: number, $highligh
   width: '80px',
   minWidth: '80px',
   textAlign: 'center',
-  backgroundColor: props.$highlight ? '#2c482f' : props.theme.backgroundColor,
+  backgroundColor: props.$highlight ? props.theme.leaderboardHighlightBackground : props.theme.backgroundColor,
   ':hover': {
-    backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 0.2)' : props.theme.backgroundColor,
+    backgroundColor: props.$highlight ? props.theme.leaderboardHighlightHoverBackground : props.theme.backgroundColor,
   },
   zIndex: 6,
   whiteSpace: 'nowrap',
@@ -147,9 +147,9 @@ const StickyNameTd = styled('td', (props: ThemeProps & { $highlight: boolean }) 
   left: '80px',
   width: '200px',
   minWidth: '200px',
-  backgroundColor: props.$highlight ? '#2c482f' : props.theme.backgroundColor,
+  backgroundColor: props.$highlight ? props.theme.leaderboardHighlightBackground : props.theme.backgroundColor,
   ':hover': {
-    backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 0.2)' : props.theme.backgroundColor,
+    backgroundColor: props.$highlight ? props.theme.leaderboardHighlightHoverBackground : props.theme.backgroundColor,
   },
   textAlign: 'center',
   zIndex: 6,
@@ -202,9 +202,9 @@ const TableHeader = styled('th', (props: ThemeProps) => ({
 }));
 
 const TableRow = styled('tr', (props: ThemeProps & { $highlight?: boolean }) => ({
-  backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 0.15)' : 'transparent',
+  backgroundColor: props.$highlight ? props.theme.leaderboardHighlightBackground : 'transparent',
   ':hover': {
-    backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 0.2)' : 'rgba(255,255,255,0.05)',
+    backgroundColor: props.$highlight ? props.theme.leaderboardHighlightHoverBackground : 'rgba(255,255,255,0.05)',
   },
 }));
 
@@ -223,7 +223,7 @@ const YourNameContainer = styled('div', (props: ThemeProps) => ({
   justifyContent: 'center',
   gap: '8px',
   padding: '12px 20px',
-  backgroundColor: 'rgba(76, 175, 80, 0.1)',
+  backgroundColor: props.theme.leaderboardHighlightBackground,
   borderBottom: `1px solid ${props.theme.borderColor}`,
 }));
 
@@ -269,7 +269,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   alignItems: 'center',
   flexDirection: 'row',
   padding: '10px',
-  backgroundColor: '#2c2c2cff',
+  backgroundColor: props.theme.backgroundColor,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   ':last-child': {
     borderBottom: 'none'
@@ -278,7 +278,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   fontWeight: 400,
   ':hover': {
     cursor: 'pointer',
-    backgroundColor: `rgba(255, 255, 255, 0.1)`
+    backgroundColor: props.theme.hoverButtonBackground
   },
   userSelect: 'none',
   transition: 'background-color 0.2s, opacity 0.2s'
@@ -872,8 +872,8 @@ class Leaderboard extends React.Component<Props, State> {
             <h1>{LocalizedString.lookup(tr('KIPR All Time Leaderboard'), props.locale)}</h1>
 
             <ButtonContainer>
-              <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr('Export My Scores!'), props.locale)}</Button>
-              <Button theme={DARK} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr('Scroll to My Scores!'), props.locale)}</Button>
+              <Button theme={theme} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr('Export My Scores!'), props.locale)}</Button>
+              <Button theme={theme} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr('Scroll to My Scores!'), props.locale)}</Button>
             </ButtonContainer>
 
           </LeaderboardTitleContainer>

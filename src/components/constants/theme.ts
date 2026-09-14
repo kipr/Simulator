@@ -97,6 +97,7 @@ export interface Theme {
   selectedFileBackground: string;
   hoverFileBackground: string;
   hoverOptionBackground: string;
+  hoverButtonBackground: string;
   confirmMessageBackground: string;
   successMessageBackground: string;
   compileWarningColor: string;
@@ -108,6 +109,8 @@ export interface Theme {
   runButtonColor: ButtonColor;
   yesButtonColor: ButtonColor;
   noButtonColor: ButtonColor;
+  leaderboardHighlightBackground: string;
+  leaderboardHighlightHoverBackground: string;
 
   borderColor: string;
   borderRadius: number;
@@ -167,6 +170,7 @@ export const COMMON: Theme = {
   contextMenuBackground: undefined,
   boxShadow: undefined,
   selectedClassBackground: undefined,
+  hoverButtonBackground: undefined,
   borderRadius: 10,
   widget: {
     padding: 10
@@ -234,6 +238,10 @@ export const LIGHT: Theme = {
 
   hoverFileBackground: '#e4f1fb',
   hoverOptionBackground: '#e4f1fb',
+  hoverButtonBackground: '#e4f1fb',
+
+  leaderboardHighlightBackground: '#e8f5e9',
+  leaderboardHighlightHoverBackground: '#c8e6c9',
 
   yesButtonColor: LIGHTMODE_YES,
   noButtonColor: LIGHTMODE_NO,
@@ -298,6 +306,10 @@ export const DARK: Theme = {
 
   hoverFileBackground: `rgba(255, 255, 255, 0.1)`,
   hoverOptionBackground: `rgba(255, 255, 255, 0.1)`,
+  hoverButtonBackground: `rgba(255, 255, 255, 0.1)`,
+
+  leaderboardHighlightBackground: '#2c482f',
+  leaderboardHighlightHoverBackground: 'rgba(76, 175, 80, 0.2)',
 
 
   yesButtonColor: DARKMODE_YES,
