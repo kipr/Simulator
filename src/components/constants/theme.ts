@@ -25,6 +25,12 @@ export const RED: ButtonColor = Object.freeze({
   hover: '#AD4C4B'
 });
 
+export const LIGHTMODE_RED: ButtonColor = Object.freeze({
+  disabled: '#d6b8b6',
+  standard: '#d98a8a',
+  hover: '#bd6666'
+});
+
 export const BLUE: ButtonColor = Object.freeze({
   disabled: '#4f5673',
   standard: '#495d8c',
@@ -107,6 +113,7 @@ export interface Theme {
   boxShadow: string;
   selectedClassBackground: string;
   runButtonColor: ButtonColor;
+  stopButtonColor: ButtonColor;
   yesButtonColor: ButtonColor;
   noButtonColor: ButtonColor;
   leaderboardHighlightBackground: string;
@@ -167,6 +174,7 @@ export const COMMON: Theme = {
   unselectedBackground: undefined,
   borderColor: undefined,
   runButtonColor: undefined,
+  stopButtonColor: undefined,
   contextMenuBackground: undefined,
   boxShadow: undefined,
   selectedClassBackground: undefined,
@@ -246,6 +254,7 @@ export const LIGHT: Theme = {
   yesButtonColor: LIGHTMODE_YES,
   noButtonColor: LIGHTMODE_NO,
   runButtonColor: LIGHTMODE_GREEN,
+  stopButtonColor: LIGHTMODE_RED,
 
   transparentBackgroundColor: (a) => `rgba(255, 255, 255, ${a})`,
   switch: {
@@ -315,6 +324,7 @@ export const DARK: Theme = {
   yesButtonColor: DARKMODE_YES,
   noButtonColor: DARKMODE_NO,
   runButtonColor: GREEN,
+  stopButtonColor: RED,
 
   transparentBackgroundColor: (a) => `rgba(${0x21}, ${0x21}, ${0x21}, ${a})`,
   switch: {

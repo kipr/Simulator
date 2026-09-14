@@ -6,7 +6,7 @@ import { Spacer } from "../constants/common";
 import { FontAwesome } from "../FontAwesome";
 import { Layout, LayoutPicker } from "../Layout";
 import { SimulatorState } from "./SimulatorState";
-import { GREEN, RED, ThemeProps } from "../constants/theme";
+import { LIGHTMODE_GREEN, LIGHTMODE_RED, GREEN, RED, ThemeProps } from "../constants/theme";
 
 import tr from "@i18n";
 
@@ -157,7 +157,7 @@ const Logo = styled("img", (props: ThemeProps & ClickProps) => ({
     props.onClick && !props.disabled
       ? {
         cursor: "pointer",
-        backgroundColor: `rgba(255, 255, 255, 0.1)`,
+        backgroundColor: props.theme.hoverOptionBackground,
       }
       : {},
   userSelect: "none",
@@ -181,29 +181,29 @@ const Item = styled("div", (props: ThemeProps & ClickProps) => ({
     props.onClick && !props.disabled
       ? {
         cursor: "pointer",
-        backgroundColor: `rgba(255, 255, 255, 0.1)`,
+        backgroundColor: props.theme.hoverOptionBackground,
       }
       : {},
   userSelect: "none",
   transition: "background-color 0.2s, opacity 0.2s",
 }));
 
-const RunItem = withStyleDeep(Item, (props: ClickProps) => ({
-  backgroundColor: props.disabled ? GREEN.disabled : GREEN.standard,
+const RunItem = withStyleDeep(Item, (props: ThemeProps & ClickProps) => ({
+  backgroundColor: props.disabled ? props.theme.runButtonColor.disabled : props.theme.runButtonColor.standard,
   ":hover":
     props.onClick && !props.disabled
       ? {
-        backgroundColor: GREEN.hover,
+        backgroundColor: props.theme.runButtonColor.hover,
       }
       : {},
 }));
 
-const StopItem = withStyleDeep(Item, (props: ClickProps) => ({
-  backgroundColor: props.disabled ? RED.disabled : RED.standard,
+const StopItem = withStyleDeep(Item, (props: ThemeProps & ClickProps) => ({
+  backgroundColor: props.disabled ? props.theme.stopButtonColor.disabled : props.theme.stopButtonColor.standard,
   ":hover":
     props.onClick && !props.disabled
       ? {
-        backgroundColor: RED.hover,
+        backgroundColor: props.theme.stopButtonColor.hover,
       }
       : {},
 }));
