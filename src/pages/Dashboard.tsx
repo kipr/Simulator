@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { styled } from 'styletron-react';
 
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { LIGHT, DARK, ThemeProps } from '../components/constants/theme';
 import { Card } from '../components/interface/Card';
 import MainMenu from '../components/MainMenu';
 
@@ -18,6 +18,7 @@ import { fetchTourIfNeeded, completeTour, retakeTour } from '../state/reducer/to
 import { TourRegistry } from '../tours/TourRegistry';
 import GuidedTour from '../components/Tours/GuidedTour';
 import TourTarget from '../components/Tours/TourTarget';
+import { Settings } from 'components/constants/Settings';
 
 export interface DashboardPublicProps extends ThemeProps, StyleProps {
 }
@@ -25,6 +26,7 @@ export interface DashboardPublicProps extends ThemeProps, StyleProps {
 interface DashboardPrivateProps {
 
   locale: LocalizedString.Language;
+  settings: Settings;
   uid: string;
   tour: TourDoc;
   tourLoaded: boolean;
@@ -98,8 +100,8 @@ class Dashboard extends React.PureComponent<Props> {
   };
   render() {
     const { props } = this;
-    const { className, style, locale, tour } = props;
-    const theme = DARK;
+    const { className, style, locale, tour, settings } = props;
+    const theme = settings.darkMode ? DARK : LIGHT;
     const dashboardTourSteps: TourStep[] = getTourSteps(TourDoc.IDS.DASHBOARD, locale);
     const showTour = props.tourLoaded && !tour.completed;
 
@@ -195,6 +197,7 @@ class Dashboard extends React.PureComponent<Props> {
 const Connected = connect((state: State) => ({
   uid: state.users.me,
   locale: state.i18n.locale,
+  settings: state.settings,
   tour: state.tours.byId[TourDoc.IDS.DASHBOARD] ?? TourDoc.DEFAULT,
   tourLoaded: !!state.tours.loaded[TourDoc.IDS.DASHBOARD],
   tourLoading: !!state.tours.loading[TourDoc.IDS.DASHBOARD],

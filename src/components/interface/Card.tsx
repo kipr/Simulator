@@ -81,7 +81,7 @@ const Gradient = styled('div', (props: ThemeProps) => ({
 const Header = styled('div', (props: ThemeProps) => ({
   fontSize: '2em',
   position: 'absolute',
-  color: props.theme.color,
+  color: props.theme.cardTextColor,
   fontWeight: 800,
   alignSelf: 'flex-start',
   marginLeft: `${props.theme.itemPadding * 2}px`,
@@ -92,7 +92,7 @@ const Description = styled('div', (props: ThemeProps) => ({
   fontSize: '1em',
   position: 'absolute',
   top: '3em',
-  color: props.theme.color,
+  color: props.theme.cardTextColor,
   fontWeight: 400,
   alignSelf: 'flex-start',
   marginLeft: `${props.theme.itemPadding * 2}px`,
