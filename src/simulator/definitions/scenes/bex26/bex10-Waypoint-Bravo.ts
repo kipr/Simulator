@@ -73,7 +73,6 @@ const touchingBlackLine = `
       insideEndBox &&
       !isTouchingBlackLine;
 
-    console.log(insideEndBox, isTouchingBlackLine);
     if (baseMissionComplete) {
       baseMissionCompleteOnce = true;
     }
