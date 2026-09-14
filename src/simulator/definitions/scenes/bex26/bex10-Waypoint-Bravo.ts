@@ -73,6 +73,7 @@ const touchingBlackLine = `
       insideEndBox &&
       !isTouchingBlackLine;
 
+    console.log(insideEndBox, isTouchingBlackLine);
     if (baseMissionComplete) {
       baseMissionCompleteOnce = true;
     }
@@ -142,6 +143,14 @@ export const BEX_10: Scene = {
   geometry: {
     ...baseScene.geometry,
     BLACK_LINE_GEOMETRY,
+    BLACK_LINE_1_2_GEOMETRY: {
+      type: 'box',
+      size: {
+        x: Distance.centimeters(1),
+        y: Distance.centimeters(12),
+        z: Distance.meters(3),
+      },
+    },
     startBox_geom,
     notStartBox_geom: {
       type: 'box',
@@ -176,31 +185,13 @@ export const BEX_10: Scene = {
       origin: ROBOT_ORIGIN,
     },
     ...blackLineNodes,
-    blackLine4:
-    {
-      ...blackLineNodes.blackLine4,
-      origin: {
-        orientation: blackLineNodes.blackLine4.origin.orientation,
-        position: {
-          x: Distance.centimeters(-137.8),
-          y: Distance.centimeters(-6.4),
-          z: Distance.centimeters(-10.46),
-        }
-
-      },
-
+    blackLine1: {
+      ...blackLineNodes.blackLine1,
+      geometryId: 'BLACK_LINE_1_2_GEOMETRY',
     },
-    blackLine5: {
-      ...blackLineNodes.blackLine5,
-      origin: {
-        orientation: blackLineNodes.blackLine5.origin.orientation,
-        position: {
-          x: Distance.centimeters(-174.4),
-          y: Distance.centimeters(-6.4),
-          z: Distance.centimeters(-10.46),
-        }
-
-      },
+    blackLine2: {
+      ...blackLineNodes.blackLine2,
+      geometryId: 'BLACK_LINE_1_2_GEOMETRY',
     },
 
     startBoxB,
