@@ -212,9 +212,9 @@ class SettingsDialog extends React.PureComponent<Props, State> {
                 )}
                 {this.createBooleanSetting(
                   LocalizedString.lookup(tr('KISS IDE Theme'), locale),
-                  LocalizedString.lookup(tr('Toggle IDE theme to dark mode'), locale),
-                  (settings: Settings) => settings.ideEditorDarkMode,
-                  (newValue: boolean) => ({ ideEditorDarkMode: newValue })
+                  LocalizedString.lookup(tr('Toggle dark mode for the IDE'), locale),
+                  (settings: Settings) => settings.darkMode,
+                  (newValue: boolean) => ({ darkMode: newValue })
                 )}
                 {/* this.createBooleanSetting(
                   LocalizedString.lookup(tr('User Interface Mode'), locale),

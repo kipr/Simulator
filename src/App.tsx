@@ -215,7 +215,7 @@ class App extends React.Component<Props, State> {
 
     const { settings } = props;
 
-    const theme = settings.ideEditorDarkMode ? DARK : LIGHT;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
     if (loading) return <Loading />;
 

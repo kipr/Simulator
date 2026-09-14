@@ -1419,7 +1419,7 @@ class Root extends React.Component<Props, State> {
       simulatorRootTourSteps,
     } = state;
 
-    const theme = settings.ideEditorDarkMode ? DARK : LIGHT;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
