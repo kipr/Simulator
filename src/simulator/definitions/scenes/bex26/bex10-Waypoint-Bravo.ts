@@ -5,10 +5,15 @@ import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
 import { blackLineNodes, BLACK_LINE_GEOMETRY, startBoxB, startBox_geom } from './bexCommonComponents';
-import { RotationwUnits } from '../../../../util/math/unitMath';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../../util/math/unitMath';
 
 
 const baseScene = createBaseSceneSurface();
+
+const ROBOT_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(-155.955, 0, -0.92),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+};
 
 
 const noStop = `
@@ -165,6 +170,11 @@ export const BEX_10: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
+    robot: {
+      ...baseScene.nodes.robot,
+      startingOrigin: ROBOT_ORIGIN,
+      origin: ROBOT_ORIGIN,
+    },
     ...blackLineNodes,
     blackLine4:
     {

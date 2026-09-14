@@ -39,6 +39,7 @@ import SensorParameters from './sensors/SensorParameters';
 import LightSensor from './sensors/LightSensor';
 import LocalizedString from '../../util/LocalizedString';
 import { incrementalHingeRotation, parentRelativeOrientation } from './motorPosition';
+import { motorPwm } from './motorPwm';
 
 /** Max mesh vertices sampled per link when building mat footprints. */
 const MAX_PROJECTED_VERTICES_PER_LINK_ = 800;
@@ -353,11 +354,13 @@ class RobotBinding {
         this.iErrs_[port] = 0;
       }
 
-      pwm = plug * clamp(-400, pwm, 400);
+      const clampedPwm = motorPwm(pwm, plug);
 
-      if (writePwm) writeCommands.push(WriteCommand.motorPwm({ port, pwm }));
+      if (writePwm) {
+        writeCommands.push(WriteCommand.motorPwm({ port, pwm: clampedPwm.logical }));
+      }
 
-      const normalizedPwm = pwm / 400;
+      const normalizedPwm = clampedPwm.physical / 400;
       const nextAngularVelocity = normalizedPwm * velocityMax * 2 * Math.PI / ticksPerRevolution;
       // console.log("nextAngularVelocity", nextAngularVelocity);
       this.setMotorVelocity_(bMotor, nextAngularVelocity);
