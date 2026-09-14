@@ -5,10 +5,15 @@ import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
 import { blackLineNodes, BLACK_LINE_GEOMETRY, startBoxB, startBox_geom } from './bexCommonComponents';
-import { RotationwUnits } from '../../../../util/math/unitMath';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../../util/math/unitMath';
 
 
 const baseScene = createBaseSceneSurface();
+
+const ROBOT_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(-155.955, 0, -0.92),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+};
 
 
 const noStop = `
@@ -137,6 +142,14 @@ export const BEX_10: Scene = {
   geometry: {
     ...baseScene.geometry,
     BLACK_LINE_GEOMETRY,
+    BLACK_LINE_1_2_GEOMETRY: {
+      type: 'box',
+      size: {
+        x: Distance.centimeters(1),
+        y: Distance.centimeters(12),
+        z: Distance.meters(3),
+      },
+    },
     startBox_geom,
     notStartBox_geom: {
       type: 'box',
@@ -165,32 +178,19 @@ export const BEX_10: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    ...blackLineNodes,
-    blackLine4:
-    {
-      ...blackLineNodes.blackLine4,
-      origin: {
-        orientation: blackLineNodes.blackLine4.origin.orientation,
-        position: {
-          x: Distance.centimeters(-5.46),
-          y: Distance.centimeters(-14.4),
-          z: Distance.meters(0.428),
-        }
-
-      },
-
+    robot: {
+      ...baseScene.nodes.robot,
+      startingOrigin: ROBOT_ORIGIN,
+      origin: ROBOT_ORIGIN,
     },
-    blackLine5: {
-      ...blackLineNodes.blackLine5,
-      origin: {
-        orientation: blackLineNodes.blackLine5.origin.orientation,
-        position: {
-          x: Distance.centimeters(-5.46),
-          y: Distance.centimeters(-14.4),
-          z: Distance.meters(0.794),
-        }
-
-      },
+    ...blackLineNodes,
+    blackLine1: {
+      ...blackLineNodes.blackLine1,
+      geometryId: 'BLACK_LINE_1_2_GEOMETRY',
+    },
+    blackLine2: {
+      ...blackLineNodes.blackLine2,
+      geometryId: 'BLACK_LINE_1_2_GEOMETRY',
     },
 
     startBoxB,
@@ -201,11 +201,11 @@ export const BEX_10: Scene = {
       name: tr('End Box'),
       origin: {
         position: {
-          x: Distance.centimeters(45.276),
-          y: Distance.centimeters(-15),
-          z: Distance.centimeters(60.995),
+          x: Distance.centimeters(-155.995),
+          y: Distance.centimeters(-7),
+          z: Distance.centimeters(40.276),
         },
-        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+        orientation: RotationwUnits.eulerDegrees(0, 0, 0),
       },
       material: {
         type: 'basic',
@@ -221,11 +221,11 @@ export const BEX_10: Scene = {
       name: tr('Stop Box'),
       origin: {
         position: {
-          x: Distance.centimeters(63.744),
-          y: Distance.centimeters(-10.6),
-          z: Distance.centimeters(60.974),
+          x: Distance.centimeters(-155.974),
+          y: Distance.centimeters(-2.6),
+          z: Distance.centimeters(58.744),
         },
-        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+        orientation: RotationwUnits.eulerDegrees(0, 0, 0),
       },
       material: {
         type: 'basic',

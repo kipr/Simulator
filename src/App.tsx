@@ -158,7 +158,6 @@ class App extends React.Component<Props, State> {
 
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
       if (user) {
-        console.log('User detected.');
         this.props.loadUser(user.uid);
         this.props.setMe(user.uid);
         // Ensure user has obtained consent before continuing
@@ -166,16 +165,13 @@ class App extends React.Component<Props, State> {
           .then(userConsent => {
             const consentStatus = LegalAcceptance.getConsentStatus(userConsent?.legalAcceptance);
             if (consentStatus === 'valid') {
-              console.log('Consent verified');
               this.setState({ loading: false });
             } else {
-              console.log('Consent not verified, status is', consentStatus);
               this.props.login();
             }
           })
           .catch(error => {
             if (DbError.is(error) && error.code === DbError.CODE_NOT_FOUND) {
-              console.log('Consent info does not exist');
               this.props.login();
             }
 
@@ -187,19 +183,6 @@ class App extends React.Component<Props, State> {
         this.props.login();
       }
     });
-  }
-
-  componentDidUpdate(prevProps: Props, prevState: State) {
-
-    const uid = auth.currentUser?.uid;
-    if (!uid) return;
-
-    const prev = prevProps.users.users?.[uid];
-    const next = this.props.users.users?.[uid];
-
-    if (prev !== next && next?.type === 5) {
-      console.log("User state changed:", next);
-    }
   }
 
   componentWillUnmount(): void {
@@ -273,7 +256,6 @@ export default connect((state: ReduxState) => {
   };
 }, dispatch => ({
   login: () => {
-    console.log('Redirecting to login page', window.location.pathname);
     window.location.href = `/login${window.location.pathname === '/login' ? '' : `?from=${window.location.pathname}`}`;
   },
   setMe: (me: string) => dispatch(UsersAction.setMe({ me })),

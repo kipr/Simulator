@@ -11,8 +11,8 @@ import {
 } from '../../../util/math/unitMath';
 import tr from '@i18n';
 
-const TABLE_POSITION = RawVector3.create(79, 0, 10);
-const TABLE_ROTATION = RawQuaternion.create(0, 1, 0, 0);
+const TABLE_POSITION = RawVector3.create(-105, 8, 74);
+const TABLE_ROTATION = RawQuaternion.create(0, Math.SQRT1_2, 0, Math.SQRT1_2);
 const IDENTITY_ROTATION = RawQuaternion.IDENTITY;
 
 // Babylon world units in this simulator are centimeters. Preserve the layout
@@ -37,9 +37,9 @@ const tableOrigin = (
   scale: RawVector3 = RawVector3.ONE,
 ): ReferenceFramewUnits => ({
   position: Vector3wUnits.centimeters(
-    TABLE_POSITION.x - position.x,
+    TABLE_POSITION.x + position.z,
     TABLE_POSITION.y + position.y,
-    TABLE_POSITION.z - position.z,
+    TABLE_POSITION.z - position.x,
   ),
   orientation: RotationwUnits.fromRawQuaternion(
     normalizeQuaternion(multiplyQuaternions(TABLE_ROTATION, orientation)),
