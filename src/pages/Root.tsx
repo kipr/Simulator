@@ -300,7 +300,6 @@ class Root extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    console.log("Root props:", this.props);
     this.state = {
       layout: Layout.Side,
       activeLanguage: 'c',
@@ -341,7 +340,6 @@ class Root extends React.Component<Props, State> {
     this.editorRef = React.createRef();
     this.overlayLayoutRef = React.createRef();
     Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
-    console.log("simulatorRootTourSteps:", this.state.simulatorRootTourSteps);
   }
 
   async componentDidMount() {
@@ -496,9 +494,6 @@ class Root extends React.Component<Props, State> {
           : 'stopped';
     }
 
-    if (this.props.projects !== prevProps.projects) {
-      console.log('Projects prop changed:', this.props.projects);
-    }
     if (this.props.locale !== prevProps.locale) {
       this.setState({ simulatorRootTourSteps: getSimulatorTourSteps(this.props.locale) });
     }
@@ -555,12 +550,14 @@ class Root extends React.Component<Props, State> {
       },
       () => {
         window.localStorage.setItem(`code-${activeLanguage}`, code);
-        this.props.onSetProjectCode(
-          projectDetails ? projectDetails.project : null,
-          projectDetails ? projectDetails.fileName : '',
-          projectDetails ? projectDetails.fileType : 'src',
-          code,
-        );
+        if (projectDetails.project) {
+          this.props.onSetProjectCode(
+            projectDetails.project,
+            projectDetails.fileName,
+            projectDetails.fileType,
+            code,
+          );
+        }
       },
     );
   };
@@ -1141,10 +1138,6 @@ class Root extends React.Component<Props, State> {
         },
       },
       () => {
-        console.log(
-          'Updated code state after file selection:',
-          this.state.code,
-        );
         window.localStorage.setItem(
           `code-${selectedProject.projectLanguage}`,
           fileContent,
@@ -1212,7 +1205,6 @@ class Root extends React.Component<Props, State> {
       userDataFiles: {},
       type: 'project',
     };
-    console.log('onProjectCreate_: ', project);
     this.props.onAddProject(project);
 
     this.setState({
@@ -1221,7 +1213,6 @@ class Root extends React.Component<Props, State> {
   };
 
   private onFileCreate_ = (fileName: string) => {
-    console.log('onFileCreate_ state: ', this.state);
     let fileN = fileName;
     const { projectDetails, activeLanguage } = this.state;
     switch (projectDetails.fileType) {
@@ -1836,7 +1827,6 @@ const ConnectedRoot = connect(
     onNodeRemove: (nodeId: string) =>
       dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
     onNodeChange: (nodeId: string, node: Node) => {
-      console.log("onNodeChange: ", nodeId, node);
       dispatch(ScenesAction.setNode({ sceneId, nodeId, node }));
       const origin = node.origin;
       const updateOrigin = true;

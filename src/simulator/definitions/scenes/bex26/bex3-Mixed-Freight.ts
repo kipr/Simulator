@@ -3,8 +3,8 @@ import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { TOP_YELLOW_2IN_CUBE, LOW_YELLOW_2IN_CUBE, TOP_GREEN_2IN_CUBE, LOW_GREEN_2IN_CUBE, offsetGamePiece } from '../26botballExplorerSandbox';
-import { createCubeEndNode, smallCubeEnd_geom, getLowestFaceScript, getHighestFaceScript, isCubeOnTopOfScript } from './bexCommonComponents';
+import { TOP_YELLOW_2IN_CUBE, LOW_YELLOW_2IN_CUBE, TOP_GREEN_2IN_CUBE, LOW_GREEN_2IN_CUBE } from '../26botballExplorerSandbox';
+import { createCubeEndNode, smallCubeEnd_geom, getLowestFaceScript, getHighestFaceScript, isCubeOnTopOfScript, offsetChallengeNode } from './bexCommonComponents';
 import Dict from '../../../../util/objectOps/Dict';
 const baseScene = createBaseSceneSurface();
 
@@ -148,6 +148,6 @@ export const BEX_3: Scene = {
       lYellowFront: createCubeEndNode(tr('Low Yellow Cube Front'), 'LOW_YELLOW_2IN_CUBE', 'front', 'smallCubeEnd_geom', Color.rgb(255, 115, 0)),
       lYellowBack: createCubeEndNode(tr('Low Yellow Cube Back'), 'LOW_YELLOW_2IN_CUBE', 'back', 'smallCubeEnd_geom', Color.rgb(229, 97, 255)),
 
-    }, offsetGamePiece)
+    }, offsetChallengeNode)
   }
 };

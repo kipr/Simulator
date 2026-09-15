@@ -3,8 +3,8 @@ import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { LOW_2INCH_RED_CUBE, HIGH_2INCH_RED_CUBE, RED_4INCH_CUBE, RED_4INCH_CUBE_PALLET, offsetGamePiece } from '../26botballExplorerSandbox';
-import { smallCubeEnd_geom, largeCubeEnd_geom, createCubeEndNode, getLowestFaceScript, getHighestFaceScript, isCubeOnTopOfScript } from './bexCommonComponents';
+import { LOW_2INCH_RED_CUBE, HIGH_2INCH_RED_CUBE, RED_4INCH_CUBE, RED_4INCH_CUBE_PALLET } from '../26botballExplorerSandbox';
+import { smallCubeEnd_geom, largeCubeEnd_geom, createCubeEndNode, getLowestFaceScript, getHighestFaceScript, isCubeOnTopOfScript, offsetChallengeNode } from './bexCommonComponents';
 import Dict from '../../../../util/objectOps/Dict';
 
 const cubesStacked = `
@@ -127,6 +127,6 @@ export const BEX_5: Scene = {
       largeRedCubeFront: createCubeEndNode(tr('4-inch Red Cube Front'), 'RED_4INCH_CUBE', 'front', 'largeCubeEnd_geom', Color.rgb(255, 0, 0)),
       largeRedCubeRight: createCubeEndNode(tr('4-inch Red Cube Right'), 'RED_4INCH_CUBE', 'right', 'largeCubeEnd_geom', Color.rgb(255, 0, 0)),
 
-    }, offsetGamePiece)
+    }, offsetChallengeNode)
   }
 };

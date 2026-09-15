@@ -81,11 +81,11 @@ export const BEX_9: Scene = {
       name: tr('Warehouse Floor'),
       origin: {
         position: {
-          x: Distance.centimeters(38.147),
-          y: Distance.centimeters(-15.59),
-          z: Distance.centimeters(17.287),
+          x: Distance.centimeters(-112.287),
+          y: Distance.centimeters(-7.59),
+          z: Distance.centimeters(33.147),
         },
-        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+        orientation: RotationwUnits.eulerDegrees(0, 0, 0),
       },
       material: {
         type: 'basic',
@@ -102,11 +102,11 @@ export const BEX_9: Scene = {
       name: tr('PVC Enclosure Left'),
       origin: {
         position: {
-          x: Distance.centimeters(99.43),
-          y: Distance.centimeters(-16.15),
-          z: Distance.centimeters(-56.669),
+          x: Distance.centimeters(-38.331),
+          y: Distance.centimeters(-8.15),
+          z: Distance.centimeters(94.43),
         },
-        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+        orientation: RotationwUnits.eulerDegrees(0, 0, 0),
       },
       material: {
         type: 'basic',
@@ -123,11 +123,11 @@ export const BEX_9: Scene = {
 
       origin: {
         position: {
-          x: Distance.centimeters(99.43),
-          y: Distance.centimeters(-16.15),
-          z: Distance.centimeters(16.568),
+          x: Distance.centimeters(-111.568),
+          y: Distance.centimeters(-8.15),
+          z: Distance.centimeters(94.43),
         },
-        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+        orientation: RotationwUnits.eulerDegrees(0, 0, 0),
       },
       material: {
         type: 'basic',
@@ -144,11 +144,11 @@ export const BEX_9: Scene = {
       name: tr('PVC Enclosure Right'),
       origin: {
         position: {
-          x: Distance.centimeters(99.43),
-          y: Distance.centimeters(-16.15),
-          z: Distance.centimeters(94.334),
+          x: Distance.centimeters(-189.334),
+          y: Distance.centimeters(-8.15),
+          z: Distance.centimeters(94.43),
         },
-        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+        orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 
       },
       material: {

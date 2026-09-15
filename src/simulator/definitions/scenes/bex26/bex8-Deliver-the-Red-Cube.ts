@@ -226,8 +226,8 @@ export const BEX_8: Scene = {
       geometryId: 'loadingDock_geom',
       name: tr('Loading Dock Top'),
       origin: {
-        position: Vector3wUnits.centimeters(78.708, -9.262, -100.797),
-        orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+        position: Vector3wUnits.centimeters(5.797, -1.262, 73.708),
+        orientation: RotationwUnits.eulerDegrees(0, 0, 0),
       },
       material: {
         type: 'basic',
