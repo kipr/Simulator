@@ -1,6 +1,6 @@
 {
   "name": "simulator",
-  "version": "4.0.4",
+  "version": "4.1.0",
   "sideEffects": [
     "**/*.css",
     "**/monaco-editor/**"
