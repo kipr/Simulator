@@ -14,7 +14,7 @@ import { ScenesAction } from "../../state/reducer";
 import ScrollArea from "../interface/ScrollArea";
 import { FontAwesome } from "../FontAwesome";
 
-import { faCheck, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faChevronLeft, faChevronRight, faFolderClosed, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';
 import Author from '../../db/Author';
 import { auth } from '../../firebase/firebase';
@@ -48,13 +48,15 @@ interface OpenSceneDialogPrivateProps {
 }
 
 type Props = OpenSceneDialogPublicProps & OpenSceneDialogPrivateProps & WithNavigateProps;
-
+type FolderScenes = Record<string, Array<[string, Scene]>>;
 interface SelectSceneDialogState {
   selectedSceneId: string | null;
   showCreateYourOwnInstructions: boolean;
   selectedDeleteSceneIds: string[];
   deleteSceneIds: string[] | null;
   folderSelected: string | null;
+  showSceneSummary: boolean;
+  selectedCardIndex: number | null;
 }
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -131,6 +133,53 @@ const ChallengeItemContainer = styled('div', (props: ThemeProps) => ({
   rowGap: '15px',
   gridTemplateColumns: "repeat(3, 1fr)",
 }));
+
+
+const SummaryGrid = styled('div', (props: ThemeProps) => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr 8fr',
+  gap: '15px',
+}));
+
+const Summary = styled('div', (props: ThemeProps & { $column: string }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  gridColumn: '1/-1',
+  position: "relative",
+  marginTop: "10px",
+  padding: '24px',
+  border: `2px solid ${props.theme.borderColor}`,
+  borderRadius: '10px',
+  width: '98%'
+}));
+
+const SummaryPointer = styled('div', (props: { $column: string }) => ({
+  position: 'absolute',
+  top: '-20px',
+
+  width: '40px',
+  height: '20px',
+
+  // Centers the pointer under column 1, 2, or 3
+  left: `calc(((${props.$column} - 0.5) * (100% / 3)) - 20px)`,
+}));
+
+const SummaryInfo = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  marginBottom: '5px'
+}));
+
+const SummaryInfoTitle = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  marginBottom: '5px',
+  maxWidth: '50px',
+  fontWeight: 'bold',
+  paddingRight: '7px'
+}));
+
 const InfoText = styled('span', (props: ThemeProps) => ({
   userSelect: 'none',
   padding: `${props.theme.itemPadding * 2}px`,
@@ -142,6 +191,15 @@ const InstructionsBody = styled('div', (props: ThemeProps) => ({
   userSelect: 'none',
 }));
 
+const FolderTitle = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  fontSize: '1.2em',
+  fontWeight: 600,
+  padding: `${props.theme.itemPadding * 2}px`,
+  // borderBottom: `1px solid ${props.theme.borderColor}`,
+  userSelect: 'none',
+}));
 const DialogBarRow = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
@@ -181,6 +239,8 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
       selectedDeleteSceneIds: [],
       deleteSceneIds: null,
       folderSelected: null,
+      showSceneSummary: null,
+      selectedCardIndex: null,
     };
   }
 
@@ -189,32 +249,32 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
   }
 
   componentDidUpdate(prevProps: Readonly<Props>) {
-    if (this.props.scenes !== prevProps.scenes) {
-      const { selectedSceneId, deleteSceneIds, selectedDeleteSceneIds } = this.state;
-      const nextSelectedDeleteSceneIds = selectedDeleteSceneIds.filter(sceneId =>
-        Object.prototype.hasOwnProperty.call(this.props.scenes, sceneId)
-      );
-      if (
-        selectedSceneId !== null &&
-        selectedSceneId !== CREATE_YOUR_OWN_SCENE_OPTION_ID &&
-        !Object.prototype.hasOwnProperty.call(this.props.scenes, selectedSceneId)
-      ) {
-        this.setState({ selectedSceneId: null, selectedDeleteSceneIds: nextSelectedDeleteSceneIds });
-        return;
-      }
-      const nextDeleteSceneIds = deleteSceneIds?.filter(sceneId =>
-        Object.prototype.hasOwnProperty.call(this.props.scenes, sceneId)
-      ) ?? null;
-      if (
-        nextSelectedDeleteSceneIds.length !== selectedDeleteSceneIds.length ||
-        (deleteSceneIds !== null && (nextDeleteSceneIds === null || nextDeleteSceneIds.length !== deleteSceneIds.length))
-      ) {
-        this.setState({
-          selectedDeleteSceneIds: nextSelectedDeleteSceneIds,
-          deleteSceneIds: nextDeleteSceneIds && nextDeleteSceneIds.length > 0 ? nextDeleteSceneIds : null,
-        });
-      }
-    }
+    // if (this.props.scenes !== prevProps.scenes) {
+    //   const { selectedSceneId, deleteSceneIds, selectedDeleteSceneIds } = this.state;
+    //   const nextSelectedDeleteSceneIds = selectedDeleteSceneIds.filter(sceneId =>
+    //     Object.prototype.hasOwnProperty.call(this.props.scenes, sceneId)
+    //   );
+    //   if (
+    //     selectedSceneId !== null &&
+    //     selectedSceneId !== CREATE_YOUR_OWN_SCENE_OPTION_ID &&
+    //     !Object.prototype.hasOwnProperty.call(this.props.scenes, selectedSceneId)
+    //   ) {
+    //     this.setState({ selectedSceneId: null, selectedDeleteSceneIds: nextSelectedDeleteSceneIds });
+    //     return;
+    //   }
+    //   const nextDeleteSceneIds = deleteSceneIds?.filter(sceneId =>
+    //     Object.prototype.hasOwnProperty.call(this.props.scenes, sceneId)
+    //   ) ?? null;
+    //   if (
+    //     nextSelectedDeleteSceneIds.length !== selectedDeleteSceneIds.length ||
+    //     (deleteSceneIds !== null && (nextDeleteSceneIds === null || nextDeleteSceneIds.length !== deleteSceneIds.length))
+    //   ) {
+    //     this.setState({
+    //       selectedDeleteSceneIds: nextSelectedDeleteSceneIds,
+    //       deleteSceneIds: nextDeleteSceneIds && nextDeleteSceneIds.length > 0 ? nextDeleteSceneIds : null,
+    //     });
+    //   }
+    // }
   }
 
   render() {
@@ -224,7 +284,8 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
       showCreateYourOwnInstructions,
       selectedDeleteSceneIds,
       deleteSceneIds,
-      folderSelected
+      folderSelected,
+      selectedCardIndex
     } = this.state;
 
     const dialogName = showCreateYourOwnInstructions
@@ -278,12 +339,396 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
     const archived_scenes = loadedScenesArray.filter(([sceneId, scene]) => ARCHIVED_SCENES.includes(sceneId));
     const sandbox_scenes = loadedScenesArray.filter(([sceneId, scene]) => sceneId.includes('Sandbox') && !ARCHIVED_SCENES.includes(sceneId));
     const remainderScenes = loadedScenesArray.filter(([sceneId, scene]) => !sceneId.startsWith('jbc') && !sceneId.startsWith('bex'));
-    const folderScenes = {
+    const folderScenes: FolderScenes = {
       'JBC Challenges': jbc_scenes,
-      'Botball Explorer 2026 Challenges': bex_scenes,
+      'Botball Explorer 2026 Missions': bex_scenes,
       'Archived Scenes': archived_scenes,
     };
 
+    const renderSummary = (selectedScene: Scene, folderName: string) => {
+      const { theme, locale } = this.props;
+
+
+      return (
+        <Summary
+          theme={this.props.theme}
+          $column={
+            folderName === 'JBC Challenges'
+              ? ((selectedCardIndex % 3) + 1).toString()
+              : (((selectedCardIndex - 1) % 3) + 1).toString()
+          }
+        >
+          <svg
+            viewBox="0 0 620 167"
+            preserveAspectRatio="none"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              pointerEvents: 'none',
+              zIndex: 0
+            }}
+          >
+            <defs>
+              <linearGradient
+                id="summaryGreyGradient"
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="1"
+              >
+                <stop offset="0%" stopColor="#343434" />
+                <stop offset="55%" stopColor="#292929" />
+                <stop offset="100%" stopColor="#1d1d1d" />
+              </linearGradient>
+
+              <linearGradient
+                id="summaryHighlight"
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="0"
+              >
+                <stop
+                  offset="0%"
+                  stopColor="#ffffff"
+                  stopOpacity="0.10"
+                />
+                <stop
+                  offset="65%"
+                  stopColor="#ffffff"
+                  stopOpacity="0.02"
+                />
+                <stop
+                  offset="100%"
+                  stopColor="#ffffff"
+                  stopOpacity="0"
+                />
+              </linearGradient>
+
+              <pattern
+                id="summaryDotPattern"
+                width="12"
+                height="12"
+                patternUnits="userSpaceOnUse"
+              >
+                <circle
+                  cx="3"
+                  cy="3"
+                  r="1.2"
+                  fill="white"
+                  opacity="0.07"
+                />
+              </pattern>
+            </defs>
+
+            {/* Background */}
+            <rect
+              x="0"
+              y="0"
+              width="620"
+              height="167"
+              rx="8"
+              fill="url(#summaryGreyGradient)"
+            />
+
+            {/* Top highlight */}
+            <path
+              d="M 0 2 H 620"
+              fill="none"
+              stroke="url(#summaryHighlight)"
+              strokeWidth="2"
+            />
+
+            {/* Left circuit traces */}
+            <g
+              fill="none"
+              stroke="white"
+              strokeWidth="1"
+              opacity="0.07"
+            >
+              <path d="M 0 48 H 75 L 92 65 H 150" />
+              <path d="M 20 77 H 110 L 132 99 H 205" />
+              <path d="M 0 125 H 60 L 78 143 H 165" />
+            </g>
+
+            {/* Center traces */}
+            <g
+              fill="none"
+              stroke="white"
+              strokeWidth="1"
+              opacity="0.055"
+            >
+              <path d="M 230 25 H 285 L 305 45 H 365" />
+              <path d="M 270 120 H 330 L 350 140 H 420" />
+            </g>
+
+            {/* Right circuit traces */}
+            <g
+              fill="none"
+              stroke="white"
+              strokeWidth="1"
+              opacity="0.07"
+            >
+              <path d="M 420 48 H 485 L 505 68 H 590" />
+              <path d="M 465 91 H 520 L 542 113 H 620" />
+            </g>
+
+            {/* Circuit nodes */}
+            <g
+              fill="#343434"
+              stroke="white"
+              strokeWidth="1"
+              opacity="0.15"
+            >
+              <circle cx="150" cy="65" r="3" />
+              <circle cx="205" cy="99" r="3" />
+              <circle cx="365" cy="45" r="3" />
+              <circle cx="420" cy="140" r="3" />
+              <circle cx="590" cy="68" r="3" />
+            </g>
+
+            {/* Right-side dot matrix */}
+            <path
+              d="
+      M 470 100
+      Q 530 78 620 92
+      L 620 167
+      L 485 167
+      Q 455 140 470 100
+      Z
+    "
+              fill="url(#summaryDotPattern)"
+              opacity="0.75"
+            />
+
+            {/* Very subtle lower depth layer */}
+            <path
+              d="
+      M 0 140
+      Q 130 128 250 145
+      Q 390 160 620 130
+      L 620 167
+      L 0 167
+      Z
+    "
+              fill="#000000"
+              opacity="0.07"
+            />
+          </svg>
+
+          <SummaryPointer
+            $column={
+              folderName === 'JBC Challenges'
+                ? ((selectedCardIndex % 3) + 1).toString()
+                : (((selectedCardIndex - 1) % 3) + 1).toString()
+            }
+          >
+            <svg viewBox="0 0 40 20">
+              <path
+                d="M 0 20 C 10 20, 10 0, 20 0 C 30 0, 30 20, 40 20"
+                fill="none"
+                stroke={this.props.theme.borderColor}
+                strokeWidth="2"
+              />
+            </svg>
+          </SummaryPointer>
+
+          <div
+            style={{
+              position: 'relative',
+              zIndex: 1
+            }}
+          >
+            <div
+              style={{
+                fontWeight: 400,
+                textDecoration: 'underline',
+                marginBottom: '5px'
+              }}
+            >
+              {selectedScene.description[this.props.locale]}
+            </div>
+
+            {selectedScene.summary && (
+
+              <SummaryGrid theme={theme}>
+                <SummaryInfoTitle theme={theme}>
+                  Skill:
+                </SummaryInfoTitle>
+                <SummaryInfo theme={theme}>
+
+                  {selectedScene.summary.skill[this.props.locale]}
+                </SummaryInfo>
+                <SummaryInfoTitle theme={theme}>
+                  Base:
+                </SummaryInfoTitle>
+                <SummaryInfo theme={theme}>
+
+                  {selectedScene.summary.baseMission[this.props.locale]}
+                </SummaryInfo>
+                {selectedScene.summary.bonusMission && (
+                  <>
+                    <SummaryInfoTitle theme={theme}>
+                      Bonus:
+                    </SummaryInfoTitle>
+                    <SummaryInfo theme={theme}>
+                      {selectedScene.summary.bonusMission[this.props.locale]}
+                    </SummaryInfo>
+                  </>
+                )}
+                {selectedScene.summary.advancedBonusMission && (
+                  <>
+                    <SummaryInfoTitle theme={theme}>
+                      Advanced Bonus:
+                    </SummaryInfoTitle>
+                    <SummaryInfo theme={theme}>
+                      {selectedScene.summary.advancedBonusMission[this.props.locale]}
+                    </SummaryInfo>
+                  </>
+                )}
+
+              </SummaryGrid>
+              // <div>
+              //   <SummaryInfo theme={theme}>
+              //     <div
+              //       style={{
+              //         fontWeight: 'bold',
+              //         paddingRight: '7px'
+              //       }}
+              //     >
+              //       Skill:
+              //     </div>
+
+            //     {selectedScene.summary.skill[this.props.locale]}
+            //   </SummaryInfo>
+
+            //   <SummaryInfo theme={theme}>
+            //     <div
+            //       style={{
+            //         fontWeight: 'bold',
+            //         paddingRight: '7px'
+            //       }}
+            //     >
+            //       Base:
+            //     </div>
+
+            //     {selectedScene.summary.baseMission[this.props.locale]}
+            //   </SummaryInfo>
+
+            //   <SummaryInfo theme={theme}>
+            //     <div
+            //       style={{
+            //         fontWeight: 'bold',
+            //         paddingRight: '7px'
+            //       }}
+            //     >
+            //       Bonus:
+            //     </div>
+
+            //     {selectedScene.summary.bonusMission[this.props.locale]}
+            //   </SummaryInfo>
+
+            //   {selectedScene.summary.advancedBonusMission && (
+            //     <SummaryInfo theme={theme}>
+            //       <div
+            //         style={{
+            //           fontWeight: 'bold',
+            //           paddingRight: '7px',
+            //           width: '15%'
+            //         }}
+            //       >
+            //         Advanced Bonus:
+            //       </div>
+
+            //       {
+            //         selectedScene.summary
+            //           .advancedBonusMission[this.props.locale]
+            //       }
+            //     </SummaryInfo>
+            //   )}
+            // </div>
+            )}
+          </div>
+        </Summary>
+      );
+
+    };
+    const renderSceneCards = (folderName: string) => {
+      const { theme } = this.props;
+      const { selectedSceneId, selectedCardIndex } = this.state;
+
+      // const selectedScene =
+      //   selectedCardIndex !== null
+      //     ? folderScenes[folderName][selectedCardIndex - 1][1]
+      //     : null;
+
+      const selectedScene: Scene | null =
+        selectedCardIndex !== null
+          ? folderName === 'JBC Challenges' ? folderScenes[folderName][selectedCardIndex][1] : folderScenes[folderName][selectedCardIndex - 1][1] : null;
+      return (
+        <StyledScrollArea theme={theme}>
+          <FolderTitle theme={theme}>{folderName}</FolderTitle>
+          <ChallengeItemContainer theme={theme}>
+            {folderScenes[folderName].map(([sceneId, scene], index) => {
+              let cardIndex: number;
+              const gridIndex = index + 1;
+              if (folderName === 'JBC Challenges') {
+                const match = /\d+/.exec(scene.name[this.props.locale]);
+                cardIndex = match ? Number(match[0]) : index;
+              } else {
+                cardIndex = index + 1;
+              }
+              const selectedRow =
+                selectedCardIndex !== null
+                  ? folderName === 'JBC Challenges'
+                    ? Math.floor(selectedCardIndex / 3) + 1
+                    : Math.ceil(selectedCardIndex / 3)
+                  : null;
+
+              const currentRow =
+                Math.floor(index / 3) + 1;
+
+              const isEndOfRow =
+                gridIndex % 3 === 0 ||
+                gridIndex === folderScenes[folderName].length;
+              return (
+                <React.Fragment key={sceneId}>
+                  <ChallengeCard
+                    cardContent={{
+                      title: scene.name,
+                      description: scene.description
+                    }}
+                    backgroundImage={`url(../../../static/icons/bot_guy_numbers/${cardIndex}.svg)`}
+                    theme={theme}
+                    customheight="150px"
+                    customwidth="150px"
+                    selected={
+                      selectedSceneId === sceneId
+                    }
+                    onClick={() =>
+                      this.onSceneClick(
+                        sceneId,
+                        true,
+                        folderScenes[folderName],
+                        folderName === 'JBC Challenges' ? index : index + 1
+                      )
+                    }
+                  />
+
+                  {selectedCardIndex !== null &&
+                    currentRow === selectedRow &&
+                    isEndOfRow &&
+                    selectedScene && (
+                    renderSummary(selectedScene, folderName)
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </ChallengeItemContainer>
+        </StyledScrollArea>);
+    };
     const sceneColumn_ = (
       <div>
         {/* {this.createCreateYourOwnSceneName()} */}
@@ -292,37 +737,28 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
         }
         {Object.entries(folderScenes).map(([folderName, scenes]) => (
           <div key={scenes.map(s => s[0]).join('-')}>
-            <SceneName onClick={() => this.handleFolderSelect(folderName)} key={folderName} theme={theme} selected={false}>
+            <SceneName onClick={() => this.handleFolderSelect(folderName)} key={folderName} theme={theme} selected={this.state.folderSelected === folderName}>
+              <FontAwesome icon={this.state.folderSelected === folderName ? faFolderOpen : faFolderClosed} style={{ marginRight: '5px' }} />
               <strong>{folderName}</strong>
 
             </SceneName>
-            {folderSelected === folderName && (
-              <div style={{ paddingLeft: '20px' }}>
-                {scenes.map(s => this.createSceneName(s[0], s[1]))}
-              </div>
-            )}
+
           </div>
         ))}
       </div>
     );
 
-    const infoColumn_ = (<InfoContainer theme={theme}>
-      {selectedSceneId === null
-        ? this.createNoSceneInfo()
-        : this.createSelectedSceneInfo(scenes)}
-      {/* <StyledScrollArea theme={theme}>
-        <ChallengeItemContainer theme={theme}>
-          {jbc_scenes.map(([sceneId, scene]) => (
-            // <div key={sceneId}>
-            //   {sceneId}
-            //   <img style={{ maxWidth: '9em' }} src='../../static/assets/challenge-0.png' />
+    const infoColumn_ = (
 
-            // </div>
-            <ChallengeCard cardContent={{ title: scene.name, description: scene.description }} key={sceneId} onClick={() => { }} theme={theme} customheight='150px' customwidth='150px' />
-          ))}
-        </ChallengeItemContainer>
-      </StyledScrollArea> */}
-    </InfoContainer>);
+      <InfoContainer theme={theme}>
+        {folderSelected ? renderSceneCards(folderSelected) : selectedSceneId === null
+          ? this.createNoSceneInfo()
+          : this.createSelectedSceneInfo(scenes)}
+
+      </InfoContainer>
+    );
+
+
 
     const canDeleteSelected = selectedDeleteSceneIds.length > 0;
     const scenePickerBar_ = (
@@ -536,6 +972,8 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
   private handleFolderSelect = (folderName: string) => {
     this.setState(prevState => ({
       folderSelected: prevState.folderSelected === folderName ? null : folderName,
+      selectedSceneId: null,
+      selectedCardIndex: null,
     }));
   };
   private createSceneName = (sceneId: string, scene: Scene) => {
@@ -600,13 +1038,24 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
     return <InfoText theme={this.props.theme}>{LocalizedString.lookup(tr('Select a scene to see more details'), this.props.locale)}</InfoText>;
   };
 
-  private onSceneClick = (sceneId: string) => {
-    this.setState({
-      selectedSceneId: sceneId,
-      showCreateYourOwnInstructions: false,
-    }, () => {
-      this.props.continueTour?.();
-    });
+  private onSceneClick = (sceneId: string, challengeCard?: boolean, scenes?: [string, Scene][], index?: number) => {
+
+    if (challengeCard) {
+      this.setState(prevState => (
+        {
+          selectedSceneId: prevState.selectedSceneId === sceneId ? null : sceneId,
+          selectedCardIndex: prevState.selectedCardIndex === index ? null : index,
+          showCreateYourOwnInstructions: false,
+        }));
+    } else {
+      this.setState({
+        selectedSceneId: sceneId,
+        showCreateYourOwnInstructions: false,
+        folderSelected: null
+      }, () => {
+        this.props.continueTour?.();
+      });
+    }
   };
 }
 

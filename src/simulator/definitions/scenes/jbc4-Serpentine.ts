@@ -42,6 +42,11 @@ export const JBC_4: Scene = {
   ...baseScene,
   name: tr('JBC 4'),
   description: tr('Junior Botball Challenge 4: Serpentine'),
+  summary: {
+    skill: tr('Make precision turns <90° and >90°'),
+    baseMission: tr('Drive out and touch each of the numbered red circles with at least one of the robot\'s wheels in sequential order (1, 2, 3, etc.) through 8.'),
+
+  },
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     touchedCircle: Script.ecmaScript('Touched Circle', touchedCircle),

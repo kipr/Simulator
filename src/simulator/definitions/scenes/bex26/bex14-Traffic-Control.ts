@@ -52,6 +52,11 @@ export const BEX_14: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 14'),
   description: tr('Botball Explorer Mission 14: Traffic Control'),
+  summary: {
+    skill: tr('Precision bulldozing and object delivery.'),
+    baseMission: tr('Both Traffic Cones are off the black line.'),
+    bonusMission: tr('A Traffic Cone is in the Loading Zone.')
+  },
   scripts: {
     conesOnBlackLine: Script.ecmaScript('Cones On Black Line', conesOnBlackLine),
     coneInLoadingZone: Script.ecmaScript('Cones In Loading Zone', coneInLoadingZone),

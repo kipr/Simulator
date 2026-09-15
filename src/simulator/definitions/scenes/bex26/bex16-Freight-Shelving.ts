@@ -105,6 +105,11 @@ export const BEX_16: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 16'),
   description: tr('Botball Explorer Mission 16: Freight Shelving'),
+  summary: {
+    skill: tr('Articulating a small cube onto a tall platform.'),
+    baseMission: tr('At least one cube originating from the Spilled Cube are is on top of the Large Green Cube.'),
+    bonusMission: tr('Two or more cubes originating from the Spilled Cube area are on top of the Large Green Cube.')
+  },
   scripts: {
     cubesStacked: Script.ecmaScript('Cubes Stacked', cubesStacked),
   },

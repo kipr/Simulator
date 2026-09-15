@@ -243,6 +243,10 @@ export const JBC_3: Scene = {
   ...baseScene,
   name: tr('JBC 3'),
   description: tr('Junior Botball Challenge 3: Precision Parking'),
+  summary: {
+    skill: tr('Making precision turns and movements.'),
+    baseMission: tr('Drive out and park in the first garage, return to the start area, then drive out and park in the second garage without touching any solid lines of the garage.'),
+  },
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     garageIntersects: Script.ecmaScript('Garage Intersects', garageIntersects),

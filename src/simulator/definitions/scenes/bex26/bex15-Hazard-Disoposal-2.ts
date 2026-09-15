@@ -45,6 +45,11 @@ export const BEX_15: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 15'),
   description: tr('Botball Explorer Mission 15: Hazard Disposal #2'),
+  summary: {
+    skill: tr('Precision driving and servo movement for object delivery.'),
+    baseMission: tr('One Blue Pom is in a basket.'),
+    bonusMission: tr('Two or more Blue Poms are in the same basket.'),
+  },
   scripts: {
     pomInBasket: Script.ecmaScript('Pom In Basket', pomInBasket),
   },

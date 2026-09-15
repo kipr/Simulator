@@ -34,6 +34,11 @@ export const BEX_9: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 9'),
   description: tr('Botball Explorer Mission 9: Recover Botguy'),
+  summary: {
+    skill: tr('Navigating to a known coordinate and extracting a high-mass object.'),
+    baseMission: tr('The robot is touching Botguy.'),
+    bonusMission: tr('Botguy is completely outside of the PVC enclosures and is touching the warehouse floor.'),
+  },
   scripts: {
     robotTouchingBotguy: Script.ecmaScript('Robot Touching Botguy', robotTouchingBotguy),
     bonus: Script.ecmaScript('Bonus', bonus),
