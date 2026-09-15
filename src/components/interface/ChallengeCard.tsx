@@ -95,6 +95,7 @@ class ChallengeCard extends React.PureComponent<Props, State> {
     const { state, props } = this;
     const { isHovered } = state;
     const filteredDescription = LocalizedString.lookup(this.props.cardContent.description, this.props.locale).split(':')[1]?.trim();
+    //console.log("ChallengeCard render selected:", this.props.selected, "isHovered:", isHovered, "filteredDescription:", filteredDescription);
     return (
       <ChallengeCardContainer
         className="custommargin"
@@ -109,7 +110,7 @@ class ChallengeCard extends React.PureComponent<Props, State> {
         <SvgOverlay
           theme={this.props.theme}
           viewBox="0 0 100 100"
-          $showOverlay={this.state.isHovered || this.props.selected}
+          $showOverlay={(this.state.isHovered || this.props.selected) && filteredDescription !== undefined}
         >
           <defs>
             <clipPath id="cardClip">
