@@ -47,7 +47,7 @@ export interface PredefinedLocation {
 interface Summary {
   skill: LocalizedString;
   baseMission: LocalizedString;
-  bonusMission: LocalizedString;
+  bonusMission?: LocalizedString;
   advancedBonusMission?: LocalizedString;
 }
 interface Scene {
