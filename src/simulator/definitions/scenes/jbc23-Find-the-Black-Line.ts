@@ -70,6 +70,10 @@ export const JBC_23: Scene = {
   ...baseScene,
   name: tr('JBC 23'),
   description: tr('Junior Botball Challenge 23: Find the Black Line'),
+  summary: {
+    skill: tr('Learning to use the reflectance sensor to find a black line on the mat.'),
+    baseMission: tr('Drive out and stop once the sensor senses the black line on the starting box from two different starting positions on the mat.')
+  },
   scripts: {
     foundBlack: Script.ecmaScript('Found Black Line', foundBlack),
     onCircle: Script.ecmaScript('On Circle', onCircle),

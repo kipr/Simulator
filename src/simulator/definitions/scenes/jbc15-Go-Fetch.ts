@@ -28,6 +28,10 @@ export const JBC_15: Scene = {
   ...baseScene,
   name: tr('JBC 15'),
   description: tr('Junior Botball Challenge 15: Go Fetch'),
+  summary: {
+    skill: tr('Precision robot driving and engineering an effector to pick up a can.'),
+    baseMission: tr('Drive to pick up the can in circle 11 and return it to the starting box.')
+  },
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     enterStartBox: Script.ecmaScript('Enter Start Box', enterStartBox),

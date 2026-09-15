@@ -45,6 +45,10 @@ export const JBC_7: Scene = {
   ...baseScene,
   name: tr('JBC 7'),
   description: tr('Junior Botball Challenge 7: Load \'Em Up'),
+  summary: {
+    skill: tr('Precision robot driving and engineering an effector to push the cans.'),
+    baseMission: tr('In a single run, the robot will push the can 2 into the green garage, can 9 into the blue garage, and can 10 into the yellow garage.')
+  },
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     uprightCans: Script.ecmaScript('Upright Cans', uprightCans),
