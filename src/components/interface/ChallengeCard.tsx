@@ -89,13 +89,12 @@ class ChallengeCard extends React.PureComponent<Props, State> {
   }
   private handleClick = (event: React.MouseEvent) => {
     this.props.onClick(event);
-  }
+  };
 
   render() {
     const { state, props } = this;
     const { isHovered } = state;
     const filteredDescription = LocalizedString.lookup(this.props.cardContent.description, this.props.locale).split(':')[1]?.trim();
-    //console.log("ChallengeCard render selected:", this.props.selected, "isHovered:", isHovered, "filteredDescription:", filteredDescription);
     return (
       <ChallengeCardContainer
         className="custommargin"

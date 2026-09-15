@@ -48,7 +48,7 @@ interface OpenSceneDialogPrivateProps {
 }
 
 type Props = OpenSceneDialogPublicProps & OpenSceneDialogPrivateProps & WithNavigateProps;
-
+type FolderScenes = Record<string, Array<[string, Scene]>>;
 interface SelectSceneDialogState {
   selectedSceneId: string | null;
   showCreateYourOwnInstructions: boolean;
@@ -149,7 +149,7 @@ const Summary = styled('div', (props: ThemeProps & { $column: string }) => ({
   position: "relative",
   marginTop: "10px",
   padding: '24px',
-  border: '2px solid ' + props.theme.borderColor,
+  border: `2px solid ${props.theme.borderColor}`,
   borderRadius: '10px',
   width: '98%'
 }));
@@ -197,7 +197,7 @@ const FolderTitle = styled('div', (props: ThemeProps) => ({
   fontSize: '1.2em',
   fontWeight: 600,
   padding: `${props.theme.itemPadding * 2}px`,
-  //borderBottom: `1px solid ${props.theme.borderColor}`,
+  // borderBottom: `1px solid ${props.theme.borderColor}`,
   userSelect: 'none',
 }));
 const DialogBarRow = styled('div', (props: ThemeProps) => ({
@@ -339,7 +339,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
     const archived_scenes = loadedScenesArray.filter(([sceneId, scene]) => ARCHIVED_SCENES.includes(sceneId));
     const sandbox_scenes = loadedScenesArray.filter(([sceneId, scene]) => sceneId.includes('Sandbox') && !ARCHIVED_SCENES.includes(sceneId));
     const remainderScenes = loadedScenesArray.filter(([sceneId, scene]) => !sceneId.startsWith('jbc') && !sceneId.startsWith('bex'));
-    const folderScenes = {
+    const folderScenes: FolderScenes = {
       'JBC Challenges': jbc_scenes,
       'Botball Explorer 2026 Missions': bex_scenes,
       'Archived Scenes': archived_scenes,
@@ -601,58 +601,58 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
               //       Skill:
               //     </div>
 
-              //     {selectedScene.summary.skill[this.props.locale]}
-              //   </SummaryInfo>
+            //     {selectedScene.summary.skill[this.props.locale]}
+            //   </SummaryInfo>
 
-              //   <SummaryInfo theme={theme}>
-              //     <div
-              //       style={{
-              //         fontWeight: 'bold',
-              //         paddingRight: '7px'
-              //       }}
-              //     >
-              //       Base:
-              //     </div>
+            //   <SummaryInfo theme={theme}>
+            //     <div
+            //       style={{
+            //         fontWeight: 'bold',
+            //         paddingRight: '7px'
+            //       }}
+            //     >
+            //       Base:
+            //     </div>
 
-              //     {selectedScene.summary.baseMission[this.props.locale]}
-              //   </SummaryInfo>
+            //     {selectedScene.summary.baseMission[this.props.locale]}
+            //   </SummaryInfo>
 
-              //   <SummaryInfo theme={theme}>
-              //     <div
-              //       style={{
-              //         fontWeight: 'bold',
-              //         paddingRight: '7px'
-              //       }}
-              //     >
-              //       Bonus:
-              //     </div>
+            //   <SummaryInfo theme={theme}>
+            //     <div
+            //       style={{
+            //         fontWeight: 'bold',
+            //         paddingRight: '7px'
+            //       }}
+            //     >
+            //       Bonus:
+            //     </div>
 
-              //     {selectedScene.summary.bonusMission[this.props.locale]}
-              //   </SummaryInfo>
+            //     {selectedScene.summary.bonusMission[this.props.locale]}
+            //   </SummaryInfo>
 
-              //   {selectedScene.summary.advancedBonusMission && (
-              //     <SummaryInfo theme={theme}>
-              //       <div
-              //         style={{
-              //           fontWeight: 'bold',
-              //           paddingRight: '7px',
-              //           width: '15%'
-              //         }}
-              //       >
-              //         Advanced Bonus:
-              //       </div>
+            //   {selectedScene.summary.advancedBonusMission && (
+            //     <SummaryInfo theme={theme}>
+            //       <div
+            //         style={{
+            //           fontWeight: 'bold',
+            //           paddingRight: '7px',
+            //           width: '15%'
+            //         }}
+            //       >
+            //         Advanced Bonus:
+            //       </div>
 
-              //       {
-              //         selectedScene.summary
-              //           .advancedBonusMission[this.props.locale]
-              //       }
-              //     </SummaryInfo>
-              //   )}
-              // </div>
+            //       {
+            //         selectedScene.summary
+            //           .advancedBonusMission[this.props.locale]
+            //       }
+            //     </SummaryInfo>
+            //   )}
+            // </div>
             )}
           </div>
         </Summary>
-      )
+      );
 
     };
     const renderSceneCards = (folderName: string) => {
@@ -664,7 +664,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
       //     ? folderScenes[folderName][selectedCardIndex - 1][1]
       //     : null;
 
-      const selectedScene =
+      const selectedScene: Scene | null =
         selectedCardIndex !== null
           ? folderName === 'JBC Challenges' ? folderScenes[folderName][selectedCardIndex][1] : folderScenes[folderName][selectedCardIndex - 1][1] : null;
       return (
@@ -675,7 +675,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
               let cardIndex: number;
               const gridIndex = index + 1;
               if (folderName === 'JBC Challenges') {
-                const match = scene.name[this.props.locale]?.match(/\d+/);
+                const match = /\d+/.exec(scene.name[this.props.locale]);
                 cardIndex = match ? Number(match[0]) : index;
               } else {
                 cardIndex = index + 1;
@@ -721,8 +721,8 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
                     currentRow === selectedRow &&
                     isEndOfRow &&
                     selectedScene && (
-                      renderSummary(selectedScene, folderName)
-                    )}
+                    renderSummary(selectedScene, folderName)
+                  )}
                 </React.Fragment>
               );
             })}
@@ -1038,7 +1038,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
     return <InfoText theme={this.props.theme}>{LocalizedString.lookup(tr('Select a scene to see more details'), this.props.locale)}</InfoText>;
   };
 
-  private onSceneClick = (sceneId: string, challengeCard?: boolean, scenes?: [string, Scene], index?: number) => {
+  private onSceneClick = (sceneId: string, challengeCard?: boolean, scenes?: [string, Scene][], index?: number) => {
 
     if (challengeCard) {
       this.setState(prevState => (
@@ -1046,11 +1046,8 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
           selectedSceneId: prevState.selectedSceneId === sceneId ? null : sceneId,
           selectedCardIndex: prevState.selectedCardIndex === index ? null : index,
           showCreateYourOwnInstructions: false,
-        }), () => {
-
-        });
-    }
-    else {
+        }));
+    } else {
       this.setState({
         selectedSceneId: sceneId,
         showCreateYourOwnInstructions: false,

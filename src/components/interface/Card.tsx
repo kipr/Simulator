@@ -56,7 +56,6 @@ const Container = styled('div', (props: ThemeProps & {
   backgroundImage: props.backgroundimage ? props.backgroundimage : 'none',
   backgroundPosition: props.backgroundposition ? props.backgroundposition : 'center',
   backgroundRepeat: 'no-repeat',
-  //backgroundSize: props.backgroundsize ? props.backgroundsize : '100%',
   backgroundSize: props.selected ? '115%' : '100%',
   transition: 'all 0.5s ease',
   ':hover': {
