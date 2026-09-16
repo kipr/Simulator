@@ -7,13 +7,18 @@ function studentEntryId(entry) {
   if (typeof entry === 'string') return entry;
   if (!entry.id) return undefined;
   if (typeof entry.id === 'string') return entry.id;
-  if (typeof entry.id === 'object' && entry.id['en-US']) return entry.id['en-US'];
+  if (typeof entry.id === 'object' && entry.id['en-US'])
+    return entry.id['en-US'];
   return undefined;
 }
 
 /** Firestore map key for a student (may differ from entry.id in edge cases). */
 function findStudentRosterKey(studentIds, studentId) {
-  if (!studentIds || typeof studentIds !== 'object' || Array.isArray(studentIds)) {
+  if (
+    !studentIds ||
+    typeof studentIds !== 'object' ||
+    Array.isArray(studentIds)
+  ) {
     return null;
   }
   if (studentIds[studentId]) return studentId;
@@ -27,7 +32,11 @@ function findStudentRosterKey(studentIds, studentId) {
 
 /** All roster map keys that refer to this student (removes duplicates / legacy keys). */
 function rosterKeysForStudent(studentIds, studentId) {
-  if (!studentIds || typeof studentIds !== 'object' || Array.isArray(studentIds)) {
+  if (
+    !studentIds ||
+    typeof studentIds !== 'object' ||
+    Array.isArray(studentIds)
+  ) {
     return [];
   }
   const keys = new Set();
@@ -40,18 +49,29 @@ function rosterKeysForStudent(studentIds, studentId) {
 }
 
 /** Firestore update() deep-merges maps; assignedTo keys must be deleted explicitly. */
-function addAssignedToDeletesForStudent(update, classroomAssignments, studentId) {
+function addAssignedToDeletesForStudent(
+  update,
+  classroomAssignments,
+  studentId,
+) {
   if (!classroomAssignments || typeof classroomAssignments !== 'object') {
     return;
   }
   const FieldPath = admin.firestore.FieldPath;
-  for (const [assignmentKey, assignment] of Object.entries(classroomAssignments)) {
+  for (const [assignmentKey, assignment] of Object.entries(
+    classroomAssignments,
+  )) {
     const assignedTo = assignment?.assignedTo;
     if (!assignedTo || typeof assignedTo !== 'object') continue;
     for (const [assignedKey, entry] of Object.entries(assignedTo)) {
       if (assignedKey === studentId || studentEntryId(entry) === studentId) {
         update[
-          new FieldPath('classroomAssignments', assignmentKey, 'assignedTo', assignedKey)
+          new FieldPath(
+            'classroomAssignments',
+            assignmentKey,
+            'assignedTo',
+            assignedKey,
+          )
         ] = admin.firestore.FieldValue.delete();
       }
     }
@@ -59,7 +79,11 @@ function addAssignedToDeletesForStudent(update, classroomAssignments, studentId)
 }
 
 /** Apply assignment map patch without leaving stale assignedTo entries after merge. */
-async function applyClassroomAssignmentsPatch(docRef, existing, incomingAssignments) {
+async function applyClassroomAssignmentsPatch(
+  docRef,
+  existing,
+  incomingAssignments,
+) {
   const FieldPath = admin.firestore.FieldPath;
   const existingAssignments = existing.classroomAssignments || {};
   const incoming = incomingAssignments || {};
@@ -78,13 +102,23 @@ async function applyClassroomAssignmentsPatch(docRef, existing, incomingAssignme
     for (const assignedKey of Object.keys(existingAt)) {
       if (!(assignedKey in incomingAt)) {
         update[
-          new FieldPath('classroomAssignments', assignmentKey, 'assignedTo', assignedKey)
+          new FieldPath(
+            'classroomAssignments',
+            assignmentKey,
+            'assignedTo',
+            assignedKey,
+          )
         ] = admin.firestore.FieldValue.delete();
       }
     }
     for (const [assignedKey, entry] of Object.entries(incomingAt)) {
       update[
-        new FieldPath('classroomAssignments', assignmentKey, 'assignedTo', assignedKey)
+        new FieldPath(
+          'classroomAssignments',
+          assignmentKey,
+          'assignedTo',
+          assignedKey,
+        )
       ] = entry;
     }
 
@@ -92,7 +126,8 @@ async function applyClassroomAssignmentsPatch(docRef, existing, incomingAssignme
       const rest = { ...incomingAssignment };
       delete rest.assignedTo;
       for (const [field, value] of Object.entries(rest)) {
-        update[new FieldPath('classroomAssignments', assignmentKey, field)] = value;
+        update[new FieldPath('classroomAssignments', assignmentKey, field)] =
+          value;
       }
     }
   }
@@ -112,7 +147,11 @@ async function removeStudentFromClassroomDoc(docRef, existing, studentId) {
   for (const key of keys) {
     update[`studentIds.${key}`] = admin.firestore.FieldValue.delete();
   }
-  addAssignedToDeletesForStudent(update, existing.classroomAssignments, studentId);
+  addAssignedToDeletesForStudent(
+    update,
+    existing.classroomAssignments,
+    studentId,
+  );
   await docRef.update(update);
   return true;
 }
@@ -140,7 +179,8 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const auth = req.headers.authorization || '';
       const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
-      if (!token) return res.status(401).json({ message: 'Missing bearer token' });
+      if (!token)
+        return res.status(401).json({ message: 'Missing bearer token' });
 
       const decoded = await firebaseTokenManager.verifyIdToken(token);
       req.user = { uid: decoded.uid };
@@ -156,15 +196,13 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
   router.post('/leave', async (req, res) => {
     try {
       const { uid } = req.user;
-      let qsnap = await colPath()
-        .where(`studentIds.${uid}`, '!=', null)
-        .get();
+      let qsnap = await colPath().where(`studentIds.${uid}`, '!=', null).get();
 
       // Legacy rosters may use a map key other than the uid; scan once if the index query misses.
       if (qsnap.empty) {
         const all = await colPath().get();
-        const matches = all.docs.filter((doc) =>
-          rosterKeysForStudent(doc.data().studentIds, uid).length > 0,
+        const matches = all.docs.filter(
+          (doc) => rosterKeysForStudent(doc.data().studentIds, uid).length > 0,
         );
         if (matches.length > 0) {
           qsnap = { docs: matches, empty: false };
@@ -172,13 +210,19 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
       }
 
       if (qsnap.empty) {
-        return res.status(404).json({ message: 'Student not in any classroom' });
+        return res
+          .status(404)
+          .json({ message: 'Student not in any classroom' });
       }
 
       let removed = false;
       for (const doc of qsnap.docs) {
         const existing = doc.data();
-        const didRemove = await removeStudentFromClassroomDoc(doc.ref, existing, uid);
+        const didRemove = await removeStudentFromClassroomDoc(
+          doc.ref,
+          existing,
+          uid,
+        );
         if (didRemove) removed = true;
       }
 
@@ -402,8 +446,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const inviteCode = req.query.inviteCode;
       if (inviteCode) {
-        const qsnap = await admin.firestore().collection('classrooms')
-          .get();
+        const qsnap = await admin.firestore().collection('classrooms').get();
         const want = String(inviteCode).trim();
         for (const doc of qsnap.docs) {
           const classroom = doc.data();
@@ -454,8 +497,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
         return res.status(400).json({ message: 'Missing invite code' });
       }
 
-      const qsnap = await admin.firestore().collection('classrooms')
-        .get();
+      const qsnap = await admin.firestore().collection('classrooms').get();
 
       const want = String(inviteCode).trim();
       for (const doc of qsnap.docs) {
@@ -487,15 +529,17 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const { uid } = req.user;
       const { id } = req.params;
-      const docRef = admin.firestore()
-        .collection('classrooms')
-        .doc(id);
+      const docRef = admin.firestore().collection('classrooms').doc(id);
       const snap = await docRef.get();
       if (!snap.exists) {
         return res.status(404).json({ message: 'Classroom not found' });
       }
       const existing = snap.data();
-      const didRemove = await removeStudentFromClassroomDoc(docRef, existing, uid);
+      const didRemove = await removeStudentFromClassroomDoc(
+        docRef,
+        existing,
+        uid,
+      );
       if (!didRemove) {
         return res.status(404).json({ message: 'Student not in classroom' });
       }
@@ -512,9 +556,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const { uid } = req.user;
       const { id, studentId } = req.params;
-      const docRef = admin.firestore()
-        .collection('classrooms')
-        .doc(id);
+      const docRef = admin.firestore().collection('classrooms').doc(id);
       const snap = await docRef.get();
       if (!snap.exists) {
         return res.status(404).json({ message: 'Classroom not found' });
@@ -583,12 +625,21 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
   };
 
   /** Non-teacher roster PATCH: may only join (add self) or leave (remove self). */
-  const applyStudentRosterPatchAsNonTeacher = async (docRef, existing, data, uid) => {
+  const applyStudentRosterPatchAsNonTeacher = async (
+    docRef,
+    existing,
+    data,
+    uid,
+  ) => {
     const existingIds = existing.studentIds || {};
     const incomingIds = data.studentIds || {};
     const selfKey = findStudentRosterKey(existingIds, uid);
-    const addedKeys = Object.keys(incomingIds).filter((k) => !(k in existingIds));
-    const removedKeys = Object.keys(existingIds).filter((k) => !(k in incomingIds));
+    const addedKeys = Object.keys(incomingIds).filter(
+      (k) => !(k in existingIds),
+    );
+    const removedKeys = Object.keys(existingIds).filter(
+      (k) => !(k in incomingIds),
+    );
 
     const forbidden = () => {
       const err = new Error('Forbidden');
@@ -597,7 +648,11 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     };
 
     // Join: preserve roster, add only the authenticated student.
-    if (removedKeys.length === 0 && addedKeys.length === 1 && addedKeys[0] === uid) {
+    if (
+      removedKeys.length === 0 &&
+      addedKeys.length === 1 &&
+      addedKeys[0] === uid
+    ) {
       for (const key of Object.keys(existingIds)) {
         if (!(key in incomingIds)) forbidden();
       }
@@ -644,8 +699,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
       const { uid } = req.user;
       const { id } = req.params;
       const data = req.body || {};
-      const docRef = admin.firestore().collection('classrooms')
-        .doc(id);
+      const docRef = admin.firestore().collection('classrooms').doc(id);
       const snap = await docRef.get();
       if (!snap.exists) {
         return res.status(404).json({ message: 'Classroom not found' });
@@ -654,7 +708,9 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
       const isOwner = existing.teacherId === uid;
 
       if (isRosterAndAssignmentsPatch(data) && isOwner) {
-        await applyRosterPatch(docRef, existing, { studentIds: data.studentIds });
+        await applyRosterPatch(docRef, existing, {
+          studentIds: data.studentIds,
+        });
         await applyClassroomAssignmentsPatch(
           docRef,
           existing,
@@ -668,7 +724,12 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
           await applyRosterPatch(docRef, existing, data);
         } else {
           try {
-            await applyStudentRosterPatchAsNonTeacher(docRef, existing, data, uid);
+            await applyStudentRosterPatchAsNonTeacher(
+              docRef,
+              existing,
+              data,
+              uid,
+            );
           } catch (err) {
             if (err.status === 403) {
               return res.status(403).json({ message: 'Forbidden' });
@@ -706,8 +767,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const { uid } = req.user;
       const { id } = req.params;
-      await colPath(uid).doc(id)
-        .delete();
+      await colPath(uid).doc(id).delete();
       return res.sendStatus(204);
     } catch (err) {
       console.error('DELETE /classrooms error:', err);
@@ -715,15 +775,120 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     }
   });
 
+  //Get specific assignment
+  router.get('/:id/assignments/:assignmentId', async (req, res) => {
+    try {
+      const { id, assignmentId } = req.params;
+
+      const assignmentRef = admin
+        .firestore()
+        .collection('classrooms')
+        .doc(id)
+        .collection('assignments')
+        .doc(assignmentId);
+
+      const snap = await assignmentRef.get();
+
+      if (!snap.exists) {
+        return res.status(404).json({
+          message: 'Assignment not found',
+        });
+      }
+
+      return res.status(200).json({
+        docId: snap.id,
+        ...snap.data(),
+      });
+    } catch (err) {
+      return res.status(500).json({
+        message: err.message,
+      });
+    }
+  });
+
+  //Get all classroom assignments
+  router.get('/:id/assignments', async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const assignmentsRef = admin
+        .firestore()
+        .collection('classrooms')
+        .doc(id)
+        .collection('assignments');
+
+      const qsnap = await assignmentsRef.get();
+
+      const assignments = {};
+      qsnap.forEach((doc) => {
+        assignments[doc.id] = { docId: doc.id, ...doc.data() };
+      });
+      console.log('Assignments for classroom', id, assignments);
+      return res.status(200).json(assignments);
+    } catch (err) {
+      return res.status(500).json({
+        message: err.message,
+      });
+    }
+  });
+  // Assign assignment to students
   // Assign assignment to students
   router.post('/:id/assign', async (req, res) => {
+    console.log('POST /classrooms/:id/assign called with body:', req.body);
     try {
-      void req.user;
-      void req.params;
-      void req.body;
-      return res.status(501).json({ message: 'Not implemented' });
+      const { uid } = req.user;
+      const { id } = req.params;
+      const assignment = req.body;
+
+      const firestore = admin.firestore();
+
+      const classroomRef = firestore.collection('classrooms').doc(id);
+
+      const classroomSnap = await classroomRef.get();
+
+      if (!classroomSnap.exists) {
+        return res.status(404).json({
+          message: 'Classroom not found',
+        });
+      }
+
+      const classroom = classroomSnap.data();
+
+      // Only the classroom teacher can create assignments
+      if (classroom.teacherId !== uid) {
+        return res.status(403).json({
+          message: 'Only the classroom teacher can create assignments',
+        });
+      }
+
+      if (!assignment.docId) {
+        return res.status(400).json({
+          message: 'Assignment docId is required',
+        });
+      }
+
+      const assignmentRef = classroomRef
+        .collection('assignments')
+        .doc(assignment.docId);
+
+      await assignmentRef.set({
+        ...assignment,
+
+        createdAt:
+          assignment.createdAt ?? admin.firestore.FieldValue.serverTimestamp(),
+
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      return res.status(201).json({
+        id: assignment.docId,
+      });
     } catch (err) {
-      return res.status(500).json({ message: err.message });
+      console.error('POST /classrooms/:id/assign error:', err);
+
+      return res.status(500).json({
+        message: err.message,
+      });
     }
   });
 

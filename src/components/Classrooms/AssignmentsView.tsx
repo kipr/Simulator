@@ -61,7 +61,9 @@ export interface AssignmentsViewPublicProps extends ThemeProps, StyleProps {
 
 export interface AssignmentsViewPrivateProps extends ThemeProps {
   locale: LocalizedString.Language;
+  classroomAssignments: Dict<Dict<ClassroomAssignment>> | undefined;
   onDeleteAssignment: (classroom: Classroom, assignmentDocId: string) => void;
+  onGetAllAssignments: (classroom: Classroom) => void;
 }
 
 type Props = AssignmentsViewPublicProps & AssignmentsViewPrivateProps;
@@ -218,12 +220,14 @@ function readCurrentUserFromDb(): { id: string; displayName: string } {
 const AssignmentsView = ({
   theme,
   locale,
+  classroomAssignments,
   currentSelectedClassroom,
   onAssignmentAction,
   setContextMenuVisible,
   contextMenuVisible,
   containerRef,
   onDeleteAssignment,
+  onGetAllAssignments,
   config,
   tourRegistry,
   tourAutoOpenAssignmentDetails,
@@ -234,6 +238,7 @@ const AssignmentsView = ({
   tourHighlightAssignmentTitle,
 }: Props) => {
   const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
+  const [assignements, setAssignments] = useState<ClassroomAssignment[] | null>(null);
   const [selectedAssignment, setSelectedAssignment] = useState<ClassroomAssignment | null>(null);
   const [assignmentInfoBlurbVisible, setAssignmentInfoBlurbVisible] = useState(false);
   const [assignedChallengesDialogVisible, setAssignedChallengesDialogVisible] = useState(false);
@@ -250,6 +255,7 @@ const AssignmentsView = ({
   );
 
   const loadedClassroomForProgress = Async.latestValue(currentSelectedClassroom);
+  //console.log("Assignments view loadedClassroomForProgress", loadedClassroomForProgress);
 
   useEffect(() => {
     if (config !== 'Student') {
@@ -459,12 +465,8 @@ const AssignmentsView = ({
     assignments: ClassroomAssignment[],
     listTour?: { highlightFirstRow?: boolean; teacherHighlightAssignment?: ClassroomAssignment | null }
   ) {
-    const loadedClassroom = Async.latestValue(currentSelectedClassroom);
-    if (!loadedClassroom?.classroomAssignments) return null;
-    if (assignments.length === 0) return null;
-
     const collapsed = collapsedTopics.has(subject);
-
+    console.log('AssignmentsView renderNoSubject', subject, assignments, collapsed);
     return (
       <SubjectContainer theme={theme}>
         <SubjectHeaderBar
@@ -672,22 +674,43 @@ const AssignmentsView = ({
     );
   }
 
-  const loadedClassroom = Async.latestValue(currentSelectedClassroom);
-  const assignments = loadedClassroom?.classroomAssignments;
+  const loadedClassroom = Async.latestValue(
+    currentSelectedClassroom
+  );
+
+  React.useEffect(() => {
+    if (loadedClassroom?.docId) {
+      onGetAllAssignments(loadedClassroom);
+    }
+  }, [loadedClassroom?.docId]);
+
+  const assignments = loadedClassroom?.docId
+    ? classroomAssignments[loadedClassroom.docId] || {}
+    : {};
+
   const topics: Dict<ClassroomAssignment[]> = {};
+
+  const assignmentDict = Object.values(assignments);
   if (assignments) {
-    for (const assignment of Object.values(assignments)) {
-      if (config === 'Student' && !assignmentIsAssignedToUser(loadedClassroom, assignment, currentUser.id)) {
-        continue;
-      }
+    for (const assignment of Object.values(assignmentDict)) {
+
+
+      console.log("Assignments view assignment", assignment);
+      // if (config === 'Student' && !assignmentIsAssignedToUser(loadedClassroom, assignment, currentUser.id)) {
+      //   continue;
+      // }
+      // console.log("a topic: ", a.topic);
       const topic = assignment.topic || 'No Subject';
       if (!topics[topic]) {
         topics[topic] = [];
       }
       topics[topic].push(assignment);
     }
+
   }
 
+  //console.log("Assignments view topics", topics);
+  console.log("topics['No Subject]:", topics['No Subject']);
   const topicNamesStudent = Object.keys(topics).sort((a, b) => {
     if (a === 'No Subject') return -1;
     if (b === 'No Subject') return 1;
@@ -784,22 +807,22 @@ const AssignmentsView = ({
                   </div>
                 )
               ) : (
-                <>
+                <React.Fragment>
                   {tourRegistry &&
                     activeTourStepId &&
                     TEACHER_TOUR_ASSIGNMENT_ROW_STEP_IDS.has(activeTourStepId) &&
                     !teacherAssignmentsListHighlight && (
-                    <div style={{ padding: '12px' }}>
-                      <TourTarget registry={tourRegistry} targetKey="teacher-assignment-in-class-list" style={{ display: 'contents' }}>
-                        <div style={{ color: theme.color }}>
-                          {LocalizedString.lookup(
-                            tr('Assignments you publish will appear in the lists below, grouped by topic.'),
-                            locale
-                          )}
-                        </div>
-                      </TourTarget>
-                    </div>
-                  )}
+                      <div style={{ padding: '12px' }}>
+                        <TourTarget registry={tourRegistry} targetKey="teacher-assignment-in-class-list" style={{ display: 'contents' }}>
+                          <div style={{ color: theme.color }}>
+                            {LocalizedString.lookup(
+                              tr('Assignments you publish will appear in the lists below, grouped by topic.'),
+                              locale
+                            )}
+                          </div>
+                        </TourTarget>
+                      </div>
+                    )}
                   <div style={{ display: 'flex', flexDirection: 'row', gap: '5em', padding: '8px' }}>
 
                     {/* No Subject Container Column */}
@@ -822,8 +845,9 @@ const AssignmentsView = ({
                         ))}
                     </div>
 
+                    {/* HELLOOOOOOO */}
                   </div>
-                </>
+                </React.Fragment>
               )}
 
             </StyledScrollArea>
@@ -877,11 +901,15 @@ export default connect((state: State) => {
   return {
     locale: state.i18n.locale,
     classroomList: state.classrooms.entities,
-    challenges: state.challenges
+    challenges: state.challenges,
+    classroomAssignments: state.classrooms.assignments,
   };
 }, (dispatch, ownProps) => ({
   onDeleteAssignment: (classroom: Classroom, assignmentDocId: string) => {
     dispatch(ClassroomsAction.deleteAssignment({ classroom, assignmentDocId }));
+  },
+  onGetAllAssignments: (classroom: Classroom) => {
+    dispatch(ClassroomsAction.getAssignments({ classroomDocId: classroom.docId }));
   }
 
 }))(AssignmentsView) as React.ComponentType<AssignmentsViewPublicProps>; 
