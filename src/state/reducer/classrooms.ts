@@ -92,6 +92,17 @@ export namespace ClassroomsAction {
     classroom: Classroom;
   }
 
+  export const updateClassroom = construct<UpdateClassroom>('classrooms/update-classroom');
+  export interface UpdateClassroom {
+    type: 'classrooms/update-classroom';
+    classroomId: string;
+    classroom: Classroom;
+  }
+
+  export const CLASSROOM_UPDATED = construct<ClassroomUpdated>('classrooms/classroom-updated');
+  export interface ClassroomUpdated {
+    type: 'classrooms/classroom-updated';
+  }
   export const listOwnedClassrooms = construct<ListOwnedClassrooms>('classrooms/list-owned-classrooms');
 
   export interface ListChallengesByStudentId {
@@ -150,7 +161,7 @@ export namespace ClassroomsAction {
     type: 'classrooms/set-assignment';
     classroom: Classroom;
     assignment: ClassroomAssignment;
-    studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>;
+    studentIds: Dict<{ id: string, displayName: string }>;
   }
 
   export const setAssignment = construct<SetAssignment>('classrooms/set-assignment');
@@ -162,11 +173,7 @@ export namespace ClassroomsAction {
   }
 
   export const getAssignments = construct<GetAssignments>('classrooms/get-assignments');
-  export interface DeleteAssignment {
-    type: 'classrooms/delete-assignment';
-    classroom: Classroom;
-    assignmentDocId: string;
-  }
+
 
   export const setAssignments = construct<SetAssignments>('classrooms/set-assignments');
   export interface SetAssignments {
@@ -174,8 +181,24 @@ export namespace ClassroomsAction {
     classroomDocId: string;
     assignments: Dict<ClassroomAssignment> | undefined;
   }
-  export const deleteAssignment = construct<DeleteAssignment>('classrooms/delete-assignment');
 
+  export const ASSIGNMENT_CREATED = construct<AssignmentCreated>('classrooms/assignment-created');
+  export interface AssignmentCreated {
+    type: 'classrooms/assignment-created';
+  }
+
+
+  export const deleteAssignment = construct<DeleteAssignment>('classrooms/delete-assignment');
+  export interface DeleteAssignment {
+    type: 'classrooms/delete-assignment';
+    classroom: Classroom;
+    assignmentDocId: string;
+  }
+
+  export const ASSIGNMENT_DELETED = construct<AssignmentDeleted>('classrooms/assignment-deleted');
+  export interface AssignmentDeleted {
+    type: 'classrooms/assignment-deleted'
+  }
 
   export interface GetGradebook {
     type: 'classrooms/get-gradebook';
@@ -189,6 +212,7 @@ export namespace ClassroomsAction {
     classroom: Classroom;
     assignmentDocId: string;
     assignment: ClassroomAssignment;
+    studentIds: Dict<{ id: string, displayName: string }>;
   }
 
   export const editAssignment = construct<EditAssignment>('classrooms/edit-assignment');
@@ -221,12 +245,16 @@ export type ClassroomsAction =
   | ClassroomsAction.ClearSelectedClassroom
   | ClassroomsAction.SetClassroomInternal
   | ClassroomsAction.DeleteClassroom
+  | ClassroomsAction.UpdateClassroom
+  | ClassroomsAction.ClassroomUpdated
   | ClassroomsAction.JoinClassroom
   | ClassroomsAction.ListChallengesByStudentId
   | ClassroomsAction.SetAssignment
   | ClassroomsAction.GetAssignments
   | ClassroomsAction.SetAssignments
+  | ClassroomsAction.AssignmentCreated
   | ClassroomsAction.DeleteAssignment
+  | ClassroomsAction.AssignmentDeleted
   | ClassroomsAction.GetGradebook
   | ClassroomsAction.EditAssignment
   | ClassroomsAction.SetChallengePointsOverride;
@@ -863,68 +891,31 @@ export async function renameClassroomById(
   return { ok: true, classroom: updated };
 }
 
-// export const setAssignment = async (
-//   classroom: Classroom,
-//   assignment: ClassroomAssignment,
-//   studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>
-// ) => {
-//   try {
-//     const docId = classroom.docId;
-//     if (!docId) throw new Error('Classroom docId is required to set assignment');
-//     const updatedStudentIds = Object.fromEntries(
-//       Object.values(studentIds).map(student => {
-//         if (!classroom.studentIds[student.id]) {
-//           throw new Error(`Student with ID ${student.id} is not in the classroom`);
-//         }
+export const updateClassroom = async (classroomId: string, classroom: Classroom) => {
 
-//         return [
-//           student.id,
-//           {
-//             ...student,
-//             assignments: {
-//               ...student.assignments,
-//               [assignment.title]: assignment,
-//             },
-//           },
-//         ];
-//       })
-//     );
+  try {
+    const docId = classroom.docId;
 
-//     const nextClassroomAssignments: Dict<ClassroomAssignment> = {
-//       ...classroom.classroomAssignments,
-//       [assignment.title]: assignment,
-//     };
-//     const updatedTopics = rebuildTopicsFromClassroomAssignments(nextClassroomAssignments);
+    if (!docId) {
+      throw new Error('Classroom docId is required to update classroom');
+    }
 
-//     // Keep all enrolled students; only the assignee list gets this assignment merged onto their record.
-//     const mergedStudentIds: Dict<{ id: string; displayName: string; assignments?: Dict<ClassroomAssignment> }> = {
-//       ...classroom.studentIds,
-//       ...updatedStudentIds,
-//     };
+    await db.set(
+      {
+        collection: `classrooms`,
+        id: docId,
+      },
+      classroom,
+      true
+    );
 
-//     let updatedClassroom = {
-//       ...classroom,
-//       classroomAssignments: nextClassroomAssignments,
-//       studentIds: mergedStudentIds,
-//       topics: updatedTopics,
-//     };
+    store.dispatch(ClassroomsAction.CLASSROOM_UPDATED({}));
+  }
+  catch (error) {
+    console.error('Error updating classroom:', error);
+  }
 
-//     updatedClassroom = await classroomWithSyncedSharedCustomChallenges(
-//       updatedClassroom,
-//       classroom.teacherId
-//     );
-
-//     await db.set(
-//       { collection: 'classrooms', id: docId },
-//       updatedClassroom,
-//       true
-//     );
-
-//   } catch (error) {
-//     console.error('Error setting assignment:', error);
-//   }
-// };
-
+}
 
 export const setAssignment = async (
   classroom: Classroom,
@@ -941,16 +932,9 @@ export const setAssignment = async (
       throw new Error('Classroom docId is required to set assignment');
     }
 
-    const assignedTo = Object.fromEntries(
-      Object.values(studentIds).map(student => [
-        student.id,
-        true
-      ])
-    );
-
     const assignmentToSave = {
       ...assignment,
-      assignedTo,
+      assignedTo: studentIds
     };
 
     await db.set(
@@ -960,6 +944,9 @@ export const setAssignment = async (
       },
       assignmentToSave
     );
+
+
+    store.dispatch(ClassroomsAction.ASSIGNMENT_CREATED({}));
 
   } catch (error) {
     console.error('Error setting assignment:', error);
@@ -997,40 +984,11 @@ export const deleteAssignment = async (classroom: Classroom, assignmentDocId: st
     const docId = classroom.docId;
     if (!docId) throw new Error('Classroom docId is required to delete assignment');
 
-    const previousClassroomAssignments = classroom.classroomAssignments || {};
-
-    const assignmentToDelete = Object.values(previousClassroomAssignments).find(a => a.docId === assignmentDocId);
-    if (!assignmentToDelete) {
-      throw new Error(`Assignment with docId ${assignmentDocId} not found in classroom`);
-    }
-    delete previousClassroomAssignments[assignmentToDelete.title];
-
-    const updatedTopics = rebuildTopicsFromClassroomAssignments(previousClassroomAssignments);
-    let updatedClassroom = {
-      ...classroom,
-      classroomAssignments: previousClassroomAssignments,
-      topics: updatedTopics,
-    };
-
-    updatedClassroom = await classroomWithSyncedSharedCustomChallenges(
-      updatedClassroom,
-      classroom.teacherId
+    await db.delete(
+      { collection: `classrooms/${classroom.docId}`, id: `assignments/${assignmentDocId}` },
     );
 
-    await db.set(
-      { collection: 'classrooms', id: docId },
-      updatedClassroom,
-      true
-    );
-    store.dispatch(
-      ClassroomsAction.setClassroom({
-        classroomId: docId,
-        classroom: Async.loaded({
-          brief: {},
-          value: updatedClassroom
-        })
-      })
-    );
+    store.dispatch(ClassroomsAction.ASSIGNMENT_DELETED({}));
 
   } catch (error) {
     console.error('Error deleting assignment:', error);
@@ -1051,6 +1009,8 @@ export const getGradebook = async (classroomDocId: string) => {
 
 };
 export interface ClassroomsState {
+  assignmentVersion: number;
+  classroomVersion: number;
   entities: Dict<AsyncClassroom>;
   selectedClassroom: AsyncClassroom | null;
   currentStudentClassroom: AsyncClassroom | null;
@@ -1059,114 +1019,22 @@ export interface ClassroomsState {
 
 
 export const reduceClassrooms = (
-  state: ClassroomsState = { entities: {}, selectedClassroom: null, currentStudentClassroom: null, assignments: {} },
+  state: ClassroomsState = { classroomVersion: 0, assignmentVersion: 0, entities: {}, selectedClassroom: null, currentStudentClassroom: null, assignments: {} },
   action: ClassroomsAction
 ): ClassroomsState => {
   switch (action.type) {
     case 'classrooms/edit-assignment': {
-      const { classroom, assignmentDocId, assignment: updatedAssignment } = action;
+      const { classroom, assignmentDocId, assignment: updatedAssignment, studentIds } = action;
       const docId = classroom.docId;
       if (!docId) throw new Error('Classroom docId is required to edit assignment');
 
-      const previousClassroomAssignments = classroom.classroomAssignments || {};
-      const assignmentToEdit = Object.values(previousClassroomAssignments).find(a => a.docId === assignmentDocId);
-      if (!assignmentToEdit) {
-        throw new Error(`Assignment with docId ${assignmentDocId} not found in classroom`);
-      }
-
-      const mergedAssignment: ClassroomAssignment = {
-        ...assignmentToEdit,
-        ...updatedAssignment,
-        docId: assignmentToEdit.docId,
-      };
-
-      const oldTitle = assignmentToEdit.title;
-      const newTitle = mergedAssignment.title;
-
-      const updatedClassroomAssignments: Dict<ClassroomAssignment> = {
-        ...previousClassroomAssignments,
-      };
-      if (newTitle !== oldTitle) {
-        delete updatedClassroomAssignments[oldTitle];
-      }
-      updatedClassroomAssignments[newTitle] = mergedAssignment;
-
-      const assignedRecipients = mergedAssignment.assignedTo || {};
-      const previousClassroomStudents = classroom.studentIds || {};
-      const updatedStudentIds = Object.fromEntries(
-        Object.values(previousClassroomStudents).map(student => {
-          const isAssigned = Object.values(assignedRecipients).some(s => s.id === student.id);
-          const previousAssignments = student.assignments || {};
-
-          const updatedAssignments = isAssigned
-            ? (() => {
-              const rest = Object.fromEntries(
-                Object.entries(previousAssignments).filter(
-                  ([t]) => t !== oldTitle && t !== newTitle
-                )
-              );
-              return {
-                ...rest,
-                [newTitle]: {
-                  ...(previousAssignments[oldTitle] || previousAssignments[newTitle]),
-                  ...mergedAssignment,
-                },
-              };
-            })()
-            : Object.fromEntries(
-              Object.entries(previousAssignments).filter(
-                ([title]) => title !== oldTitle && title !== newTitle
-              )
-            );
-
-          return [
-            student.id,
-            {
-              ...student,
-              assignments: updatedAssignments,
-            },
-          ];
-        })
+      void setAssignment(
+        classroom,
+        updatedAssignment,
+        studentIds
       );
+      return state;
 
-      const updatedClassroom: Classroom = {
-        ...classroom,
-        classroomAssignments: updatedClassroomAssignments,
-        studentIds: updatedStudentIds,
-        topics: rebuildTopicsFromClassroomAssignments(updatedClassroomAssignments),
-      };
-
-      void (async () => {
-        const synced = await classroomWithSyncedSharedCustomChallenges(
-          updatedClassroom,
-          classroom.teacherId
-        );
-        await saveClassroomDocument(synced);
-        store.dispatch(
-          ClassroomsAction.setClassroom({
-            classroomId: docId,
-            classroom: Async.loaded({
-              brief: Async.brief(state.entities[docId]),
-              value: synced,
-            }),
-          })
-        );
-      })();
-
-      return {
-        ...state,
-        entities: {
-          ...state.entities,
-          [docId]: Async.loaded({
-            brief: Async.brief(state.entities[docId]),
-            value: updatedClassroom,
-          }),
-        },
-        selectedClassroom: Async.loaded({
-          brief: Async.brief(state.selectedClassroom),
-          value: updatedClassroom,
-        }),
-      };
     }
 
     case 'classrooms/get-gradebook': {
@@ -1210,71 +1078,7 @@ export const reduceClassrooms = (
       void deleteAssignment(classroom, assignmentDocId);
       return state;
     }
-    // case 'classrooms/set-assignment': {
-    //   const { classroom, assignment, studentIds } = action;
-    //   const docId = classroom.docId;
 
-    //   if (!docId) return state;
-
-    //   const assignmentDocIds = Object.values(classroom.classroomAssignments || {}).map(a => a.docId);
-
-    //   const uuid = crypto.randomUUID();
-    //   const shortenedId = uuid.replace(/-/g, '').slice(-7);
-
-    //   const shortenedDocIdExists = assignmentDocIds.includes(shortenedId);
-
-    //   if (shortenedDocIdExists) {
-    //     const newUuid = crypto.randomUUID();
-    //     const newShortenedId = newUuid.replace(/-/g, '').slice(-7);
-    //     assignment.docId = newShortenedId;
-    //   } else {
-    //     assignment.docId = shortenedId;
-    //   }
-
-    //   const updatedStudentIds = Object.fromEntries(
-    //     Object.values(studentIds).map(student => [
-    //       student.id,
-    //       {
-    //         ...student,
-    //         assignments: {
-    //           ...student.assignments,
-    //           [assignment.title]: assignment,
-    //         },
-    //       },
-    //     ])
-    //   );
-
-    //   const mergedAssignments: Dict<ClassroomAssignment> = {
-    //     ...classroom.classroomAssignments,
-    //     [assignment.title]: assignment,
-    //   };
-
-    //   const updatedClassroom = {
-    //     ...classroom,
-    //     classroomAssignments: mergedAssignments,
-    //     studentIds: {
-    //       ...classroom.studentIds,
-    //       ...updatedStudentIds,
-    //     },
-    //     topics: rebuildTopicsFromClassroomAssignments(mergedAssignments),
-    //   };
-
-    //   void setAssignment(updatedClassroom, assignment, updatedStudentIds);
-
-    //   const asyncUpdatedClassroom = Async.loaded({
-    //     brief: {},
-    //     value: updatedClassroom,
-    //   });
-
-    //   return {
-    //     ...state,
-    //     entities: {
-    //       ...state.entities,
-    //       [docId]: asyncUpdatedClassroom,
-    //     },
-    //     selectedClassroom: asyncUpdatedClassroom,
-    //   };
-    // }
     case 'classrooms/set-assignment': {
       const { classroom, assignment, studentIds } = action;
 
@@ -1291,6 +1095,20 @@ export const reduceClassrooms = (
         assignment,
         studentIds
       );
+      console.log("classroom:", classroom);
+
+
+      console.log('classroom topics:', classroom.topics);
+      if (classroom.topics.includes(assignment.topic)) {
+        console.log('topic already exists in classroom, not adding');
+      } else {
+        console.log('adding topic to classroom:', assignment.topic);
+        const updatedClassroom = {
+          ...classroom,
+          topics: [...classroom.topics, assignment.topic],
+        };
+        void saveClassroomDocument(updatedClassroom);
+      }
 
       return state;
     }
@@ -1300,14 +1118,34 @@ export const reduceClassrooms = (
     }
     case 'classrooms/set-assignments': {
       const { classroomDocId, assignments } = action;
-      //console.log("classrooms/set-assignments:", classroomDocId, assignments);
+      console.log("classrooms/set-assignments:", classroomDocId, assignments);
       return {
         ...state,
         assignments: {
-          ...state.assignments,
           [classroomDocId]: assignments,
         },
       };
+    }
+    case 'classrooms/assignment-created': {
+      console.log("classrooms/assignment-created: incrementing assignmentVersion");
+      return {
+        ...state,
+        assignmentVersion: state.assignmentVersion + 1,
+      }
+    }
+    case 'classrooms/assignment-deleted': {
+      console.log("classrooms/assignment-deleted: incrementing assignmentVersion");
+      return {
+        ...state,
+        assignmentVersion: state.assignmentVersion + 1,
+      }
+    }
+    case 'classrooms/classroom-updated': {
+      console.log("classrooms/classroom-updated: incrementing assignmentVersion");
+      return {
+        ...state,
+        classroomVersion: state.classroomVersion + 1,
+      }
     }
     case 'classrooms/load-classroom': {
       void load(action.classroomId, state.entities[action.classroomId]);
@@ -1344,8 +1182,16 @@ export const reduceClassrooms = (
       };
     }
 
+    case 'classrooms/update-classroom': {
+      const { classroomId, classroom } = action;
+      console.log("classrooms/update-classroom:", classroomId, classroom);
+      classroom.topics.length === 0 ? null : updateClassroom(classroomId, classroom);
+      return state;
+    }
+
 
     case 'classrooms/set-classroom': {
+      console.log("classrooms/set-classroom:", action.classroomId, action.classroom);
       return {
         ...state,
         entities: {

@@ -71,7 +71,7 @@ export function buildGradesExportCsv(p: BuildGradesExportCsvParams): string {
     grades,
     locale,
   } = p;
-
+  console.log("buildGradesExportCsv params:", p);
   const header = csvRow([
     'Classroom',
     'Student ID',
@@ -88,20 +88,23 @@ export function buildGradesExportCsv(p: BuildGradesExportCsvParams): string {
   ]);
 
   const rows: string[] = [header];
-
+  console.log("exportGradesCsv students:", students);
   const studentsIncluded =
     studentIdsFilter.length === 0 ? students : students.filter(s => studentIdsFilter.includes(s.id));
-
+  console.log("exportGradesCsv studentsIncluded:", studentsIncluded);
   for (const student of studentsIncluded) {
     const progress = grades?.[student.id] ?? null;
     for (const assignment of assignments) {
       const narrowed = narrowAssignmentToChallengeKeys(assignment, challengeKeysFilter);
+
+      console.log("exportGradesCsv narrowed assignment:", narrowed);
       const list = narrowed.challenges ? Object.values(narrowed.challenges) : [];
+      console.log("exportGradesCsv student:", student, "assignment:", assignment, "list:", list, "progress:", progress);
       if (list.length === 0) continue;
 
       const assigned = !!(student.assignments && student.assignments[assignment.title]);
       if (!assigned) continue;
-
+      // console.log("exportGradesCsv student:", student, "assignment:", assignment, "list:", list, "progress:", progress);
       for (const entry of list) {
         const sceneId = entry.challenge.sceneId;
         const name = entry.challenge.name;
@@ -131,7 +134,7 @@ export function buildGradesExportCsv(p: BuildGradesExportCsvParams): string {
       }
     }
   }
-
+  console.log("buildGradesExportCsv rows:", rows);
   return rows.join('\r\n');
 }
 

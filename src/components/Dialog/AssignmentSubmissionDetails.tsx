@@ -142,7 +142,9 @@ const AssignmentSubmissionDetails = ({
     (challenge?.success?.exprStates?.completion ?? false) &&
     !(challenge?.failure?.exprStates?.failure ?? false)
   );
-
+  console.log("AssignmentSubmissionDetails studentId:", studentId);
+  console.log("AssignmentSubmissionDetails assignment:", assignment);
+  console.log("challengeProgressions:", challengeProgressions);
   const assignmentChallenges = Object.values(assignment.challenges);
   const userGrade = useMemo((): UserGrade | null => {
     if (!studentId) return null;
@@ -183,7 +185,7 @@ const AssignmentSubmissionDetails = ({
     const finalScore = scores.reduce((total, score) => total + (score.completed ? score.points : 0), 0);
     return { studentId, assignedChallenges: scores, finalScore };
   }, [studentId, assignment, assignment.challenges, challengeProgressions, classroom]);
-
+  console.log("AssignmentSubmissionDetails userGrade:", userGrade);
   function renderChallengeCompletion(challenge: ClassroomAssignmentChallenge) {
     const progression = challengeProgressions ? challengeProgressions[challenge.sceneId] : null;
     const asyncChallengeCompletion = Async.loaded({
@@ -292,10 +294,10 @@ const AssignmentSubmissionDetails = ({
 
               {challengeCompletionVisible === challengeInfo.challenge.sceneId &&
                 !challengeProgressions?.[challengeInfo.challenge.sceneId] && (
-                <div style={{ margin: '1em', padding: '1em', border: `1px solid ${theme.borderColor}`, borderRadius: '4px' }}>
-                  <div style={{ fontStyle: 'italic' }}>Student has not started this challenge.</div>
-                </div>
-              )}
+                  <div style={{ margin: '1em', padding: '1em', border: `1px solid ${theme.borderColor}`, borderRadius: '4px' }}>
+                    <div style={{ fontStyle: 'italic' }}>Student has not started this challenge.</div>
+                  </div>
+                )}
             </div>
           ))}
 

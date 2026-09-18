@@ -1,5 +1,5 @@
 
-import { ThemeProps } from '../constants/theme';
+import { Theme, ThemeProps } from '../constants/theme';
 import { StyleProps } from '../../util/style';
 import LocalizedString from '../../util/LocalizedString';
 import * as React from 'react';
@@ -41,6 +41,7 @@ export interface GradesViewPublicProps extends ThemeProps, StyleProps {
 
 export interface GradesViewPrivateProps extends ThemeProps {
   locale: LocalizedString.Language;
+  classroomAssignments: Dict<Dict<ClassroomAssignment>>;
   onGetGradebook: (classroomDocId: string) => void;
   onSetChallengePointsOverride: (payload: {
     classroom: Classroom;
@@ -52,6 +53,17 @@ export interface GradesViewPrivateProps extends ThemeProps {
 }
 
 type Props = GradesViewPublicProps & GradesViewPrivateProps;
+
+interface StudentAssignmentRowProps {
+  student: { id: string, displayName: string };
+  theme: Theme;
+  displayAssignmentPairs: { orig: ClassroomAssignment, narrowed: ClassroomAssignment }[];
+  renderGradeCell: (
+    student: { id: string, displayName: string },
+    orig: ClassroomAssignment,
+    narrowed: ClassroomAssignment
+  ) => React.ReactNode;
+}
 
 function parseLocalDateBoundary(dateStr: string, endOfDay: boolean): number {
   const parts = dateStr.split('-').map(Number);
@@ -282,9 +294,31 @@ const MultiSelect = styled('select', (props: ThemeProps) => ({
   fontSize: '0.85em',
 }));
 
+const StudentAssignmentRow = React.memo(
+  ({
+    student,
+    theme,
+    displayAssignmentPairs,
+    renderGradeCell
+  }: StudentAssignmentRowProps) => {
+    return (
+      <TableRow theme={theme}>
+        <TableCell theme={theme}>{student.displayName}</TableCell>
+
+        {displayAssignmentPairs.map(({ orig, narrowed }) =>
+          renderGradeCell(student, orig, narrowed)
+        )}
+      </TableRow>
+    )
+  }
+);
+
+
+
 const GradesView = ({
   theme,
   locale,
+  classroomAssignments,
   currentSelectedClassroom,
   contextMenuVisible,
   setContextMenuVisible,
@@ -296,9 +330,9 @@ const GradesView = ({
   const [selectedAssignment, setSelectedAssignment] = useState<ClassroomAssignment | null>(null);
   const loadedClassroom = Async.latestValue(currentSelectedClassroom);
 
-  const [classroomAssignments, setClassroomAssignments] = useState<ClassroomAssignment[]>(
-    loadedClassroom ? Object.values(loadedClassroom.classroomAssignments ?? {}) : []
-  );
+  // const [classroomAssignments, setClassroomAssignments] = useState<ClassroomAssignment[]>(
+  //   loadedClassroom ? Object.values(loadedClassroom.classroomAssignments ?? {}) : []
+  // );
 
   const sortedStudents = useMemo(() => {
     const s = loadedClassroom?.studentIds;
@@ -333,17 +367,17 @@ const GradesView = ({
     setStudentIdsFilter(prev => prev.filter(id => valid.has(id)));
   }, [rosterStudentIdsKey, sortedStudents]);
 
-  useEffect(() => {
-    if (loadedClassroom?.classroomAssignments) {
-      setClassroomAssignments(Object.values(loadedClassroom.classroomAssignments));
-    } else {
-      setClassroomAssignments([]);
-    }
-  }, [loadedClassroom]);
+  // useEffect(() => {
+  //   if (loadedClassroom?.classroomAssignments) {
+  //     setClassroomAssignments(Object.values(loadedClassroom.classroomAssignments));
+  //   } else {
+  //     setClassroomAssignments([]);
+  //   }
+  // }, [loadedClassroom]);
 
   const sortedAssignments = useMemo(
     () =>
-      [...classroomAssignments].sort((a, b) => {
+      [...(classroomAssignments[loadedClassroom?.docId || ''] ? Object.values(classroomAssignments[loadedClassroom?.docId || '']) : [])].sort((a, b) => {
         const getTime = (dueDate?: string) => {
           if (!dueDate || dueDate === 'No Due Date') return Infinity;
           return new Date(dueDate).getTime();
@@ -358,6 +392,7 @@ const GradesView = ({
     [sortedAssignments, filterFrom, filterTo]
   );
 
+  console.log("GradesView visibleAssignments:", visibleAssignments);
   useEffect(() => {
     const valid = new Set(
       visibleAssignments.flatMap(a =>
@@ -384,6 +419,7 @@ const GradesView = ({
         ),
     [visibleAssignments, challengeKeysFilter]
   );
+  console.log("GradesView displayAssignmentPairs:", displayAssignmentPairs);
 
   const challengeExportOptions = useMemo(() => {
     const opts: { key: string; label: string }[] = [];
@@ -424,6 +460,7 @@ const GradesView = ({
       grades,
       locale,
     });
+    console.log("GradesView handleExportCsv csv:", csv);
     const safe = loadedClassroom.classroomId.replace(/[^\w\-.]+/g, '_').slice(0, 80);
     downloadCsvFile(
       `grades-${safe}-${new Date().toISOString()
@@ -432,6 +469,8 @@ const GradesView = ({
       csv
     );
   };
+
+
 
   useEffect(() => {
     const docId = loadedClassroom?.docId;
@@ -495,68 +534,111 @@ const GradesView = ({
   }
 
 
-  function renderGradeCell(
-    student: { id: string; displayName: string; assignments?: Dict<ClassroomAssignment> },
-    orig: ClassroomAssignment,
-    narrowed: ClassroomAssignment
-  ) {
-    const isAssigned = !!(
-      student.assignments &&
-      Object.prototype.hasOwnProperty.call(student.assignments, orig.title)
-    );
-    const progressForStudent = grades ? grades[student.id] : null;
-    const cellKey = `${student.id}-${orig.title}`;
+  const renderGradeCell = React.useCallback(
+    (
+      student: {
+        id: string;
+        displayName: string;
+      },
+      orig: ClassroomAssignment,
+      narrowed: ClassroomAssignment
+    ) => {
+      const isAssigned =
+        classroomAssignments[loadedClassroom?.docId || '']
+          ?.[orig.docId]
+          ?.assignedTo
+        ?.[student.id] !== undefined;
 
-    if (!isAssigned) {
+      const progressForStudent =
+        grades ? grades[student.id] : null;
+
+      const cellKey = `${student.id}-${orig.title}`;
+
+      if (!isAssigned) {
+        return (
+          <TableCell key={cellKey} theme={theme}>
+            —
+          </TableCell>
+        );
+      }
+
+      const { completed, total } =
+        countCompletedAssignmentChallenges(
+          narrowed,
+          progressForStudent
+        );
+
+      const versusDue = progressForStudent
+        ? assignmentCompletionVersusDueDate(
+          narrowed,
+          progressForStudent
+        )
+        : 'unknown';
+
+      const progressLabel =
+        total === 0
+          ? '—'
+          : completed === total
+            ? '✓'
+            : `${completed}/${total}`;
+
       return (
         <TableCell key={cellKey} theme={theme}>
-          —
-        </TableCell>
-      );
-    }
-
-    const { completed, total } = countCompletedAssignmentChallenges(narrowed, progressForStudent);
-    const versusDue =
-      progressForStudent ? assignmentCompletionVersusDueDate(narrowed, progressForStudent) : 'unknown';
-
-    const progressLabel =
-      total === 0 ? '—' : completed === total ? '✓' : `${completed}/${total}`;
-
-    return (
-      <TableCell key={cellKey} theme={theme}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-          {versusDue !== 'unknown' && (
-            <span style={completionDuePillStyle[versusDue]}>
-              {LocalizedString.lookup(
-                versusDue === 'on-time'
-                  ? tr('On time')
-                  : versusDue === 'late'
-                    ? tr('Late')
-                    : tr('No deadline'),
-                locale
-              )}
-            </span>
-          )}
           <div
-            onClick={() => {
-              setSeeSubmissionDialogVisible(true);
-              setSelectedStudentId(student.id);
-              setSelectedAssignment(orig);
-            }}
             style={{
-              fontSize: '0.75em',
-              color: theme.color,
-              textDecoration: 'underline',
-              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 6,
             }}
           >
-            {LocalizedString.lookup(tr('See Details'), locale)}
+            {versusDue !== 'unknown' && (
+              <span style={completionDuePillStyle[versusDue]}>
+                {LocalizedString.lookup(
+                  versusDue === 'on-time'
+                    ? tr('On time')
+                    : versusDue === 'late'
+                      ? tr('Late')
+                      : tr('No deadline'),
+                  locale
+                )}
+              </span>
+            )}
+
+            <div
+              onClick={() => {
+                setSeeSubmissionDialogVisible(true);
+                setSelectedStudentId(student.id);
+                setSelectedAssignment(orig);
+              }}
+              style={{
+                fontSize: '0.75em',
+                color: theme.color,
+                textDecoration: 'underline',
+                cursor: 'pointer',
+              }}
+            >
+              {LocalizedString.lookup(
+                tr('See Details'),
+                locale
+              )}
+            </div>
+
+            <span style={{ fontWeight: 700 }}>
+              {progressLabel}
+            </span>
           </div>
-          <span style={{ fontWeight: 700 }}>{progressLabel}</span>
-        </div>
-      </TableCell>
-    );
-  }
+        </TableCell>
+      );
+    },
+    [
+      classroomAssignments,
+      loadedClassroom?.docId,
+      grades,
+      theme,
+      locale,
+    ]
+  );
 
   function renderRow(student: { id: string; displayName: string; assignments?: Dict<ClassroomAssignment> }) {
     return (
@@ -727,7 +809,18 @@ const GradesView = ({
                   ))}
               </tr>
             </thead>
-            <tbody>{visibleStudents.map(student => renderRow(student))}</tbody>
+            {/* <tbody>{visibleStudents.map(student => renderRow(student))}</tbody> */}
+            <tbody>
+              {visibleStudents.map(student => (
+                <StudentAssignmentRow
+                  key={student.id}
+                  theme={theme}
+                  student={student}
+                  displayAssignmentPairs={displayAssignmentPairs}
+                  renderGradeCell={renderGradeCell}
+                />
+              ))}
+            </tbody>
           </Table>
         </ScrollContainer>
       )}
@@ -759,6 +852,7 @@ export default connect((state: State) => {
 
   return {
     locale: state.i18n.locale,
+    classroomAssignments: state.classrooms.assignments
   };
 }, (dispatch) => ({
   onGetGradebook: (classroomDocId: string) => dispatch(ClassroomsAction.getGradebook({ classroomDocId })),

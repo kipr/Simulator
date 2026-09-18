@@ -352,16 +352,22 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
             .then((snap) => ({ studentId, snap })),
         ),
       );
-
+      console.log(
+        'Fetched challenge_completion snapshots for students:',
+        snapshots,
+      );
       const result = {};
 
       snapshots.forEach(({ studentId, snap }) => {
+        console.log('Processing studentId:', studentId, 'with snap:', snap);
         result[studentId] = {};
 
         snap.forEach((doc) => {
           result[studentId][doc.id] = doc.data();
         });
       });
+
+      console.log(`GET /${classroomId}/gradebook/challenges result:`, result);
 
       return res.status(200).json(result);
     } catch (err) {
@@ -775,6 +781,47 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     }
   });
 
+  //Delete specific assignment
+
+  router.delete('/:id/assignments/:assignmentId', async (req, res) => {
+    console.log(
+      'DELETE /classrooms/:id/assignments/:assignmentId called with params:',
+      req.params,
+    );
+    try {
+      const { uid } = req.user;
+      const { id, assignmentId } = req.params;
+
+      const classroomRef = admin.firestore().collection('classrooms').doc(id);
+      const classroomSnap = await classroomRef.get();
+
+      if (!classroomSnap.exists) {
+        return res.status(404).json({ message: 'Classroom not found' });
+      }
+
+      const classroom = classroomSnap.data();
+
+      // Only the classroom teacher can delete assignments
+      if (classroom.teacherId !== uid) {
+        return res.status(403).json({
+          message: 'Only the classroom teacher can delete assignments',
+        });
+      }
+
+      const assignmentRef = classroomRef
+        .collection('assignments')
+        .doc(assignmentId);
+      await assignmentRef.delete();
+
+      return res.sendStatus(204);
+    } catch (err) {
+      console.error(
+        'DELETE /classrooms/:id/assignments/:assignmentId error:',
+        err,
+      );
+      return res.status(500).json({ message: err.message });
+    }
+  });
   //Get specific assignment
   router.get('/:id/assignments/:assignmentId', async (req, res) => {
     try {
@@ -880,7 +927,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
 
-      return res.status(201).json({
+      return res.status(204).json({
         id: assignment.docId,
       });
     } catch (err) {

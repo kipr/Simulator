@@ -99,9 +99,12 @@ interface ClassroomTeacherViewPrivateProps {
   tourError: string | null;
   uid: string;
   selectedClassroom?: AsyncClassroom | null;
+  classroomVersion: number;
   onStudentInClassroom?: (studentId: LocalizedString) => void;
   onAddStudentToClassroom?: (classroomId: string, studentId: LocalizedString) => void;
+  onUpdateClassroom?: (classroomId: string, classroom: AsyncClassroom) => void;
   deleteClassroom?: (classroomId: string, classroom: Classroom) => void;
+  onReloadClassroom?: (classroomId: string) => void;
 }
 
 interface ClassroomTeacherViewState {
@@ -121,6 +124,7 @@ interface ClassroomTeacherViewState {
   continueTour?: boolean;
   currentSelectedClassroom?: AsyncClassroom | null;
   createAssignmentVisible?: boolean;
+  assignComplete: boolean;
   teacherTabIndex?: number;
   assignmentToEdit?: ClassroomAssignment | null;
   cardContainerVisible?: boolean;
@@ -302,7 +306,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       showCreateClassroomDialog: false,
       isStudentInClassroom: null as boolean | null,
       currentSelectedClassroom: null,
-
+      assignComplete: null,
       showJoinClassroomDialog: false,
       showClassroomLeaderboardSelector: false,
       showSelectedClassroomLeaderboard: false,
@@ -328,6 +332,13 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps: Props, prevState: State) {
 
+    if (prevProps.classroomVersion !== this.props.classroomVersion) {
+      if (this.props.selectedClassroom) {
+        const loaded = Async.latestValue(this.props.selectedClassroom);
+        this.props.onReloadClassroom?.(loaded.docId);
+      }
+
+    }
     if (prevProps.selectedClassroom !== this.props.selectedClassroom && this.props.selectedClassroom) {
       this.setState({ currentSelectedClassroom: this.props.selectedClassroom || null });
     }
@@ -468,6 +479,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       code: classroomInviteCode,
       studentIds: {},
       docId: '',
+      topics: ['No Subject'],
       type: 'classroom',
       teacherDisplayName: teacherDisplayName
     });
@@ -856,19 +868,31 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   };
 
-  private handleAssignemntAction = (currentSelectedClassroom: AsyncClassroom | null, action: 'edit' | 'create', assignmentToEdit?: ClassroomAssignment) => {
+  private handleAssignmentAction = (currentSelectedClassroom: AsyncClassroom | null, action: 'edit' | 'create', assignmentToEdit?: ClassroomAssignment) => {
     if (!currentSelectedClassroom) {
       return;
     }
     if (assignmentToEdit && action === 'edit') {
       this.setState({ createAssignmentVisible: true, assignmentToEdit: assignmentToEdit });
     } else if (action === 'create') {
-      this.setState({ createAssignmentVisible: true, assignmentToEdit: undefined });
+      this.setState({ createAssignmentVisible: true, assignComplete: false, assignmentToEdit: undefined });
     }
   };
 
   private onAssignComplete_ = (students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>, assignment: ClassroomAssignment) => {
     const stepId = this.state.teacherTourSteps[this.state.currentTourStepIndex ?? 0]?.id;
+
+    console.log('onAssignComplete_ called with assignment:', assignment, 'stepId:', stepId);
+    console.log("currentSelectedClassroom:", this.state.currentSelectedClassroom);
+    const currClass = Async.latestValue(this.state.currentSelectedClassroom);
+    if (!currClass.topics?.includes(assignment.topic)) {
+      console.log("Assignment topic not in current classroom topics, adding it.");
+      const updatedClassroom = AsyncClassroom.loaded({
+        ...currClass,
+        topics: [...currClass.topics, assignment.topic]
+      })
+      this.props.onUpdateClassroom(currClass.docId, updatedClassroom);
+    }
     const advanceTeacherTourAfterPublish =
       this.props.tourLoaded &&
       !this.props.tour.completed &&
@@ -876,6 +900,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
     this.setState(
       {
+        assignComplete: true,
         teacherTabIndex: 1,
         ...(advanceTeacherTourAfterPublish ? { tourHighlightAssignmentTitle: assignment.title } : {}),
       },
@@ -955,7 +980,11 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                   )}
 
 
-                <TeacherTabs theme={theme} tabIndex={this.state.teacherTabIndex ?? 0} currentSelectedClassroom={this.state.currentSelectedClassroom} onAssignmentAction={this.handleAssignemntAction} tourRegistry={this.registry}
+                <TeacherTabs theme={theme}
+                  tabIndex={this.state.teacherTabIndex ?? 0}
+                  currentSelectedClassroom={this.state.currentSelectedClassroom}
+                  onAssignmentAction={this.handleAssignmentAction}
+                  tourRegistry={this.registry}
                   activeTourStepId={activeTourStepId}
                   tourHighlightAssignmentTitle={this.state.tourHighlightAssignmentTitle}
                 />
@@ -1027,6 +1056,7 @@ export default connect(
     uid: state.users.me,
     classroomList: state.classrooms.entities,
     selectedClassroom: state.classrooms.selectedClassroom,
+    classroomVersion: state.classrooms.classroomVersion,
     challenges: state.challenges,
     challengeCompletions: state.challengeCompletions,
     tour: state.tours.byId[TourDoc.IDS.TEACHER_VIEW] ?? TourDoc.DEFAULT,
@@ -1042,13 +1072,16 @@ export default connect(
       dispatch(ClassroomsAction.createClassroom({ classroom })),
     onListOwnedClassrooms: () =>
       dispatch(ClassroomsAction.listOwnedClassrooms({})),
+    onReloadClassroom: (classroomId: string) =>
+      dispatch(ClassroomsAction.loadClassroom({ classroomId })),
     onListChallengesByStudentId: (studentId: string) =>
       dispatch(ClassroomsAction.listChallengesByStudentId({ studentId })),
     onShowClassroomLeaderboard: (classroom: AsyncClassroom) =>
       dispatch(ClassroomsAction.showClassroomLeaderboard({ classroom })),
     onDeleteClassroom: (classroomId: string, classroom: Classroom) =>
       dispatch(ClassroomsAction.deleteClassroom({ classroomId, classroom })),
-
+    onUpdateClassroom: (classroomId: string, classroom: AsyncClassroom) =>
+      dispatch(ClassroomsAction.setClassroom({ classroomId, classroom })),
     onRemoveStudentFromClassroom: (studentId: string, currentClassroom: AsyncClassroom) =>
       dispatch(ClassroomsAction.removeStudentFromClassroom({ studentId, currentClassroom })),
   })
