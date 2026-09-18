@@ -7,10 +7,18 @@ export interface ButtonColor {
   textShadow?: string;
 }
 
-export const GREEN: ButtonColor = Object.freeze({
-  disabled: '#507255',
-  standard: '#488b49',
-  hover: '#4aad52'
+export interface ButtonColors {
+  default: ButtonColor;
+  run: ButtonColor;
+  stop: ButtonColor;
+  yes: ButtonColor;
+  no: ButtonColor;
+}
+
+export const LIGHTMODE_DEFAULT: ButtonColor = Object.freeze({
+  disabled: '#808080',
+  standard: '#e0e0e0',
+  hover: '#d3d3d3'
 });
 
 export const LIGHTMODE_GREEN: ButtonColor = Object.freeze({
@@ -19,17 +27,35 @@ export const LIGHTMODE_GREEN: ButtonColor = Object.freeze({
   hover: '#4aad52'
 });
 
-export const RED: ButtonColor = Object.freeze({
-  disabled: '#735350',
-  standard: '#8C494C',
-  hover: '#AD4C4B'
-});
-
 export const LIGHTMODE_RED: ButtonColor = Object.freeze({
   disabled: '#d6b8b6',
   standard: '#d98a8a',
   hover: '#bd6666'
 });
+
+export const DARKMODE_DEFAULT: ButtonColor = Object.freeze({
+  disabled: '#2c2c2e',
+  standard: '#343436',   // = DARK.unselectedBackground
+  hover: '#3f3f3f',   // = DARK.selectedFileBackground
+  border: '#323232',   // = DARK.borderColor
+  textColor: '#ffffff',
+});
+export const DARKMODE_GREEN: ButtonColor = Object.freeze({
+  disabled: '#507255',
+  standard: '#488b49',
+  hover: '#4aad52',
+});
+
+export const DARKMODE_RED: ButtonColor = Object.freeze({
+  disabled: '#735350',
+  standard: '#8C494C',
+  hover: '#AD4C4B',
+});
+
+/** @deprecated use DARKMODE_GREEN */
+export const GREEN = DARKMODE_GREEN;
+/** @deprecated use DARKMODE_RED */
+export const RED = DARKMODE_RED;
 
 export const BLUE: ButtonColor = Object.freeze({
   disabled: '#4f5673',
@@ -112,10 +138,7 @@ export interface Theme {
   contextMenuBackground: string;
   boxShadow: string;
   selectedClassBackground: string;
-  runButtonColor: ButtonColor;
-  stopButtonColor: ButtonColor;
-  yesButtonColor: ButtonColor;
-  noButtonColor: ButtonColor;
+  buttonColors: ButtonColors;
   leaderboardHighlightBackground: string;
   leaderboardHighlightHoverBackground: string;
   cardTextColor: string;
@@ -167,20 +190,18 @@ export const COMMON: Theme = {
   successMessageBackground: undefined,
   compileWarningColor: undefined,
   editorBackground: undefined,
-  yesButtonColor: undefined,
-  noButtonColor: undefined,
   hoverOptionBackground: undefined,
   dialogBoxTitleBackground: undefined,
   whiteText: undefined,
   unselectedBackground: undefined,
   borderColor: undefined,
-  runButtonColor: undefined,
-  stopButtonColor: undefined,
   contextMenuBackground: undefined,
   boxShadow: undefined,
   selectedClassBackground: undefined,
   hoverButtonBackground: undefined,
   cardTextColor: undefined,
+  buttonColors: undefined,
+
   borderRadius: 10,
   widget: {
     padding: 10
@@ -253,10 +274,13 @@ export const LIGHT: Theme = {
   leaderboardHighlightBackground: '#e8f5e9',
   leaderboardHighlightHoverBackground: '#c8e6c9',
 
-  yesButtonColor: LIGHTMODE_YES,
-  noButtonColor: LIGHTMODE_NO,
-  runButtonColor: LIGHTMODE_GREEN,
-  stopButtonColor: LIGHTMODE_RED,
+  buttonColors: {
+    default: LIGHTMODE_DEFAULT,
+    run: LIGHTMODE_GREEN,
+    stop: LIGHTMODE_RED,
+    yes: LIGHTMODE_YES,
+    no: LIGHTMODE_NO,
+  },
 
   cardTextColor: '#ffffff',
 
@@ -324,10 +348,13 @@ export const DARK: Theme = {
   leaderboardHighlightBackground: '#2c482f',
   leaderboardHighlightHoverBackground: 'rgba(76, 175, 80, 0.2)',
 
-  yesButtonColor: DARKMODE_YES,
-  noButtonColor: DARKMODE_NO,
-  runButtonColor: GREEN,
-  stopButtonColor: RED,
+  buttonColors: {
+    default: DARKMODE_DEFAULT,
+    run: DARKMODE_GREEN,
+    stop: DARKMODE_RED,
+    yes: DARKMODE_YES,
+    no: DARKMODE_NO,
+  },
 
   cardTextColor: '#ffffff',
 

@@ -269,7 +269,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   alignItems: 'center',
   flexDirection: 'row',
   padding: '10px',
-  backgroundColor: props.theme.backgroundColor,
+  backgroundColor: props.theme.buttonColors.default.standard,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   ':last-child': {
     borderBottom: 'none'
@@ -278,7 +278,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   fontWeight: 400,
   ':hover': {
     cursor: 'pointer',
-    backgroundColor: props.theme.hoverButtonBackground
+    backgroundColor: props.theme.buttonColors.default.hover
   },
   userSelect: 'none',
   transition: 'background-color 0.2s, opacity 0.2s'

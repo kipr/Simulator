@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { styled } from 'styletron-react';
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { DARK, LIGHT, ThemeProps } from '../components/constants/theme';
 import { Card } from '../components/interface/Card';
 import MainMenu from '../components/MainMenu';
 import { StyleProps } from '../util/style';
@@ -16,12 +16,14 @@ import { TourRegistry } from '../tours/TourRegistry';
 import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/tours';
 import TourDoc, { getClassroomTourSteps, getTourSteps, TourStep } from '../tours/Tours';
 import GuidedTour from '../components/Tours/GuidedTour';
+import { Settings } from '../components/constants/Settings';
 
 export interface ClassroomsDashboardPublicProps extends ThemeProps, StyleProps {
 }
 
 interface ClassroomsDashboardPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
   uid: string;
   tour: TourDoc;
   tourLoaded: boolean;
@@ -118,8 +120,8 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
   render() {
     const { props } = this;
     const { userId } = this.state;
-    const { className, style, locale } = props;
-    const theme = DARK;
+    const { className, style, locale, settings } = props;
+    const theme = settings.darkMode ? DARK : LIGHT;
     const showTour = props.tourLoaded && !props.tour.completed;
     const classroomTourSteps: TourStep[] = getClassroomTourSteps(locale);
     return (
@@ -170,6 +172,7 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
 
 const Connected = connect((state: ReduxState) => ({
   locale: state.i18n.locale,
+  settings: state.settings,
   uid: state.users.me,
   tour: state.tours.byId[TourDoc.IDS.CLASSROOM] ?? TourDoc.DEFAULT,
   tourLoaded: !!state.tours.loaded[TourDoc.IDS.CLASSROOM],
