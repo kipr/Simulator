@@ -189,21 +189,21 @@ const Item = styled("div", (props: ThemeProps & ClickProps) => ({
 }));
 
 const RunItem = withStyleDeep(Item, (props: ThemeProps & ClickProps) => ({
-  backgroundColor: props.disabled ? props.theme.buttonColors.run.disabled : props.theme.buttonColors.run.standard,
+  backgroundColor: props.disabled ? props.theme.buttonColors.success.disabled : props.theme.buttonColors.success.standard,
   ":hover":
     props.onClick && !props.disabled
       ? {
-        backgroundColor: props.theme.buttonColors.run.hover,
+        backgroundColor: props.theme.buttonColors.success.hover,
       }
       : {},
 }));
 
 const StopItem = withStyleDeep(Item, (props: ThemeProps & ClickProps) => ({
-  backgroundColor: props.disabled ? props.theme.buttonColors.stop.disabled : props.theme.buttonColors.stop.standard,
+  backgroundColor: props.disabled ? props.theme.buttonColors.danger.disabled : props.theme.buttonColors.danger.standard,
   ":hover":
     props.onClick && !props.disabled
       ? {
-        backgroundColor: props.theme.buttonColors.stop.hover,
+        backgroundColor: props.theme.buttonColors.danger.hover,
       }
       : {},
 }));

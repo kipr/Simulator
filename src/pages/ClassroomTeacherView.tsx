@@ -184,7 +184,7 @@ const ClassroomsCardContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
   margin: '20px 20px 0px 20px',
-  color: props.theme.cardColors.cardTextColor,
+  color: props.theme.cardColors.textColor,
 }));
 
 const ClassroomCardScrollContainer = styled('div', (props: { collapsed: boolean }) => ({

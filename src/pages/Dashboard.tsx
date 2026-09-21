@@ -71,7 +71,7 @@ const CardContainer = styled('div', (props: ThemeProps) => ({
   height: 'calc(100vh - 48px)',
   overflowY: 'auto',
   overflowX: 'hidden',
-  color: props.theme.cardColors.cardTextAlternateColor,
+  color: props.theme.cardColors.alternateTextColor,
 }));
 class Dashboard extends React.PureComponent<Props> {
   private onAboutClick_ = (event: React.MouseEvent) => {

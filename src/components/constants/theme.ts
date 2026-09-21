@@ -21,7 +21,7 @@ export const LIGHTMODE_DEFAULT: ButtonColor = Object.freeze({
   disabled: '#808080',
   standard: '#e0e0e0',
   hover: '#d3d3d3',
-  textColor: '#000000',
+  textColor: '#30323a',
   textShadow: 'none'
 });
 
@@ -153,8 +153,8 @@ export interface Theme {
   leaderboardHighlightBackground: string;
   leaderboardHighlightHoverBackground: string;
   cardColors: {
-    cardTextColor: string;
-    cardTextAlternateColor: string;
+    textColor: string;
+    alternateTextColor: string;
   };
 
   borderColor: string;
@@ -246,47 +246,48 @@ export const GRAPHICAL_LIGHT = {
   flyout: '#fbfbfb',
   workspace: '#fbfbfb',
 };
+
 export const LIGHT: Theme = {
   ...COMMON,
   themeName: 'LIGHT',
   whiteText: 'white',
-  textColor: '#000000',
-  color: '#403f53',
-  cursorColor: '#000000',
-  borderColor: '#ede0e0',
-  iconColor: '#f5ebeb',
+  textColor: '#202124',
+  color: '#30323a',
+  cursorColor: '#202124',
+  borderColor: '#d7dbe0',
+  iconColor: '#5f6368',
   foreground: 'white',
-  verticalLineColor: 'black',
-  backgroundColor: '#ffffff',
-  titleBarBackground: '#f4ecec',
-  startContainerBackground: '#ebdbdc',
-  dialogBoxTitleBackground: '#e3cece',
-  editorPageBackground: '#FBFBFB',
-  editorConsoleBackground: '#fff6f7',
-  mobileEditorBarBackground: '#e6ddde',
-  editorBackground: '#fbfbfb',
+  verticalLineColor: '#5f6368',
+  backgroundColor: '#f7f8fa',
+  titleBarBackground: '#eef0f3',
+  startContainerBackground: '#f1f3f5',
+  dialogBoxTitleBackground: '#e9ecef',
+  editorPageBackground: '#f7f8fa',
+  editorConsoleBackground: '#f3f4f6',
+  mobileEditorBarBackground: '#e9ecef',
+  editorBackground: '#ffffff',
   contextMenuBackground: '#ffffff',
-  boxShadow: '0px 10px 13px -6px rgba(255, 105, 180, 0.1), 0px 1px 31px 0px rgba(135, 206, 250, 0.08), 0px 8px 38px 7px rgba(144, 238, 144, 0.1)',
+  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.08)',
 
-  unselectedBackground: '#f4ebec',
-  selectedClassBackground: '#ffd1dc',
-  fileContainerBackground: '#f4ecec',
-  leftBarContainerBackground: '#f4ecec',
-  homeStartContainerBackground: '#f4ebec',
-  confirmMessageBackground: '#ff4d4d',
-  successMessageBackground: '#5dd5cb',
-  compileWarningColor: '#c3c30f',
+  unselectedBackground: '#eef0f3',
+  selectedClassBackground: '#dce8f7',
+  fileContainerBackground: '#f1f3f5',
+  leftBarContainerBackground: '#eef0f3',
+  homeStartContainerBackground: '#f1f3f5',
+  confirmMessageBackground: '#d9534f',
+  successMessageBackground: '#4f9d69',
+  compileWarningColor: '#8a6d00',
 
-  selectedUserBackground: '#dadada',
-  selectedProjectBackground: '#dadada',
-  selectedFileBackground: '#d3e8f9',
+  selectedUserBackground: '#e2e6ea',
+  selectedProjectBackground: '#e2e6ea',
+  selectedFileBackground: '#dce8f7',
 
-  hoverFileBackground: '#e4f1fb',
-  hoverOptionBackground: '#e4f1fb',
-  hoverButtonBackground: '#e4f1fb',
+  hoverFileBackground: '#e8f1fb',
+  hoverOptionBackground: '#e8f1fb',
+  hoverButtonBackground: '#e8f1fb',
 
-  leaderboardHighlightBackground: '#e8f5e9',
-  leaderboardHighlightHoverBackground: '#c8e6c9',
+  leaderboardHighlightBackground: '#e6f4ea',
+  leaderboardHighlightHoverBackground: '#cee8d5',
 
   buttonColors: {
     default: LIGHTMODE_DEFAULT,
@@ -298,10 +299,10 @@ export const LIGHT: Theme = {
   },
 
   cardColors: {
-    cardTextColor: '#070303',
-    cardTextAlternateColor: '#ffffff',
-  }
-  
+    textColor: '#202124',
+    alternateTextColor: '#ffffff',
+  },
+
   transparentBackgroundColor: (a) => `rgba(255, 255, 255, ${a})`,
   switch: {
     on: {
