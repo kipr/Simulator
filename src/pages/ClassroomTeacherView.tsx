@@ -184,6 +184,7 @@ const ClassroomsCardContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
   margin: '20px 20px 0px 20px',
+  color: props.theme.cardColors.cardTextColor,
 }));
 
 const ClassroomCardScrollContainer = styled('div', (props: { collapsed: boolean }) => ({
@@ -224,7 +225,7 @@ const ClassroomCardIconBtn = styled('div', (props: ThemeProps & { $danger?: bool
   padding: '6px 8px',
   borderRadius: `${props.theme.itemPadding * 2}px`,
   backgroundColor: 'rgba(0, 0, 0, 0.55)',
-  color: props.theme.color,
+  color: '#ffffff',
   fontSize: '0.95em',
   lineHeight: 1,
   userSelect: 'none',

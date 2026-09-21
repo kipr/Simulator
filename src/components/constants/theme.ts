@@ -9,16 +9,20 @@ export interface ButtonColor {
 
 export interface ButtonColors {
   default: ButtonColor;
-  run: ButtonColor;
-  stop: ButtonColor;
-  yes: ButtonColor;
-  no: ButtonColor;
+  primary: ButtonColor;
+  success: ButtonColor;
+  danger: ButtonColor;
+  confirm: ButtonColor;
+  cancel: ButtonColor;
 }
+
 
 export const LIGHTMODE_DEFAULT: ButtonColor = Object.freeze({
   disabled: '#808080',
   standard: '#e0e0e0',
-  hover: '#d3d3d3'
+  hover: '#d3d3d3',
+  textColor: '#000000',
+  textShadow: 'none'
 });
 
 export const LIGHTMODE_GREEN: ButtonColor = Object.freeze({
@@ -31,6 +35,30 @@ export const LIGHTMODE_RED: ButtonColor = Object.freeze({
   disabled: '#d6b8b6',
   standard: '#d98a8a',
   hover: '#bd6666'
+});
+
+export const LIGHTMODE_BLUE: ButtonColor = Object.freeze({
+  disabled: '#90caf9',
+  standard: '#2196f3',
+  hover: '#1976d2',
+});
+
+export const LIGHTMODE_YES: ButtonColor = Object.freeze({
+  disabled: '#808080',
+  border: '#1f7a72',
+  standard: "#41af3c",
+  hover: "#51d94b",
+  textColor: 'white',
+  textShadow: '2px 2px 4px rgba(0,0,0,0.9)',
+});
+
+export const LIGHTMODE_NO: ButtonColor = Object.freeze({
+  disabled: '#507255',
+  border: '#800000',
+  standard: "#cc0000",
+  hover: "#ff1a1a",
+  textColor: 'white',
+  textShadow: '2px 2px 4px rgba(0,0,0,0.9)',
 });
 
 export const DARKMODE_DEFAULT: ButtonColor = Object.freeze({
@@ -52,41 +80,6 @@ export const DARKMODE_RED: ButtonColor = Object.freeze({
   hover: '#AD4C4B',
 });
 
-/** @deprecated use DARKMODE_GREEN */
-export const GREEN = DARKMODE_GREEN;
-/** @deprecated use DARKMODE_RED */
-export const RED = DARKMODE_RED;
-
-export const BLUE: ButtonColor = Object.freeze({
-  disabled: '#4f5673',
-  standard: '#495d8c',
-  hover: '#4b64ad'
-});
-
-export const BROWN: ButtonColor = Object.freeze({
-  disabled: '#72674f',
-  standard: '#8a7547',
-  hover: '#ab8c49',
-});
-
-export const LIGHTMODE_YES: ButtonColor = Object.freeze({
-  disabled: '#808080',
-  border: '#1f7a72',
-  standard: "#41af3c",
-  hover: "#51d94b",
-  textColor: 'white',
-  textShadow: '2px 2px 4px rgba(0,0,0,0.9)',
-});
-
-export const LIGHTMODE_NO: ButtonColor = Object.freeze({
-  disabled: '#507255',
-  border: '#800000',
-  standard: "#cc0000",
-  hover: "#ff1a1a",
-  textColor: 'white',
-  textShadow: '2px 2px 4px rgba(0,0,0,0.9)',
-});
-
 export const DARKMODE_YES: ButtonColor = Object.freeze({
   disabled: '#5c665e',
   standard: '#488b49',
@@ -101,7 +94,25 @@ export const DARKMODE_NO: ButtonColor = Object.freeze({
   hover: '#AD4C4B',
   textColor: 'white',
   textShadow: '2px 2px 4px rgba(0,0,0,0.9)',
+});
 
+export const DARKMODE_BLUE: ButtonColor = Object.freeze({
+  disabled: '#4f6f8a',
+  standard: '#2196f3',
+  hover: '#42a5f5',
+});
+
+/** @deprecated use DARKMODE_GREEN */
+export const GREEN = DARKMODE_GREEN;
+/** @deprecated use DARKMODE_RED */
+export const RED = DARKMODE_RED;
+/** @deprecated use DARKMODE_BLUE */
+export const BLUE = DARKMODE_BLUE;
+
+export const BROWN: ButtonColor = Object.freeze({
+  disabled: '#72674f',
+  standard: '#8a7547',
+  hover: '#ab8c49',
 });
 
 export interface Theme {
@@ -141,7 +152,10 @@ export interface Theme {
   buttonColors: ButtonColors;
   leaderboardHighlightBackground: string;
   leaderboardHighlightHoverBackground: string;
-  cardTextColor: string;
+  cardColors: {
+    cardTextColor: string;
+    cardTextAlternateColor: string;
+  };
 
   borderColor: string;
   borderRadius: number;
@@ -199,8 +213,8 @@ export const COMMON: Theme = {
   boxShadow: undefined,
   selectedClassBackground: undefined,
   hoverButtonBackground: undefined,
-  cardTextColor: undefined,
   buttonColors: undefined,
+  cardColors: undefined,
 
   borderRadius: 10,
   widget: {
@@ -276,14 +290,18 @@ export const LIGHT: Theme = {
 
   buttonColors: {
     default: LIGHTMODE_DEFAULT,
-    run: LIGHTMODE_GREEN,
-    stop: LIGHTMODE_RED,
-    yes: LIGHTMODE_YES,
-    no: LIGHTMODE_NO,
+    primary: LIGHTMODE_BLUE,
+    success: LIGHTMODE_GREEN,
+    danger: LIGHTMODE_RED,
+    confirm: LIGHTMODE_YES,
+    cancel: LIGHTMODE_NO,
   },
 
-  cardTextColor: '#ffffff',
-
+  cardColors: {
+    cardTextColor: '#070303',
+    cardTextAlternateColor: '#ffffff',
+  }
+  
   transparentBackgroundColor: (a) => `rgba(255, 255, 255, ${a})`,
   switch: {
     on: {
@@ -350,13 +368,17 @@ export const DARK: Theme = {
 
   buttonColors: {
     default: DARKMODE_DEFAULT,
-    run: DARKMODE_GREEN,
-    stop: DARKMODE_RED,
-    yes: DARKMODE_YES,
-    no: DARKMODE_NO,
+    primary: DARKMODE_BLUE,
+    success: DARKMODE_GREEN,
+    danger: DARKMODE_RED,
+    confirm: DARKMODE_YES,
+    cancel: DARKMODE_NO,
   },
 
-  cardTextColor: '#ffffff',
+  cardColors: {
+    textColor: '#ffffff',
+    alternateTextColor: '#ffffff',
+  }
 
   transparentBackgroundColor: (a) => `rgba(${0x21}, ${0x21}, ${0x21}, ${a})`,
   switch: {

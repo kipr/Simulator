@@ -69,6 +69,7 @@ const CardContainer = styled('div', (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
   width: `calc(100vw - 210px)`,
   marginTop: '5em',
+  color: props.theme.cardColors.cardTextAlternateColor,
 }));
 
 
