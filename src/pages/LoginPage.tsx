@@ -49,6 +49,10 @@ interface LoginPageState {
   logInFailedMessage: string;
 }
 
+interface ReduxState {
+  settings: Settings;
+}
+
 const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',

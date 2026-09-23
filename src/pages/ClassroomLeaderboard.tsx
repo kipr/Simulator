@@ -74,6 +74,7 @@ interface RouterProps {
     studentId?: string;
   }
 }
+
 interface ClassroomLeaderboardPrivateProps {
   onClearSelectedClassroom: () => void;
   onListUserChallenges: () => void;
