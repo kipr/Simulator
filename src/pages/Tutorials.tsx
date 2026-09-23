@@ -12,6 +12,7 @@ import LocalizedString from '../util/LocalizedString';
 import { State as ReduxState } from '../state';
 import tr from '@i18n';
 import { Settings } from '../components/constants/Settings';
+import { faThemeco } from '@fortawesome/free-brands-svg-icons';
 
 interface Tutorial {
   title?: LocalizedString;
@@ -133,6 +134,7 @@ const CardContainer = styled('div', (props: ThemeProps) => ({
   rowGap: '20px',
   flexGrow: 1,
   flexShrink: 1,
+  color: props.theme.cardColors.alternateTextColor,
 }));
 
 class Tutorials extends React.Component<Props, State> {
@@ -166,6 +168,7 @@ class Tutorials extends React.Component<Props, State> {
               <Card
                 theme={theme}
                 title={LocalizedString.lookup(tutorial.title, locale)}
+                textcolor={theme.cardColors.alternateTextColor}
                 description={LocalizedString.lookup(tutorial.description, locale)}
                 backgroundImage={tutorial.backgroundImage}
                 backgroundColor={tutorial.backgroundColor}
