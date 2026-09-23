@@ -184,7 +184,7 @@ const ClassroomsCardContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
   margin: '20px 20px 0px 20px',
-  color: props.theme.cardColors.textColor,
+  color: props.theme.cardColors.alternateTextColor,
 }));
 
 const ClassroomCardScrollContainer = styled('div', (props: { collapsed: boolean }) => ({
@@ -1002,6 +1002,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                             customheight='150px'
                             customwidth='200px'
                             backgroundPosition={'center top'}
+                            backgroundColor={theme.iconColor}
                             custommargin='10px'
                           />
                         </TourTarget>
