@@ -311,10 +311,12 @@ const YourNameValue = styled('span', (props: ThemeProps) => ({
   fontWeight: 'bold',
   color: '#4caf50',
 }));
+
 interface ButtonProps {
   $disabled?: boolean;
   $primary?: boolean;
 }
+
 const EmptyState = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -341,6 +343,7 @@ const ErrorState = styled('div', (props: ThemeProps) => ({
   padding: '48px',
   color: '#f44336',
 }));
+
 const SectionSeparator = styled('tr', (props: ThemeProps) => ({
   backgroundColor: 'rgba(255,255,255,0.02)',
 }));
