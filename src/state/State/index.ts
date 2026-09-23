@@ -142,7 +142,7 @@ export interface Settings {
   simulationRealisticSensors: boolean;
   editorAutoComplete: boolean;
   showScripts: boolean;
-  ideEditorDarkMode: boolean;
+  darkMode: boolean;
   classroomView: boolean;
   consoleLayout: "horizontal" | "vertical";
   interfaceMode: boolean; // false = simple, true = advanced

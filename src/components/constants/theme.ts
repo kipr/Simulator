@@ -4,6 +4,7 @@ export interface ButtonColor {
   hover: string;
   border?: string;
   textColor?: string;
+  disabledTextColor?: string;
   textShadow?: string;
 }
 
@@ -16,12 +17,12 @@ export interface ButtonColors {
   cancel: ButtonColor;
 }
 
-
 export const LIGHTMODE_DEFAULT: ButtonColor = Object.freeze({
   disabled: '#808080',
   standard: '#e0e0e0',
   hover: '#d3d3d3',
   textColor: '#30323a',
+  disabledTextColor: '#d9d9d9',
   textShadow: 'none'
 });
 
@@ -63,11 +64,13 @@ export const LIGHTMODE_NO: ButtonColor = Object.freeze({
 
 export const DARKMODE_DEFAULT: ButtonColor = Object.freeze({
   disabled: '#2c2c2e',
-  standard: '#343436',   // = DARK.unselectedBackground
-  hover: '#3f3f3f',   // = DARK.selectedFileBackground
-  border: '#323232',   // = DARK.borderColor
+  standard: '#343436',
+  hover: '#3f3f3f',
+  border: '#323232',
   textColor: '#ffffff',
+  disabledTextColor: '#8f8f93',
 });
+
 export const DARKMODE_GREEN: ButtonColor = Object.freeze({
   disabled: '#507255',
   standard: '#488b49',

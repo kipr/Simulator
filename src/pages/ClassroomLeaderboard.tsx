@@ -215,7 +215,7 @@ const Button = styled('button', (props: ThemeProps & ButtonProps) => ({
   padding: '12px 24px',
   fontSize: '1em',
   fontWeight: 'bold',
-  color: props.$disabled ? '#888' : '#fff',
+  color: props.$disabled ? props.theme.buttonColors.default.disabledTextColor : props.theme.buttonColors.default.textColor,
   backgroundColor: props.$disabled ? props.theme.buttonColors.default.disabled : (props.$primary ? props.theme.buttonColors.success.standard : props.theme.buttonColors.primary.standard),
   border: 'none',
   borderRadius: '4px',
