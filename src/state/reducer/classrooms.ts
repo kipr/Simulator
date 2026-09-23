@@ -11,6 +11,7 @@ import ChallengeCompletion from 'state/State/ChallengeCompletion';
 import { mergeChallengePointsOverride } from '../../util/classroomGradeOverrides';
 import { classroomWithSyncedSharedCustomChallenges } from '../../util/customChallengeClassroomShare';
 import FirebaseTokenManager from '../../firebase/FirebaseTokenManager';
+import { Dispatch } from 'redux';
 
 /**
  * Canonical topic index: each topic maps to assignment titles in that topic.
@@ -137,6 +138,13 @@ export namespace ClassroomsAction {
 
   export const removeStudentFromClassroom = construct<RemoveStudentFromClassroom>('classrooms/remove-student-from-classroom');
 
+  export interface RemoveStudentFromAssignments {
+    type: 'classrooms/remove-student-from-assignments';
+    studentId: string;
+    currentClassroom: AsyncClassroom;
+  }
+
+  export const removeStudentFromAssignments = construct<RemoveStudentFromAssignments>('classrooms/remove-student-from-assignments');
   export interface StudentInClassroom {
     type: 'classrooms/student-in-classroom';
     studentId: string;
@@ -238,6 +246,7 @@ export type ClassroomsAction =
   | ClassroomsAction.SetClassrooms
   | ClassroomsAction.StudentAdded
   | ClassroomsAction.RemoveStudentFromClassroom
+  | ClassroomsAction.RemoveStudentFromAssignments
   | ClassroomsAction.StudentInClassroom
   | ClassroomsAction.FindClassroomByInviteCode
   | ClassroomsAction.ListOwnedClassrooms
@@ -259,16 +268,31 @@ export type ClassroomsAction =
   | ClassroomsAction.EditAssignment
   | ClassroomsAction.SetChallengePointsOverride;
 
-const load = async (
+export const load = async (
   classroomId: string,
   current: AsyncClassroom | undefined
 ) => {
   const brief = Async.brief(current);
+
   try {
-    const value = await db.get<Classroom>(Selector.classroom(classroomId));
+    const classrooms = await db.get<Dict<Classroom>>(
+      Selector.classroom(classroomId)
+    );
+
+    const value = classrooms[classroomId];
+
+    if (!value) {
+      throw new Error(
+        `Classroom ${classroomId} not found`
+      );
+    }
+
     store.dispatch(
       ClassroomsAction.setClassroom({
-        classroom: Async.loaded({ brief, value }),
+        classroom: Async.loaded({
+          brief,
+          value,
+        }),
         classroomId,
       })
     );
@@ -276,9 +300,22 @@ const load = async (
     store.dispatch(
       ClassroomsAction.setClassroom({
         classroomId,
-        classroom: Async.loadFailed({ brief, error: errorToAsyncError(error) }),
+        classroom: Async.loadFailed({
+          brief,
+          error: errorToAsyncError(error),
+        }),
       })
     );
+  }
+};
+
+export const loadClassroom = async (classroomId: string) => {
+
+  try {
+    const value = await db.get<Classroom>(Selector.classroom(classroomId));
+
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -360,7 +397,7 @@ export const deleteClassroom = async (classroomId: string, next: Async.Deleting<
 
 
 // List classrooms owned by logged-in user and update store
-const listOwned = async () => {
+export const listOwned = async () => {
   try {
     const result = await db.list<Classroom>('classrooms');
 
@@ -662,7 +699,7 @@ function isDbNotFound(error: unknown): boolean {
   return e.code === 404;
 }
 
-// Remove student from classroom in database and update store
+// // Remove student from classroom in database and update store
 export const removeStudentFromClassroom = async (
   studentId: string,
   currentClassroom: AsyncClassroom
@@ -706,6 +743,35 @@ export const removeStudentFromClassroom = async (
   } catch (error) {
     if (!isDbNotFound(error)) throw error;
     await patchClassroomAfterStudentRemoval(docId, classroom, studentId);
+  }
+};
+
+
+// Updates firebase and redux store to remove student from assignments in a classroom
+export const removeStudentFromAssignments = async (
+  studentId: string,
+  currentClassroom: AsyncClassroom
+) => {
+  try {
+    const classroom = Async.latestValue(currentClassroom);
+    const assignments = await getAssignments(classroom.docId);
+    for (const [assignmentKey, assignment] of Object.entries(assignments || {})) {
+      if (!assignment?.assignedTo) continue;
+      const assignedTo = { ...assignment.assignedTo };
+      for (const [key, entry] of Object.entries(assignedTo)) {
+        if (key === studentId || studentIdFromRosterEntry(entry) === studentId) {
+
+          delete assignedTo[key];
+          void setAssignment(classroom, assignment, assignedTo);
+        }
+      }
+      assignments[assignmentKey] = { ...assignment, assignedTo };
+
+    }
+
+
+  } catch (error) {
+    console.error('Error removing student from assignments:', error);
   }
 };
 
@@ -910,13 +976,134 @@ export const updateClassroom = async (classroomId: string, classroom: Classroom)
     );
 
     store.dispatch(ClassroomsAction.CLASSROOM_UPDATED({}));
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error updating classroom:', error);
   }
 
-}
+};
 
+export const convertClassroomTopics = async (classroom: Classroom) => {
+
+  try {
+    if (classroom.topics === undefined) {
+      classroom.topics = [];
+    } else {
+      const isArray = Array.isArray(classroom.topics);
+      if (isArray) {
+        return;
+      }
+
+      const newTopicArray = Object.keys(classroom.topics);
+      classroom.topics = newTopicArray;
+      await updateClassroom(classroom.classroomId, classroom);
+
+    }
+  } catch (error) {
+    console.error('Error converting classroom topics:', error);
+  }
+};
+
+export const convertClassroomAssignmentsToNewFormat = async (
+  classroom: Classroom
+): Promise<void> => {
+  try {
+    const oldAssignments = classroom.classroomAssignments ?? {};
+
+    if (Object.keys(oldAssignments).length === 0) {
+      return;
+    }
+
+    for (const [assignmentKey, assignment] of Object.entries(oldAssignments)) {
+      const assignedTo = {
+        ...(assignment.assignedTo ?? {})
+      };
+
+      const newAssignment: ClassroomAssignment = {
+        ...assignment,
+        docId: assignment.docId ?? assignmentKey,
+        assignedTo
+      };
+
+      await setAssignment(
+        classroom,
+        newAssignment,
+        assignedTo
+      );
+    }
+
+    // ONLY remove classroomAssignments here,
+    // after every assignment has successfully been written.
+    await removeClassroomAssignmentsField(classroom);
+    store.dispatch(ClassroomsAction.CLASSROOM_UPDATED({}));
+  } catch (error) {
+    console.error(
+      "Error converting classroom assignments to new format:",
+      error
+    );
+
+    throw error;
+  }
+};
+
+export const convertStudentIdsToNewFormat = async (classroom: Classroom): Promise<void> => {
+  try {
+    const oldStudentIds = classroom.studentIds ?? {};
+
+    if (Object.keys(oldStudentIds).length === 0) {
+      return;
+    }
+
+    const newStudentIds: Dict<{
+      id: string;
+      displayName: string;
+    }> = {};
+
+    for (const [studentKey, student] of Object.entries(oldStudentIds)) {
+
+
+      const newStudentEntry = {
+        id: typeof student.id === 'string' ? student.id : student.id['en-US'],
+        displayName: typeof student.displayName === 'string' ? student.displayName : student.displayName['en-US']
+      };
+
+      newStudentIds[studentKey] = newStudentEntry;
+    }
+
+    classroom.studentIds = newStudentIds;
+
+    await updateClassroom(classroom.classroomId, classroom);
+
+
+  } catch (error) {
+    console.error(
+      "Error converting student IDs to new format:",
+      error
+    );
+
+  }
+};
+
+const removeClassroomAssignmentsField = async (classroom: Classroom): Promise<void> => {
+  try {
+    const docId = classroom.docId;
+
+    if (!docId) {
+      throw new Error('Classroom docId is required to remove classroomAssignments field');
+    }
+
+    const updatedClassroom = { ...classroom };
+    delete updatedClassroom.classroomAssignments;
+
+    await updateClassroom(classroom.classroomId, updatedClassroom);
+  } catch (error) {
+    console.error(
+      "Error removing classroomAssignments field:",
+      error
+    );
+
+    throw error;
+  }
+};
 export const setAssignment = async (
   classroom: Classroom,
   assignment: ClassroomAssignment,
@@ -932,8 +1119,24 @@ export const setAssignment = async (
       throw new Error('Classroom docId is required to set assignment');
     }
 
+    // Check if assignment topic already exists
+    classroom.topics?.includes(assignment.topic) ? null : classroom.topics?.push(assignment.topic);
+
+    await updateClassroom(classroom.classroomId, classroom);
+    let assignmentDocId: string;
+
+    if (assignment.docId) {
+      assignmentDocId = assignment.docId;
+    } else {
+      const uuid = crypto.randomUUID();
+      const shortenedId = uuid.replace(/-/g, '').slice(-7);
+      assignmentDocId = shortenedId;
+
+    }
+
     const assignmentToSave = {
       ...assignment,
+      docId: assignmentDocId,
       assignedTo: studentIds
     };
 
@@ -961,7 +1164,6 @@ export const getAssignments = async (classroomDocId: string) => {
         id: 'assignments',
       }
     );
-    //console.log("Fetched assignments for classroomDocId:", classroomDocId, result);
     return result || {};
   } catch (error) {
     console.error('Error getting assignments:', error);
@@ -1085,30 +1287,7 @@ export const reduceClassrooms = (
       const docId = classroom.docId;
       if (!docId) return state;
 
-      const uuid = crypto.randomUUID();
-      const shortenedId = uuid.replace(/-/g, '').slice(-7);
 
-      assignment.docId = shortenedId;
-
-      void setAssignment(
-        classroom,
-        assignment,
-        studentIds
-      );
-      console.log("classroom:", classroom);
-
-
-      console.log('classroom topics:', classroom.topics);
-      if (classroom.topics.includes(assignment.topic)) {
-        console.log('topic already exists in classroom, not adding');
-      } else {
-        console.log('adding topic to classroom:', assignment.topic);
-        const updatedClassroom = {
-          ...classroom,
-          topics: [...classroom.topics, assignment.topic],
-        };
-        void saveClassroomDocument(updatedClassroom);
-      }
 
       return state;
     }
@@ -1118,7 +1297,7 @@ export const reduceClassrooms = (
     }
     case 'classrooms/set-assignments': {
       const { classroomDocId, assignments } = action;
-      console.log("classrooms/set-assignments:", classroomDocId, assignments);
+
       return {
         ...state,
         assignments: {
@@ -1127,28 +1306,28 @@ export const reduceClassrooms = (
       };
     }
     case 'classrooms/assignment-created': {
-      console.log("classrooms/assignment-created: incrementing assignmentVersion");
+
       return {
         ...state,
         assignmentVersion: state.assignmentVersion + 1,
-      }
+      };
     }
     case 'classrooms/assignment-deleted': {
-      console.log("classrooms/assignment-deleted: incrementing assignmentVersion");
+
       return {
         ...state,
         assignmentVersion: state.assignmentVersion + 1,
-      }
+      };
     }
     case 'classrooms/classroom-updated': {
-      console.log("classrooms/classroom-updated: incrementing assignmentVersion");
+
       return {
         ...state,
         classroomVersion: state.classroomVersion + 1,
-      }
+      };
     }
     case 'classrooms/load-classroom': {
-      void load(action.classroomId, state.entities[action.classroomId]);
+
       return {
         ...state,
         entities: {
@@ -1184,27 +1363,28 @@ export const reduceClassrooms = (
 
     case 'classrooms/update-classroom': {
       const { classroomId, classroom } = action;
-      console.log("classrooms/update-classroom:", classroomId, classroom);
-      classroom.topics.length === 0 ? null : updateClassroom(classroomId, classroom);
+
+      classroom.topics.length === 0 ? null : void updateClassroom(classroomId, classroom);
       return state;
     }
 
 
     case 'classrooms/set-classroom': {
-      console.log("classrooms/set-classroom:", action.classroomId, action.classroom);
+
       return {
         ...state,
         entities: {
           ...state.entities,
           [action.classroomId]: action.classroom,
         },
+        // classroomVersion: state.classroomVersion + 1,
       };
     }
 
     case 'classrooms/set-classrooms': {
       const merged = { ...state.entities, ...action.classrooms, };
       return { ...state, entities: merged, };
-      return { ...state, entities: merged, };
+
     }
 
     case 'classrooms/list-owned-classrooms': {
@@ -1277,6 +1457,8 @@ export const reduceClassrooms = (
         action.studentId
       );
 
+      void removeStudentFromAssignments(action.studentId, action.currentClassroom);
+
       const entities = entity && docId
         ? { ...state.entities, [docId]: entity }
         : state.entities;
@@ -1297,6 +1479,10 @@ export const reduceClassrooms = (
       };
     }
 
+    case 'classrooms/remove-student-from-assignments': {
+
+      return state;
+    }
     case 'classrooms/student-in-classroom': {
 
       void studentInClassroom(action.studentId);

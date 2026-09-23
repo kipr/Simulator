@@ -16,7 +16,7 @@ import { AsyncClassroom, Classroom, ClassroomAssignment } from '../state/State/C
 import { CreateClassroomDialog } from '../components/Dialog/CreateClassroomDialog';
 import Dict from '../util/objectOps/Dict';
 import { nativeScrollbarChrome } from '../util/nativeScrollbarChrome';
-import { ClassroomsAction, listChallengesByStudentId, deleteClassroom } from 'state/reducer/classrooms';
+import { ClassroomsAction, listChallengesByStudentId, deleteClassroom, convertClassroomAssignmentsToNewFormat, listOwned, load, convertStudentIdsToNewFormat } from 'state/reducer/classrooms';
 import { auth } from '../firebase/firebase';
 import { User } from 'ivygate/dist/src/types/user';
 import Async from 'state/State/Async';
@@ -104,7 +104,9 @@ interface ClassroomTeacherViewPrivateProps {
   onAddStudentToClassroom?: (classroomId: string, studentId: LocalizedString) => void;
   onUpdateClassroom?: (classroomId: string, classroom: AsyncClassroom) => void;
   deleteClassroom?: (classroomId: string, classroom: Classroom) => void;
-  onReloadClassroom?: (classroomId: string) => void;
+  onReloadClassroom?: (classroomId: string, current: AsyncClassroom) => void;
+  onConvertClassroomAssignmentsToNewFormat?: (classroom: Classroom) => void;
+  onConvertStudentIdsToNewFormat?: (classroom: Classroom) => void;
 }
 
 interface ClassroomTeacherViewState {
@@ -332,10 +334,29 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps: Props, prevState: State) {
 
+    if (prevState.currentSelectedClassroom !== this.state.currentSelectedClassroom) {
+      const { currentSelectedClassroom } = this.state;
+      const { onConvertClassroomAssignmentsToNewFormat } = this.props;
+      const loadedClassroom = currentSelectedClassroom ? Async.latestValue(currentSelectedClassroom) : null;
+      if (loadedClassroom.classroomAssignments && Object.keys(loadedClassroom.classroomAssignments).length > 0) {
+        onConvertClassroomAssignmentsToNewFormat?.(loadedClassroom);
+
+      }
+      // Check if studentId map contains assignments, if so, convert to new format
+      if (loadedClassroom.studentIds && Object.keys(loadedClassroom.studentIds).length > 0) {
+        // check first student for assignments
+        const firstStudent = Object.values(loadedClassroom.studentIds)[0];
+        Object.keys(firstStudent).includes("assignments") ? this.props.onConvertStudentIdsToNewFormat?.(loadedClassroom) : null;
+
+      }
+
+
+    }
     if (prevProps.classroomVersion !== this.props.classroomVersion) {
-      if (this.props.selectedClassroom) {
-        const loaded = Async.latestValue(this.props.selectedClassroom);
-        this.props.onReloadClassroom?.(loaded.docId);
+      const { currentSelectedClassroom } = this.state;
+      if (currentSelectedClassroom) {
+        const loaded = Async.latestValue(currentSelectedClassroom);
+        this.props.onReloadClassroom?.(loaded.docId, currentSelectedClassroom);
       }
 
     }
@@ -881,16 +902,37 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   private onAssignComplete_ = (students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>, assignment: ClassroomAssignment) => {
     const stepId = this.state.teacherTourSteps[this.state.currentTourStepIndex ?? 0]?.id;
-
-    console.log('onAssignComplete_ called with assignment:', assignment, 'stepId:', stepId);
-    console.log("currentSelectedClassroom:", this.state.currentSelectedClassroom);
     const currClass = Async.latestValue(this.state.currentSelectedClassroom);
-    if (!currClass.topics?.includes(assignment.topic)) {
-      console.log("Assignment topic not in current classroom topics, adding it.");
-      const updatedClassroom = AsyncClassroom.loaded({
+    const topicsIsArray = Array.isArray(currClass?.topics);
+    let updatedClassroom: AsyncClassroom;
+    if (topicsIsArray) {
+      if (!currClass.topics?.includes(assignment.topic)) {
+
+        if (currClass.topics) {
+          updatedClassroom = AsyncClassroom.loaded({
+            ...currClass,
+            topics: [...currClass?.topics, assignment.topic]
+          });
+        } else {
+          updatedClassroom = AsyncClassroom.loaded({
+            ...currClass,
+            topics: [assignment.topic]
+          });
+        }
+        this.props.onUpdateClassroom(currClass.docId, updatedClassroom);
+      }
+    } else {
+
+      const newTopicsArray: string[] = [];
+      for (const topic of Object.keys(currClass?.topics)) {
+
+        newTopicsArray.push(topic);
+      }
+
+      updatedClassroom = AsyncClassroom.loaded({
         ...currClass,
-        topics: [...currClass.topics, assignment.topic]
-      })
+        topics: [...newTopicsArray, assignment.topic]
+      });
       this.props.onUpdateClassroom(currClass.docId, updatedClassroom);
     }
     const advanceTeacherTourAfterPublish =
@@ -1066,14 +1108,18 @@ export default connect(
 
   }),
   (dispatch) => ({
+    onConvertClassroomAssignmentsToNewFormat: async (classroom: Classroom) =>
+      await convertClassroomAssignmentsToNewFormat(classroom),
+    onConvertStudentIdsToNewFormat: async (classroom: Classroom) =>
+      await convertStudentIdsToNewFormat(classroom),
     onGetAssignments: (classroomDocId: string) =>
       dispatch(ClassroomsAction.getAssignments({ classroomDocId })),
     onCreateClassroom: (classroom: Classroom) =>
       dispatch(ClassroomsAction.createClassroom({ classroom })),
     onListOwnedClassrooms: () =>
-      dispatch(ClassroomsAction.listOwnedClassrooms({})),
-    onReloadClassroom: (classroomId: string) =>
-      dispatch(ClassroomsAction.loadClassroom({ classroomId })),
+      listOwned(),
+    onReloadClassroom: (classroomId: string, current: AsyncClassroom) =>
+      load(classroomId, current),
     onListChallengesByStudentId: (studentId: string) =>
       dispatch(ClassroomsAction.listChallengesByStudentId({ studentId })),
     onShowClassroomLeaderboard: (classroom: AsyncClassroom) =>

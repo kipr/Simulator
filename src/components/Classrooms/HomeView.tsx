@@ -159,24 +159,18 @@ const HomeView = ({
   const currentUserId = db.tokenManager?.auth().currentUser?.uid ?? '';
 
   function renderOrderedAssignments() {
-    //let assignments = stateClassroom?.classroomAssignments ? Object.values(stateClassroom.classroomAssignments) : [];
-    console.log("stateclassroom:", stateClassroom);
-    console.log("classroomAssignments: ", classroomAssignments);
     let assignments = classroomAssignments[stateClassroom?.docId || ''] ? Object.values(classroomAssignments[stateClassroom?.docId || '']) : [];
-    console.log("HomeView assignments:", assignments);
     if (config === 'Student') {
       assignments = assignments.filter(a => assignmentListsUserInAssignedTo(a, currentUserId));
     }
-    // else if (config === 'Teacher') {
-    //   assignments = assignments.filter(a => assignmentHasAnyAssignee(a));
-    // }
+
     const sortedAssignments = assignments.sort((a, b) => {
       const aCreated = a.createdAt ? new Date(a.createdAt).getTime() : Infinity;
       const bCreated = b.createdAt ? new Date(b.createdAt).getTime() : Infinity;
 
       return bCreated - aCreated; // Sort in descending order (newest first)
     });
-    console.log("HomeView sortedAssignments:", sortedAssignments);
+
     if (assignments) {
       return sortedAssignments.map(assignment => (
         <AssignmentItem theme={theme} key={assignment.title}>
@@ -230,7 +224,7 @@ const HomeView = ({
       ));
     }
     return <h2>{LocalizedString.lookup(tr('No upcoming assignments'), locale)}</h2>
-      ;
+    ;
 
   }
   return (

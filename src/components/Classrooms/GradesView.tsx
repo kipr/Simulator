@@ -309,7 +309,7 @@ const StudentAssignmentRow = React.memo(
           renderGradeCell(student, orig, narrowed)
         )}
       </TableRow>
-    )
+    );
   }
 );
 
@@ -392,7 +392,6 @@ const GradesView = ({
     [sortedAssignments, filterFrom, filterTo]
   );
 
-  console.log("GradesView visibleAssignments:", visibleAssignments);
   useEffect(() => {
     const valid = new Set(
       visibleAssignments.flatMap(a =>
@@ -419,7 +418,6 @@ const GradesView = ({
         ),
     [visibleAssignments, challengeKeysFilter]
   );
-  console.log("GradesView displayAssignmentPairs:", displayAssignmentPairs);
 
   const challengeExportOptions = useMemo(() => {
     const opts: { key: string; label: string }[] = [];
@@ -460,7 +458,7 @@ const GradesView = ({
       grades,
       locale,
     });
-    console.log("GradesView handleExportCsv csv:", csv);
+
     const safe = loadedClassroom.classroomId.replace(/[^\w\-.]+/g, '_').slice(0, 80);
     downloadCsvFile(
       `grades-${safe}-${new Date().toISOString()
@@ -547,7 +545,7 @@ const GradesView = ({
         classroomAssignments[loadedClassroom?.docId || '']
           ?.[orig.docId]
           ?.assignedTo
-        ?.[student.id] !== undefined;
+          ?.[student.id] !== undefined;
 
       const progressForStudent =
         grades ? grades[student.id] : null;

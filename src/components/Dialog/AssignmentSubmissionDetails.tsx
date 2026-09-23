@@ -294,10 +294,10 @@ const AssignmentSubmissionDetails = ({
 
               {challengeCompletionVisible === challengeInfo.challenge.sceneId &&
                 !challengeProgressions?.[challengeInfo.challenge.sceneId] && (
-                  <div style={{ margin: '1em', padding: '1em', border: `1px solid ${theme.borderColor}`, borderRadius: '4px' }}>
-                    <div style={{ fontStyle: 'italic' }}>Student has not started this challenge.</div>
-                  </div>
-                )}
+                <div style={{ margin: '1em', padding: '1em', border: `1px solid ${theme.borderColor}`, borderRadius: '4px' }}>
+                  <div style={{ fontStyle: 'italic' }}>Student has not started this challenge.</div>
+                </div>
+              )}
             </div>
           ))}
 

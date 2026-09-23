@@ -20,7 +20,7 @@ import store, { State as ReduxState } from '../../state';
 import { Challenges } from '../../state/State';
 import ScrollArea from '../interface/ScrollArea';
 import ResizeableComboBox from '../interface/ResizeableComboBox';
-import { ClassroomsAction } from 'state/reducer/classrooms';
+import { ClassroomsAction, convertClassroomTopics, setAssignment } from 'state/reducer/classrooms';
 import { ChallengesAction } from 'state/reducer/challenges';
 import TourTarget from '../Tours/TourTarget';
 import { TourRegistry } from '../../tours/TourRegistry';
@@ -226,9 +226,8 @@ const CreateAssignmentView = ({
   tourRegistry,
   activeTourStepId
 }: Props) => {
-  console.log("CreateAssignmentView props:", { theme, locale, onClose, classroom, challenges, onAssignComplete, onCreateAssignment, originalAssignment, onEditComplete, onEditAssignment, onListUserChallenges, tourRegistry, activeTourStepId });
+
   const loadedClassroom = Async.latestValue(classroom);
-  console.log('loadedClassroom:', loadedClassroom);
   const [assignToMenuVisible, setAssignToMenuVisible] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState<Dict<{ id: string, displayName: string }>>(originalAssignment?.assignedTo || {});
   const [enableAssign, setEnableAssign] = useState(false);
@@ -247,19 +246,45 @@ const CreateAssignmentView = ({
   const [isCreatingTopic, setIsCreatingTopic] = React.useState(false);
   const [newTopic, setNewTopic] = React.useState("");
 
-  const [topics, setTopics] = useState<ResizeableComboBox.Option[]>([Object.keys(loadedClassroom?.topics ?? {}).length > 0
-    ? loadedClassroom.topics.map(topic => (topic === 'No Subject'
-      ? { text: LocalizedString.lookup(tr('No Subject'), locale), data: 'No Subject' }
-      : { text: topic, data: topic }))
-      .concat({ text: LocalizedString.lookup(tr('Create Subject'), locale), data: 'Create Subject' })
-    : [{ text: LocalizedString.lookup(tr('No Subject'), locale), data: 'No Subject' }, { text: LocalizedString.lookup(tr('Create Subject'), locale), data: 'Create Subject' }]].flat());
+  const classroomTopics = Array.isArray(loadedClassroom?.topics)
+    ? loadedClassroom.topics
+    : Object.keys(loadedClassroom?.topics ?? {});
+
+  const [topics, setTopics] = useState<ResizeableComboBox.Option[]>(
+    classroomTopics.length > 0
+      ? classroomTopics
+        .map(topic =>
+          (topic === 'No Subject'
+            ? {
+              text: LocalizedString.lookup(tr('No Subject'), locale),
+              data: 'No Subject'
+            }
+            : {
+              text: topic,
+              data: topic
+            })
+        )
+        .concat({
+          text: LocalizedString.lookup(tr('Create Subject'), locale),
+          data: 'Create Subject'
+        })
+      : [
+        {
+          text: LocalizedString.lookup(tr('No Subject'), locale),
+          data: 'No Subject'
+        },
+        {
+          text: LocalizedString.lookup(tr('Create Subject'), locale),
+          data: 'Create Subject'
+        }
+      ]
+  );
   const [assignedPointsSet, setAssignedPointsSet] = useState<Dict<{ challenge: ClassroomAssignmentChallenge, points: number | '' }>>({});
   const [topicIndex, setTopicIndex] = React.useState(
     originalAssignment?.topic
       ? topics.findIndex(topic => topic.data === originalAssignment.topic)
       : topics.findIndex(topic => topic.data === 'No Subject')
   );
-  console.log("CreateAssignmentView state:", { assignToMenuVisible, selectedStudents, enableAssign, assignmentInfo, isCreatingTopic, newTopic, topics, assignedPointsSet, topicIndex });
 
   function handleAssign(info: ClassroomAssignment, studentsOverride?: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) {
     const students = studentsOverride ?? selectedStudents;
@@ -477,22 +502,22 @@ const CreateAssignmentView = ({
   }
 
   const wrapCreateAssignmentFormTarget = (inner: React.ReactNode) =>
-  (tourRegistry ? (
-    <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-form" style={{ display: 'contents' }}>
-      {inner}
-    </TourTarget>
-  ) : (
-    inner
-  ));
+    (tourRegistry ? (
+      <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-form" style={{ display: 'contents' }}>
+        {inner}
+      </TourTarget>
+    ) : (
+      inner
+    ));
 
   const wrapCreateAssignmentRosterTarget = (inner: React.ReactNode) =>
-  (tourRegistry ? (
-    <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-roster" style={{ display: 'contents' }}>
-      {inner}
-    </TourTarget>
-  ) : (
-    inner
-  ));
+    (tourRegistry ? (
+      <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-roster" style={{ display: 'contents' }}>
+        {inner}
+      </TourTarget>
+    ) : (
+      inner
+    ));
 
   const assignButtonTourActive =
     !originalAssignment && activeTourStepId === 'teacher-create-assignment-assign';
@@ -914,8 +939,11 @@ export default connect((state: ReduxState) => {
 
   };
 }, dispatch => ({
-  onCreateAssignment: (classroom: Classroom, assignment: ClassroomAssignment, studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => {
-    dispatch(ClassroomsAction.setAssignment({ classroom, assignment, studentIds }));
+  onCreateAssignment: async (classroom: Classroom, assignment: ClassroomAssignment, studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => {
+    // dispatch(ClassroomsAction.setAssignment({ classroom, assignment, studentIds }));
+    !Array.isArray(classroom.topics) ? await convertClassroomTopics(classroom) : null;
+
+    await setAssignment(classroom, assignment, studentIds);
   },
   onEditAssignment: (classroom: Classroom, docId: string, assignment: ClassroomAssignment, studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => {
     dispatch(ClassroomsAction.editAssignment({ classroom, assignmentDocId: docId, assignment, studentIds }));

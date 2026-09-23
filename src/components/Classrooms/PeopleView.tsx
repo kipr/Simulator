@@ -16,7 +16,7 @@ import { current } from 'immer';
 import { get } from 'immer/dist/internal';
 import { useState } from 'react';
 import Async from 'state/State/Async';
-import { ClassroomsAction } from '../../state/reducer';
+import { ClassroomsAction, load, removeStudentFromAssignments, removeStudentFromClassroom } from '../../state/reducer';
 import RemoveUserFromClassroomDialog from '../Dialog/RemoveUserFromClassroomDialog';
 import { useTeacherViewOverlayEffect } from './TeacherViewOverlayContext';
 
@@ -30,7 +30,9 @@ export interface PeopleViewPublicProps extends ThemeProps, StyleProps {
 export interface PeopleViewPrivateProps extends ThemeProps {
   locale: LocalizedString.Language;
   classroomList: Dict<AsyncClassroom>;
+  classroomVersion: number;
   onRemoveStudentFromClassroom: (studentId: string, currentClassroom: AsyncClassroom) => void;
+  onReloadClassroom: (currentClassroom: AsyncClassroom) => void;
 }
 
 type Props = PeopleViewPublicProps & PeopleViewPrivateProps;
@@ -123,14 +125,23 @@ const PeopleView = ({
   contextMenuVisible,
   setContextMenuVisible,
   onRemoveStudentFromClassroom,
+  onReloadClassroom,
+  classroomVersion,
   config
 }: Props) => {
 
   const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
   const [selectedStudent, setSelectedStudent] = useState<{ id: string, displayName: string } | null>(null);
   const [removeUserDialogVisible, setRemoveUserDialogVisible] = useState(false);
-
+  // const [currClassroom, setCurrClassroom] = useState<AsyncClassroom | null>(currentSelectedClassroom);
   useTeacherViewOverlayEffect(config === 'Teacher' && removeUserDialogVisible);
+  const selectedDocId =
+    Async.latestValue(currentSelectedClassroom)?.docId;
+
+  const currClassroom =
+    selectedDocId
+      ? classroomList[selectedDocId] ?? currentSelectedClassroom
+      : currentSelectedClassroom;
 
   function getTeachers(currentSelectedClassroom: AsyncClassroom | null) {
     const teachers = Async.latestValue(currentSelectedClassroom)?.teacherDisplayName;
@@ -142,15 +153,19 @@ const PeopleView = ({
     );
   }
 
-  function getStudents(currentSelectedClassroom: AsyncClassroom | null) {
+  React.useEffect(() => {
 
-    const loadedClassroom = Async.latestValue(currentSelectedClassroom);
+    onReloadClassroom(currClassroom);
+  }, [classroomVersion]);
+
+
+  function getStudents() {
+
+    const loadedClassroom = Async.latestValue(currClassroom);
+
     const docId = loadedClassroom?.docId || '';
     const stateClassroom = docId ? classroomList[docId] : undefined;
-    const students =
-      Async.latestValue(stateClassroom)?.studentIds ??
-      loadedClassroom?.studentIds;
-
+    const students = loadedClassroom?.studentIds;
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em', fontSize: '1.5em', alignItems: 'flex-start', width: '80%' }}>
         {students ? (
@@ -218,7 +233,7 @@ const PeopleView = ({
         <StudentContainer>
           <h1 style={{ textDecoration: 'underline' }}>{LocalizedString.lookup(tr('Students'), locale)}</h1>
           {currentSelectedClassroom && (
-            getStudents(currentSelectedClassroom)
+            getStudents()
           )}
         </StudentContainer>
       </TeacherStudentContainer>
@@ -228,24 +243,41 @@ const PeopleView = ({
           theme={theme} locale={locale}
           onClose={() => setRemoveUserDialogVisible(false)}
           onAcceptRemove={() => {
-            onRemoveStudentFromClassroom(selectedStudent?.id || "", currentSelectedClassroom);
+            onRemoveStudentFromClassroom(selectedStudent?.id || "", currClassroom);
             setRemoveUserDialogVisible(false);
           }}
           toRemoveUser={selectedStudent?.displayName || ""}
-          classroom={Async.latestValue(currentSelectedClassroom) }
+          classroom={Async.latestValue(currClassroom)}
 
         />}
     </Container>
   );
 };
 
-export default connect((state: State) => {
-  return {
+export default connect(
+  (state: State) => ({
     locale: state.i18n.locale,
     classroomList: state.classrooms.entities,
-  };
-}, (dispatch, ownProps) => ({
-  onRemoveStudentFromClassroom: (studentId: string, currentClassroom: AsyncClassroom) => {
-    dispatch(ClassroomsAction.removeStudentFromClassroom({ studentId, currentClassroom }));
-  }
-}))(PeopleView) as React.ComponentType<PeopleViewPublicProps>; 
+    classroomVersion: state.classrooms.classroomVersion,
+  }),
+  dispatch => ({
+    onRemoveStudentFromClassroom: async (
+      studentId: string,
+      currentClassroom: AsyncClassroom
+    ) => {
+      await removeStudentFromAssignments(
+        studentId,
+        currentClassroom
+      );
+
+      await removeStudentFromClassroom(
+        studentId,
+        currentClassroom
+      );
+      dispatch(ClassroomsAction.CLASSROOM_UPDATED({}));
+    },
+    onReloadClassroom: async (currentClassroom: AsyncClassroom) => {
+      await load(Async.latestValue(currentClassroom)?.docId || "", currentClassroom);
+    }
+  })
+)(PeopleView) as React.ComponentType<PeopleViewPublicProps>;
