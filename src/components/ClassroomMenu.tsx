@@ -3,7 +3,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../util/style';
 import { Spacer } from './constants/common';
 import { FontAwesome } from './FontAwesome';
-import { DARK, ThemeProps } from './constants/theme';
+import { LIGHT, DARK, ThemeProps } from './constants/theme';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../state';
@@ -11,6 +11,7 @@ import KIPR_LOGO_BLACK from '../../static/assets/KIPR-Logo-Black-Text-Clear-Larg
 import KIPR_LOGO_WHITE from '../../static/assets/KIPR-Logo-White-Text-Clear-Large.png';
 import LocalizedString from '../util/LocalizedString';
 import ClassroomExtraMenu from './ClassroomExtraMenu';
+import { Settings } from 'components/constants/Settings';
 
 namespace SubMenu {
   export enum Type {
@@ -42,6 +43,7 @@ export interface ClassroomMainMenuPublicProps extends StyleProps, ThemeProps {
 
 interface ClassroomMainMenuPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
 }
 
 interface ClassroomMainMenuState { subMenu: SubMenu; }
@@ -149,9 +151,9 @@ export class ClassroomMainMenu extends React.Component<Props, State> {
     window.removeEventListener('click', this.onClickOutside_);
   };
   render() {
-    const { className, style, locale, onLeaveClass } = this.props;
+    const { className, style, locale, onLeaveClass, settings } = this.props;
     const { subMenu } = this.state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
     return (
       <Container className={className} style={style} theme={theme}>
         <Logo theme={theme} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string} onClick={this.onDashboardClick_} />
@@ -176,5 +178,6 @@ export class ClassroomMainMenu extends React.Component<Props, State> {
 }
 
 export default connect((state: ReduxState) => ({
-  locale: state.i18n.locale
+  locale: state.i18n.locale,
+  settings: state.settings,
 }))(ClassroomMainMenu) as React.ComponentType<ClassroomMainMenuPublicProps>;

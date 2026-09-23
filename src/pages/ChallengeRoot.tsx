@@ -17,7 +17,7 @@ import ExceptionDialog from '../components/Challenge/ExceptionDialog';
 import ChallengeMenu from '../components/Challenge/ChallengeMenu';
 
 import { DEFAULT_SETTINGS, Settings } from '../components/constants/Settings';
-import { DARK, Theme } from '../components/constants/theme';
+import { DARK, LIGHT, Theme } from '../components/constants/theme';
 
 import SettingsDialog from '../components/Dialog/SettingsDialog';
 import AboutDialog from '../components/Dialog/AboutDialog';
@@ -117,6 +117,7 @@ interface RootPrivateProps {
   challenge?: AsyncChallenge;
   challengeCompletion?: AsyncChallengeCompletion;
   locale: LocalizedString.Language;
+  settings: Settings;
 
   robots: Dict<Robot>;
 
@@ -1511,12 +1512,12 @@ class Root extends React.Component<Props, State> {
       simulatorState,
       console,
       messages,
-      settings,
       feedback,
       windowInnerHeight,
     } = state;
 
-    const theme = DARK;
+    const { settings } = this.props;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
 
 
@@ -1693,7 +1694,7 @@ class Root extends React.Component<Props, State> {
           />
         )}
         <AiWindow
-          theme={DARK}
+          theme={theme}
           code={code}
           language={language}
           console={StyledText.toString(console)}
@@ -1718,6 +1719,7 @@ const ConnectedChallengeRoot = connect((state: ReduxState, { params: { challenge
     challenge: Dict.unique(builder.challenges),
     challengeCompletion: Dict.unique(builder.challengeCompletions),
     locale: state.i18n.locale,
+    settings: state.settings,
     robots: Dict.map(state.robots.robots, Async.latestValue),
   };
 }, (dispatch, { params: { challengeId } }: RootPublicProps) => ({

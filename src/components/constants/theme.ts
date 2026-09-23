@@ -382,7 +382,7 @@ export const DARK: Theme = {
   cardColors: {
     textColor: '#ffffff',
     alternateTextColor: '#ffffff',
-  }
+  },
 
   transparentBackgroundColor: (a) => `rgba(${0x21}, ${0x21}, ${0x21}, ${a})`,
   switch: {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
 
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { DARK, LIGHT, ThemeProps } from '../components/constants/theme';
 import { Card } from '../components/interface/Card';
 import MainMenu from '../components/MainMenu';
 
@@ -11,6 +11,7 @@ import LocalizedString from '../util/LocalizedString';
 
 import { State as ReduxState } from '../state';
 import tr from '@i18n';
+import { Settings } from '../components/constants/Settings';
 
 interface Tutorial {
   title?: LocalizedString;
@@ -63,6 +64,7 @@ export interface TutorialsPublicProps extends StyleProps, ThemeProps {
 
 interface TutorialsPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
 }
 
 interface TutorialsState {
@@ -151,9 +153,9 @@ class Tutorials extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, locale } = props;
+    const { style, locale, settings } = props;
     const { selected } = state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
     return (
       <Container style={style} theme={theme}>
@@ -183,4 +185,5 @@ class Tutorials extends React.Component<Props, State> {
 
 export default connect((state: ReduxState) => ({
   locale: state.i18n.locale,
+  settings: state.settings,
 }))(Tutorials) as React.ComponentType<TutorialsPublicProps>;

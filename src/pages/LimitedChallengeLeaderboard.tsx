@@ -587,7 +587,8 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
   };
 
   private renderLeaderboardRow = (entry: LeaderboardEntry, rank: number, isCurrentUser: boolean) => {
-    const theme = DARK;
+    const { settings } = this.props;
+    const theme = settings.darkMode ? DARK : LIGHT;
     return (
       <TableRow key={`${entry.uid}-${rank}`} theme={theme} $highlight={isCurrentUser}>
         <RankCell theme={theme} rank={rank}>#{rank}</RankCell>
@@ -602,9 +603,9 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
   };
 
   private renderLeaderboard = () => {
-    const { locale, currentUserUid } = this.props;
+    const { locale, currentUserUid, settings } = this.props;
     const { topEntries, userContext, loading, error } = this.state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
     if (loading) {
       return (
