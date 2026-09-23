@@ -7,7 +7,8 @@ function studentEntryId(entry) {
   if (typeof entry === 'string') return entry;
   if (!entry.id) return undefined;
   if (typeof entry.id === 'string') return entry.id;
-  if (typeof entry.id === 'object' && entry.id['en-US']) return entry.id['en-US'];
+  if (typeof entry.id === 'object' && entry.id['en-US'])
+    return entry.id['en-US'];
   return undefined;
 }
 
@@ -178,7 +179,8 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const auth = req.headers.authorization || '';
       const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
-      if (!token) return res.status(401).json({ message: 'Missing bearer token' });
+      if (!token)
+        return res.status(401).json({ message: 'Missing bearer token' });
 
       const decoded = await firebaseTokenManager.verifyIdToken(token);
       req.user = { uid: decoded.uid };
@@ -194,8 +196,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
   router.post('/leave', async (req, res) => {
     try {
       const { uid } = req.user;
-      let qsnap = await colPath().where(`studentIds.${uid}`, '!=', null)
-        .get();
+      let qsnap = await colPath().where(`studentIds.${uid}`, '!=', null).get();
 
       // Legacy rosters may use a map key other than the uid; scan once if the index query misses.
       if (qsnap.empty) {
@@ -351,22 +352,16 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
             .then((snap) => ({ studentId, snap })),
         ),
       );
-      console.log(
-        'Fetched challenge_completion snapshots for students:',
-        snapshots,
-      );
+
       const result = {};
 
       snapshots.forEach(({ studentId, snap }) => {
-        console.log('Processing studentId:', studentId, 'with snap:', snap);
         result[studentId] = {};
 
         snap.forEach((doc) => {
           result[studentId][doc.id] = doc.data();
         });
       });
-
-      console.log(`GET /${classroomId}/gradebook/challenges result:`, result);
 
       return res.status(200).json(result);
     } catch (err) {
@@ -451,8 +446,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const inviteCode = req.query.inviteCode;
       if (inviteCode) {
-        const qsnap = await admin.firestore().collection('classrooms')
-          .get();
+        const qsnap = await admin.firestore().collection('classrooms').get();
         const want = String(inviteCode).trim();
         for (const doc of qsnap.docs) {
           const classroom = doc.data();
@@ -503,8 +497,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
         return res.status(400).json({ message: 'Missing invite code' });
       }
 
-      const qsnap = await admin.firestore().collection('classrooms')
-        .get();
+      const qsnap = await admin.firestore().collection('classrooms').get();
 
       const want = String(inviteCode).trim();
       for (const doc of qsnap.docs) {
@@ -536,8 +529,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const { uid } = req.user;
       const { id } = req.params;
-      const docRef = admin.firestore().collection('classrooms')
-        .doc(id);
+      const docRef = admin.firestore().collection('classrooms').doc(id);
       const snap = await docRef.get();
       if (!snap.exists) {
         return res.status(404).json({ message: 'Classroom not found' });
@@ -564,8 +556,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const { uid } = req.user;
       const { id, studentId } = req.params;
-      const docRef = admin.firestore().collection('classrooms')
-        .doc(id);
+      const docRef = admin.firestore().collection('classrooms').doc(id);
       const snap = await docRef.get();
       if (!snap.exists) {
         return res.status(404).json({ message: 'Classroom not found' });
@@ -708,8 +699,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
       const { uid } = req.user;
       const { id } = req.params;
       const data = req.body || {};
-      const docRef = admin.firestore().collection('classrooms')
-        .doc(id);
+      const docRef = admin.firestore().collection('classrooms').doc(id);
       const snap = await docRef.get();
       if (!snap.exists) {
         return res.status(404).json({ message: 'Classroom not found' });
@@ -777,8 +767,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const { uid } = req.user;
       const { id } = req.params;
-      await colPath(uid).doc(id)
-        .delete();
+      await colPath(uid).doc(id).delete();
       return res.sendStatus(204);
     } catch (err) {
       console.error('DELETE /classrooms error:', err);
@@ -789,16 +778,11 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
   // Delete specific assignment
 
   router.delete('/:id/assignments/:assignmentId', async (req, res) => {
-    console.log(
-      'DELETE /classrooms/:id/assignments/:assignmentId called with params:',
-      req.params,
-    );
     try {
       const { uid } = req.user;
       const { id, assignmentId } = req.params;
 
-      const classroomRef = admin.firestore().collection('classrooms')
-        .doc(id);
+      const classroomRef = admin.firestore().collection('classrooms').doc(id);
       const classroomSnap = await classroomRef.get();
 
       if (!classroomSnap.exists) {
@@ -876,7 +860,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
       qsnap.forEach((doc) => {
         assignments[doc.id] = { docId: doc.id, ...doc.data() };
       });
-      console.log('Assignments for classroom', id, assignments);
+
       return res.status(200).json(assignments);
     } catch (err) {
       return res.status(500).json({
@@ -887,7 +871,6 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
   // Assign assignment to students
   // Assign assignment to students
   router.post('/:id/assign', async (req, res) => {
-    console.log('POST /classrooms/:id/assign called with body:', req.body);
     try {
       const { uid } = req.user;
       const { id } = req.params;
