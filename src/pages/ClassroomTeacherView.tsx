@@ -16,7 +16,7 @@ import { AsyncClassroom, Classroom, ClassroomAssignment } from '../state/State/C
 import { CreateClassroomDialog } from '../components/Dialog/CreateClassroomDialog';
 import Dict from '../util/objectOps/Dict';
 import { nativeScrollbarChrome } from '../util/nativeScrollbarChrome';
-import { ClassroomsAction, listChallengesByStudentId, deleteClassroom } from 'state/reducer/classrooms';
+import { ClassroomsAction, listChallengesByStudentId, deleteClassroom, convertClassroomAssignmentsToNewFormat, listOwned, load, convertStudentIdsToNewFormat } from 'state/reducer/classrooms';
 import { auth } from '../firebase/firebase';
 import { User } from 'ivygate/dist/src/types/user';
 import Async from 'state/State/Async';
@@ -99,9 +99,14 @@ interface ClassroomTeacherViewPrivateProps {
   tourError: string | null;
   uid: string;
   selectedClassroom?: AsyncClassroom | null;
+  classroomVersion: number;
   onStudentInClassroom?: (studentId: LocalizedString) => void;
   onAddStudentToClassroom?: (classroomId: string, studentId: LocalizedString) => void;
+  onUpdateClassroom?: (classroomId: string, classroom: AsyncClassroom) => void;
   deleteClassroom?: (classroomId: string, classroom: Classroom) => void;
+  onReloadClassroom?: (classroomId: string, current: AsyncClassroom) => void;
+  onConvertClassroomAssignmentsToNewFormat?: (classroom: Classroom) => void;
+  onConvertStudentIdsToNewFormat?: (classroom: Classroom) => void;
 }
 
 interface ClassroomTeacherViewState {
@@ -121,6 +126,7 @@ interface ClassroomTeacherViewState {
   continueTour?: boolean;
   currentSelectedClassroom?: AsyncClassroom | null;
   createAssignmentVisible?: boolean;
+  assignComplete: boolean;
   teacherTabIndex?: number;
   assignmentToEdit?: ClassroomAssignment | null;
   cardContainerVisible?: boolean;
@@ -302,7 +308,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       showCreateClassroomDialog: false,
       isStudentInClassroom: null as boolean | null,
       currentSelectedClassroom: null,
-
+      assignComplete: null,
       showJoinClassroomDialog: false,
       showClassroomLeaderboardSelector: false,
       showSelectedClassroomLeaderboard: false,
@@ -328,6 +334,32 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps: Props, prevState: State) {
 
+    if (prevState.currentSelectedClassroom !== this.state.currentSelectedClassroom) {
+      const { currentSelectedClassroom } = this.state;
+      const { onConvertClassroomAssignmentsToNewFormat } = this.props;
+      const loadedClassroom = currentSelectedClassroom ? Async.latestValue(currentSelectedClassroom) : null;
+      if (loadedClassroom.classroomAssignments && Object.keys(loadedClassroom.classroomAssignments).length > 0) {
+        onConvertClassroomAssignmentsToNewFormat?.(loadedClassroom);
+
+      }
+      // Check if studentId map contains assignments, if so, convert to new format
+      if (loadedClassroom.studentIds && Object.keys(loadedClassroom.studentIds).length > 0) {
+        // check first student for assignments
+        const firstStudent = Object.values(loadedClassroom.studentIds)[0];
+        Object.keys(firstStudent).includes("assignments") ? this.props.onConvertStudentIdsToNewFormat?.(loadedClassroom) : null;
+
+      }
+
+
+    }
+    if (prevProps.classroomVersion !== this.props.classroomVersion) {
+      const { currentSelectedClassroom } = this.state;
+      if (currentSelectedClassroom) {
+        const loaded = Async.latestValue(currentSelectedClassroom);
+        this.props.onReloadClassroom?.(loaded.docId, currentSelectedClassroom);
+      }
+
+    }
     if (prevProps.selectedClassroom !== this.props.selectedClassroom && this.props.selectedClassroom) {
       this.setState({ currentSelectedClassroom: this.props.selectedClassroom || null });
     }
@@ -468,6 +500,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       code: classroomInviteCode,
       studentIds: {},
       docId: '',
+      topics: ['No Subject'],
       type: 'classroom',
       teacherDisplayName: teacherDisplayName
     });
@@ -856,19 +889,52 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   };
 
-  private handleAssignemntAction = (currentSelectedClassroom: AsyncClassroom | null, action: 'edit' | 'create', assignmentToEdit?: ClassroomAssignment) => {
+  private handleAssignmentAction = (currentSelectedClassroom: AsyncClassroom | null, action: 'edit' | 'create', assignmentToEdit?: ClassroomAssignment) => {
     if (!currentSelectedClassroom) {
       return;
     }
     if (assignmentToEdit && action === 'edit') {
       this.setState({ createAssignmentVisible: true, assignmentToEdit: assignmentToEdit });
     } else if (action === 'create') {
-      this.setState({ createAssignmentVisible: true, assignmentToEdit: undefined });
+      this.setState({ createAssignmentVisible: true, assignComplete: false, assignmentToEdit: undefined });
     }
   };
 
   private onAssignComplete_ = (students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>, assignment: ClassroomAssignment) => {
     const stepId = this.state.teacherTourSteps[this.state.currentTourStepIndex ?? 0]?.id;
+    const currClass = Async.latestValue(this.state.currentSelectedClassroom);
+    const topicsIsArray = Array.isArray(currClass?.topics);
+    let updatedClassroom: AsyncClassroom;
+    if (topicsIsArray) {
+      if (!currClass.topics?.includes(assignment.topic)) {
+
+        if (currClass.topics) {
+          updatedClassroom = AsyncClassroom.loaded({
+            ...currClass,
+            topics: [...currClass?.topics, assignment.topic]
+          });
+        } else {
+          updatedClassroom = AsyncClassroom.loaded({
+            ...currClass,
+            topics: [assignment.topic]
+          });
+        }
+        this.props.onUpdateClassroom(currClass.docId, updatedClassroom);
+      }
+    } else {
+
+      const newTopicsArray: string[] = [];
+      for (const topic of Object.keys(currClass?.topics)) {
+
+        newTopicsArray.push(topic);
+      }
+
+      updatedClassroom = AsyncClassroom.loaded({
+        ...currClass,
+        topics: [...newTopicsArray, assignment.topic]
+      });
+      this.props.onUpdateClassroom(currClass.docId, updatedClassroom);
+    }
     const advanceTeacherTourAfterPublish =
       this.props.tourLoaded &&
       !this.props.tour.completed &&
@@ -876,6 +942,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
     this.setState(
       {
+        assignComplete: true,
         teacherTabIndex: 1,
         ...(advanceTeacherTourAfterPublish ? { tourHighlightAssignmentTitle: assignment.title } : {}),
       },
@@ -955,7 +1022,11 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                   )}
 
 
-                <TeacherTabs theme={theme} tabIndex={this.state.teacherTabIndex ?? 0} currentSelectedClassroom={this.state.currentSelectedClassroom} onAssignmentAction={this.handleAssignemntAction} tourRegistry={this.registry}
+                <TeacherTabs theme={theme}
+                  tabIndex={this.state.teacherTabIndex ?? 0}
+                  currentSelectedClassroom={this.state.currentSelectedClassroom}
+                  onAssignmentAction={this.handleAssignmentAction}
+                  tourRegistry={this.registry}
                   activeTourStepId={activeTourStepId}
                   tourHighlightAssignmentTitle={this.state.tourHighlightAssignmentTitle}
                 />
@@ -1027,6 +1098,7 @@ export default connect(
     uid: state.users.me,
     classroomList: state.classrooms.entities,
     selectedClassroom: state.classrooms.selectedClassroom,
+    classroomVersion: state.classrooms.classroomVersion,
     challenges: state.challenges,
     challengeCompletions: state.challengeCompletions,
     tour: state.tours.byId[TourDoc.IDS.TEACHER_VIEW] ?? TourDoc.DEFAULT,
@@ -1036,19 +1108,26 @@ export default connect(
 
   }),
   (dispatch) => ({
+    onConvertClassroomAssignmentsToNewFormat: async (classroom: Classroom) =>
+      await convertClassroomAssignmentsToNewFormat(classroom),
+    onConvertStudentIdsToNewFormat: async (classroom: Classroom) =>
+      await convertStudentIdsToNewFormat(classroom),
     onGetAssignments: (classroomDocId: string) =>
       dispatch(ClassroomsAction.getAssignments({ classroomDocId })),
     onCreateClassroom: (classroom: Classroom) =>
       dispatch(ClassroomsAction.createClassroom({ classroom })),
     onListOwnedClassrooms: () =>
-      dispatch(ClassroomsAction.listOwnedClassrooms({})),
+      listOwned(),
+    onReloadClassroom: (classroomId: string, current: AsyncClassroom) =>
+      load(classroomId, current),
     onListChallengesByStudentId: (studentId: string) =>
       dispatch(ClassroomsAction.listChallengesByStudentId({ studentId })),
     onShowClassroomLeaderboard: (classroom: AsyncClassroom) =>
       dispatch(ClassroomsAction.showClassroomLeaderboard({ classroom })),
     onDeleteClassroom: (classroomId: string, classroom: Classroom) =>
       dispatch(ClassroomsAction.deleteClassroom({ classroomId, classroom })),
-
+    onUpdateClassroom: (classroomId: string, classroom: AsyncClassroom) =>
+      dispatch(ClassroomsAction.setClassroom({ classroomId, classroom })),
     onRemoveStudentFromClassroom: (studentId: string, currentClassroom: AsyncClassroom) =>
       dispatch(ClassroomsAction.removeStudentFromClassroom({ studentId, currentClassroom })),
   })

@@ -12,7 +12,7 @@ export interface Classroom {
   type: 'classroom';
   docId?: string; // document ID in the database
   classroomAssignments?: Dict<ClassroomAssignment>; // assignments in the classroom, keyed by assignment ID
-  topics?: Dict<string[]>; // topic name → assignment titles in that topic (derived from classroomAssignments when saving)
+  topics?: string[]; // topic name → assignment titles in that topic (derived from classroomAssignments when saving)
   /** Teacher per-student per-challenge point overrides: studentId → assignmentKey (docId or title) → sceneId → points */
   challengePointsOverrides?: Dict<Dict<Dict<number>>>;
 
@@ -59,6 +59,7 @@ export namespace Classroom {
       studentIds: {},
       docId: '',
       type: 'classroom',
+      topics: ['No Subject'],
     }
   };
 

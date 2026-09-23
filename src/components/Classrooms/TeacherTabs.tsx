@@ -21,6 +21,7 @@ import ChallengeTabView from './ChallengeTabView';
 
 export interface TeacherTabsPublicProps extends ThemeProps, StyleProps {
   currentSelectedClassroom: AsyncClassroom | null;
+  assignComplete?: boolean;
   onAssignmentAction: (currentSelectedClassroom: AsyncClassroom, action: 'edit' | 'create', assingmentToEdit?: ClassroomAssignment) => void;
   tabIndex?: number;
   tourRegistry?: TourRegistry;
@@ -94,6 +95,7 @@ const TeacherTabs = ({
   currentSelectedClassroom,
   onAssignmentAction,
   tabIndex: tabIndexProp,
+  assignComplete,
   tourRegistry,
   activeTourStepId,
   tourHighlightAssignmentTitle,
@@ -158,6 +160,7 @@ const TeacherTabs = ({
           {tabIndex === 1 &&
             <AssignmentsView containerRef={containerRef} config={'Teacher'} theme={theme} currentSelectedClassroom={currentSelectedClassroom}
               onAssignmentAction={onAssignmentAction}
+              assignComplete={assignComplete}
               contextMenuVisible={assignmentsContextMenu.visible}
               setContextMenuVisible={setAssignmentsContextMenu}
               tourRegistry={tourRegistry}

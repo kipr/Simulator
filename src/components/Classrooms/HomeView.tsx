@@ -28,7 +28,9 @@ export interface HomeViewPublicProps extends ThemeProps, StyleProps {
 export interface HomeViewPrivateProps extends ThemeProps {
   locale: LocalizedString.Language;
   classroomList: Dict<AsyncClassroom>;
+  classroomAssignments: Dict<Dict<ClassroomAssignment>>;
   onLoadClassroom: (classroomId: string) => void;
+  onGetAllAssignments: (classroom: Classroom) => void;
 }
 
 type Props = HomeViewPublicProps & HomeViewPrivateProps;
@@ -105,6 +107,8 @@ const HomeView = ({
   currentClassroom,
   classroomList,
   onLoadClassroom,
+  classroomAssignments,
+  onGetAllAssignments,
   config
 }: Props) => {
 
@@ -118,6 +122,11 @@ const HomeView = ({
   useTeacherViewOverlayEffect(
     config === 'Teacher' && (classroomCodeDialogVisible || assignmentDetailsDialogVisible),
   );
+
+  useEffect(() => {
+    if (!loadedClassroom) return;
+    onGetAllAssignments(loadedClassroom);
+  }, [loadedClassroom]);
 
   useEffect(() => {
     if (config !== 'Student') {
@@ -150,18 +159,18 @@ const HomeView = ({
   const currentUserId = db.tokenManager?.auth().currentUser?.uid ?? '';
 
   function renderOrderedAssignments() {
-    let assignments = stateClassroom?.classroomAssignments ? Object.values(stateClassroom.classroomAssignments) : [];
+    let assignments = classroomAssignments[stateClassroom?.docId || ''] ? Object.values(classroomAssignments[stateClassroom?.docId || '']) : [];
     if (config === 'Student') {
       assignments = assignments.filter(a => assignmentListsUserInAssignedTo(a, currentUserId));
-    } else if (config === 'Teacher') {
-      assignments = assignments.filter(a => assignmentHasAnyAssignee(a));
     }
+
     const sortedAssignments = assignments.sort((a, b) => {
       const aCreated = a.createdAt ? new Date(a.createdAt).getTime() : Infinity;
       const bCreated = b.createdAt ? new Date(b.createdAt).getTime() : Infinity;
 
       return bCreated - aCreated; // Sort in descending order (newest first)
     });
+
     if (assignments) {
       return sortedAssignments.map(assignment => (
         <AssignmentItem theme={theme} key={assignment.title}>
@@ -182,12 +191,13 @@ const HomeView = ({
   }
 
   function renderUpcomingAssignments() {
-    let assignments = stateClassroom?.classroomAssignments ? Object.values(stateClassroom.classroomAssignments) : [];
+    let assignments = classroomAssignments[stateClassroom?.docId || ''] ? Object.values(classroomAssignments[stateClassroom?.docId || '']) : [];
     if (config === 'Student') {
       assignments = assignments.filter(a => assignmentListsUserInAssignedTo(a, currentUserId));
-    } else if (config === 'Teacher') {
-      assignments = assignments.filter(a => assignmentHasAnyAssignee(a));
     }
+    //  else if (config === 'Teacher') {
+    //   assignments = assignments.filter(a => assignmentHasAnyAssignee(a));
+    // }
     const upcomingAssignments = assignments.filter(assignment => {
       if (!assignment.dueDate) return false;
       const dueDate = new Date(assignment.dueDate).getTime();
@@ -267,7 +277,11 @@ export default connect((state: State) => {
   return {
     locale: state.i18n.locale,
     classroomList: state.classrooms.entities,
+    classroomAssignments: state.classrooms.assignments,
   };
 }, (dispatch, ownProps) => ({
+  onGetAllAssignments: (classroom: Classroom) => {
+    dispatch(ClassroomsAction.getAssignments({ classroomDocId: classroom.docId }));
+  },
   onLoadClassroom: (classroomId: string) => dispatch(ClassroomsAction.loadClassroom({ classroomId })),
 }))(HomeView) as React.ComponentType<HomeViewPublicProps>; 

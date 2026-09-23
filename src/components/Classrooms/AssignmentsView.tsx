@@ -24,6 +24,8 @@ import Async from 'state/State/Async';
 import Dict from 'util/objectOps/Dict';
 import { assignmentIsAssignedToUser } from '../../util/studentAssignmentVisibility';
 import { useTeacherViewOverlayEffect } from './TeacherViewOverlayContext';
+import { set } from 'immer/dist/internal';
+import { render } from 'react-dom';
 
 const TEACHER_TOUR_ASSIGNMENT_ROW_STEP_IDS = new Set([
   'teacher-assignment-in-class-list',
@@ -40,6 +42,8 @@ const TEACHER_TOUR_ROW_SPOTLIGHT_STEP_IDS = new Set([
 
 export interface AssignmentsViewPublicProps extends ThemeProps, StyleProps {
   currentSelectedClassroom: AsyncClassroom | null;
+  assignComplete?: boolean;
+
   onAssignmentAction: (currentSelectedClassroom: AsyncClassroom, action: 'edit' | 'create', assingmentToEdit?: ClassroomAssignment) => void;
   contextMenuVisible: boolean;
   config?: 'Student' | 'Teacher';
@@ -61,7 +65,11 @@ export interface AssignmentsViewPublicProps extends ThemeProps, StyleProps {
 
 export interface AssignmentsViewPrivateProps extends ThemeProps {
   locale: LocalizedString.Language;
+  classroomAssignments: Dict<Dict<ClassroomAssignment>> | undefined;
+  assignmentVersion: number;
   onDeleteAssignment: (classroom: Classroom, assignmentDocId: string) => void;
+  onGetAllAssignments: (classroom: Classroom) => void;
+  onUpdateClassroom: (classroomId: string, classroom: Classroom) => void;
 }
 
 type Props = AssignmentsViewPublicProps & AssignmentsViewPrivateProps;
@@ -218,15 +226,19 @@ function readCurrentUserFromDb(): { id: string; displayName: string } {
 const AssignmentsView = ({
   theme,
   locale,
+  classroomAssignments,
   currentSelectedClassroom,
   onAssignmentAction,
   setContextMenuVisible,
   contextMenuVisible,
   containerRef,
   onDeleteAssignment,
+  onGetAllAssignments,
+  onUpdateClassroom,
   config,
   tourRegistry,
   tourAutoOpenAssignmentDetails,
+  assignmentVersion,
   tourExpandAssignmentTopics,
   tourAssignmentDetailsStepId,
   tourGuidedStepIndex,
@@ -234,6 +246,7 @@ const AssignmentsView = ({
   tourHighlightAssignmentTitle,
 }: Props) => {
   const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
+  const [assignements, setAssignments] = useState<ClassroomAssignment[] | null>(null);
   const [selectedAssignment, setSelectedAssignment] = useState<ClassroomAssignment | null>(null);
   const [assignmentInfoBlurbVisible, setAssignmentInfoBlurbVisible] = useState(false);
   const [assignedChallengesDialogVisible, setAssignedChallengesDialogVisible] = useState(false);
@@ -243,20 +256,57 @@ const AssignmentsView = ({
   const [studentChallengeProgressByScene, setStudentChallengeProgressByScene] = useState<Dict<unknown> | null>(null);
   /** Topic / subject section titles the user has collapsed (all start expanded). */
   const [collapsedTopics, setCollapsedTopics] = useState<Set<string>>(() => new Set());
-
+  const [topics, setTopics] = useState<Dict<ClassroomAssignment[]>>({});
   useTeacherViewOverlayEffect(
     (config ?? 'Student') === 'Teacher' &&
     (assignedChallengesDialogVisible || assignedStudentsDialogVisible || deleteAssignmentDialogVisible),
   );
 
-  const loadedClassroomForProgress = Async.latestValue(currentSelectedClassroom);
+  const loadedClassroom = Async.latestValue(
+    currentSelectedClassroom
+  );
+
+  // Get all assignments for the current classroom when the component mounts or when the classroom changes
+  React.useEffect(() => {
+    if (loadedClassroom?.docId) {
+      onGetAllAssignments(loadedClassroom);
+    }
+  }, [loadedClassroom?.docId, assignmentVersion]);
+
+  React.useEffect(() => {
+    if (!loadedClassroom?.docId) {
+      return;
+    }
+
+    const assignments =
+      classroomAssignments[loadedClassroom.docId] || {};
+
+    const newTopics: Dict<ClassroomAssignment[]> = {};
+
+    for (const assignment of Object.values(assignments)) {
+      const topic = assignment.topic || 'No Subject';
+
+      if (!newTopics[topic]) {
+        newTopics[topic] = [];
+      }
+
+      newTopics[topic].push(assignment);
+    }
+    const updatedClassroom = { ...loadedClassroom, topics: Object.keys(newTopics) };
+    loadedClassroom?.topics === undefined ? onUpdateClassroom(loadedClassroom.docId, updatedClassroom) : null;
+    setTopics(newTopics);
+
+  }, [
+    loadedClassroom?.docId,
+    classroomAssignments,
+  ]);
 
   useEffect(() => {
     if (config !== 'Student') {
       setStudentChallengeProgressByScene(null);
       return;
     }
-    const docId = loadedClassroomForProgress?.docId;
+    const docId = loadedClassroom?.docId;
     const uid = currentUser.id;
     if (!docId || !uid) {
       setStudentChallengeProgressByScene(null);
@@ -276,7 +326,7 @@ const AssignmentsView = ({
     return () => {
       cancelled = true;
     };
-  }, [config, loadedClassroomForProgress?.docId, currentUser.id]);
+  }, [config, loadedClassroom?.docId, currentUser.id]);
 
   React.useEffect(() => {
     if (tourExpandAssignmentTopics) {
@@ -327,8 +377,8 @@ const AssignmentsView = ({
   }, [teacherAssignmentsListHighlight]);
 
   const studentTourDetailsAutoOpenAssignment = React.useMemo(() => {
-    if (config !== 'Student' || !loadedClassroomForProgress) return null;
-    const loaded = loadedClassroomForProgress;
+    if (config !== 'Student' || !loadedClassroom) return null;
+    const loaded = loadedClassroom;
     if (!loaded?.classroomAssignments) return null;
     const byId = loaded.classroomAssignments as unknown as Dict<ClassroomAssignment>;
     const grouped: Record<string, ClassroomAssignment[]> = {};
@@ -359,7 +409,7 @@ const AssignmentsView = ({
       }
     }
     return firstListed;
-  }, [config, loadedClassroomForProgress, currentUser.id]);
+  }, [config, loadedClassroom, currentUser.id]);
 
   const prevTourAutoOpenRef = React.useRef<boolean | undefined>(undefined);
   /** Layout phase so the dialog mounts before paint; GuidedTour measures in rAF after cDU and misses useEffect-only opens. */
@@ -454,17 +504,12 @@ const AssignmentsView = ({
     });
   }
 
-  function renderNoSubject(
+  function renderSubject(
     subject: string,
     assignments: ClassroomAssignment[],
     listTour?: { highlightFirstRow?: boolean; teacherHighlightAssignment?: ClassroomAssignment | null }
   ) {
-    const loadedClassroom = Async.latestValue(currentSelectedClassroom);
-    if (!loadedClassroom?.classroomAssignments) return null;
-    if (assignments.length === 0) return null;
-
     const collapsed = collapsedTopics.has(subject);
-
     return (
       <SubjectContainer theme={theme}>
         <SubjectHeaderBar
@@ -486,147 +531,11 @@ const AssignmentsView = ({
           <Icon icon={collapsed ? faChevronRight : faChevronDown} style={{ height: '0.75em', width: '0.75em', flexShrink: 0 }} />
           <span>{subject}</span>
         </SubjectHeaderBar>
-        {!collapsed &&
-          assignments.map((assignment, rowIdx) => (
-            config === 'Teacher' ? (
-              <div style={{ width: '100%' }} key={`${assignment.title}-row`}>
-                {(() => {
-                  const th = listTour?.teacherHighlightAssignment;
-                  const wrapHighlight =
-                    !!tourRegistry &&
-                    !!activeTourStepId &&
-                    TEACHER_TOUR_ROW_SPOTLIGHT_STEP_IDS.has(activeTourStepId) &&
-                    !!th &&
-                    (th.docId && assignment.docId
-                      ? assignment.docId === th.docId
-                      : assignment.title === th.title);
-                  const row = (
-                    <AssignmentRow theme={theme}
-                      onClick={(e: React.MouseEvent) => {
-                        e.stopPropagation();
-                        setAssignmentInfoBlurbVisible(selectedAssignment !== assignment || !assignmentInfoBlurbVisible);
-                        setSelectedAssignment(assignment);
-                      }}>
-                      <div style={{ flex: 1, fontWeight: 'bold' }}>
-                        {assignment.title}
-                      </div>
 
-                      <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
-                        <div >
-                          {assignment.dueDate !== 'No Due Date'
-                            ? `${LocalizedString.lookup(tr('Due'), locale)} ${new Date(assignment.dueDate || '').toLocaleDateString(locale)}`
-                            : `${LocalizedString.lookup(tr('Posted'), locale)} ${new Date(assignment.createdAt || '').toLocaleDateString(locale)}`}
-                        </div>
-
-                        <div style={{ marginLeft: 'auto', display: 'flex', flexDirection: 'row', gap: '4px' }}>
-                          <Icon style={{ height: '1em', padding: '0 0.5em' }} icon={faEllipsisVertical}
-                            onClick={(e: React.MouseEvent) => {
-                              e.stopPropagation();
-                              const clickX = e.clientX;
-                              const clickY = e.clientY;
-
-                              setSelectedAssignment(assignment);
-                              setContextMenuVisible({ visible: true, x: clickX, y: clickY });
-                              setContextMenu({ visible: true, x: clickX, y: clickY });
-
-                            }} />
-                        </div>
-                      </div>
-
-
-                    </AssignmentRow>
-                  );
-                  return wrapHighlight ? (
-                    <TourTarget registry={tourRegistry} targetKey="teacher-assignment-in-class-list" style={{ display: 'contents' }}>
-                      {row}
-                    </TourTarget>
-                  ) : (
-                    row
-                  );
-                })()}
-                <>
-                  {assignmentInfoBlurbVisible && selectedAssignment === assignment && renderAssignmentInfoBlurb(assignment)}
-                </>
-              </div>
-            ) : (
-              <div style={{ width: '100%' }} key={`${assignment.title}-${rowIdx}-row`}>
-                {tourRegistry && listTour?.highlightFirstRow && rowIdx === 0 ? (
-                  <TourTarget registry={tourRegistry} targetKey="student-assignment-first-row">
-                    <AssignmentRow theme={theme}
-                      onClick={(e: React.MouseEvent) => {
-                        e.stopPropagation();
-                        setAssignmentInfoBlurbVisible(selectedAssignment !== assignment || !assignmentInfoBlurbVisible);
-                        setSelectedAssignment(assignment);
-                      }}>
-                      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-                        <div style={{ fontWeight: 'bold' }}>
-                          {assignment.title}
-                        </div>
-                        {assignment.challenges && Object.keys(assignment.challenges).length > 0 && (() => {
-                          const c = countCompletedAssignmentChallenges(assignment, studentChallengeProgressByScene);
-                          return (
-                            <div style={{ fontSize: '0.82em', opacity: 0.85, marginTop: '2px' }}>
-                              {LocalizedString.lookup(tr('Challenges completed'), locale)}
-                              {': '}
-                              {c.completed}/{c.total}
-                            </div>
-                          );
-                        })()}
-                      </div>
-
-                      <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
-                        <div >
-                          {assignment.dueDate !== 'No Due Date'
-                            ? `Due ${new Date(assignment.dueDate || '').toLocaleDateString(locale)}`
-                            : `Posted ${new Date(assignment.createdAt || '').toLocaleDateString(locale)}`}
-                        </div>
-
-                      </div>
-
-
-                    </AssignmentRow>
-                  </TourTarget>
-                ) : (
-                  <AssignmentRow theme={theme}
-                    onClick={(e: React.MouseEvent) => {
-                      e.stopPropagation();
-                      setAssignmentInfoBlurbVisible(selectedAssignment !== assignment || !assignmentInfoBlurbVisible);
-                      setSelectedAssignment(assignment);
-                    }}>
-                    <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-                      <div style={{ fontWeight: 'bold' }}>
-                        {assignment.title}
-                      </div>
-                      {assignment.challenges && Object.keys(assignment.challenges).length > 0 && (() => {
-                        const c = countCompletedAssignmentChallenges(assignment, studentChallengeProgressByScene);
-                        return (
-                          <div style={{ fontSize: '0.82em', opacity: 0.85, marginTop: '2px' }}>
-                            {LocalizedString.lookup(tr('Challenges completed'), locale)}
-                            {': '}
-                            {c.completed}/{c.total}
-                          </div>
-                        );
-                      })()}
-                    </div>
-
-                    <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
-                      <div >
-                        {assignment.dueDate !== 'No Due Date'
-                          ? `Due ${new Date(assignment.dueDate || '').toLocaleDateString(locale)}`
-                          : `Posted ${new Date(assignment.createdAt || '').toLocaleDateString(locale)}`}
-                      </div>
-
-                    </div>
-
-
-                  </AssignmentRow>
-                )}
-                <>
-                  {assignmentInfoBlurbVisible && selectedAssignment === assignment && renderAssignmentInfoBlurb(assignment)}
-                </>
-              </div>
-            )
-          ))}
+        {!collapsed && (
+          config === 'Teacher' ? renderTeacherAssignmentsView(assignments, listTour)
+            : renderStudentAssignmentsView(assignments, listTour)
+        )}
       </SubjectContainer>
     );
   }
@@ -671,23 +580,258 @@ const AssignmentsView = ({
       </ContextMenu>
     );
   }
+  function renderStudentSubjectView() {
 
-  const loadedClassroom = Async.latestValue(currentSelectedClassroom);
-  const assignments = loadedClassroom?.classroomAssignments;
-  const topics: Dict<ClassroomAssignment[]> = {};
-  if (assignments) {
-    for (const assignment of Object.values(assignments)) {
-      if (config === 'Student' && !assignmentIsAssignedToUser(loadedClassroom, assignment, currentUser.id)) {
-        continue;
-      }
+    const studentAssignments = Object.values(classroomAssignments[loadedClassroom?.docId || ''] || {}).filter(assignment => assignmentIsAssignedToUser(loadedClassroom, assignment, currentUser.id));
+
+    const studentTopics: Dict<ClassroomAssignment[]> = {};
+    for (const assignment of studentAssignments) {
       const topic = assignment.topic || 'No Subject';
-      if (!topics[topic]) {
-        topics[topic] = [];
+      if (!studentTopics[topic]) {
+        studentTopics[topic] = [];
       }
-      topics[topic].push(assignment);
+      studentTopics[topic].push(assignment);
     }
+
+    const orderedTopicAssignments = Object.keys(studentTopics).sort((a, b) => {
+      return a.localeCompare(b, undefined, { sensitivity: 'base' });
+    });
+
+    return (
+      <TourTarget registry={tourRegistry} targetKey="student-assignments-panel">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1em', padding: '8px', width: '100%' }}>
+          {!hasStudentAssignments ? (
+            tourRegistry ? (
+              <TourTarget registry={tourRegistry} targetKey="student-assignment-first-row">
+                <div style={{ padding: '1em', color: theme.color }}>
+                  {LocalizedString.lookup(tr('You have no assignments in this class yet.'), locale)}
+                </div>
+              </TourTarget>
+            ) : (
+              <div style={{ padding: '1em', color: theme.color }}>
+                {LocalizedString.lookup(tr('You have no assignments in this class yet.'), locale)}
+              </div>
+            )
+          ) : (
+            (() => {
+              let passedFirstNonEmptyTopic = false;
+              return Object.keys(studentTopics).map(topic => {
+                const list = studentTopics[topic] || [];
+                if (list.length === 0) {
+                  return <div key={`${topic}-student-block`}>{renderSubject(topic, list, undefined)}</div>;
+                }
+                const highlightFirstRow = !passedFirstNonEmptyTopic;
+                passedFirstNonEmptyTopic = true;
+                return (
+                  <div key={`${topic}-student-block`}>
+                    {renderSubject(topic, list, { highlightFirstRow })}
+                  </div>
+                );
+              });
+            })()
+          )}
+        </div>
+      </TourTarget>
+
+
+    );
   }
 
+  function renderStudentAssignmentsView(assignments: ClassroomAssignment[], listTour?: { highlightFirstRow?: boolean; teacherHighlightAssignment?: ClassroomAssignment | null }) {
+    return (assignments.map((assignment, rowIdx) => (
+      (Object.keys(assignment.assignedTo).includes(currentUser.id) &&
+        <div style={{ width: '100%' }} key={`${assignment.title}-${rowIdx}-row`}>
+          {tourRegistry && listTour?.highlightFirstRow && rowIdx === 0 ? (
+            <TourTarget registry={tourRegistry} targetKey="student-assignment-first-row">
+              <AssignmentRow theme={theme}
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  setAssignmentInfoBlurbVisible(selectedAssignment !== assignment || !assignmentInfoBlurbVisible);
+                  setSelectedAssignment(assignment);
+                }}>
+                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ fontWeight: 'bold' }}>
+                    {assignment.title}
+                  </div>
+                  {assignment.challenges && Object.keys(assignment.challenges).length > 0 && (() => {
+                    const c = countCompletedAssignmentChallenges(assignment, studentChallengeProgressByScene);
+                    return (
+                      <div style={{ fontSize: '0.82em', opacity: 0.85, marginTop: '2px' }}>
+                        {LocalizedString.lookup(tr('Challenges completed'), locale)}
+                        {': '}
+                        {c.completed}/{c.total}
+                      </div>
+                    );
+                  })()}
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
+                  <div >
+                    {assignment.dueDate !== 'No Due Date'
+                      ? `Due ${new Date(assignment.dueDate || '').toLocaleDateString(locale)}`
+                      : `Posted ${new Date(assignment.createdAt || '').toLocaleDateString(locale)}`}
+                  </div>
+
+                </div>
+
+
+              </AssignmentRow>
+            </TourTarget>
+          ) : (
+            <AssignmentRow theme={theme}
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+                setAssignmentInfoBlurbVisible(selectedAssignment !== assignment || !assignmentInfoBlurbVisible);
+                setSelectedAssignment(assignment);
+              }}>
+              <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+                <div style={{ fontWeight: 'bold' }}>
+                  {assignment.title}
+                </div>
+                {assignment.challenges && Object.keys(assignment.challenges).length > 0 && (() => {
+                  const c = countCompletedAssignmentChallenges(assignment, studentChallengeProgressByScene);
+                  return (
+                    <div style={{ fontSize: '0.82em', opacity: 0.85, marginTop: '2px' }}>
+                      {LocalizedString.lookup(tr('Challenges completed'), locale)}
+                      {': '}
+                      {c.completed}/{c.total}
+                    </div>
+                  );
+                })()}
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
+                <div >
+                  {assignment.dueDate !== 'No Due Date'
+                    ? `Due ${new Date(assignment.dueDate || '').toLocaleDateString(locale)}`
+                    : `Posted ${new Date(assignment.createdAt || '').toLocaleDateString(locale)}`}
+                </div>
+
+              </div>
+
+
+            </AssignmentRow>
+          )}
+          <>
+            {assignmentInfoBlurbVisible && selectedAssignment === assignment && renderAssignmentInfoBlurb(assignment)}
+          </>
+        </div>
+      )
+    )
+    ));
+  }
+
+  function renderTeacherSubjectView() {
+
+    return (
+      <React.Fragment>
+        {tourRegistry &&
+          activeTourStepId &&
+          TEACHER_TOUR_ASSIGNMENT_ROW_STEP_IDS.has(activeTourStepId) &&
+          !teacherAssignmentsListHighlight && (
+          <div style={{ padding: '12px' }}>
+            <TourTarget registry={tourRegistry} targetKey="teacher-assignment-in-class-list" style={{ display: 'contents' }}>
+              <div style={{ color: theme.color }}>
+                {LocalizedString.lookup(
+                  tr('Assignments you publish will appear in the lists below, grouped by topic.'),
+                  locale
+                )}
+              </div>
+            </TourTarget>
+          </div>
+        )}
+        <div style={{ display: 'flex', flexDirection: 'row', gap: '5em', padding: '8px' }}>
+
+          {/* No Subject Container Column */}
+          {<div style={{ width: '50%' }}>
+            {renderSubject('No Subject', topics['No Subject'] || [], {
+              teacherHighlightAssignment: teacherAssignmentsListHighlight,
+            })}
+          </div>}
+
+          {/* Named Subject Container Column */}
+          <div style={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
+            {Object.keys(topics).filter(topic => topic !== 'No Subject')
+              .map(topic => (
+
+                <div key={`${topic}-subject-column`} style={{ marginBottom: '2em' }}>
+                  {renderSubject(topic, topics[topic] || [], {
+                    teacherHighlightAssignment: teacherAssignmentsListHighlight,
+                  })}
+                </div>
+              ))}
+          </div>
+
+          {/* HELLOOOOOOO */}
+        </div>
+      </React.Fragment>
+
+    );
+  }
+
+  function renderTeacherAssignmentsView(assignments: ClassroomAssignment[], listTour?: { highlightFirstRow?: boolean; teacherHighlightAssignment?: ClassroomAssignment | null }) {
+    return (assignments.map((assignment, rowIdx) => (
+      <div style={{ width: '100%' }} key={`${assignment.title}-row`}>
+        {(() => {
+          const th = listTour?.teacherHighlightAssignment;
+          const wrapHighlight =
+            !!tourRegistry &&
+            !!activeTourStepId &&
+            TEACHER_TOUR_ROW_SPOTLIGHT_STEP_IDS.has(activeTourStepId) &&
+            !!th &&
+            (th.docId && assignment.docId
+              ? assignment.docId === th.docId
+              : assignment.title === th.title);
+          const row = (
+            <AssignmentRow theme={theme}
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+                setAssignmentInfoBlurbVisible(selectedAssignment !== assignment || !assignmentInfoBlurbVisible);
+                setSelectedAssignment(assignment);
+              }}>
+              <div style={{ flex: 1, fontWeight: 'bold' }}>
+                {assignment.title}
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
+                <div >
+                  {assignment.dueDate !== 'No Due Date'
+                    ? `${LocalizedString.lookup(tr('Due'), locale)} ${new Date(assignment.dueDate || '').toLocaleDateString(locale)}`
+                    : `${LocalizedString.lookup(tr('Posted'), locale)} ${new Date(assignment.createdAt || '').toLocaleDateString(locale)}`}
+                </div>
+
+                <div style={{ marginLeft: 'auto', display: 'flex', flexDirection: 'row', gap: '4px' }}>
+                  <Icon style={{ height: '1em', padding: '0 0.5em' }} icon={faEllipsisVertical}
+                    onClick={(e: React.MouseEvent) => {
+                      e.stopPropagation();
+                      const clickX = e.clientX;
+                      const clickY = e.clientY;
+
+                      setSelectedAssignment(assignment);
+                      setContextMenuVisible({ visible: true, x: clickX, y: clickY });
+                      setContextMenu({ visible: true, x: clickX, y: clickY });
+
+                    }} />
+                </div>
+              </div>
+
+
+            </AssignmentRow>
+          );
+          return wrapHighlight ? (
+            <TourTarget registry={tourRegistry} targetKey="teacher-assignment-in-class-list" style={{ display: 'contents' }}>
+              {row}
+            </TourTarget>
+          ) : (
+            row
+          );
+        })()}
+        <>
+          {assignmentInfoBlurbVisible && selectedAssignment === assignment && renderAssignmentInfoBlurb(assignment)}
+        </>
+      </div>
+    )));
+  }
   const topicNamesStudent = Object.keys(topics).sort((a, b) => {
     if (a === 'No Subject') return -1;
     if (b === 'No Subject') return 1;
@@ -696,6 +840,8 @@ const AssignmentsView = ({
   const hasStudentAssignments =
     config === 'Student' &&
     topicNamesStudent.some(name => (topics[name] || []).length > 0);
+
+
 
   return (
     <Container $theme={theme}>
@@ -722,109 +868,11 @@ const AssignmentsView = ({
           const scrollArea = (
             <StyledScrollArea theme={theme}>
               {config === 'Student' ? (
-                tourRegistry ? (
-                  <TourTarget registry={tourRegistry} targetKey="student-assignments-panel">
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1em', padding: '8px', width: '100%' }}>
-                      {!hasStudentAssignments ? (
-                        tourRegistry ? (
-                          <TourTarget registry={tourRegistry} targetKey="student-assignment-first-row">
-                            <div style={{ padding: '1em', color: theme.color }}>
-                              {LocalizedString.lookup(tr('You have no assignments in this class yet.'), locale)}
-                            </div>
-                          </TourTarget>
-                        ) : (
-                          <div style={{ padding: '1em', color: theme.color }}>
-                            {LocalizedString.lookup(tr('You have no assignments in this class yet.'), locale)}
-                          </div>
-                        )
-                      ) : (
-                        (() => {
-                          let passedFirstNonEmptyTopic = false;
-                          return topicNamesStudent.map(topic => {
-                            const list = topics[topic] || [];
-                            if (list.length === 0) {
-                              return <div key={`${topic}-student-block`}>{renderNoSubject(topic, list, undefined)}</div>;
-                            }
-                            const highlightFirstRow = !passedFirstNonEmptyTopic;
-                            passedFirstNonEmptyTopic = true;
-                            return (
-                              <div key={`${topic}-student-block`}>
-                                {renderNoSubject(topic, list, { highlightFirstRow })}
-                              </div>
-                            );
-                          });
-                        })()
-                      )}
-                    </div>
-                  </TourTarget>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1em', padding: '8px', width: '100%' }}>
-                    {!hasStudentAssignments ? (
-                      <div style={{ padding: '1em', color: theme.color }}>
-                        {LocalizedString.lookup(tr('You have no assignments in this class yet.'), locale)}
-                      </div>
-                    ) : (
-                      (() => {
-                        let passedFirstNonEmptyTopic = false;
-                        return topicNamesStudent.map(topic => {
-                          const list = topics[topic] || [];
-                          if (list.length === 0) {
-                            return <div key={`${topic}-student-block`}>{renderNoSubject(topic, list, undefined)}</div>;
-                          }
-                          const highlightFirstRow = !passedFirstNonEmptyTopic;
-                          passedFirstNonEmptyTopic = true;
-                          return (
-                            <div key={`${topic}-student-block`}>
-                              {renderNoSubject(topic, list, { highlightFirstRow })}
-                            </div>
-                          );
-                        });
-                      })()
-                    )}
-                  </div>
-                )
+                renderStudentSubjectView()
               ) : (
-                <>
-                  {tourRegistry &&
-                    activeTourStepId &&
-                    TEACHER_TOUR_ASSIGNMENT_ROW_STEP_IDS.has(activeTourStepId) &&
-                    !teacherAssignmentsListHighlight && (
-                    <div style={{ padding: '12px' }}>
-                      <TourTarget registry={tourRegistry} targetKey="teacher-assignment-in-class-list" style={{ display: 'contents' }}>
-                        <div style={{ color: theme.color }}>
-                          {LocalizedString.lookup(
-                            tr('Assignments you publish will appear in the lists below, grouped by topic.'),
-                            locale
-                          )}
-                        </div>
-                      </TourTarget>
-                    </div>
-                  )}
-                  <div style={{ display: 'flex', flexDirection: 'row', gap: '5em', padding: '8px' }}>
-
-                    {/* No Subject Container Column */}
-                    {<div style={{ width: '50%' }}>
-                      {renderNoSubject('No Subject', topics['No Subject'] || [], {
-                        teacherHighlightAssignment: teacherAssignmentsListHighlight,
-                      })}
-                    </div>}
-
-                    {/* Named Subject Container Column */}
-                    <div style={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
-                      {Object.keys(topics).filter(topic => topic !== 'No Subject')
-                        .map(topic => (
-
-                          <div key={`${topic}-subject-column`} style={{ marginBottom: '2em' }}>
-                            {renderNoSubject(topic, topics[topic] || [], {
-                              teacherHighlightAssignment: teacherAssignmentsListHighlight,
-                            })}
-                          </div>
-                        ))}
-                    </div>
-
-                  </div>
-                </>
-              )}
+                renderTeacherSubjectView()
+              )
+              }
 
             </StyledScrollArea>
           );
@@ -838,37 +886,43 @@ const AssignmentsView = ({
         })()}
 
       </AssignmentsListContainer>
-      {assignedChallengesDialogVisible && selectedAssignment && (
-        <AssignmentDetailsDialog
-          key={tourAssignmentDetailsStepId ? `${tourAssignmentDetailsStepId}:${selectedAssignment.docId}` : selectedAssignment.docId}
-          theme={theme}
-          onClose={() => setAssignedChallengesDialogVisible(false)}
-          assignment={selectedAssignment}
-          config={config}
-          challengeProgressions={config === 'Student' ? studentChallengeProgressByScene : undefined}
-          tourRegistry={tourRegistry}
-        />
-      )}
-      {assignedStudentsDialogVisible && selectedAssignment && (
-        <SeeAssignedToDialog
-          theme={theme}
-          onClose={() => setAssignedStudentsDialogVisible(false)}
-          assignment={selectedAssignment}
-        />
-      )}
+      {
+        assignedChallengesDialogVisible && selectedAssignment && (
+          <AssignmentDetailsDialog
+            key={tourAssignmentDetailsStepId ? `${tourAssignmentDetailsStepId}:${selectedAssignment.docId}` : selectedAssignment.docId}
+            theme={theme}
+            onClose={() => setAssignedChallengesDialogVisible(false)}
+            assignment={selectedAssignment}
+            config={config}
+            challengeProgressions={config === 'Student' ? studentChallengeProgressByScene : undefined}
+            tourRegistry={tourRegistry}
+          />
+        )
+      }
+      {
+        assignedStudentsDialogVisible && selectedAssignment && (
+          <SeeAssignedToDialog
+            theme={theme}
+            onClose={() => setAssignedStudentsDialogVisible(false)}
+            assignment={selectedAssignment}
+          />
+        )
+      }
       {contextMenuVisible && renderContextMenu(contextMenu.x, contextMenu.y)}
-      {deleteAssignmentDialogVisible && selectedAssignment && (
-        <DeleteDialog
-          theme={theme}
-          onClose={() => setDeleteAssignmentDialogVisible(false)}
-          onAccept={() => {
-            setDeleteAssignmentDialogVisible(false);
-            onDeleteAssignment(Async.latestValue(currentSelectedClassroom), selectedAssignment?.docId || '');
+      {
+        deleteAssignmentDialogVisible && selectedAssignment && (
+          <DeleteDialog
+            theme={theme}
+            onClose={() => setDeleteAssignmentDialogVisible(false)}
+            onAccept={() => {
+              setDeleteAssignmentDialogVisible(false);
+              onDeleteAssignment(Async.latestValue(currentSelectedClassroom), selectedAssignment?.docId || '');
 
-          }}
-          name={tr(selectedAssignment.title)}
-        />
-      )}
+            }}
+            name={tr(selectedAssignment.title)}
+          />
+        )
+      }
     </Container >
   );
 };
@@ -877,11 +931,18 @@ export default connect((state: State) => {
   return {
     locale: state.i18n.locale,
     classroomList: state.classrooms.entities,
-    challenges: state.challenges
+    challenges: state.challenges,
+    classroomAssignments: state.classrooms.assignments,
+    assignmentVersion: state.classrooms.assignmentVersion,
   };
 }, (dispatch, ownProps) => ({
   onDeleteAssignment: (classroom: Classroom, assignmentDocId: string) => {
     dispatch(ClassroomsAction.deleteAssignment({ classroom, assignmentDocId }));
-  }
+  },
+  onGetAllAssignments: (classroom: Classroom) => {
+    dispatch(ClassroomsAction.getAssignments({ classroomDocId: classroom.docId }));
+  },
+  onUpdateClassroom: (classroomId: string, classroom: Classroom) =>
+    dispatch(ClassroomsAction.updateClassroom({ classroomId, classroom })),
 
 }))(AssignmentsView) as React.ComponentType<AssignmentsViewPublicProps>; 

@@ -20,7 +20,7 @@ import store, { State as ReduxState } from '../../state';
 import { Challenges } from '../../state/State';
 import ScrollArea from '../interface/ScrollArea';
 import ResizeableComboBox from '../interface/ResizeableComboBox';
-import { ClassroomsAction } from 'state/reducer/classrooms';
+import { ClassroomsAction, convertClassroomTopics, setAssignment } from 'state/reducer/classrooms';
 import { ChallengesAction } from 'state/reducer/challenges';
 import TourTarget from '../Tours/TourTarget';
 import { TourRegistry } from '../../tours/TourRegistry';
@@ -46,7 +46,7 @@ export interface CreateAssignmentViewPrivateProps extends ThemeProps {
   locale: LocalizedString.Language;
   challenges: Challenges;
   onCreateAssignment?: (classroom: Classroom, assignment: ClassroomAssignment, students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => void;
-  onEditAssignment?: (classroom: Classroom, docId: string, assignment: ClassroomAssignment) => void;
+  onEditAssignment?: (classroom: Classroom, docId: string, assignment: ClassroomAssignment, studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => void;
   onListUserChallenges?: () => void;
 }
 interface ClickProps {
@@ -234,6 +234,7 @@ const CreateAssignmentView = ({
   const [assignmentInfo, setAssignmentInfo] = useState<Partial<ClassroomAssignment>>(
     {
       createdAt: originalAssignment?.createdAt || '',
+      docId: originalAssignment?.docId || '',
       challenges: originalAssignment?.challenges || {},
       dueDate: originalAssignment?.dueDate || "No Due Date",
       description: originalAssignment?.description || '',
@@ -244,17 +245,46 @@ const CreateAssignmentView = ({
     });
   const [isCreatingTopic, setIsCreatingTopic] = React.useState(false);
   const [newTopic, setNewTopic] = React.useState("");
-  const [topics, setTopics] = useState<ResizeableComboBox.Option[]>([Object.keys(loadedClassroom?.topics ?? {}).length > 0
-    ? Object.keys(loadedClassroom.topics).map(topic => (topic === 'No Subject'
-      ? { text: LocalizedString.lookup(tr('No Subject'), locale), data: 'No Subject' }
-      : { text: topic, data: topic }))
-      .concat({ text: LocalizedString.lookup(tr('Create Subject'), locale), data: 'Create Subject' })
-    : [{ text: LocalizedString.lookup(tr('No Subject'), locale), data: 'No Subject' }, { text: LocalizedString.lookup(tr('Create Subject'), locale), data: 'Create Subject' }]].flat());
+
+  const classroomTopics = Array.isArray(loadedClassroom?.topics)
+    ? loadedClassroom.topics
+    : Object.keys(loadedClassroom?.topics ?? {});
+
+  const [topics, setTopics] = useState<ResizeableComboBox.Option[]>(
+    classroomTopics.length > 0
+      ? classroomTopics
+        .map(topic =>
+          (topic === 'No Subject'
+            ? {
+              text: LocalizedString.lookup(tr('No Subject'), locale),
+              data: 'No Subject'
+            }
+            : {
+              text: topic,
+              data: topic
+            })
+        )
+        .concat({
+          text: LocalizedString.lookup(tr('Create Subject'), locale),
+          data: 'Create Subject'
+        })
+      : [
+        {
+          text: LocalizedString.lookup(tr('No Subject'), locale),
+          data: 'No Subject'
+        },
+        {
+          text: LocalizedString.lookup(tr('Create Subject'), locale),
+          data: 'Create Subject'
+        }
+      ]
+  );
   const [assignedPointsSet, setAssignedPointsSet] = useState<Dict<{ challenge: ClassroomAssignmentChallenge, points: number | '' }>>({});
-  const [topicIndex, setTopicIndex] = React.useState(originalAssignment?.topic ? Object.keys(loadedClassroom?.topics || {}).indexOf(originalAssignment.topic) : topics.findIndex(
-    topic => topic.data === 'No Subject'
-  ));
-  const [originalAssignmentInfo, setOriginalAssignmentInfo] = useState<Partial<ClassroomAssignment>>(originalAssignment);
+  const [topicIndex, setTopicIndex] = React.useState(
+    originalAssignment?.topic
+      ? topics.findIndex(topic => topic.data === originalAssignment.topic)
+      : topics.findIndex(topic => topic.data === 'No Subject')
+  );
 
   function handleAssign(info: ClassroomAssignment, studentsOverride?: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) {
     const students = studentsOverride ?? selectedStudents;
@@ -264,7 +294,7 @@ const CreateAssignmentView = ({
   }
   function handleEdit(info: ClassroomAssignment) {
     onEditComplete?.(selectedStudents, info);
-    onEditAssignment(loadedClassroom, originalAssignment?.docId || '', info);
+    onEditAssignment(loadedClassroom, originalAssignment?.docId || '', info, selectedStudents);
     onClose();
   }
   useEffect(() => {
@@ -293,13 +323,16 @@ const CreateAssignmentView = ({
 
   useEffect(() => {
     if (selectedStudents) {
-      setAssignmentInfo(prev => ({
-        ...prev,
-        assignedTo: Object.fromEntries(Object.entries(selectedStudents).map(([id, student]) => [id, { id: student.id, displayName: student.displayName }]))
-      }));
+      setAssignmentInfo(prev => (
+        {
+          ...prev,
+          assignedTo: Object.fromEntries(Object.entries(selectedStudents).map(([id, student]) => [id, { id: student.id, displayName: student.displayName }]))
+        }));
     }
   }, [selectedStudents]);
-
+  React.useEffect(() => {
+    setEnableAssign((assignmentInfo?.title ?? '').trim().length > 0);
+  }, [assignmentInfo?.title]);
 
   useEffect(() => {
     onListUserChallenges?.();
@@ -504,7 +537,7 @@ const CreateAssignmentView = ({
     if (Object.keys(selectedStudents).length > 0) {
       return selectedStudents;
     }
-    return loadedClassroom?.studentIds ?? {};
+    return {};
   }
 
   function runCreateAssign() {
@@ -528,12 +561,7 @@ const CreateAssignmentView = ({
     handleAssign(updatedAssignmentInfo, students);
   }
 
-  const createAssignDisabled = originalAssignment
-    ? !(Object.keys(selectedStudents).length > 0)
-    : !(
-      assignButtonTourActive ||
-        enableAssign
-    );
+  const finishButtonDisabled = !(assignButtonTourActive || enableAssign);
 
   return (
     <Container theme={theme}>
@@ -548,7 +576,7 @@ const CreateAssignmentView = ({
         </div>
         {tourRegistry ? (
           <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-assign" style={{ display: 'contents' }}>
-            <Button theme={theme} disabled={createAssignDisabled}
+            <Button theme={theme} disabled={finishButtonDisabled}
               onClick={() => {
                 originalAssignment
                   ? (() => {
@@ -567,7 +595,7 @@ const CreateAssignmentView = ({
             </Button>
           </TourTarget>
         ) : (
-          <Button theme={theme} disabled={createAssignDisabled}
+          <Button theme={theme} disabled={finishButtonDisabled}
             onClick={() => {
               originalAssignment
                 ? (() => {
@@ -676,11 +704,11 @@ const CreateAssignmentView = ({
                       setNewTopic("");
                       return;
                     }
-                  
+
                     setIsCreatingTopic(false);
                     setTopicIndex(optionIndex);
 
-                  
+
 
                     setAssignmentInfo({
                       ...assignmentInfo,
@@ -785,6 +813,7 @@ const CreateAssignmentView = ({
                       <DateTimeInput
                         type="datetime-local"
                         theme={theme}
+                        value={assignmentInfo.dueDate === "No Due Date" ? "" : assignmentInfo.dueDate}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           setAssignmentInfo({
                             ...assignmentInfo,
@@ -868,6 +897,7 @@ const CreateAssignmentView = ({
                     <DateTimeInput
                       type="datetime-local"
                       theme={theme}
+                      value={assignmentInfo.dueDate}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setAssignmentInfo({
                           ...assignmentInfo,
@@ -909,11 +939,14 @@ export default connect((state: ReduxState) => {
 
   };
 }, dispatch => ({
-  onCreateAssignment: (classroom: Classroom, assignment: ClassroomAssignment, studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => {
-    dispatch(ClassroomsAction.setAssignment({ classroom, assignment, studentIds }));
+  onCreateAssignment: async (classroom: Classroom, assignment: ClassroomAssignment, studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => {
+    // dispatch(ClassroomsAction.setAssignment({ classroom, assignment, studentIds }));
+    !Array.isArray(classroom.topics) ? await convertClassroomTopics(classroom) : null;
+
+    await setAssignment(classroom, assignment, studentIds);
   },
-  onEditAssignment: (classroom: Classroom, docId: string, assignment: ClassroomAssignment) => {
-    dispatch(ClassroomsAction.editAssignment({ classroom, assignmentDocId: docId, assignment }));
+  onEditAssignment: (classroom: Classroom, docId: string, assignment: ClassroomAssignment, studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => {
+    dispatch(ClassroomsAction.editAssignment({ classroom, assignmentDocId: docId, assignment, studentIds }));
   },
   onListUserChallenges: () => {
     dispatch(ChallengesAction.listUserChallenges({}));
