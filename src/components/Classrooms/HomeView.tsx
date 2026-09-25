@@ -13,7 +13,7 @@ import Dict from '../../util/objectOps/Dict';
 import { useEffect, useState } from 'react';
 import ScrollArea from '../interface/ScrollArea';
 import Async from 'state/State/Async';
-import { ClassroomsAction, getGradebook } from '../../state/reducer/classrooms';
+import { ClassroomsAction, getGradebook, loadClassroom } from '../../state/reducer/classrooms';
 import ClassroomCodeDialog from '../Dialog/ClassroomCodeDialog';
 import AssignmentDetailsDialog from '../Dialog/AssignmentDetailsDialog';
 import db from '../../db';
@@ -29,6 +29,7 @@ export interface HomeViewPrivateProps extends ThemeProps {
   locale: LocalizedString.Language;
   classroomList: Dict<AsyncClassroom>;
   classroomAssignments: Dict<Dict<ClassroomAssignment>>;
+  classroomVersion: number;
   onLoadClassroom: (classroomId: string) => void;
   onGetAllAssignments: (classroom: Classroom) => void;
 }
@@ -106,6 +107,7 @@ const HomeView = ({
   locale,
   currentClassroom,
   classroomList,
+  classroomVersion,
   onLoadClassroom,
   classroomAssignments,
   onGetAllAssignments,
@@ -118,7 +120,7 @@ const HomeView = ({
   const [assignmentDetailsDialogVisible, setAssignmentDetailsDialogVisible] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState<ClassroomAssignment | null>(null);
   const [studentChallengeProgressByScene, setStudentChallengeProgressByScene] = useState<Dict<unknown> | null>(null);
-
+  console.log("homeView stateClassroom:", stateClassroom);
   useTeacherViewOverlayEffect(
     config === 'Teacher' && (classroomCodeDialogVisible || assignmentDetailsDialogVisible),
   );
@@ -127,6 +129,13 @@ const HomeView = ({
     if (!loadedClassroom) return;
     onGetAllAssignments(loadedClassroom);
   }, [loadedClassroom]);
+
+  // useEffect(() => {
+  //   console.log("classroomVersion changed, reloading classroom");
+  //   if (loadedClassroom) {
+  //     onLoadClassroom(loadedClassroom.docId);
+  //   }
+  // }, [classroomVersion]);
 
   useEffect(() => {
     if (config !== 'Student') {
@@ -224,7 +233,7 @@ const HomeView = ({
       ));
     }
     return <h2>{LocalizedString.lookup(tr('No upcoming assignments'), locale)}</h2>
-    ;
+      ;
 
   }
   return (
@@ -278,10 +287,12 @@ export default connect((state: State) => {
     locale: state.i18n.locale,
     classroomList: state.classrooms.entities,
     classroomAssignments: state.classrooms.assignments,
+    classroomVersion: state.classrooms.classroomVersion,
   };
 }, (dispatch, ownProps) => ({
   onGetAllAssignments: (classroom: Classroom) => {
     dispatch(ClassroomsAction.getAssignments({ classroomDocId: classroom.docId }));
   },
-  onLoadClassroom: (classroomId: string) => dispatch(ClassroomsAction.loadClassroom({ classroomId })),
+  onLoadClassroom: (docId: string) =>
+    loadClassroom(docId),
 }))(HomeView) as React.ComponentType<HomeViewPublicProps>; 

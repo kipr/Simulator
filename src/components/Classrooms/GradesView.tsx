@@ -13,7 +13,7 @@ import { AsyncClassroom, Classroom, ClassroomAssignment } from '../../state/Stat
 import Dict from '../../util/objectOps/Dict';
 import { useEffect, useMemo, useState } from 'react';
 import Async from 'state/State/Async';
-import { ClassroomsAction, getGradebook } from '../../state/reducer/classrooms';
+import { ClassroomsAction, getAssignments, getGradebook, load, loadAssignments } from '../../state/reducer/classrooms';
 import AssignmentSubmissionDetails from '../Dialog/AssignmentSubmissionDetails';
 import ChallengeCompletion from '../../state/State/ChallengeCompletion';
 import Input from '../interface/Input';
@@ -30,6 +30,7 @@ import {
 } from '../../util/exportGradesCsv';
 import { nativeScrollbarChrome } from '../../util/nativeScrollbarChrome';
 import { useTeacherViewOverlayEffect } from './TeacherViewOverlayContext';
+import ScrollArea from '../interface/ScrollArea';
 
 
 export interface GradesViewPublicProps extends ThemeProps, StyleProps {
@@ -42,6 +43,8 @@ export interface GradesViewPublicProps extends ThemeProps, StyleProps {
 export interface GradesViewPrivateProps extends ThemeProps {
   locale: LocalizedString.Language;
   classroomAssignments: Dict<Dict<ClassroomAssignment>>;
+  classroomList: Dict<AsyncClassroom>;
+  classroomVersion: number;
   onGetGradebook: (classroomDocId: string) => void;
   onSetChallengePointsOverride: (payload: {
     classroom: Classroom;
@@ -50,6 +53,7 @@ export interface GradesViewPrivateProps extends ThemeProps {
     sceneId: string;
     overridePoints: number | null;
   }) => void;
+  onReloadClassroom: (currentClassroom: AsyncClassroom) => void;
 }
 
 type Props = GradesViewPublicProps & GradesViewPrivateProps;
@@ -116,7 +120,9 @@ const ScrollContainer = styled('div', () => ({
   height: '80%',
   ...nativeScrollbarChrome,
 }));
-
+const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
+  flex: 1,
+}));
 const Table = styled('table', () => ({
   width: '100%',
   borderCollapse: 'collapse',
@@ -210,7 +216,18 @@ const ClearFilterButton = styled('div', (props: ThemeProps) => ({
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
 }));
-
+const GradesListContainer = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  borderColor: props.theme.borderColor,
+  borderWidth: '4px',
+  borderStyle: 'solid',
+  borderRadius: `${props.theme.itemPadding * 2}px`,
+  padding: '8px',
+  margin: '8px',
+  backgroundColor: 'lightpurple',
+  height: '100%',
+}));
 const ExportButton = styled(ClearFilterButton, () => ({
   backgroundColor: '#2a4d2e',
   ':hover': {
@@ -319,21 +336,22 @@ const GradesView = ({
   theme,
   locale,
   classroomAssignments,
+  classroomList,
+  classroomVersion,
   currentSelectedClassroom,
   contextMenuVisible,
   setContextMenuVisible,
   onAssignmentAction,
   onGetGradebook,
-  onSetChallengePointsOverride
+  onSetChallengePointsOverride,
+  onReloadClassroom
 }: Props) => {
   const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
   const [selectedAssignment, setSelectedAssignment] = useState<ClassroomAssignment | null>(null);
   const loadedClassroom = Async.latestValue(currentSelectedClassroom);
 
-  // const [classroomAssignments, setClassroomAssignments] = useState<ClassroomAssignment[]>(
-  //   loadedClassroom ? Object.values(loadedClassroom.classroomAssignments ?? {}) : []
-  // );
 
+  console.log('GradesView: loadedClassroom', loadedClassroom);
   const sortedStudents = useMemo(() => {
     const s = loadedClassroom?.studentIds;
     return s ? Object.values(s).sort((a, b) => a.displayName.localeCompare(b.displayName)) : [];
@@ -357,6 +375,14 @@ const GradesView = ({
 
   useTeacherViewOverlayEffect(seeSubmissionDialogVisible);
 
+  const selectedDocId =
+    Async.latestValue(currentSelectedClassroom)?.docId;
+
+  const currClassroom =
+    selectedDocId
+      ? classroomList[selectedDocId] ?? currentSelectedClassroom
+      : currentSelectedClassroom;
+  console.log('GradesView: currClassroom', currClassroom);
   useEffect(() => {
     setStudentIdsFilter([]);
     setChallengeKeysFilter([]);
@@ -367,14 +393,17 @@ const GradesView = ({
     setStudentIdsFilter(prev => prev.filter(id => valid.has(id)));
   }, [rosterStudentIdsKey, sortedStudents]);
 
-  // useEffect(() => {
-  //   if (loadedClassroom?.classroomAssignments) {
-  //     setClassroomAssignments(Object.values(loadedClassroom.classroomAssignments));
-  //   } else {
-  //     setClassroomAssignments([]);
-  //   }
-  // }, [loadedClassroom]);
+  // React.useEffect(() => {
+  //   console.log('GradesView: useEffect: onReloadClassroom', currClassroom);
+  //   onReloadClassroom(currClassroom);
+  // }, [classroomVersion]);
 
+  React.useEffect(() => {
+    console.log('GradesView: useEffect: onReloadClassroom', currClassroom);
+    onReloadClassroom(currClassroom);
+  }, [loadedClassroom])
+
+  console.log('GradesView: classroomAssignments', classroomAssignments);
   const sortedAssignments = useMemo(
     () =>
       [...(classroomAssignments[loadedClassroom?.docId || ''] ? Object.values(classroomAssignments[loadedClassroom?.docId || '']) : [])].sort((a, b) => {
@@ -418,6 +447,7 @@ const GradesView = ({
         ),
     [visibleAssignments, challengeKeysFilter]
   );
+
 
   const challengeExportOptions = useMemo(() => {
     const opts: { key: string; label: string }[] = [];
@@ -545,7 +575,7 @@ const GradesView = ({
         classroomAssignments[loadedClassroom?.docId || '']
           ?.[orig.docId]
           ?.assignedTo
-          ?.[student.id] !== undefined;
+        ?.[student.id] !== undefined;
 
       const progressForStudent =
         grades ? grades[student.id] : null;
@@ -768,59 +798,61 @@ const GradesView = ({
           )}
         </div>
       ) : (
-        <ScrollContainer>
-          <Table>
-            <thead>
-              <tr>
-                <TableHeader theme={theme}>
-                  {LocalizedString.lookup(tr('Student Name'), locale)}
-                </TableHeader>
-                {loadedClassroom &&
-                  displayAssignmentPairs.map(({ orig }) => (
-                    <TableHeader key={`hdr-${orig.title}`} theme={theme}>
-                      <div
-                        style={{
-                          fontWeight: 'normal',
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                        }}
-                      >
-                        {orig.dueDate !== 'No Due Date'
-                          ? `${LocalizedString.lookup(tr('Due'), locale)} ${new Date(orig.dueDate || '').toLocaleDateString(locale)}`
-                          : LocalizedString.lookup(tr('No Due Date'), locale)}
-                        <Icon
-                          style={{ height: '1em', padding: '0 0.5em' }}
-                          icon={faEllipsisVertical}
-                          onClick={(e: React.MouseEvent) => {
-                            e.stopPropagation();
-                            setSelectedAssignment(orig);
-                            setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
-                            setContextMenuVisible({ visible: true, x: e.clientX, y: e.clientY });
+        <GradesListContainer theme={theme}>
+          <StyledScrollArea theme={theme} horizontalScroll={true}>
+            <Table>
+              <thead>
+                <tr>
+                  <TableHeader theme={theme}>
+                    {LocalizedString.lookup(tr('Student Name'), locale)}
+                  </TableHeader>
+                  {loadedClassroom &&
+                    displayAssignmentPairs.map(({ orig }) => (
+                      <TableHeader key={`hdr-${orig.title}`} theme={theme}>
+                        <div
+                          style={{
+                            fontWeight: 'normal',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
                           }}
-                        />
-                      </div>
-                      <br />
-                      {LocalizedString.lookup(tr(`${orig.title}`), locale)}
-                    </TableHeader>
-                  ))}
-              </tr>
-            </thead>
-            {/* <tbody>{visibleStudents.map(student => renderRow(student))}</tbody> */}
-            <tbody>
-              {visibleStudents.map(student => (
-                <StudentAssignmentRow
-                  key={student.id}
-                  theme={theme}
-                  student={student}
-                  displayAssignmentPairs={displayAssignmentPairs}
-                  renderGradeCell={renderGradeCell}
-                />
-              ))}
-            </tbody>
-          </Table>
-        </ScrollContainer>
+                        >
+                          {orig.dueDate !== 'No Due Date'
+                            ? `${LocalizedString.lookup(tr('Due'), locale)} ${new Date(orig.dueDate || '').toLocaleDateString(locale)}`
+                            : LocalizedString.lookup(tr('No Due Date'), locale)}
+                          <Icon
+                            style={{ height: '1em', padding: '0 0.5em' }}
+                            icon={faEllipsisVertical}
+                            onClick={(e: React.MouseEvent) => {
+                              e.stopPropagation();
+                              setSelectedAssignment(orig);
+                              setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
+                              setContextMenuVisible({ visible: true, x: e.clientX, y: e.clientY });
+                            }}
+                          />
+                        </div>
+                        <br />
+                        {LocalizedString.lookup(tr(`${orig.title}`), locale)}
+                      </TableHeader>
+                    ))}
+                </tr>
+              </thead>
+              {/* <tbody>{visibleStudents.map(student => renderRow(student))}</tbody> */}
+              <tbody>
+                {visibleStudents.map(student => (
+                  <StudentAssignmentRow
+                    key={student.id}
+                    theme={theme}
+                    student={student}
+                    displayAssignmentPairs={displayAssignmentPairs}
+                    renderGradeCell={renderGradeCell}
+                  />
+                ))}
+              </tbody>
+            </Table>
+          </StyledScrollArea>
+        </GradesListContainer>
       )}
       {contextMenuVisible && renderContextMenu(contextMenu.x, contextMenu.y)}
       {seeSubmissionDialogVisible && selectedAssignment && loadedClassroom && (
@@ -850,9 +882,16 @@ export default connect((state: State) => {
 
   return {
     locale: state.i18n.locale,
-    classroomAssignments: state.classrooms.assignments
+    classroomAssignments: state.classrooms.assignments,
+    classroomList: state.classrooms.entities,
+    classroomVersion: state.classrooms.classroomVersion,
   };
 }, (dispatch) => ({
+  onReloadClassroom: async (currentClassroom: AsyncClassroom) => {
+    console.log('GradesView: onReloadClassroom', currentClassroom);
+    // await load(Async.latestValue(currentClassroom)?.docId || "", currentClassroom);
+    await loadAssignments(Async.latestValue(currentClassroom)?.docId || "");
+  },
   onGetGradebook: (classroomDocId: string) => dispatch(ClassroomsAction.getGradebook({ classroomDocId })),
   onSetChallengePointsOverride: (payload: {
     classroom: Classroom;
