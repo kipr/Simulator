@@ -1,4 +1,4 @@
-import { ThemeProps } from 'components/constants/theme';
+import { GRAPHICAL_DARK, GRAPHICAL_LIGHT, ThemeProps } from '../constants/theme';
 import { RawVector2 } from '../../util/math/math';
 import * as React from 'react';
 import { styled } from 'styletron-react';
@@ -31,7 +31,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   position: 'absolute',
   top: 0,
   left: 0,
-  backgroundColor: '#212121'
+  backgroundColor: props.theme.backgroundColor,
 }));
 
 class GraphicalEditor extends React.Component<Props, State> {
@@ -45,9 +45,60 @@ class GraphicalEditor extends React.Component<Props, State> {
     };
   }
 
+  private graphicalThemeStyle_: HTMLStyleElement | null = null;
+
+  private updateGraphicalTheme_ = () => {
+    if (!this.containerRef_) return;
+
+    const graphicalTheme =
+      this.props.theme.themeName === 'DARK'
+        ? GRAPHICAL_DARK
+        : GRAPHICAL_LIGHT;
+
+    const blocklySvg =
+      this.containerRef_.querySelector('.blocklySvg') as SVGElement | null;
+
+    if (blocklySvg) {
+      blocklySvg.style.backgroundColor = graphicalTheme.workspace;
+    }
+
+    const flyouts =
+      this.containerRef_.querySelectorAll('.blocklyFlyoutBackground');
+
+    flyouts.forEach((flyout: SVGElement) => {
+      flyout.style.fill = graphicalTheme.flyout;
+    });
+
+    if (!this.graphicalThemeStyle_) {
+      this.graphicalThemeStyle_ = document.createElement('style');
+      this.containerRef_.appendChild(this.graphicalThemeStyle_);
+    }
+
+    this.graphicalThemeStyle_.textContent = `
+      .blocklyToolboxDiv,
+      .scratchCategoryMenu,
+      .scratchCategoryMenuHorizontal {
+        background: ${graphicalTheme.toolbox} !important;
+        color: ${graphicalTheme.toolboxText} !important;
+      }
+
+      .scratchCategoryMenuItem.categorySelected {
+        background: ${graphicalTheme.toolboxSelected} !important;
+      }
+
+      .scratchCategoryMenuItem:hover {
+        color: ${graphicalTheme.toolboxHover} !important;
+      }
+    `;
+  };
+
   private debounce_: boolean;
   componentDidUpdate(prevProps: Readonly<GraphicalEditorProps>, prevState: Readonly<GraphicalEditorState>) {
     const { props: nextProps, state: nextState } = this;
+
+    if (prevProps.theme.themeName !== nextProps.theme.themeName) {
+      this.updateGraphicalTheme_();
+    }
 
     if (this.workspace_) {
       if (prevProps.code !== nextProps.code && !this.debounce_) {
@@ -95,6 +146,8 @@ class GraphicalEditor extends React.Component<Props, State> {
 
   private workspace_: Blockly.Workspace;
   private injectBlockly_ = () => {
+    const graphicalTheme = this.props.theme.themeName === 'DARK' ? GRAPHICAL_DARK : GRAPHICAL_LIGHT;
+
     this.workspace_ = Blockly.inject(this.containerRef_, {
       comments: true,
       disable: false,
@@ -118,7 +171,14 @@ class GraphicalEditor extends React.Component<Props, State> {
       },
       colours: {
         fieldShadow: 'rgba(255, 255, 255, 0.3)',
-        dragShadowOpacity: 0.6
+        dragShadowOpacity: 0.6,
+
+        workspace: graphicalTheme.workspace,
+        toolbox: graphicalTheme.toolbox,
+        toolboxSelected: graphicalTheme.toolboxSelected,
+        toolboxText: graphicalTheme.toolboxText,
+        toolboxHover: graphicalTheme.toolboxHover,
+        flyout: graphicalTheme.flyout,
       }
     });
 

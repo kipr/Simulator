@@ -325,7 +325,7 @@ export const GRAPHICAL_DARK = {
   toolbox: '#212121',
   toolboxSelected: '#313131',
   toolboxText: "#EEEEEE",
-  toolbBoxHover: '#4C97FF',
+  toolboxHover: '#4C97FF',
   flyout: '#212121',
   workspace: '#212121',
 
