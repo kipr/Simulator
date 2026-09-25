@@ -56,16 +56,18 @@ class GraphicalEditor extends React.Component<Props, State> {
         : GRAPHICAL_LIGHT;
 
     const blocklySvg =
-      this.containerRef_.querySelector('.blocklySvg') as SVGElement | null;
+      this.containerRef_.querySelector<SVGSVGElement>('.blocklySvg');
 
     if (blocklySvg) {
       blocklySvg.style.backgroundColor = graphicalTheme.workspace;
     }
 
     const flyouts =
-      this.containerRef_.querySelectorAll('.blocklyFlyoutBackground');
+      this.containerRef_.querySelectorAll<SVGElement>(
+        '.blocklyFlyoutBackground'
+      );
 
-    flyouts.forEach((flyout: SVGElement) => {
+    flyouts.forEach(flyout => {
       flyout.style.fill = graphicalTheme.flyout;
     });
 
@@ -93,6 +95,7 @@ class GraphicalEditor extends React.Component<Props, State> {
   };
 
   private debounce_: boolean;
+
   componentDidUpdate(prevProps: Readonly<GraphicalEditorProps>, prevState: Readonly<GraphicalEditorState>) {
     const { props: nextProps, state: nextState } = this;
 
