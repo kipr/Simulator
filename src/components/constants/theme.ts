@@ -4,13 +4,26 @@ export interface ButtonColor {
   hover: string;
   border?: string;
   textColor?: string;
+  disabledTextColor?: string;
   textShadow?: string;
 }
 
-export const GREEN: ButtonColor = Object.freeze({
-  disabled: '#507255',
-  standard: '#488b49',
-  hover: '#4aad52'
+export interface ButtonColors {
+  default: ButtonColor;
+  primary: ButtonColor;
+  success: ButtonColor;
+  danger: ButtonColor;
+  confirm: ButtonColor;
+  cancel: ButtonColor;
+}
+
+export const LIGHTMODE_DEFAULT: ButtonColor = Object.freeze({
+  disabled: '#808080',
+  standard: '#e0e0e0',
+  hover: '#d3d3d3',
+  textColor: '#30323a',
+  disabledTextColor: '#d9d9d9',
+  textShadow: 'none'
 });
 
 export const LIGHTMODE_GREEN: ButtonColor = Object.freeze({
@@ -19,22 +32,16 @@ export const LIGHTMODE_GREEN: ButtonColor = Object.freeze({
   hover: '#4aad52'
 });
 
-export const RED: ButtonColor = Object.freeze({
-  disabled: '#735350',
-  standard: '#8C494C',
-  hover: '#AD4C4B'
+export const LIGHTMODE_RED: ButtonColor = Object.freeze({
+  disabled: '#d6b8b6',
+  standard: '#d98a8a',
+  hover: '#bd6666'
 });
 
-export const BLUE: ButtonColor = Object.freeze({
-  disabled: '#4f5673',
-  standard: '#495d8c',
-  hover: '#4b64ad'
-});
-
-export const BROWN: ButtonColor = Object.freeze({
-  disabled: '#72674f',
-  standard: '#8a7547',
-  hover: '#ab8c49',
+export const LIGHTMODE_BLUE: ButtonColor = Object.freeze({
+  disabled: '#90caf9',
+  standard: '#2196f3',
+  hover: '#1976d2',
 });
 
 export const LIGHTMODE_YES: ButtonColor = Object.freeze({
@@ -55,6 +62,27 @@ export const LIGHTMODE_NO: ButtonColor = Object.freeze({
   textShadow: '2px 2px 4px rgba(0,0,0,0.9)',
 });
 
+export const DARKMODE_DEFAULT: ButtonColor = Object.freeze({
+  disabled: '#2c2c2e',
+  standard: '#343436',
+  hover: '#3f3f3f',
+  border: '#323232',
+  textColor: '#ffffff',
+  disabledTextColor: '#8f8f93',
+});
+
+export const DARKMODE_GREEN: ButtonColor = Object.freeze({
+  disabled: '#507255',
+  standard: '#488b49',
+  hover: '#4aad52',
+});
+
+export const DARKMODE_RED: ButtonColor = Object.freeze({
+  disabled: '#735350',
+  standard: '#8C494C',
+  hover: '#AD4C4B',
+});
+
 export const DARKMODE_YES: ButtonColor = Object.freeze({
   disabled: '#5c665e',
   standard: '#488b49',
@@ -69,7 +97,25 @@ export const DARKMODE_NO: ButtonColor = Object.freeze({
   hover: '#AD4C4B',
   textColor: 'white',
   textShadow: '2px 2px 4px rgba(0,0,0,0.9)',
+});
 
+export const DARKMODE_BLUE: ButtonColor = Object.freeze({
+  disabled: '#4f6f8a',
+  standard: '#2196f3',
+  hover: '#42a5f5',
+});
+
+/** @deprecated use DARKMODE_GREEN */
+export const GREEN = DARKMODE_GREEN;
+/** @deprecated use DARKMODE_RED */
+export const RED = DARKMODE_RED;
+/** @deprecated use DARKMODE_BLUE */
+export const BLUE = DARKMODE_BLUE;
+
+export const BROWN: ButtonColor = Object.freeze({
+  disabled: '#72674f',
+  standard: '#8a7547',
+  hover: '#ab8c49',
 });
 
 export interface Theme {
@@ -97,6 +143,7 @@ export interface Theme {
   selectedFileBackground: string;
   hoverFileBackground: string;
   hoverOptionBackground: string;
+  hoverButtonBackground: string;
   confirmMessageBackground: string;
   successMessageBackground: string;
   compileWarningColor: string;
@@ -105,9 +152,13 @@ export interface Theme {
   contextMenuBackground: string;
   boxShadow: string;
   selectedClassBackground: string;
-  runButtonColor: ButtonColor;
-  yesButtonColor: ButtonColor;
-  noButtonColor: ButtonColor;
+  buttonColors: ButtonColors;
+  leaderboardHighlightBackground: string;
+  leaderboardHighlightHoverBackground: string;
+  cardColors: {
+    textColor: string;
+    alternateTextColor: string;
+  };
 
   borderColor: string;
   borderRadius: number;
@@ -156,17 +207,18 @@ export const COMMON: Theme = {
   successMessageBackground: undefined,
   compileWarningColor: undefined,
   editorBackground: undefined,
-  yesButtonColor: undefined,
-  noButtonColor: undefined,
   hoverOptionBackground: undefined,
   dialogBoxTitleBackground: undefined,
   whiteText: undefined,
   unselectedBackground: undefined,
   borderColor: undefined,
-  runButtonColor: undefined,
   contextMenuBackground: undefined,
   boxShadow: undefined,
   selectedClassBackground: undefined,
+  hoverButtonBackground: undefined,
+  buttonColors: undefined,
+  cardColors: undefined,
+
   borderRadius: 10,
   widget: {
     padding: 10
@@ -197,47 +249,62 @@ export const GRAPHICAL_LIGHT = {
   flyout: '#fbfbfb',
   workspace: '#fbfbfb',
 };
+
 export const LIGHT: Theme = {
   ...COMMON,
   themeName: 'LIGHT',
   whiteText: 'white',
-  textColor: '#000000',
-  color: '#403f53',
-  cursorColor: '#000000',
-  borderColor: '#ede0e0',
-  iconColor: '#f5ebeb',
+  textColor: '#202124',
+  color: '#30323a',
+  cursorColor: '#202124',
+  borderColor: '#d7dbe0',
+  iconColor: '#5f6368',
   foreground: 'white',
-  verticalLineColor: 'black',
-  backgroundColor: '#ffffff',
-  titleBarBackground: '#f4ecec',
-  startContainerBackground: '#ebdbdc',
-  dialogBoxTitleBackground: '#e3cece',
-  editorPageBackground: '#FBFBFB',
-  editorConsoleBackground: '#fff6f7',
-  mobileEditorBarBackground: '#e6ddde',
-  editorBackground: '#fbfbfb',
+  verticalLineColor: '#5f6368',
+  backgroundColor: '#f7f8fa',
+  titleBarBackground: '#eef0f3',
+  startContainerBackground: '#f1f3f5',
+  dialogBoxTitleBackground: '#e9ecef',
+  editorPageBackground: '#f7f8fa',
+  editorConsoleBackground: '#f3f4f6',
+  mobileEditorBarBackground: '#e9ecef',
+  editorBackground: '#ffffff',
   contextMenuBackground: '#ffffff',
-  boxShadow: '0px 10px 13px -6px rgba(255, 105, 180, 0.1), 0px 1px 31px 0px rgba(135, 206, 250, 0.08), 0px 8px 38px 7px rgba(144, 238, 144, 0.1)',
+  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.08)',
 
-  unselectedBackground: '#f4ebec',
-  selectedClassBackground: '#ffd1dc',
-  fileContainerBackground: '#f4ecec',
-  leftBarContainerBackground: '#f4ecec',
-  homeStartContainerBackground: '#f4ebec',
-  confirmMessageBackground: '#ff4d4d',
-  successMessageBackground: '#5dd5cb',
-  compileWarningColor: '#c3c30f',
+  unselectedBackground: '#eef0f3',
+  selectedClassBackground: '#dce8f7',
+  fileContainerBackground: '#f1f3f5',
+  leftBarContainerBackground: '#eef0f3',
+  homeStartContainerBackground: '#f1f3f5',
+  confirmMessageBackground: '#d9534f',
+  successMessageBackground: '#4f9d69',
+  compileWarningColor: '#8a6d00',
 
-  selectedUserBackground: '#dadada',
-  selectedProjectBackground: '#dadada',
-  selectedFileBackground: '#d3e8f9',
+  selectedUserBackground: '#e2e6ea',
+  selectedProjectBackground: '#e2e6ea',
+  selectedFileBackground: '#dce8f7',
 
-  hoverFileBackground: '#e4f1fb',
-  hoverOptionBackground: '#e4f1fb',
+  hoverFileBackground: '#e8f1fb',
+  hoverOptionBackground: '#e8f1fb',
+  hoverButtonBackground: '#e8f1fb',
 
-  yesButtonColor: LIGHTMODE_YES,
-  noButtonColor: LIGHTMODE_NO,
-  runButtonColor: LIGHTMODE_GREEN,
+  leaderboardHighlightBackground: '#e6f4ea',
+  leaderboardHighlightHoverBackground: '#cee8d5',
+
+  buttonColors: {
+    default: LIGHTMODE_DEFAULT,
+    primary: LIGHTMODE_BLUE,
+    success: LIGHTMODE_GREEN,
+    danger: LIGHTMODE_RED,
+    confirm: LIGHTMODE_YES,
+    cancel: LIGHTMODE_NO,
+  },
+
+  cardColors: {
+    textColor: '#202124',
+    alternateTextColor: '#ffffff',
+  },
 
   transparentBackgroundColor: (a) => `rgba(255, 255, 255, ${a})`,
   switch: {
@@ -258,7 +325,7 @@ export const GRAPHICAL_DARK = {
   toolbox: '#212121',
   toolboxSelected: '#313131',
   toolboxText: "#EEEEEE",
-  toolbBoxHover: '#4C97FF',
+  toolboxHover: '#4C97FF',
   flyout: '#212121',
   workspace: '#212121',
 
@@ -298,11 +365,24 @@ export const DARK: Theme = {
 
   hoverFileBackground: `rgba(255, 255, 255, 0.1)`,
   hoverOptionBackground: `rgba(255, 255, 255, 0.1)`,
+  hoverButtonBackground: `rgba(255, 255, 255, 0.1)`,
 
+  leaderboardHighlightBackground: '#2c482f',
+  leaderboardHighlightHoverBackground: 'rgba(76, 175, 80, 0.2)',
 
-  yesButtonColor: DARKMODE_YES,
-  noButtonColor: DARKMODE_NO,
-  runButtonColor: GREEN,
+  buttonColors: {
+    default: DARKMODE_DEFAULT,
+    primary: DARKMODE_BLUE,
+    success: DARKMODE_GREEN,
+    danger: DARKMODE_RED,
+    confirm: DARKMODE_YES,
+    cancel: DARKMODE_NO,
+  },
+
+  cardColors: {
+    textColor: '#ffffff',
+    alternateTextColor: '#ffffff',
+  },
 
   transparentBackgroundColor: (a) => `rgba(${0x21}, ${0x21}, ${0x21}, ${a})`,
   switch: {

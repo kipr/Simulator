@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
 
-import { DARK, ThemeProps } from '../constants/theme';
+import { DARK, LIGHT, ThemeProps } from '../constants/theme';
 import { CountdownTimer } from '../../components/LimitedChallenge';
 
 import { StyleProps } from '../../util/style';
@@ -18,6 +18,8 @@ import { withNavigate, WithNavigateProps } from '../../util/withNavigate';
 import tr from '@i18n';
 import db from '../../db';
 
+import { Settings } from '../constants/Settings';
+
 export interface ClassroomLimitedChallengeLeaderboardRouteParams {
   [key: string]: string | undefined;
   challengeId: string;
@@ -31,6 +33,7 @@ export interface ClassroomLimitedChallengeLeaderboardPublicProps extends StylePr
 
 interface ClassroomLimitedChallengeLeaderboardPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
   challenge?: AsyncLimitedChallenge;
   currentUserUid?: string;
 }
@@ -589,7 +592,8 @@ class ClassroomLimitedChallengeLeaderboard extends React.Component<Props, State>
   };
 
   private renderLeaderboardRow = (entry: LeaderboardEntry, rank: number, isCurrentUser: boolean) => {
-    const theme = DARK;
+    const { settings } = this.props;
+    const theme = settings.darkMode ? DARK : LIGHT;
     return (
       <TableRow key={`${entry.uid}-${rank}`} theme={theme} $highlight={isCurrentUser}>
         <RankCell theme={theme} rank={rank}>#{rank}</RankCell>
@@ -604,9 +608,9 @@ class ClassroomLimitedChallengeLeaderboard extends React.Component<Props, State>
   };
 
   private renderLeaderboard = () => {
-    const { locale, currentUserUid } = this.props;
+    const { locale, currentUserUid, settings } = this.props;
     const { topEntries, userContext, loading, error } = this.state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
     if (loading) {
       return (
@@ -689,9 +693,9 @@ class ClassroomLimitedChallengeLeaderboard extends React.Component<Props, State>
 
   render() {
     const { props, state } = this;
-    const { style, locale, currentUserUid } = props;
+    const { style, locale, currentUserUid, settings } = props;
     const { sortField, status } = state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
     const challengeBrief = this.getChallengeBrief();
     const name = challengeBrief ? LocalizedString.lookup(challengeBrief.name, locale) : '';
@@ -810,6 +814,7 @@ class ClassroomLimitedChallengeLeaderboard extends React.Component<Props, State>
 const ConnectedClassroomLimitedChallengeLeaderboard = connect(
   (state: ReduxState, { challengeId }: ClassroomLimitedChallengeLeaderboardPublicProps) => ({
     locale: state.i18n.locale,
+    settings: state.settings,
     challenge: state.limitedChallenges[challengeId],
     currentUserUid: state.users.me,
   })

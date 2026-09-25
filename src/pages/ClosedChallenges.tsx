@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
 
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { DARK, LIGHT, ThemeProps } from '../components/constants/theme';
 import MainMenu from '../components/MainMenu';
 import { ChallengeCard } from '../components/LimitedChallenge';
 
@@ -18,12 +18,14 @@ import { LimitedChallengeCompletionsAction } from '../state/reducer/limitedChall
 
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
 import tr from '@i18n';
+import { Settings } from '../components/constants/Settings';
 
 export interface ClosedChallengesPublicProps extends StyleProps, ThemeProps {
 }
 
 interface ClosedChallengesPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
   limitedChallenges: LimitedChallengesState;
   limitedChallengeCompletions: LimitedChallengeCompletions;
   loadCompletion: (challengeId: string) => void;
@@ -132,8 +134,8 @@ class ClosedChallenges extends React.Component<Props> {
 
   render() {
     const { props } = this;
-    const { style, locale, limitedChallenges, limitedChallengeCompletions } = props;
-    const theme = DARK;
+    const { style, locale, limitedChallenges, limitedChallengeCompletions, settings } = props;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
     // Filter to only show closed challenges
     const challengeIds = Object.keys(limitedChallenges).filter(challengeId => {
@@ -193,6 +195,7 @@ class ClosedChallenges extends React.Component<Props> {
 export default connect(
   (state: ReduxState) => ({
     locale: state.i18n.locale,
+    settings: state.settings,
     limitedChallenges: state.limitedChallenges,
     limitedChallengeCompletions: state.limitedChallengeCompletions,
   }),

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
-import { DARK, Theme, ThemeProps } from '../components/constants/theme';
+import { DARK, LIGHT, Theme, ThemeProps } from '../components/constants/theme';
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
 import { State as ReduxState } from '../state';
@@ -27,6 +27,7 @@ import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/to
 import tr from '@i18n';
 import StudentTabs from '../components/Classrooms/StudentTabs';
 import Async from 'state/State/Async';
+import { Settings } from 'components/constants/Settings';
 
 namespace SubMenu {
   export enum Type {
@@ -91,6 +92,7 @@ export interface ClassroomStudentViewPublicProps extends StyleProps, ThemeProps 
 
 interface ClassroomStudentViewPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
   currentStudentClassroom: AsyncClassroom | null;
   uid: string;
   toursById: Record<string, TourDoc>;
@@ -190,7 +192,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   alignItems: 'center',
   flexDirection: 'row',
   padding: '10px',
-  backgroundColor: '#2c2c2cff',
+  backgroundColor: props.theme.buttonColors.default.standard,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   ':last-child': {
     borderBottom: 'none'
@@ -199,7 +201,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   fontWeight: 400,
   ':hover': {
     cursor: 'pointer',
-    backgroundColor: `rgba(255, 255, 255, 0.1)`
+    backgroundColor:  props.theme.buttonColors.default.hover
   },
   userSelect: 'none',
   transition: 'background-color 0.2s, opacity 0.2s'
@@ -433,7 +435,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
             <p>{LocalizedString.lookup(tr("You are not enrolled in any classroom."), locale)}</p>
 
             <TourTarget registry={this.registry} targetKey='join-classroom-button' style={{ marginLeft: '1em' }}>
-              <Button style={{ marginLeft: '1em' }} theme={DARK} onClick={this.onJoinClassroomDialog_}>
+              <Button style={{ marginLeft: '1em' }} theme={theme} onClick={this.onJoinClassroomDialog_}>
                 {LocalizedString.lookup(tr("Join Class"), locale)}
               </Button>
             </TourTarget>
@@ -618,9 +620,9 @@ class ClassroomStudentView extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, locale, toursById, toursLoaded } = props;
+    const { style, locale, toursById, toursLoaded, settings } = props;
     const { tourId, showLeaveClassroomDialog, showJoinClassroomDialog, currentClassroom, subMenu, studentViewTourSteps } = state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
     const activeTour = tourId ? (toursById[tourId] ?? TourDoc.DEFAULT) : TourDoc.DEFAULT;
     const activeTourLoaded = !!(tourId && toursLoaded[tourId]);
     const showTour = !!tourId && activeTourLoaded && !activeTour.completed;
@@ -659,7 +661,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
                     currentClassroom={Async.latestValue(this.classroomForLeave_())}
                     locale={locale}
                     onLeaveClassDialogClose={this.onCloseLeaveClassroomDialog_}
-                    theme={DARK}
+                    theme={theme}
 
                   />
                 )}
@@ -669,7 +671,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
                     onContinueTour={this.onContinueTour_}
                     locale={locale}
                     onJoinClassDialogClose={this.onCloseJoinClassroomDialog_}
-                    theme={DARK}
+                    theme={theme}
                     tourRegistry={this.registry}
 
                   />
@@ -709,6 +711,7 @@ export default connect(
     classroomList: state.classrooms.entities,
     currentStudentClassroom: state.classrooms.currentStudentClassroom,
     locale: state.i18n.locale,
+    settings: state.settings,
     uid: state.users.me,
   }),
   (dispatch) => ({

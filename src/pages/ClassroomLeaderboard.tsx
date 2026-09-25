@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { LIGHT, DARK, ThemeProps } from '../components/constants/theme';
 import MainMenu from '../components/MainMenu';
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
@@ -26,6 +26,7 @@ import { isCustomChallengeId } from '../util/customChallengeFactory';
 import { isTeacherOwnedCustomChallenge } from '../util/customChallengeClassroomShare';
 import { ChallengesAction } from '../state/reducer/challenges';
 import { NATIVE_SCROLLBAR_CLASS, nativeScrollbarChrome } from '../util/nativeScrollbarChrome';
+import { Settings } from '../components/constants/Settings';
 
 const SELFIDENTIFIER = "My Scores!";
 
@@ -73,10 +74,12 @@ interface RouterProps {
     studentId?: string;
   }
 }
+
 interface ClassroomLeaderboardPrivateProps {
   onClearSelectedClassroom: () => void;
   onListUserChallenges: () => void;
   locale: LocalizedString.Language;
+  settings: Settings;
   classroom: AsyncClassroom;
 }
 
@@ -213,8 +216,8 @@ const Button = styled('button', (props: ThemeProps & ButtonProps) => ({
   padding: '12px 24px',
   fontSize: '1em',
   fontWeight: 'bold',
-  color: props.$disabled ? '#888' : '#fff',
-  backgroundColor: props.$disabled ? '#444' : (props.$primary ? '#4caf50' : '#2196f3'),
+  color: props.$disabled ? props.theme.buttonColors.default.disabledTextColor : props.theme.buttonColors.default.textColor,
+  backgroundColor: props.$disabled ? props.theme.buttonColors.default.disabled : (props.$primary ? props.theme.buttonColors.success.standard : props.theme.buttonColors.primary.standard),
   border: 'none',
   borderRadius: '4px',
   cursor: props.$disabled ? 'not-allowed' : 'pointer',
@@ -309,10 +312,12 @@ const YourNameValue = styled('span', (props: ThemeProps) => ({
   fontWeight: 'bold',
   color: '#4caf50',
 }));
+
 interface ButtonProps {
   $disabled?: boolean;
   $primary?: boolean;
 }
+
 const EmptyState = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -339,6 +344,7 @@ const ErrorState = styled('div', (props: ThemeProps) => ({
   padding: '48px',
   color: '#f44336',
 }));
+
 const SectionSeparator = styled('tr', (props: ThemeProps) => ({
   backgroundColor: 'rgba(255,255,255,0.02)',
 }));
@@ -1289,30 +1295,30 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, locale, view, currentStudentDisplayName, tourRegistry } = props;
+    const { style, locale, view, currentStudentDisplayName, tourRegistry, settings } = props;
     const { selected, showBadgeDialog, users } = state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
     const currentUser = this.getCurrentUser();
     const currentUserEmail = this.getCurrentUserEmail();
 
     const tourContent_ = (<ButtonContainer>
 
       <TourTarget registry={this.props.tourRegistry} targetKey='export-button'>
-        <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr("Export My Scores!"), locale)}</Button>
+        <Button theme={theme} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr("Export My Scores!"), locale)}</Button>
       </TourTarget>
       <TourTarget registry={this.props.tourRegistry} targetKey='scroll-to-my-scores-button'>
-        <Button theme={DARK} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr("Scroll to My Scores!"), locale)}</Button>
+        <Button theme={theme} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr("Scroll to My Scores!"), locale)}</Button>
       </TourTarget>
       <TourTarget registry={this.props.tourRegistry} targetKey='see-my-badges-button'>
-        <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> {LocalizedString.lookup(tr("See My Badges!"), locale)}</Button>
+        <Button theme={theme} onClick={() => this.onSeeMyBadges()}> {LocalizedString.lookup(tr("See My Badges!"), locale)}</Button>
       </TourTarget>
     </ButtonContainer>);
 
     const normalContent_ = (
       <ButtonContainer>
-        <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr("Export My Scores!"), locale)}</Button>
-        <Button theme={DARK} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr("Scroll to My Scores!"), locale)}</Button>
-        <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> {LocalizedString.lookup(tr("See My Badges!"), locale)}</Button>
+        <Button theme={theme} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr("Export My Scores!"), locale)}</Button>
+        <Button theme={theme} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr("Scroll to My Scores!"), locale)}</Button>
+        <Button theme={theme} onClick={() => this.onSeeMyBadges()}> {LocalizedString.lookup(tr("See My Badges!"), locale)}</Button>
       </ButtonContainer>
     );
     const isTeacherView = view === 'teacherView';
@@ -1352,7 +1358,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
               <ButtonContainer>
                 <TourTarget registry={tourRegistry} targetKey="export-all-general-scores">
                   <Button
-                    theme={DARK}
+                    theme={theme}
                     $disabled={!this.canExportClassroomScores()}
                     onClick={() => this.exportClassroomScores()}
                   >
@@ -1361,7 +1367,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
                 </TourTarget>
                 <TourTarget registry={tourRegistry} targetKey="export-all-detailed-scores">
                   <Button
-                    theme={DARK}
+                    theme={theme}
                     $disabled={!this.canExportClassroomScores()}
                     onClick={() => this.exportDetailedClassroomScores()}
                   >
@@ -1383,6 +1389,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 export default connect(
   (state: ReduxState) => ({
     locale: state.i18n.locale,
+    settings: state.settings,
     classroom: state.classrooms.selectedClassroom,
     challenges: state.challenges,
     currentStudentDisplayName: Async.latestValue(state.classrooms.currentStudentClassroom)

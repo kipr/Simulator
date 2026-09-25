@@ -16,7 +16,7 @@ import ExceptionDialog from '../components/Challenge/ExceptionDialog';
 import ChallengeMenu from '../components/Challenge/ChallengeMenu';
 
 import { DEFAULT_SETTINGS, Settings } from '../components/constants/Settings';
-import { DARK, Theme } from '../components/constants/theme';
+import { DARK, LIGHT, Theme } from '../components/constants/theme';
 
 import SettingsDialog from '../components/Dialog/SettingsDialog';
 import AboutDialog from '../components/Dialog/AboutDialog';
@@ -83,6 +83,7 @@ interface RootPrivateProps {
   challenge?: AsyncLimitedChallenge;
   challengeCompletion?: AsyncLimitedChallengeCompletion;
   locale: LocalizedString.Language;
+  settings: Settings;
 
   robots: Dict<Robot>;
 
@@ -908,12 +909,12 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
       simulatorState,
       console: consoleState,
       messages,
-      settings,
       feedback,
       windowInnerHeight,
     } = state;
 
-    const theme = DARK;
+    const { settings } = this.props;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
@@ -1081,6 +1082,7 @@ const ConnectedLimitedChallengeRoot = connect((state: ReduxState, { params: { ch
     challenge: Dict.unique(builder.limitedChallenges),
     challengeCompletion: Dict.unique(builder.limitedChallengeCompletions),
     locale: state.i18n.locale,
+    settings: state.settings,
     robots: Dict.map(state.robots.robots, Async.latestValue),
   };
 }, (dispatch, { params: { challengeId } }: RootPublicProps) => ({
