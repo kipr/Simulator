@@ -17,6 +17,7 @@ import { StyleProps } from "../../util/style";
 import Input from "../interface/Input";
 import TourTarget from "../Tours/TourTarget";
 import { TourRegistry } from "../../tours/TourRegistry";
+import ScrollArea from "../interface/ScrollArea";
 
 
 export interface AssignToDialogPublicProps extends StyleProps, ThemeProps {
@@ -42,7 +43,10 @@ const Container = styled('div', (props: ThemeProps) => ({
   margin: '1em',
   zIndex: 100,
 }));
-
+const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
+  flex: 1,
+  minHeight: '30em'
+}));
 const CheckboxRow = styled('div', (props: ThemeProps) => ({
   gap: '0.5em',
   fontWeight: 500,
@@ -121,11 +125,11 @@ const AssignTo = ({
 
   const toggleStudent = (studentId: string) => {
     setSelectedIds(prev =>
-      (Object.prototype.hasOwnProperty.call(prev, studentId)
-        ? Object.fromEntries(
-          Object.entries(prev).filter(([id]) => id !== studentId)
-        )
-        : { ...prev, [studentId]: loadedClassroom.studentIds[studentId] as { id: string; displayName: string; assignments?: Dict<ClassroomAssignment> } })
+    (Object.prototype.hasOwnProperty.call(prev, studentId)
+      ? Object.fromEntries(
+        Object.entries(prev).filter(([id]) => id !== studentId)
+      )
+      : { ...prev, [studentId]: loadedClassroom.studentIds[studentId] as { id: string; displayName: string; assignments?: Dict<ClassroomAssignment> } })
     );
   };
 
@@ -143,25 +147,27 @@ const AssignTo = ({
       theme={theme}
       name={LocalizedString.lookup(tr('Assign To'), locale)}
       onClose={onClose}
+      style={{ minWidth: '30em' }}
       tourRegistry={tourRegistry}
       tourTargetKey={tourRegistry ? 'teacher-create-assignment-assign-to-dialog' : undefined}
     >
       <Container theme={theme}>
-        <div style={{ fontSize: '1.5em', display: 'flex', flexDirection: 'column', gap: '1em', alignItems: 'flex-start', margin: '1em' }}>
-          <CheckboxRow theme={theme}>
-            <StyledCheckbox type="checkbox" theme={theme} id={`assign-to-all`} checked={allSelected} onChange={() => { toggleAll(); }} />
-            <label htmlFor={`assign-to-all`}>{LocalizedString.lookup(tr('All Students'), locale)}</label>
-          </CheckboxRow>
-          {
-            assignToStudentRows.map(({ id, displayName }) => (
-              <CheckboxRow theme={theme} key={id}>
-                <StyledCheckbox theme={theme} type="checkbox" id={`assign-to-${id}`} name={`assign-to-${id}`} value={id} checked={selectedIds[id] !== undefined} onChange={() => toggleStudent(id)} />
-                <label htmlFor={`assign-to-${id}`}>{displayName}</label>
-              </CheckboxRow>
-            ))
-          }
-        </div>
-
+        <StyledScrollArea theme={theme} horizontalScroll={false}>
+          <div style={{ fontSize: '1.5em', display: 'flex', flexDirection: 'column', gap: '1em', alignItems: 'flex-start', margin: '1em' }}>
+            <CheckboxRow theme={theme}>
+              <StyledCheckbox type="checkbox" theme={theme} id={`assign-to-all`} checked={allSelected} onChange={() => { toggleAll(); }} />
+              <label htmlFor={`assign-to-all`}>{LocalizedString.lookup(tr('All Students'), locale)}</label>
+            </CheckboxRow>
+            {
+              assignToStudentRows.map(({ id, displayName }) => (
+                <CheckboxRow theme={theme} key={id}>
+                  <StyledCheckbox theme={theme} type="checkbox" id={`assign-to-${id}`} name={`assign-to-${id}`} value={id} checked={selectedIds[id] !== undefined} onChange={() => toggleStudent(id)} />
+                  <label htmlFor={`assign-to-${id}`}>{displayName}</label>
+                </CheckboxRow>
+              ))
+            }
+          </div>
+        </StyledScrollArea>
         <ButtonContainer theme={theme}>
           {tourRegistry ? (
             <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-assign-to-done" style={{ display: 'contents' }}>
@@ -181,6 +187,7 @@ const AssignTo = ({
             </Finalize>
           )}
         </ButtonContainer>
+
       </Container>
 
     </Dialog>
