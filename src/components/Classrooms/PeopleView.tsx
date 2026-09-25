@@ -19,6 +19,7 @@ import Async from 'state/State/Async';
 import { ClassroomsAction, load, removeStudentFromAssignments, removeStudentFromClassroom } from '../../state/reducer';
 import RemoveUserFromClassroomDialog from '../Dialog/RemoveUserFromClassroomDialog';
 import { useTeacherViewOverlayEffect } from './TeacherViewOverlayContext';
+import ScrollArea from '../interface/ScrollArea';
 
 export interface PeopleViewPublicProps extends ThemeProps, StyleProps {
   currentSelectedClassroom: AsyncClassroom | null;
@@ -38,12 +39,17 @@ export interface PeopleViewPrivateProps extends ThemeProps {
 type Props = PeopleViewPublicProps & PeopleViewPrivateProps;
 
 const Container = styled('div', (props: ThemeProps) => ({
-  width: '100%',
+  width: '99%',
+  height: '99%',
   display: 'flex',
   flexDirection: 'column',
   color: props.theme.color,
   backgroundColor: props.theme.backgroundColor,
   // minHeight: '100vh',
+  borderColor: props.theme.borderColor,
+  borderWidth: '4px',
+  borderStyle: 'solid',
+  borderRadius: `${props.theme.itemPadding * 2}px`,
 }));
 
 const TeacherStudentContainer = styled('div', {
@@ -78,6 +84,9 @@ const Icon = styled(FontAwesome, {
   paddingRight: "5px",
   height: "1.5em",
 });
+const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
+  flex: 1,
+}));
 
 const StudentRow = styled('div', (props: ThemeProps) => ({
   display: 'flex',
@@ -179,6 +188,9 @@ const PeopleView = ({
                 <Icon style={{ height: '1em', padding: '0 0.5em' }} icon={faEllipsisVertical} onClick={(e: React.MouseEvent) => {
                   e.stopPropagation();
                   setSelectedStudent(student);
+                  const boundingRect = (e.target as HTMLElement).getBoundingClientRect();
+                  console.log("PeopleView: boundingRect", boundingRect);
+                  console.log("PeopleView: e.clientX, e.clientY", e.clientX, e.clientY);
                   setContextMenuVisible({ visible: true, x: e.clientX, y: e.clientY });
                   setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
                 }} />)}
@@ -201,12 +213,12 @@ const PeopleView = ({
 
     const menuWidth = 200;
     const menuHeight = 185;
-
+    console.log("PeopleView: renderContextMenu: x, y, viewportWidth, viewportHeight", x, y, viewportWidth, viewportHeight);
     const adjustedX = Math.min(x, viewportWidth - menuWidth);
     const adjustedY = Math.min(y, viewportHeight - (menuHeight + 50));
-
+    console.log("PeopleView: renderContextMenu: adjustedX, adjustedY", adjustedX, adjustedY);
     return (
-      <ContextMenu x={adjustedX} y={adjustedY} theme={theme} >
+      <ContextMenu x={adjustedX} y={443} theme={theme} >
         <ContextMenuItem theme={theme}>
           <li
             style={{ padding: "5px 10px" }}
@@ -223,33 +235,35 @@ const PeopleView = ({
   }
   return (
     <Container theme={theme} onClick={() => setContextMenu({ ...contextMenu, visible: false })}>
-      <TeacherStudentContainer>
-        <TeacherContainer>
-          <h1 style={{ textDecoration: 'underline' }}>{LocalizedString.lookup(tr('Teachers'), locale)}</h1>
-          {currentSelectedClassroom && (
-            getTeachers(currentSelectedClassroom)
-          )}
-        </TeacherContainer>
-        <StudentContainer>
-          <h1 style={{ textDecoration: 'underline' }}>{LocalizedString.lookup(tr('Students'), locale)}</h1>
-          {currentSelectedClassroom && (
-            getStudents()
-          )}
-        </StudentContainer>
-      </TeacherStudentContainer>
-      {contextMenuVisible && renderContextMenu(contextMenu.x, contextMenu.y)}
-      {removeUserDialogVisible &&
-        <RemoveUserFromClassroomDialog
-          theme={theme} locale={locale}
-          onClose={() => setRemoveUserDialogVisible(false)}
-          onAcceptRemove={() => {
-            onRemoveStudentFromClassroom(selectedStudent?.id || "", currClassroom);
-            setRemoveUserDialogVisible(false);
-          }}
-          toRemoveUser={selectedStudent?.displayName || ""}
-          classroom={Async.latestValue(currClassroom)}
+      <StyledScrollArea theme={theme}>
+        <TeacherStudentContainer>
+          <TeacherContainer>
+            <h1 style={{ textDecoration: 'underline' }}>{LocalizedString.lookup(tr('Teachers'), locale)}</h1>
+            {currentSelectedClassroom && (
+              getTeachers(currentSelectedClassroom)
+            )}
+          </TeacherContainer>
+          <StudentContainer>
+            <h1 style={{ textDecoration: 'underline' }}>{LocalizedString.lookup(tr('Students'), locale)}</h1>
+            {currentSelectedClassroom && (
+              getStudents()
+            )}
+          </StudentContainer>
+        </TeacherStudentContainer>
+        {contextMenuVisible && renderContextMenu(contextMenu.x, contextMenu.y)}
+        {removeUserDialogVisible &&
+          <RemoveUserFromClassroomDialog
+            theme={theme} locale={locale}
+            onClose={() => setRemoveUserDialogVisible(false)}
+            onAcceptRemove={() => {
+              onRemoveStudentFromClassroom(selectedStudent?.id || "", currClassroom);
+              setRemoveUserDialogVisible(false);
+            }}
+            toRemoveUser={selectedStudent?.displayName || ""}
+            classroom={Async.latestValue(currClassroom)}
 
-        />}
+          />}
+      </StyledScrollArea>
     </Container>
   );
 };

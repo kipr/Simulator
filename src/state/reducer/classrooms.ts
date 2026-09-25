@@ -103,6 +103,14 @@ export namespace ClassroomsAction {
   export const CLASSROOM_UPDATED = construct<ClassroomUpdated>('classrooms/classroom-updated');
   export interface ClassroomUpdated {
     type: 'classrooms/classroom-updated';
+
+  }
+
+  export const UPDATE_CLASSROOM_INTERNAL = construct<UpdateClassroomInternal>('classrooms/update-classroom-internal');
+  export interface UpdateClassroomInternal {
+    type: 'classrooms/update-classroom-internal';
+    classroomId: string;
+    classroom: AsyncClassroom;
   }
   export const listOwnedClassrooms = construct<ListOwnedClassrooms>('classrooms/list-owned-classrooms');
 
@@ -255,6 +263,7 @@ export type ClassroomsAction =
   | ClassroomsAction.SetClassroomInternal
   | ClassroomsAction.DeleteClassroom
   | ClassroomsAction.UpdateClassroom
+  | ClassroomsAction.UpdateClassroomInternal
   | ClassroomsAction.ClassroomUpdated
   | ClassroomsAction.JoinClassroom
   | ClassroomsAction.ListChallengesByStudentId
@@ -287,6 +296,7 @@ export const load = async (
       );
     }
 
+    console.log("Loaded classroom from DB: ", value);
     store.dispatch(
       ClassroomsAction.setClassroom({
         classroom: Async.loaded({
@@ -309,10 +319,11 @@ export const load = async (
   }
 };
 
-export const loadClassroom = async (classroomId: string) => {
+export const loadClassroom = async (docId: string) => {
 
   try {
-    const value = await db.get<Classroom>(Selector.classroom(classroomId));
+    const value = await db.get<Classroom>(Selector.classroom(docId));
+    console.log("loadClassroom from DB: ", value);
 
   } catch (error) {
     console.error(error);
@@ -966,6 +977,8 @@ export const updateClassroom = async (classroomId: string, classroom: Classroom)
       throw new Error('Classroom docId is required to update classroom');
     }
 
+    console.log("updateClassroom classroom:", classroom);
+
     await db.set(
       {
         collection: `classrooms`,
@@ -975,14 +988,14 @@ export const updateClassroom = async (classroomId: string, classroom: Classroom)
       true
     );
 
-    store.dispatch(ClassroomsAction.CLASSROOM_UPDATED({}));
+    store.dispatch(ClassroomsAction.CLASSROOM_UPDATED({ classroom }));
   } catch (error) {
     console.error('Error updating classroom:', error);
   }
 
 };
 
-export const convertClassroomTopics = async (classroom: Classroom) => {
+export const convertClassroomTopicsAndUpdate = async (classroom: Classroom) => {
 
   try {
     if (classroom.topics === undefined) {
@@ -995,6 +1008,8 @@ export const convertClassroomTopics = async (classroom: Classroom) => {
 
       const newTopicArray = Object.keys(classroom.topics);
       classroom.topics = newTopicArray;
+      console.log("convertClassroomTopicsAndUpdate updateClassroom....");
+
       await updateClassroom(classroom.classroomId, classroom);
 
     }
@@ -1002,6 +1017,28 @@ export const convertClassroomTopics = async (classroom: Classroom) => {
     console.error('Error converting classroom topics:', error);
   }
 };
+
+const convertClassroomTopics = (classroom: Classroom): string[] => {
+
+  try {
+    if (classroom.topics === undefined) {
+      classroom.topics = [];
+    } else {
+      const isArray = Array.isArray(classroom.topics);
+      if (isArray) {
+        return;
+      }
+
+      const newTopicArray = Object.keys(classroom.topics);
+      return newTopicArray;
+
+
+    }
+  } catch (error) {
+    console.error('Error converting classroom topics:', error);
+  }
+};
+
 
 export const convertClassroomAssignmentsToNewFormat = async (
   classroom: Classroom
@@ -1013,9 +1050,18 @@ export const convertClassroomAssignmentsToNewFormat = async (
       return;
     }
 
+    //First check if topics are in old object format instead of string[]
+    const newTopics = convertClassroomTopics(classroom);
+    const newStudentIds = convertStudentIdsToNewFormat(classroom);
+    let updatedClassroom: Classroom;
     for (const [assignmentKey, assignment] of Object.entries(oldAssignments)) {
       const assignedTo = {
         ...(assignment.assignedTo ?? {})
+      };
+      updatedClassroom = {
+        ...classroom,
+        topics: newTopics,
+        studentIds: newStudentIds
       };
 
       const newAssignment: ClassroomAssignment = {
@@ -1025,7 +1071,7 @@ export const convertClassroomAssignmentsToNewFormat = async (
       };
 
       await setAssignment(
-        classroom,
+        updatedClassroom,
         newAssignment,
         assignedTo
       );
@@ -1033,8 +1079,12 @@ export const convertClassroomAssignmentsToNewFormat = async (
 
     // ONLY remove classroomAssignments here,
     // after every assignment has successfully been written.
-    await removeClassroomAssignmentsField(classroom);
-    store.dispatch(ClassroomsAction.CLASSROOM_UPDATED({}));
+    const newClassroom = await removeClassroomAssignmentsField(updatedClassroom);
+    const asyncClass = Async.loaded({
+      brief: {},
+      value: newClassroom
+    });
+    store.dispatch(ClassroomsAction.UPDATE_CLASSROOM_INTERNAL({ classroomId: newClassroom.docId, classroom: asyncClass }));
   } catch (error) {
     console.error(
       "Error converting classroom assignments to new format:",
@@ -1045,7 +1095,7 @@ export const convertClassroomAssignmentsToNewFormat = async (
   }
 };
 
-export const convertStudentIdsToNewFormat = async (classroom: Classroom): Promise<void> => {
+export const convertStudentIdsToNewFormat = (classroom: Classroom): Dict<{ id: string, displayName: string }> => {
   try {
     const oldStudentIds = classroom.studentIds ?? {};
 
@@ -1070,9 +1120,10 @@ export const convertStudentIdsToNewFormat = async (classroom: Classroom): Promis
     }
 
     classroom.studentIds = newStudentIds;
+    // console.log("convertStudentIdsToNewFormat updateclassroom....");
+    // await updateClassroom(classroom.classroomId, classroom);
 
-    await updateClassroom(classroom.classroomId, classroom);
-
+    return (newStudentIds);
 
   } catch (error) {
     console.error(
@@ -1083,7 +1134,7 @@ export const convertStudentIdsToNewFormat = async (classroom: Classroom): Promis
   }
 };
 
-const removeClassroomAssignmentsField = async (classroom: Classroom): Promise<void> => {
+const removeClassroomAssignmentsField = async (classroom: Classroom): Promise<Classroom> => {
   try {
     const docId = classroom.docId;
 
@@ -1093,8 +1144,9 @@ const removeClassroomAssignmentsField = async (classroom: Classroom): Promise<vo
 
     const updatedClassroom = { ...classroom };
     delete updatedClassroom.classroomAssignments;
-
+    console.log("removeAssignmentsField updateclassroom....");
     await updateClassroom(classroom.classroomId, updatedClassroom);
+    return updatedClassroom;
   } catch (error) {
     console.error(
       "Error removing classroomAssignments field:",
@@ -1118,11 +1170,14 @@ export const setAssignment = async (
     if (!docId) {
       throw new Error('Classroom docId is required to set assignment');
     }
+    console.log("setAssignment classroom:", classroom);
+
 
     // Check if assignment topic already exists
     classroom.topics?.includes(assignment.topic) ? null : classroom.topics?.push(assignment.topic);
 
     await updateClassroom(classroom.classroomId, classroom);
+    await loadClassroom(classroom.docId);
     let assignmentDocId: string;
 
     if (assignment.docId) {
@@ -1183,7 +1238,7 @@ export const loadAssignments = async (
 };
 export const deleteAssignment = async (classroom: Classroom, assignmentDocId: string) => {
   try {
-    const docId = classroom.docId;
+    const docId = classroom.docId
     if (!docId) throw new Error('Classroom docId is required to delete assignment');
 
     await db.delete(
@@ -1219,6 +1274,45 @@ export interface ClassroomsState {
   assignments: Dict<Dict<ClassroomAssignment>>;
 }
 
+export const testMigration = async () => {
+  //Need to copy a know large classroom to test migration of assignments and studentIds
+  try {
+    const value = await db.get<Classroom>(Selector.classroom('dfb17ca')) as Classroom;
+    console.log('Test migration result:', value);
+    const uuid = crypto.randomUUID();
+    const shortenedId = uuid.replace(/-/g, '').slice(-7);
+
+    const loadedClassroom = Object.values(value) as Classroom;
+    console.log('Loaded classroom:', loadedClassroom);
+
+    const l = loadedClassroom[0] as Classroom;
+    console.log('Loaded classroom first entry:', l);
+    console.log('Object.values(l):', Object.values(l));
+    const e = Object.values(l);
+    console.log('Object.values(l) as array:', e);
+    const testClassroom: Classroom = {
+
+      classroomId: l.classroomId + '-test',
+      code: l.code,
+      type: 'classroom',
+      studentIds: l.studentIds,
+      classroomAssignments: l.classroomAssignments,
+      topics: l.topics,
+
+      docId: shortenedId,
+      teacherDisplayName: 'Test Migration',
+      teacherId: 'A8xNiNn6NmcDJ85Pxz4R7U6MJog2'
+    };
+
+
+    await db.set(Selector.classroom(shortenedId), testClassroom);
+
+  }
+  catch (error) {
+    console.error('Error testing migration:', error);
+  }
+
+}
 
 export const reduceClassrooms = (
   state: ClassroomsState = { classroomVersion: 0, assignmentVersion: 0, entities: {}, selectedClassroom: null, currentStudentClassroom: null, assignments: {} },
@@ -1323,6 +1417,7 @@ export const reduceClassrooms = (
 
       return {
         ...state,
+
         classroomVersion: state.classroomVersion + 1,
       };
     }
@@ -1364,8 +1459,18 @@ export const reduceClassrooms = (
     case 'classrooms/update-classroom': {
       const { classroomId, classroom } = action;
 
-      classroom.topics.length === 0 ? null : void updateClassroom(classroomId, classroom);
+      // classroom.topics.length === 0 ? null : void updateClassroom(classroomId, classroom);
       return state;
+    }
+    case 'classrooms/update-classroom-internal': {
+      const { classroomId, classroom } = action;
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          [classroomId]: classroom
+        }
+      };
     }
 
 

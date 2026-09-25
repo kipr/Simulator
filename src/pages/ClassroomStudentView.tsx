@@ -180,7 +180,7 @@ const MyClassroomContainer = styled('div', (props: ThemeProps) => ({
   alignItems: 'center',
   flex: 1,
   minHeight: '80vh',
-  width: '100vw'
+  maxWidth: '95vw'
 
 }));
 
@@ -566,13 +566,13 @@ class ClassroomStudentView extends React.Component<Props, State> {
    * GuidedTour measures (the previous step may live in Home, Assignments, People, or Leaderboard).
    */
   private studentTourUiStateForStepIndex_(stepIndex: number): Pick<
-  ClassroomStudentViewState,
-  | 'currentTourStepIndex'
-  | 'tourStudentTabSync'
-  | 'tourExpandStudentAssignmentTopics'
-  | 'tourAutoOpenAssignmentDetails'
-  | 'showJoinClassroomDialog'
-  | 'subMenu'
+    ClassroomStudentViewState,
+    | 'currentTourStepIndex'
+    | 'tourStudentTabSync'
+    | 'tourExpandStudentAssignmentTopics'
+    | 'tourAutoOpenAssignmentDetails'
+    | 'showJoinClassroomDialog'
+    | 'subMenu'
   > {
     const step = this.state.studentViewTourSteps[stepIndex];
     const id = step?.id;

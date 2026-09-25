@@ -17,6 +17,7 @@ import AssignmentsView from './AssignmentsView';
 import HomeView from './HomeView';
 import GradesView from './GradesView';
 import ChallengeTabView from './ChallengeTabView';
+import ScrollArea from '../interface/ScrollArea';
 
 
 export interface TeacherTabsPublicProps extends ThemeProps, StyleProps {
@@ -45,17 +46,21 @@ const Container = styled('div', ({ $theme }: { $theme: Theme }) => ({
 }));
 
 const Body = styled('div', {
+  justifyItems: 'center',
   flex: 1,
   minHeight: 0,
   minWidth: 0,
   overflow: 'hidden',
   display: 'flex',
+  justifyContent: 'center',
   flexDirection: 'row',
   '@screen and (max-width: 800px)': {
     flexDirection: 'column',
   },
 });
-
+const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
+  flex: 1,
+}));
 const TopBar = styled('div', ({ $theme }: { $theme: Theme }) => ({
   width: '100%',
   display: 'flex',

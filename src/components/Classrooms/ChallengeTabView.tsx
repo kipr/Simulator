@@ -107,6 +107,7 @@ const SidePanel = styled('div', (props: ThemeProps & { $teacherView?: boolean })
     overflow: 'hidden',
     flexWrap: 'nowrap',
     boxSizing: 'border-box',
+    justifyItems: 'center',
   } : {}),
 }));
 
@@ -122,6 +123,7 @@ const ChallengeViewContainer = styled('div', (props: ThemeProps & { $teacherView
     minWidth: 0,
     overflow: 'hidden',
     boxSizing: 'border-box',
+    justifyItems: 'center',
   } : {}),
 }));
 
@@ -157,7 +159,7 @@ const SectionsColumn = styled('div', (props: ThemeProps & { $teacherView?: boole
   alignItems: 'center',
   flexGrow: 1,
   border: `3px solid ${props.theme.borderColor}`,
-  height: '95%',
+  //height: '95%',
   paddingBottom: '3em',
   backgroundColor: props.theme.backgroundColor,
   zIndex: '1',
@@ -165,7 +167,6 @@ const SectionsColumn = styled('div', (props: ThemeProps & { $teacherView?: boole
     width: '100%',
     maxWidth: '100%',
     minWidth: 0,
-    overflow: 'hidden',
     boxSizing: 'border-box',
   } : {}),
 }));
@@ -295,7 +296,7 @@ class ChallengeTabView extends React.Component<Props, State> {
     };
 
     const tourContent_ = (
-      <TourTarget registry={this.props.tourRegistry} targetKey='challenge-tab-view' style={style}>
+      <TourTarget registry={this.props.tourRegistry} targetKey='challenge-tab-view' style={{ ...style, justifyItems: 'center', width: '100%' }}>
         <ChallengeViewContainer theme={theme} $teacherView={isTeacherView}>
 
           <SectionTabsRow>
@@ -324,7 +325,7 @@ class ChallengeTabView extends React.Component<Props, State> {
     const normalContent_ = (
       <ChallengeViewContainer theme={theme} $teacherView={isTeacherView}>
 
-        <SectionTabsRow>
+        <SectionTabsRow className={"section-tabs-row"}>
           <SectionNameTab theme={theme} selected={selectedSection === "Default JBC Challenges"} onClick={() => this.onSectionSelect_("Default JBC Challenges")}>
             {LocalizedString.lookup(tr('Default JBC Challenges'), locale)}
           </SectionNameTab>
