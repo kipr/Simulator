@@ -350,8 +350,6 @@ const GradesView = ({
   const [selectedAssignment, setSelectedAssignment] = useState<ClassroomAssignment | null>(null);
   const loadedClassroom = Async.latestValue(currentSelectedClassroom);
 
-
-  console.log('GradesView: loadedClassroom', loadedClassroom);
   const sortedStudents = useMemo(() => {
     const s = loadedClassroom?.studentIds;
     return s ? Object.values(s).sort((a, b) => a.displayName.localeCompare(b.displayName)) : [];
@@ -382,7 +380,7 @@ const GradesView = ({
     selectedDocId
       ? classroomList[selectedDocId] ?? currentSelectedClassroom
       : currentSelectedClassroom;
-  console.log('GradesView: currClassroom', currClassroom);
+
   useEffect(() => {
     setStudentIdsFilter([]);
     setChallengeKeysFilter([]);
@@ -393,17 +391,10 @@ const GradesView = ({
     setStudentIdsFilter(prev => prev.filter(id => valid.has(id)));
   }, [rosterStudentIdsKey, sortedStudents]);
 
-  // React.useEffect(() => {
-  //   console.log('GradesView: useEffect: onReloadClassroom', currClassroom);
-  //   onReloadClassroom(currClassroom);
-  // }, [classroomVersion]);
-
   React.useEffect(() => {
-    console.log('GradesView: useEffect: onReloadClassroom', currClassroom);
     onReloadClassroom(currClassroom);
   }, [loadedClassroom])
 
-  console.log('GradesView: classroomAssignments', classroomAssignments);
   const sortedAssignments = useMemo(
     () =>
       [...(classroomAssignments[loadedClassroom?.docId || ''] ? Object.values(classroomAssignments[loadedClassroom?.docId || '']) : [])].sort((a, b) => {
@@ -640,7 +631,7 @@ const GradesView = ({
                 setSelectedAssignment(orig);
               }}
               style={{
-                fontSize: '0.75em',
+                fontSize: '1em',
                 color: theme.color,
                 textDecoration: 'underline',
                 cursor: 'pointer',
@@ -888,8 +879,6 @@ export default connect((state: State) => {
   };
 }, (dispatch) => ({
   onReloadClassroom: async (currentClassroom: AsyncClassroom) => {
-    console.log('GradesView: onReloadClassroom', currentClassroom);
-    // await load(Async.latestValue(currentClassroom)?.docId || "", currentClassroom);
     await loadAssignments(Async.latestValue(currentClassroom)?.docId || "");
   },
   onGetGradebook: (classroomDocId: string) => dispatch(ClassroomsAction.getGradebook({ classroomDocId })),

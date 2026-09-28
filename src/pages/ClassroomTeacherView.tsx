@@ -329,17 +329,13 @@ class ClassroomTeacherView extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
-    console.log("prevState: ", prevState);
-    console.log("this.state: ", this.state);
-    console.log("prevProps: ", prevProps);
-    console.log("this.props: ", this.props);
     if (prevProps.classroomVersion !== this.props.classroomVersion) {
       const { currentSelectedClassroom } = this.state;
       if (currentSelectedClassroom) {
         const loaded = Async.latestValue(currentSelectedClassroom);
-        console.log("Reloading classroom after version change: ", loaded);
+
         this.props.onReloadClassroom?.(loaded.docId);
-        console.log("ClassroomTeacherView componentDidUpdate classroomList: ", this.props.classroomList);
+
       }
 
     }
@@ -347,7 +343,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       const { currentSelectedClassroom } = this.state;
       const { onConvertClassroomAssignmentsToNewFormat } = this.props;
       const loadedClassroom = currentSelectedClassroom ? Async.latestValue(currentSelectedClassroom) : null;
-      console.log("Loaded classroom on update: ", loadedClassroom);
+
       if (loadedClassroom.classroomAssignments && Object.keys(loadedClassroom.classroomAssignments).length > 0) {
         console.log("Classroom assignments are in old format, converting to new format... ");
         onConvertClassroomAssignmentsToNewFormat?.(loadedClassroom);
