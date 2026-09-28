@@ -188,11 +188,16 @@ const PeopleView = ({
                 <Icon style={{ height: '1em', padding: '0 0.5em' }} icon={faEllipsisVertical} onClick={(e: React.MouseEvent) => {
                   e.stopPropagation();
                   setSelectedStudent(student);
+                  const componentRect = containerRef.current?.getBoundingClientRect();
+
+                  const localY = componentRect
+                    ? e.clientY - componentRect.top
+                    : e.clientY;
                   const boundingRect = (e.target as HTMLElement).getBoundingClientRect();
-                  console.log("PeopleView: boundingRect", boundingRect);
-                  console.log("PeopleView: e.clientX, e.clientY", e.clientX, e.clientY);
-                  setContextMenuVisible({ visible: true, x: e.clientX, y: e.clientY });
-                  setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
+                  setContextMenuVisible({ visible: true, x: e.clientX, y: localY });
+                  setContextMenu({ visible: true, x: e.clientX, y: localY });
+
+
                 }} />)}
             </StudentRow>
           ))
@@ -213,12 +218,10 @@ const PeopleView = ({
 
     const menuWidth = 200;
     const menuHeight = 185;
-    console.log("PeopleView: renderContextMenu: x, y, viewportWidth, viewportHeight", x, y, viewportWidth, viewportHeight);
     const adjustedX = Math.min(x, viewportWidth - menuWidth);
-    const adjustedY = Math.min(y, viewportHeight - (menuHeight + 50));
-    console.log("PeopleView: renderContextMenu: adjustedX, adjustedY", adjustedX, adjustedY);
+    const adjustedY = Math.min(y, viewportHeight - (menuHeight));
     return (
-      <ContextMenu x={adjustedX} y={443} theme={theme} >
+      <ContextMenu x={adjustedX} y={y} theme={theme} >
         <ContextMenuItem theme={theme}>
           <li
             style={{ padding: "5px 10px" }}
@@ -233,10 +236,11 @@ const PeopleView = ({
       </ContextMenu>
     );
   }
+  const containerRef = React.useRef<HTMLDivElement>(null);
   return (
     <Container theme={theme} onClick={() => setContextMenu({ ...contextMenu, visible: false })}>
       <StyledScrollArea theme={theme}>
-        <TeacherStudentContainer>
+        <TeacherStudentContainer ref={containerRef}>
           <TeacherContainer>
             <h1 style={{ textDecoration: 'underline' }}>{LocalizedString.lookup(tr('Teachers'), locale)}</h1>
             {currentSelectedClassroom && (
@@ -249,20 +253,21 @@ const PeopleView = ({
               getStudents()
             )}
           </StudentContainer>
-        </TeacherStudentContainer>
-        {contextMenuVisible && renderContextMenu(contextMenu.x, contextMenu.y)}
-        {removeUserDialogVisible &&
-          <RemoveUserFromClassroomDialog
-            theme={theme} locale={locale}
-            onClose={() => setRemoveUserDialogVisible(false)}
-            onAcceptRemove={() => {
-              onRemoveStudentFromClassroom(selectedStudent?.id || "", currClassroom);
-              setRemoveUserDialogVisible(false);
-            }}
-            toRemoveUser={selectedStudent?.displayName || ""}
-            classroom={Async.latestValue(currClassroom)}
+          {contextMenuVisible && renderContextMenu(contextMenu.x, contextMenu.y)}
+          {removeUserDialogVisible &&
+            <RemoveUserFromClassroomDialog
+              theme={theme} locale={locale}
+              onClose={() => setRemoveUserDialogVisible(false)}
+              onAcceptRemove={() => {
+                onRemoveStudentFromClassroom(selectedStudent?.id || "", currClassroom);
+                setRemoveUserDialogVisible(false);
+              }}
+              toRemoveUser={selectedStudent?.displayName || ""}
+              classroom={Async.latestValue(currClassroom)}
 
-          />}
+            />}
+        </TeacherStudentContainer>
+
       </StyledScrollArea>
     </Container>
   );
