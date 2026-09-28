@@ -143,8 +143,8 @@ const SceneNameOverlay = styled("div", (props: ThemeProps) => ({
 const SideBarMinimizedTab = -1;
 
 export class SideLayout extends React.PureComponent<
-Props & ReduxSideLayoutProps,
-State
+  Props & ReduxSideLayoutProps,
+  State
 > {
   constructor(props: Props & ReduxSideLayoutProps) {
     super(props);
@@ -280,6 +280,7 @@ State
             language={editorTarget.language}
             onCodeChange={editorTarget.onCodeChange}
             messages={messages}
+            editable={true}
             autocomplete={settings.editorAutoComplete}
             onDocumentationGoToFuzzy={onDocumentationGoToFuzzy}
           />
