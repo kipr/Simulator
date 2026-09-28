@@ -9,7 +9,7 @@ import { FontAwesome } from '../FontAwesome';
 import tr from '@i18n';
 import { useMemo, useState } from 'react';
 import LocalizedString from '../../util/LocalizedString';
-import { faAngleUp, faAngleDown, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import { faAngleUp, faAngleDown, faArrowRightToBracket, faExpand, faCompress } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
 import { State as ReduxState, State } from '../../state';
 import Dict from '../../util/objectOps/Dict';
@@ -23,6 +23,7 @@ import { Challenges } from "../../state/State";
 import { completionVersusDueDate, completionDuePillStyle } from '../../util/challengeCompletionStatus';
 import { defaultChallengePoints, getEffectiveChallengePoints } from '../../util/classroomGradeOverrides';
 import { ChallengePointsOverrideField } from '../Classrooms/ChallengePointsOverrideField';
+import { Editor } from "../Editor";
 
 interface Challenge {
   name: LocalizedString;
@@ -89,12 +90,13 @@ const Container = styled('div', (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
   height: '30em',
-  margin: '1em',
+  margin: '1em 0em 1em 1em',
   zIndex: 100,
 }));
 
 const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
   flex: 1,
+  maxWidth: '100%'
 }));
 
 const Button = styled('div', (props: ThemeProps) => ({
@@ -121,6 +123,9 @@ const Button = styled('div', (props: ThemeProps) => ({
 const Icon = styled(FontAwesome, {
   paddingRight: "5px",
   height: "1.5em",
+  ':hover': {
+    cursor: 'pointer',
+  },
 });
 
 
@@ -137,14 +142,12 @@ const AssignmentSubmissionDetails = ({
   onChallengePointsOverride,
 }: Props) => {
   const [challengeCompletionVisible, setChallengeCompletionVisible] = React.useState<string | null>(null);
-
+  const [showExpandedCode, setShowExpandedCode] = React.useState<boolean>(false);
+  const [editor, setEditor] = React.useState<React.JSX.Element | null>(null);
   const challengeCompletion = (challenge: ChallengeData) => (
     (challenge?.success?.exprStates?.completion ?? false) &&
     !(challenge?.failure?.exprStates?.failure ?? false)
   );
-  console.log("AssignmentSubmissionDetails studentId:", studentId);
-  console.log("AssignmentSubmissionDetails assignment:", assignment);
-  console.log("challengeProgressions:", challengeProgressions);
   const assignmentChallenges = Object.values(assignment.challenges);
   const userGrade = useMemo((): UserGrade | null => {
     if (!studentId) return null;
@@ -185,7 +188,8 @@ const AssignmentSubmissionDetails = ({
     const finalScore = scores.reduce((total, score) => total + (score.completed ? score.points : 0), 0);
     return { studentId, assignedChallenges: scores, finalScore };
   }, [studentId, assignment, assignment.challenges, challengeProgressions, classroom]);
-  console.log("AssignmentSubmissionDetails userGrade:", userGrade);
+
+
   function renderChallengeCompletion(challenge: ClassroomAssignmentChallenge) {
     const progression = challengeProgressions ? challengeProgressions[challenge.sceneId] : null;
     const asyncChallengeCompletion = Async.loaded({
@@ -194,17 +198,27 @@ const AssignmentSubmissionDetails = ({
     });
     const loadedChallenge = challenges[challenge.sceneId];
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', height: '20em' }}>
-        <Challenge challenge={loadedChallenge} challengeCompletion={asyncChallengeCompletion} theme={theme} />
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <Challenge onExpandCode={onExpandCode} gradeView={true} challenge={loadedChallenge} challengeCompletion={asyncChallengeCompletion} theme={theme} />
       </div>
       // <div></div>
     );
   }
 
+  function onExpandCode(editor: React.JSX.Element) {
+    setEditor(editor);
+    setShowExpandedCode(!showExpandedCode)
+
+  }
+
+  function onExpandCode_() {
+    setShowExpandedCode(!showExpandedCode)
+  }
+
   return (
     <Dialog onClose={onClose} theme={theme} name={LocalizedString.lookup(tr("Submission Details"), locale)} >
       <Container theme={theme}>
-        <StyledScrollArea theme={theme}>
+        <StyledScrollArea innerStyle={{ maxWidth: '100%' }} theme={theme}>
           <div>
             <h2>{LocalizedString.lookup(tr("Title"), locale)}: {assignment.title}</h2>
             {assignment.description && <p>{LocalizedString.lookup(tr("Description"), locale)}: {assignment.description}</p>}
@@ -294,10 +308,10 @@ const AssignmentSubmissionDetails = ({
 
               {challengeCompletionVisible === challengeInfo.challenge.sceneId &&
                 !challengeProgressions?.[challengeInfo.challenge.sceneId] && (
-                <div style={{ margin: '1em', padding: '1em', border: `1px solid ${theme.borderColor}`, borderRadius: '4px' }}>
-                  <div style={{ fontStyle: 'italic' }}>Student has not started this challenge.</div>
-                </div>
-              )}
+                  <div style={{ margin: '1em', padding: '1em', border: `1px solid ${theme.borderColor}`, borderRadius: '4px' }}>
+                    <div style={{ fontStyle: 'italic' }}>Student has not started this challenge.</div>
+                  </div>
+                )}
             </div>
           ))}
 
@@ -306,6 +320,22 @@ const AssignmentSubmissionDetails = ({
 
 
         </StyledScrollArea>
+
+        {showExpandedCode && (
+          <div style={{ height: '30em', marginRight: '10px' }}>
+            {editor}
+            <Icon style={{
+              position: 'relative',
+              left: '44em',
+              bottom: '2.3em',
+              zIndex: 10,
+              transform: 'translateY(-50%)',
+              paddingRight: "5px",
+              height: "2.5em",
+
+            }} icon={faCompress} onClick={onExpandCode_} />
+          </div>
+        )}
       </Container>
       <DialogBar theme={theme} onAccept={onClose}>{LocalizedString.lookup(tr("Close"), locale)}</DialogBar>
     </Dialog>
