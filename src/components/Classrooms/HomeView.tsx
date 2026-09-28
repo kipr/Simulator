@@ -182,11 +182,11 @@ const HomeView = ({
 
     if (assignments) {
       return sortedAssignments.map(assignment => (
-        <AssignmentItem theme={theme} key={assignment.title}>
-          <div style={{ display: 'flex', flexDirection: 'row' }} onClick={() => {
-            setSelectedAssignment(assignment);
-            setAssignmentDetailsDialogVisible(true);
-          }}>
+        <AssignmentItem onClick={() => {
+          setSelectedAssignment(assignment);
+          setAssignmentDetailsDialogVisible(true);
+        }} theme={theme} key={assignment.title}>
+          <div style={{ display: 'flex', flexDirection: 'row' }} >
             <h2>{LocalizedString.lookup(tr('New Assignment Posted'), locale)}: {assignment.title}</h2>
           </div>
 
@@ -204,16 +204,16 @@ const HomeView = ({
     if (config === 'Student') {
       assignments = assignments.filter(a => assignmentListsUserInAssignedTo(a, currentUserId));
     }
-    //  else if (config === 'Teacher') {
-    //   assignments = assignments.filter(a => assignmentHasAnyAssignee(a));
-    // }
+    console.log("renderUpcomingAssignments: assignments:", assignments);
     const upcomingAssignments = assignments.filter(assignment => {
       if (!assignment.dueDate) return false;
       const dueDate = new Date(assignment.dueDate).getTime();
+      console.log("renderUpcomingAssignments: assignment:", assignment, "dueDate:", dueDate, "now:", Date.now());
       const now = Date.now();
       return dueDate > now;
     });
 
+    console.log("renderUpcomingAssignments: upcomingAssignments:", upcomingAssignments);
     const sortedAssignments = upcomingAssignments.sort((a, b) => {
       const aDue = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
       const bDue = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
@@ -223,7 +223,10 @@ const HomeView = ({
 
     if (upcomingAssignments.length > 0) {
       return sortedAssignments.map(assignment => (
-        <AssignmentItem theme={theme} key={assignment.title}>
+        <AssignmentItem theme={theme} key={assignment.title} onClick={() => {
+          setSelectedAssignment(assignment);
+          setAssignmentDetailsDialogVisible(true);
+        }}>
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             <h2>{LocalizedString.lookup(tr('Upcoming Assignment'), locale)}: {assignment.title}</h2>
           </div>

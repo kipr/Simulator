@@ -31,6 +31,10 @@ const TabContainer = styled(
     ":last-child": {
       borderRight: "none",
       borderBottom: "none",
+      borderTopRightRadius: props.selected ? `${props.theme.itemPadding * 2}px` : null,
+    },
+    ":first-child": {
+      borderTopLeftRadius: props.selected ? `${props.theme.itemPadding * 2}px` : null,
     },
     textAlign: "center",
     userSelect: "none",
@@ -103,11 +107,11 @@ const TabBarContainer = styled(
 
 export class TabBar extends React.PureComponent<Props> {
   private onClick_ =
-  (index: number) => (event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
-    event.preventDefault();
-    this.props.onIndexChange(index, event);
-  };
+    (index: number) => (event: React.MouseEvent<HTMLDivElement>) => {
+      event.stopPropagation();
+      event.preventDefault();
+      this.props.onIndexChange(index, event);
+    };
 
   render() {
     const { props } = this;
