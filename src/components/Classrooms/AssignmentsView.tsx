@@ -293,7 +293,10 @@ const AssignmentsView = ({
       newTopics[topic].push(assignment);
     }
     const updatedClassroom = { ...loadedClassroom, topics: Object.keys(newTopics) };
-    loadedClassroom?.topics === undefined ? onUpdateClassroom(loadedClassroom.docId, updatedClassroom) : null;
+    if (loadedClassroom?.topics === undefined) {
+      console.log("AssignmentsView updateClassroom...");
+      onUpdateClassroom(loadedClassroom.docId, updatedClassroom);
+    }
     setTopics(newTopics);
 
   }, [
@@ -866,7 +869,7 @@ const AssignmentsView = ({
       <AssignmentsListContainer theme={theme}>
         {(() => {
           const scrollArea = (
-            <StyledScrollArea theme={theme}>
+            <StyledScrollArea theme={theme} horizontalScroll={false}>
               {config === 'Student' ? (
                 renderStudentSubjectView()
               ) : (

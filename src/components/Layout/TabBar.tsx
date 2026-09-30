@@ -31,6 +31,10 @@ const TabContainer = styled(
     ":last-child": {
       borderRight: "none",
       borderBottom: "none",
+      borderTopRightRadius: props.selected ? `${props.theme.itemPadding * 2}px` : null,
+    },
+    ":first-child": {
+      borderTopLeftRadius: props.selected ? `${props.theme.itemPadding * 2}px` : null,
     },
     textAlign: "center",
     userSelect: "none",

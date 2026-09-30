@@ -172,6 +172,8 @@ const ClassroomHeaderContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'row',
   gap: '3em',
   height: '88vh',
+  width: '100%',
+  justifyContent: 'center',
 }));
 
 const MyClassroomContainer = styled('div', (props: ThemeProps) => ({
@@ -180,7 +182,7 @@ const MyClassroomContainer = styled('div', (props: ThemeProps) => ({
   alignItems: 'center',
   flex: 1,
   minHeight: '80vh',
-  width: '100vw'
+  maxWidth: '95vw'
 
 }));
 
