@@ -1112,7 +1112,7 @@ export default connect(
     },
     onConvertClassroomAssignmentsToNewFormat: async (classroom: Classroom) =>
       await convertClassroomAssignmentsToNewFormat(classroom),
-    onConvertStudentIdsToNewFormat: async (classroom: Classroom) =>
+    onConvertStudentIdsToNewFormat: (classroom: Classroom) =>
       convertStudentIdsToNewFormat(classroom),
     onGetAssignments: (classroomDocId: string) =>
       dispatch(ClassroomsAction.getAssignments({ classroomDocId })),
