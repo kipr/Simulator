@@ -174,7 +174,7 @@ const ClassroomsCardContainer = styled('div', (props: ThemeProps) => ({
   justifyContent: 'flex-start',
   display: 'flex',
   flexDirection: 'row',
-  //margin: '20px 20px 0px 20px',
+  // margin: '20px 20px 0px 20px',
 }));
 
 const ClassroomCardContainer = styled('div', (props: { collapsed: boolean }) => ({
@@ -344,8 +344,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       const { onConvertClassroomAssignmentsToNewFormat } = this.props;
       const loadedClassroom = currentSelectedClassroom ? Async.latestValue(currentSelectedClassroom) : null;
 
-      if (loadedClassroom.classroomAssignments && Object.keys(loadedClassroom.classroomAssignments).length > 0) {
-        console.log("Classroom assignments are in old format, converting to new format... ");
+      if (loadedClassroom?.classroomAssignments && Object.keys(loadedClassroom.classroomAssignments).length > 0) {
         onConvertClassroomAssignmentsToNewFormat?.(loadedClassroom);
 
       }
@@ -981,44 +980,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
               <ClassroomsContainer style={style} theme={theme}>
 
                 {this.state.cardContainerVisible
-                  ?
-                  //  (<ClassroomCardScrollContainer collapsed={!this.state.cardContainerVisible}>
-                  //   <TourTarget registry={this.registry} targetKey="teacher-classroom-cards-strip" style={{ display: 'contents' }}>
-                  //     <ClassroomsCardContainer style={style} theme={theme}>
-                  //       <TourTarget registry={this.registry} targetKey="teacher-create-classroom-card" style={{ display: 'contents' }}>
-                  //         <Card
-                  //           onClick={() => this.setState({ showCreateClassroomDialog: true })}
-                  //           title={LocalizedString.lookup(tr('Create New Classroom'), locale)}
-                  //           theme={theme}
-                  //           customheight='150px'
-                  //           customwidth='200px'
-                  //           backgroundPosition={'center top'}
-                  //           custommargin='10px'
-                  //         />
-                  //       </TourTarget>
-                  //       <Card
-                  //         onClick={() => this.props.onTestMigration()}
-                  //         title={LocalizedString.lookup(tr('Test Migration'), locale)}
-                  //         theme={theme}
-                  //         customheight='150px'
-                  //         customwidth='200px'
-                  //         backgroundPosition={'center top'}
-                  //         custommargin='10px'
-                  //       />
-                  //       <TourTarget
-                  //         registry={this.registry}
-                  //         targetKey="teacher-classroom-cards-list"
-                  //         style={{ display: 'contents' }}
-                  //       >
-                  //         {this.exisitingClassroomCards()}
-                  //       </TourTarget>
-                  //     </ClassroomsCardContainer>
-                  //   </TourTarget>
-                  //   <StickyButtonWrap>
-                  //     <Icon icon={this.state.cardContainerVisible ? faAngleUp : faAngleDown} onClick={() => this.setState({ cardContainerVisible: !this.state.cardContainerVisible })} />
-                  //   </StickyButtonWrap>
-                  // </ClassroomCardScrollContainer>)
-                  (
+                  ? (
                     <ClassroomCardContainer collapsed={!this.state.cardContainerVisible}>
                       <StyledScrollArea theme={theme} verticalScroll={false} horizontalScroll={true} collapsed={!this.state.cardContainerVisible}>
                         <TourTarget registry={this.registry} targetKey="teacher-classroom-cards-strip" style={{ display: 'contents' }}>
@@ -1034,15 +996,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                                 custommargin='10px'
                               />
                             </TourTarget>
-                            <Card
-                              onClick={() => this.props.onTestMigration()}
-                              title={LocalizedString.lookup(tr('Test Migration'), locale)}
-                              theme={theme}
-                              customheight='150px'
-                              customwidth='200px'
-                              backgroundPosition={'center top'}
-                              custommargin='10px'
-                            />
+
                             <TourTarget
                               registry={this.registry}
                               targetKey="teacher-classroom-cards-list"
@@ -1159,7 +1113,7 @@ export default connect(
     onConvertClassroomAssignmentsToNewFormat: async (classroom: Classroom) =>
       await convertClassroomAssignmentsToNewFormat(classroom),
     onConvertStudentIdsToNewFormat: async (classroom: Classroom) =>
-      await convertStudentIdsToNewFormat(classroom),
+      convertStudentIdsToNewFormat(classroom),
     onGetAssignments: (classroomDocId: string) =>
       dispatch(ClassroomsAction.getAssignments({ classroomDocId })),
     onCreateClassroom: (classroom: Classroom) =>

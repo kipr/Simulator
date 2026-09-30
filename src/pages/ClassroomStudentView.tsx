@@ -568,13 +568,13 @@ class ClassroomStudentView extends React.Component<Props, State> {
    * GuidedTour measures (the previous step may live in Home, Assignments, People, or Leaderboard).
    */
   private studentTourUiStateForStepIndex_(stepIndex: number): Pick<
-    ClassroomStudentViewState,
-    | 'currentTourStepIndex'
-    | 'tourStudentTabSync'
-    | 'tourExpandStudentAssignmentTopics'
-    | 'tourAutoOpenAssignmentDetails'
-    | 'showJoinClassroomDialog'
-    | 'subMenu'
+  ClassroomStudentViewState,
+  | 'currentTourStepIndex'
+  | 'tourStudentTabSync'
+  | 'tourExpandStudentAssignmentTopics'
+  | 'tourAutoOpenAssignmentDetails'
+  | 'showJoinClassroomDialog'
+  | 'subMenu'
   > {
     const step = this.state.studentViewTourSteps[stepIndex];
     const id = step?.id;

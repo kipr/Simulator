@@ -159,7 +159,7 @@ const SectionsColumn = styled('div', (props: ThemeProps & { $teacherView?: boole
   alignItems: 'center',
   flexGrow: 1,
   border: `3px solid ${props.theme.borderColor}`,
-  //height: '95%',
+  // height: '95%',
   paddingBottom: '3em',
   backgroundColor: props.theme.backgroundColor,
   zIndex: '1',

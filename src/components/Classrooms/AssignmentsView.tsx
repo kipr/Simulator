@@ -295,7 +295,7 @@ const AssignmentsView = ({
     const updatedClassroom = { ...loadedClassroom, topics: Object.keys(newTopics) };
     if (loadedClassroom?.topics === undefined) {
       console.log("AssignmentsView updateClassroom...");
-      onUpdateClassroom(loadedClassroom.docId, updatedClassroom)
+      onUpdateClassroom(loadedClassroom.docId, updatedClassroom);
     }
     setTopics(newTopics);
 
@@ -732,17 +732,17 @@ const AssignmentsView = ({
           activeTourStepId &&
           TEACHER_TOUR_ASSIGNMENT_ROW_STEP_IDS.has(activeTourStepId) &&
           !teacherAssignmentsListHighlight && (
-            <div style={{ padding: '12px' }}>
-              <TourTarget registry={tourRegistry} targetKey="teacher-assignment-in-class-list" style={{ display: 'contents' }}>
-                <div style={{ color: theme.color }}>
-                  {LocalizedString.lookup(
-                    tr('Assignments you publish will appear in the lists below, grouped by topic.'),
-                    locale
-                  )}
-                </div>
-              </TourTarget>
-            </div>
-          )}
+          <div style={{ padding: '12px' }}>
+            <TourTarget registry={tourRegistry} targetKey="teacher-assignment-in-class-list" style={{ display: 'contents' }}>
+              <div style={{ color: theme.color }}>
+                {LocalizedString.lookup(
+                  tr('Assignments you publish will appear in the lists below, grouped by topic.'),
+                  locale
+                )}
+              </div>
+            </TourTarget>
+          </div>
+        )}
         <div style={{ display: 'flex', flexDirection: 'row', gap: '5em', padding: '8px' }}>
 
           {/* No Subject Container Column */}

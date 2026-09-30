@@ -296,7 +296,6 @@ export const load = async (
       );
     }
 
-    console.log("Loaded classroom from DB: ", value);
     store.dispatch(
       ClassroomsAction.setClassroom({
         classroom: Async.loaded({
@@ -323,7 +322,6 @@ export const loadClassroom = async (docId: string) => {
 
   try {
     const value = await db.get<Classroom>(Selector.classroom(docId));
-    console.log("loadClassroom from DB: ", value);
 
   } catch (error) {
     console.error(error);
@@ -977,7 +975,6 @@ export const updateClassroom = async (classroomId: string, classroom: Classroom)
       throw new Error('Classroom docId is required to update classroom');
     }
 
-    console.log("updateClassroom classroom:", classroom);
 
     await db.set(
       {
@@ -1008,7 +1005,6 @@ export const convertClassroomTopicsAndUpdate = async (classroom: Classroom) => {
 
       const newTopicArray = Object.keys(classroom.topics);
       classroom.topics = newTopicArray;
-      console.log("convertClassroomTopicsAndUpdate updateClassroom....");
 
       await updateClassroom(classroom.classroomId, classroom);
 
@@ -1050,7 +1046,7 @@ export const convertClassroomAssignmentsToNewFormat = async (
       return;
     }
 
-    //First check if topics are in old object format instead of string[]
+    // First check if topics are in old object format instead of string[]
     const newTopics = convertClassroomTopics(classroom);
     const newStudentIds = convertStudentIdsToNewFormat(classroom);
     let updatedClassroom: Classroom;
@@ -1120,8 +1116,6 @@ export const convertStudentIdsToNewFormat = (classroom: Classroom): Dict<{ id: s
     }
 
     classroom.studentIds = newStudentIds;
-    // console.log("convertStudentIdsToNewFormat updateclassroom....");
-    // await updateClassroom(classroom.classroomId, classroom);
 
     return (newStudentIds);
 
@@ -1144,7 +1138,6 @@ const removeClassroomAssignmentsField = async (classroom: Classroom): Promise<Cl
 
     const updatedClassroom = { ...classroom };
     delete updatedClassroom.classroomAssignments;
-    console.log("removeAssignmentsField updateclassroom....");
     await updateClassroom(classroom.classroomId, updatedClassroom);
     return updatedClassroom;
   } catch (error) {
@@ -1170,7 +1163,7 @@ export const setAssignment = async (
     if (!docId) {
       throw new Error('Classroom docId is required to set assignment');
     }
-    console.log("setAssignment classroom:", classroom);
+
 
 
     // Check if assignment topic already exists
@@ -1238,7 +1231,7 @@ export const loadAssignments = async (
 };
 export const deleteAssignment = async (classroom: Classroom, assignmentDocId: string) => {
   try {
-    const docId = classroom.docId
+    const docId = classroom.docId;
     if (!docId) throw new Error('Classroom docId is required to delete assignment');
 
     await db.delete(
@@ -1275,30 +1268,27 @@ export interface ClassroomsState {
 }
 
 export const testMigration = async () => {
-  //Need to copy a know large classroom to test migration of assignments and studentIds
+  // Need to copy a know large classroom to test migration of assignments and studentIds
   try {
-    const value = await db.get<Classroom>(Selector.classroom('dfb17ca')) as Classroom;
-    console.log('Test migration result:', value);
+    const value = await db.get<Classroom>(Selector.classroom('2281141')) ;
     const uuid = crypto.randomUUID();
     const shortenedId = uuid.replace(/-/g, '').slice(-7);
 
     const loadedClassroom = Object.values(value) as Classroom;
-    console.log('Loaded classroom:', loadedClassroom);
+
 
     const l = loadedClassroom[0] as Classroom;
-    console.log('Loaded classroom first entry:', l);
-    console.log('Object.values(l):', Object.values(l));
+
     const e = Object.values(l);
-    console.log('Object.values(l) as array:', e);
     const testClassroom: Classroom = {
 
-      classroomId: l.classroomId + '-test',
+      classroomId: `${l.classroomId}-test`,
       code: l.code,
       type: 'classroom',
       studentIds: l.studentIds,
       classroomAssignments: l.classroomAssignments,
       topics: l.topics,
-
+      challengePointsOverrides: l.challengePointsOverrides,
       docId: shortenedId,
       teacherDisplayName: 'Test Migration',
       teacherId: 'A8xNiNn6NmcDJ85Pxz4R7U6MJog2'
@@ -1307,12 +1297,11 @@ export const testMigration = async () => {
 
     await db.set(Selector.classroom(shortenedId), testClassroom);
 
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error testing migration:', error);
   }
 
-}
+};
 
 export const reduceClassrooms = (
   state: ClassroomsState = { classroomVersion: 0, assignmentVersion: 0, entities: {}, selectedClassroom: null, currentStudentClassroom: null, assignments: {} },

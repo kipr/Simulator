@@ -125,11 +125,11 @@ const AssignTo = ({
 
   const toggleStudent = (studentId: string) => {
     setSelectedIds(prev =>
-    (Object.prototype.hasOwnProperty.call(prev, studentId)
-      ? Object.fromEntries(
-        Object.entries(prev).filter(([id]) => id !== studentId)
-      )
-      : { ...prev, [studentId]: loadedClassroom.studentIds[studentId] as { id: string; displayName: string; assignments?: Dict<ClassroomAssignment> } })
+      (Object.prototype.hasOwnProperty.call(prev, studentId)
+        ? Object.fromEntries(
+          Object.entries(prev).filter(([id]) => id !== studentId)
+        )
+        : { ...prev, [studentId]: loadedClassroom.studentIds[studentId] as { id: string; displayName: string; assignments?: Dict<ClassroomAssignment> } })
     );
   };
 

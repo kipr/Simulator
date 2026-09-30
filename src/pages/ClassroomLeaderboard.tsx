@@ -104,7 +104,7 @@ const TeacherLeaderboardRoot = styled('div', {
   width: '100%',
   maxWidth: '100%',
   minWidth: 0,
-  //overflow: 'hidden',
+  // overflow: 'hidden',
   boxSizing: 'border-box',
 });
 
@@ -127,12 +127,12 @@ const ClassroomLeaderboardContainer = styled("div", (props: ThemeProps & { $teac
 const TeacherLeaderboardPanel = styled('div', {
   width: '88%',
   maxWidth: '88%',
-  //height: '75%',
-  //maxHeight: '75%',
+  // height: '75%',
+  // maxHeight: '75%',
   alignSelf: 'center',
   display: 'flex',
   flexDirection: 'column',
-  //minHeight: '21em',
+  // minHeight: '21em',
   minWidth: 0,
   overflow: 'hidden',
   boxSizing: 'border-box',
@@ -311,7 +311,7 @@ const TableHeader = styled('th', (props: ThemeProps & { $challengeColumn?: boole
     maxWidth: '140px',
     whiteSpace: 'normal',
     verticalAlign: 'bottom',
-    //zIndex: 5,
+    // zIndex: 5,
   } : {}),
 }));
 

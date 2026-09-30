@@ -207,12 +207,12 @@ const AssignmentSubmissionDetails = ({
 
   function onExpandCode(editor: React.JSX.Element) {
     setEditor(editor);
-    setShowExpandedCode(!showExpandedCode)
+    setShowExpandedCode(!showExpandedCode);
 
   }
 
   function onExpandCode_() {
-    setShowExpandedCode(!showExpandedCode)
+    setShowExpandedCode(!showExpandedCode);
   }
 
   return (
@@ -275,6 +275,10 @@ const AssignmentSubmissionDetails = ({
                               {LocalizedString.lookup(tr('Completed at'), locale)}:{' '}
                               {new Date(row.completedAt).toLocaleString(locale)}
                             </div>
+                            <div style={{ fontSize: '0.75em', opacity: 0.85, fontWeight: 'normal' }}>
+                              {LocalizedString.lookup(tr('Due at'), locale)}:{' '}
+                              {new Date(assignment.dueDate).toLocaleString(locale) === 'Invalid Date' ? LocalizedString.lookup(tr('No deadline'), locale) : new Date(assignment.dueDate).toLocaleString(locale)}
+                            </div>
                             {(() => {
                               const versus = completionVersusDueDate(row.completedAt, assignment.dueDate);
                               if (versus === 'unknown') return null;
@@ -308,10 +312,10 @@ const AssignmentSubmissionDetails = ({
 
               {challengeCompletionVisible === challengeInfo.challenge.sceneId &&
                 !challengeProgressions?.[challengeInfo.challenge.sceneId] && (
-                  <div style={{ margin: '1em', padding: '1em', border: `1px solid ${theme.borderColor}`, borderRadius: '4px' }}>
-                    <div style={{ fontStyle: 'italic' }}>Student has not started this challenge.</div>
-                  </div>
-                )}
+                <div style={{ margin: '1em', padding: '1em', border: `1px solid ${theme.borderColor}`, borderRadius: '4px' }}>
+                  <div style={{ fontStyle: 'italic' }}>Student has not started this challenge.</div>
+                </div>
+              )}
             </div>
           ))}
 

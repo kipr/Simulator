@@ -393,7 +393,7 @@ const GradesView = ({
 
   React.useEffect(() => {
     onReloadClassroom(currClassroom);
-  }, [loadedClassroom])
+  }, [loadedClassroom]);
 
   const sortedAssignments = useMemo(
     () =>
@@ -566,7 +566,7 @@ const GradesView = ({
         classroomAssignments[loadedClassroom?.docId || '']
           ?.[orig.docId]
           ?.assignedTo
-        ?.[student.id] !== undefined;
+          ?.[student.id] !== undefined;
 
       const progressForStudent =
         grades ? grades[student.id] : null;

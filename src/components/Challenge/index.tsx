@@ -170,7 +170,7 @@ class Challenge extends React.Component<Props, State> {
 
   private onIndexChange_ = (index: number) => {
     this.setState({ index });
-  }
+  };
   render() {
     const { props, state } = this;
     const {
@@ -217,11 +217,11 @@ class Challenge extends React.Component<Props, State> {
         />
         {latestChallengeCompletion?.success?.exprStates?.completion &&
           latestChallengeCompletion.completedAt && (
-            <div style={{ fontSize: '0.85em', padding: '0.35em 0 0 0.25em', opacity: 0.9 }}>
-              {LocalizedString.lookup(tr('Completed at'), locale)}:{' '}
-              {new Date(latestChallengeCompletion.completedAt).toLocaleString(locale)}
-            </div>
-          )}
+          <div style={{ fontSize: '0.85em', padding: '0.35em 0 0 0.25em', opacity: 0.9 }}>
+            {LocalizedString.lookup(tr('Completed at'), locale)}:{' '}
+            {new Date(latestChallengeCompletion.completedAt).toLocaleString(locale)}
+          </div>
+        )}
       </Section>
 
     );
@@ -252,7 +252,7 @@ class Challenge extends React.Component<Props, State> {
         <Editor
           language={language}
           code={latestChallengeCompletion?.code[language] ?? ''}
-          onCodeChange={() => { }}
+          onCodeChange={null}
           autocomplete={false}
           editable={false}
           theme={theme} />
@@ -283,11 +283,11 @@ class Challenge extends React.Component<Props, State> {
 
         </GradeViewContainer>
       );
-    }
+    };
 
     const renderDefaultView = () => {
-      return (sectionComponent)
-    }
+      return (sectionComponent);
+    };
     const content = gradeView ? renderGradeView() : renderDefaultView();
     return (
       <>

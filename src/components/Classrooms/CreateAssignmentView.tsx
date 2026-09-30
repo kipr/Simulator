@@ -227,7 +227,6 @@ const CreateAssignmentView = ({
   tourRegistry,
   activeTourStepId
 }: Props) => {
-
   const loadedClassroom = Async.latestValue(classroom);
   const [assignToMenuVisible, setAssignToMenuVisible] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState<Dict<{ id: string, displayName: string }>>(originalAssignment?.assignedTo || {});
@@ -255,12 +254,7 @@ const CreateAssignmentView = ({
     classroomTopics.length > 0
       ? classroomTopics
         .map(topic =>
-        (topic === 'No Subject'
-          ? {
-            text: LocalizedString.lookup(tr('No Subject'), locale),
-            data: 'No Subject'
-          }
-          : {
+          ({
             text: topic,
             data: topic
           })
@@ -268,6 +262,9 @@ const CreateAssignmentView = ({
         .concat({
           text: LocalizedString.lookup(tr('Create Subject'), locale),
           data: 'Create Subject'
+        }, {
+          text: LocalizedString.lookup(tr('No Subject'), locale),
+          data: 'No Subject'
         })
       : [
         {
@@ -280,6 +277,8 @@ const CreateAssignmentView = ({
         }
       ]
   );
+
+
   const [assignedPointsSet, setAssignedPointsSet] = useState<Dict<{ challenge: ClassroomAssignmentChallenge, points: number | '' }>>({});
   const [topicIndex, setTopicIndex] = React.useState(
     originalAssignment?.topic
@@ -503,22 +502,22 @@ const CreateAssignmentView = ({
   }
 
   const wrapCreateAssignmentFormTarget = (inner: React.ReactNode) =>
-  (tourRegistry ? (
-    <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-form" style={{ display: 'contents' }}>
-      {inner}
-    </TourTarget>
-  ) : (
-    inner
-  ));
+    (tourRegistry ? (
+      <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-form" style={{ display: 'contents' }}>
+        {inner}
+      </TourTarget>
+    ) : (
+      inner
+    ));
 
   const wrapCreateAssignmentRosterTarget = (inner: React.ReactNode) =>
-  (tourRegistry ? (
-    <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-roster" style={{ display: 'contents' }}>
-      {inner}
-    </TourTarget>
-  ) : (
-    inner
-  ));
+    (tourRegistry ? (
+      <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-roster" style={{ display: 'contents' }}>
+        {inner}
+      </TourTarget>
+    ) : (
+      inner
+    ));
 
   const assignButtonTourActive =
     !originalAssignment && activeTourStepId === 'teacher-create-assignment-assign';

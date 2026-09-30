@@ -120,7 +120,7 @@ const HomeView = ({
   const [assignmentDetailsDialogVisible, setAssignmentDetailsDialogVisible] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState<ClassroomAssignment | null>(null);
   const [studentChallengeProgressByScene, setStudentChallengeProgressByScene] = useState<Dict<unknown> | null>(null);
-  console.log("homeView stateClassroom:", stateClassroom);
+
   useTeacherViewOverlayEffect(
     config === 'Teacher' && (classroomCodeDialogVisible || assignmentDetailsDialogVisible),
   );
@@ -129,13 +129,6 @@ const HomeView = ({
     if (!loadedClassroom) return;
     onGetAllAssignments(loadedClassroom);
   }, [loadedClassroom]);
-
-  // useEffect(() => {
-  //   console.log("classroomVersion changed, reloading classroom");
-  //   if (loadedClassroom) {
-  //     onLoadClassroom(loadedClassroom.docId);
-  //   }
-  // }, [classroomVersion]);
 
   useEffect(() => {
     if (config !== 'Student') {
@@ -204,16 +197,15 @@ const HomeView = ({
     if (config === 'Student') {
       assignments = assignments.filter(a => assignmentListsUserInAssignedTo(a, currentUserId));
     }
-    console.log("renderUpcomingAssignments: assignments:", assignments);
+
     const upcomingAssignments = assignments.filter(assignment => {
       if (!assignment.dueDate) return false;
       const dueDate = new Date(assignment.dueDate).getTime();
-      console.log("renderUpcomingAssignments: assignment:", assignment, "dueDate:", dueDate, "now:", Date.now());
       const now = Date.now();
       return dueDate > now;
     });
 
-    console.log("renderUpcomingAssignments: upcomingAssignments:", upcomingAssignments);
+
     const sortedAssignments = upcomingAssignments.sort((a, b) => {
       const aDue = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
       const bDue = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
@@ -236,7 +228,7 @@ const HomeView = ({
       ));
     }
     return <h2>{LocalizedString.lookup(tr('No upcoming assignments'), locale)}</h2>
-      ;
+    ;
 
   }
   return (
@@ -260,7 +252,7 @@ const HomeView = ({
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '90%' }}>
               <InfoBubble style={{ width: '100%' }} theme={theme}>
-                {renderOrderedAssignments()}
+                {stateClassroom.classroomAssignments && config === 'Teacher' ? <h2>Updating...</h2> : renderOrderedAssignments()}
               </InfoBubble>
 
             </div>
