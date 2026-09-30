@@ -1270,7 +1270,7 @@ export interface ClassroomsState {
 export const testMigration = async () => {
   // Need to copy a know large classroom to test migration of assignments and studentIds
   try {
-    const value = await db.get<Classroom>(Selector.classroom('2281141')) ;
+    const value = await db.get<Classroom>(Selector.classroom(''));
     const uuid = crypto.randomUUID();
     const shortenedId = uuid.replace(/-/g, '').slice(-7);
 
@@ -1287,13 +1287,12 @@ export const testMigration = async () => {
       type: 'classroom',
       studentIds: l.studentIds,
       classroomAssignments: l.classroomAssignments,
-      topics: l.topics,
+      topics: l.topics ? l.topics : [],
       challengePointsOverrides: l.challengePointsOverrides,
       docId: shortenedId,
       teacherDisplayName: 'Test Migration',
       teacherId: 'A8xNiNn6NmcDJ85Pxz4R7U6MJog2'
     };
-
 
     await db.set(Selector.classroom(shortenedId), testClassroom);
 
