@@ -218,6 +218,8 @@ export const COMMON: Theme = {
   hoverButtonBackground: undefined,
   buttonColors: undefined,
   cardColors: undefined,
+  leaderboardHighlightBackground: undefined,
+  leaderboardHighlightHoverBackground: undefined,
 
   borderRadius: 10,
   widget: {
