@@ -888,9 +888,14 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
     // Check if challenge is closed
     const status = this.challengeStatus;
 
+    
+    const { settings } = this.props;
+    const theme = settings.darkMode ? DARK : LIGHT;
+
     if (challengeId && !challengeStarted) {
       return (
         <LoadingOverlay
+          theme={theme}
           onStartClick={this.onChallengeStartClick_}
           challenge={challenge}
           loading={!latestChallengeCompletion}
@@ -914,9 +919,6 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
       feedback,
       windowInnerHeight,
     } = state;
-
-    const { settings } = this.props;
-    const theme = settings.darkMode ? DARK : LIGHT;
 
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,

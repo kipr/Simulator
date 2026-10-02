@@ -1482,10 +1482,14 @@ class Root extends React.Component<Props, State> {
       challengeStarted
     } = state;
 
+    const { settings } = this.props;
+    const theme = settings.darkMode ? DARK : LIGHT;
+
     const latestChallengeCompletion = Async.latestValue(challengeCompletion);
     if (challengeId && !challengeStarted) {
       return (
         <LoadingOverlay
+          theme={theme}
           onStartClick={this.onChallengeStartClick_}
           challenge={challenge}
           loading={!latestChallengeCompletion}
@@ -1517,9 +1521,6 @@ class Root extends React.Component<Props, State> {
       feedback,
       windowInnerHeight,
     } = state;
-
-    const { settings } = this.props;
-    const theme = settings.darkMode ? DARK : LIGHT;
 
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
