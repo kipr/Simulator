@@ -34,7 +34,7 @@ const Container = styled('div', ({ $disabled, $theme }: { $disabled: boolean; $t
   },
   userSelect: 'none',
   ':hover': {
-    backgroundColor: $theme.lighten(0.1),
+    backgroundColor: $theme.hoverButtonBackground,
   },
   transition: 'background-color 0.2s',
   cursor: !$disabled ? 'pointer' : 'default',

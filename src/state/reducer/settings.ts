@@ -30,7 +30,7 @@ export const initialSettings: Settings = {
   simulationRealisticSensors: false,
   editorAutoComplete: false,
   showScripts: false,
-  ideEditorDarkMode: true,
+  darkMode: true,
   classroomView: false,
   consoleLayout: "horizontal",
   interfaceMode: false // false = simple, true = advanced

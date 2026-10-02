@@ -85,6 +85,11 @@ const ConsoleText = styled(Text, (props: ThemeProps) => ({
   display: 'block'
 }));
 
+const ConsoleScrollArea = styled(ScrollArea, (props: ThemeProps) => ({
+  backgroundColor: props.theme.editorConsoleBackground,
+  color: props.theme.textColor,
+}));
+
 export class Console extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -93,9 +98,9 @@ export class Console extends React.PureComponent<Props, State> {
   render() {
     const { style, className, theme, text } = this.props;
     return (
-      <ScrollArea style={style} className={className} theme={theme} autoscroll>
+      <ConsoleScrollArea style={style} className={className} theme={theme} autoscroll>
         <ConsoleText theme={theme} text={text} />
-      </ScrollArea>
+      </ConsoleScrollArea>
     );
   }
 }
