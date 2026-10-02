@@ -459,12 +459,14 @@ class Root extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const theme = this.props.settings.darkMode ? DARK : LIGHT;
+
     this.state = {
       layout: Layout.Side,
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
-      console: StyledText.text({ text: LocalizedString.lookup(tr('Welcome to the KIPR Simulator!\n'), props.locale), style: STDOUT_STYLE(DARK) }),
-      theme: DARK,
+      console: StyledText.text({ text: LocalizedString.lookup(tr('Welcome to the KIPR Simulator!\n'), props.locale), style: STDOUT_STYLE(theme) }),
+      theme: theme,
       messages: [],
       settings: DEFAULT_SETTINGS,
       feedback: DEFAULT_FEEDBACK,
@@ -1518,8 +1520,6 @@ class Root extends React.Component<Props, State> {
 
     const { settings } = this.props;
     const theme = settings.darkMode ? DARK : LIGHT;
-
-
 
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
