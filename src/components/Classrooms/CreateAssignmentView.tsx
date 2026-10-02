@@ -20,7 +20,7 @@ import store, { State as ReduxState } from '../../state';
 import { Challenges } from '../../state/State';
 import ScrollArea from '../interface/ScrollArea';
 import ResizeableComboBox from '../interface/ResizeableComboBox';
-import { ClassroomsAction, convertClassroomTopics, setAssignment } from 'state/reducer/classrooms';
+import { ClassroomsAction, convertClassroomTopicsAndUpdate, setAssignment } from 'state/reducer/classrooms';
 import { ChallengesAction } from 'state/reducer/challenges';
 import TourTarget from '../Tours/TourTarget';
 import { TourRegistry } from '../../tours/TourRegistry';
@@ -179,6 +179,7 @@ const DateTimeInput = styled(Input, (props: ThemeProps) => ({
 
 const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
   flex: 1,
+
 }));
 
 const CheckboxRow = styled('div', (props: ThemeProps) => ({
@@ -226,7 +227,6 @@ const CreateAssignmentView = ({
   tourRegistry,
   activeTourStepId
 }: Props) => {
-
   const loadedClassroom = Async.latestValue(classroom);
   const [assignToMenuVisible, setAssignToMenuVisible] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState<Dict<{ id: string, displayName: string }>>(originalAssignment?.assignedTo || {});
@@ -254,19 +254,17 @@ const CreateAssignmentView = ({
     classroomTopics.length > 0
       ? classroomTopics
         .map(topic =>
-          (topic === 'No Subject'
-            ? {
-              text: LocalizedString.lookup(tr('No Subject'), locale),
-              data: 'No Subject'
-            }
-            : {
-              text: topic,
-              data: topic
-            })
+          ({
+            text: topic,
+            data: topic
+          })
         )
         .concat({
           text: LocalizedString.lookup(tr('Create Subject'), locale),
           data: 'Create Subject'
+        }, {
+          text: LocalizedString.lookup(tr('No Subject'), locale),
+          data: 'No Subject'
         })
       : [
         {
@@ -279,6 +277,8 @@ const CreateAssignmentView = ({
         }
       ]
   );
+
+
   const [assignedPointsSet, setAssignedPointsSet] = useState<Dict<{ challenge: ClassroomAssignmentChallenge, points: number | '' }>>({});
   const [topicIndex, setTopicIndex] = React.useState(
     originalAssignment?.topic
@@ -656,7 +656,7 @@ const CreateAssignmentView = ({
               <label htmlFor="assignmentChallenges" style={{ fontSize: '1.5em', fontWeight: 500 }}>
                 {LocalizedString.lookup(tr('Choose JBC Challenges to Assign'), locale)}
               </label>
-              <StyledScrollArea theme={theme}>
+              <StyledScrollArea horizontalScroll={false} theme={theme}>
                 {renderChallengeCheckboxes()}
               </StyledScrollArea>
             </AssignmentInfoRow>
@@ -770,7 +770,7 @@ const CreateAssignmentView = ({
                     {Object.keys(assignedPointsSet).length > 0 && (
 
                       <AssignmentInfoContent theme={theme} style={{ marginTop: '0.2em', width: '97%' }}>
-                        <StyledScrollArea style={{ height: '18em' }} theme={theme}>
+                        <StyledScrollArea style={{ height: '18em' }} horizontalScroll={false} theme={theme}>
                           <table>
                             <TableBody theme={theme}>
 
@@ -854,7 +854,7 @@ const CreateAssignmentView = ({
                   {Object.keys(assignedPointsSet).length > 0 && (
 
                     <AssignmentInfoContent theme={theme} style={{ marginTop: '0.2em', width: '97%' }}>
-                      <StyledScrollArea style={{ height: '18em' }} theme={theme}>
+                      <StyledScrollArea style={{ height: '18em' }} horizontalScroll={false} theme={theme}>
                         <table>
                           <TableBody theme={theme}>
 
@@ -941,7 +941,7 @@ export default connect((state: ReduxState) => {
 }, dispatch => ({
   onCreateAssignment: async (classroom: Classroom, assignment: ClassroomAssignment, studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => {
     // dispatch(ClassroomsAction.setAssignment({ classroom, assignment, studentIds }));
-    !Array.isArray(classroom.topics) ? await convertClassroomTopics(classroom) : null;
+    !Array.isArray(classroom.topics) ? await convertClassroomTopicsAndUpdate(classroom) : null;
 
     await setAssignment(classroom, assignment, studentIds);
   },

@@ -9,6 +9,14 @@ namespace ProgrammingLanguage {
     graphical: 'graphical'
   };
 
+  export const ProgammingNames: { [key in ProgrammingLanguage]: string } = {
+    c: 'C',
+    cpp: 'C++',
+    python: 'Python',
+    plaintext: 'Plaintext',
+    graphical: 'Graphical'
+  };
+
 
   export const DEFAULT_CODE: { [key in ProgrammingLanguage]: string } = {
     c: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n\n  return 0;\n}\n',
