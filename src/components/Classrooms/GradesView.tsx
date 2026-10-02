@@ -228,8 +228,8 @@ const GradesListContainer = styled('div', (props: ThemeProps) => ({
   backgroundColor: 'lightpurple',
   height: '100%',
 }));
-const ExportButton = styled(ClearFilterButton, () => ({
-    backgroundColor: props.theme.buttonColors.success.standard,
+const ExportButton = styled(ClearFilterButton, (props: ThemeProps) => ({
+  backgroundColor: props.theme.buttonColors.success.standard,
   ':hover': {
     backgroundColor: props.theme.buttonColors.success.hover,
   },
