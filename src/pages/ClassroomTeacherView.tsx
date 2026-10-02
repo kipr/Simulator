@@ -185,7 +185,7 @@ const ClassroomCardContainer = styled('div', (props: { collapsed: boolean }) => 
 }));
 const StyledScrollArea = styled(ScrollArea, (props: { collapsed: boolean }) => ({
   flex: 1,
-  height: '80%',
+  height: '87%',
 }));
 const CardWrapper = styled('div', (props: ThemeProps & { selected?: boolean }) => ({
   borderRadius: `${props.theme.itemPadding * 4}px`,
@@ -996,7 +996,15 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                                 custommargin='10px'
                               />
                             </TourTarget>
-
+                            <Card
+                              onClick={this.props.onTestMigration}
+                              title={LocalizedString.lookup(tr('Test Migration'), locale)}
+                              theme={theme}
+                              customheight='150px'
+                              customwidth='200px'
+                              backgroundPosition={'center top'}
+                              custommargin='10px'
+                            />
                             <TourTarget
                               registry={this.registry}
                               targetKey="teacher-classroom-cards-list"
