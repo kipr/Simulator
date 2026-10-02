@@ -68,7 +68,7 @@ const CardContainer = styled('div', (props: ThemeProps) => ({
   paddingBottom: `calc(${cardContainerMargin()} + 50px)`,
   backgroundColor: props.theme.backgroundColor,
   width: `calc(100vw - 210px)`,
-  marginTop: '5em',
+  // marginTop: '5em',
   color: props.theme.cardColors.alternateTextColor,
 }));
 

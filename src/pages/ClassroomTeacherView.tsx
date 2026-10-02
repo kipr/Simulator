@@ -985,7 +985,10 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                 {this.state.cardContainerVisible
                   ? (
                     <ClassroomCardContainer collapsed={!this.state.cardContainerVisible}>
-                      <StyledScrollArea theme={theme} verticalScroll={false} horizontalScroll={true} collapsed={!this.state.cardContainerVisible}>
+                      <StyledScrollArea innerStyle={{
+                        width: 'max-content',
+                        minWidth: '100%',
+                      }} theme={theme} verticalScroll={false} horizontalScroll={true} collapsed={!this.state.cardContainerVisible}>
                         <TourTarget registry={this.registry} targetKey="teacher-classroom-cards-strip" style={{ display: 'contents' }}>
                           <ClassroomsCardContainer style={style} theme={theme}>
                             <TourTarget registry={this.registry} targetKey="teacher-create-classroom-card" style={{ display: 'contents' }}>

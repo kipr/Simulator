@@ -155,6 +155,7 @@ export interface Theme {
   buttonColors: ButtonColors;
   leaderboardHighlightBackground: string;
   leaderboardHighlightHoverBackground: string;
+  inputBoxBorderColor: string;
   cardColors: {
     textColor: string;
     alternateTextColor: string;
@@ -180,6 +181,18 @@ export interface Theme {
   transparentBackgroundColor: (a: number) => string;
   lighten: (frac: number) => string;
   darken: (frac: number) => string;
+
+
+  summaryCard: {
+    backgroundStart: string;
+    backgroundMiddle: string;
+    backgroundEnd: string;
+    trace: string;
+    nodeFill: string;
+    nodeStroke: string;
+    dot: string;
+    depth: string;
+  };
 }
 
 export const COMMON: Theme = {
@@ -220,7 +233,7 @@ export const COMMON: Theme = {
   cardColors: undefined,
   leaderboardHighlightBackground: undefined,
   leaderboardHighlightHoverBackground: undefined,
-
+  inputBoxBorderColor: undefined,
   borderRadius: 10,
   widget: {
     padding: 10
@@ -239,7 +252,18 @@ export const COMMON: Theme = {
   lighten: undefined,
   darken: undefined,
 
-  iconColor: undefined
+  iconColor: undefined,
+
+  summaryCard: {
+    backgroundStart: undefined,
+    backgroundMiddle: undefined,
+    backgroundEnd: undefined,
+    trace: undefined,
+    nodeFill: undefined,
+    nodeStroke: undefined,
+    dot: undefined,
+    depth: undefined,
+  }
 };
 
 
@@ -293,7 +317,7 @@ export const LIGHT: Theme = {
 
   leaderboardHighlightBackground: '#e6f4ea',
   leaderboardHighlightHoverBackground: '#cee8d5',
-
+  inputBoxBorderColor: '#d7dbe0',
   buttonColors: {
     default: LIGHTMODE_DEFAULT,
     primary: LIGHTMODE_BLUE,
@@ -321,6 +345,17 @@ export const LIGHT: Theme = {
   },
   lighten: (frac) => `rgba(0, 0, 0, ${frac})`,
   darken: (frac) => `rgba(255, 255, 255, ${frac})`,
+  summaryCard: {
+    backgroundStart: '#ffffff',
+    backgroundMiddle: '#f4f4f4',
+    backgroundEnd: '#e5e5e5',
+    trace: '#222222',
+    nodeFill: '#eeeeee',
+    nodeStroke: '#222222',
+    dot: '#222222',
+    depth: '#000000',
+  }
+
 };
 
 export const GRAPHICAL_DARK = {
@@ -371,7 +406,7 @@ export const DARK: Theme = {
 
   leaderboardHighlightBackground: '#2c482f',
   leaderboardHighlightHoverBackground: 'rgba(76, 175, 80, 0.2)',
-
+  inputBoxBorderColor: '#5f6368',
   buttonColors: {
     default: DARKMODE_DEFAULT,
     primary: DARKMODE_BLUE,
@@ -399,6 +434,16 @@ export const DARK: Theme = {
   },
   lighten: (frac) => `rgba(255, 255, 255, ${frac})`,
   darken: (frac) => `rgba(0, 0, 0, ${frac})`,
+  summaryCard: {
+    backgroundStart: '#343434',
+    backgroundMiddle: '#292929',
+    backgroundEnd: '#1d1d1d',
+    trace: '#ffffff',
+    nodeFill: '#343434',
+    nodeStroke: '#ffffff',
+    dot: '#ffffff',
+    depth: '#000000',
+  }
 };
 
 export interface ThemeProps {

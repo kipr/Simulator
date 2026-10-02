@@ -1060,10 +1060,12 @@ class ScrollArea extends React.PureComponent<Props, State> {
     };
 
     const innerStyle = {
-      ...this.props.innerStyle,
+
+      width: '100%',
       transform: `translate(${-left}px, ${-top}px)`,
       '--scroll-left': `${left}px`,
       '--scroll-top': `${top}px`,
+      ...this.props.innerStyle,
     } as React.CSSProperties;
 
     return (

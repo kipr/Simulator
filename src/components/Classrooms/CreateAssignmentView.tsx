@@ -138,7 +138,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   flexDirection: 'row',
   padding: '10px',
   opacity: props.disabled ? "0.5" : "1.0",
-  backgroundColor: '#2c2c2cff',
+  backgroundColor: props.theme.buttonColors.default.standard,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   ':last-child': {
     borderBottom: 'none'
@@ -149,7 +149,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
     props.onClick && !props.disabled
       ? {
         cursor: "pointer",
-        backgroundColor: `rgba(255, 255, 255, 0.1)`,
+        backgroundColor: props.theme.hoverOptionBackground,
       }
       : {},
   userSelect: 'none',
@@ -190,6 +190,8 @@ const CheckboxRow = styled('div', (props: ThemeProps) => ({
   alignItems: 'center',
 }));
 
+
+//Move outline to outside of scrollable container
 const TableBody = styled('tbody', (props: ThemeProps) => ({
   outline: `2px solid ${props.theme.borderColor}`,
   display: 'flex',
@@ -254,10 +256,10 @@ const CreateAssignmentView = ({
     classroomTopics.length > 0
       ? classroomTopics
         .map(topic =>
-          ({
-            text: topic,
-            data: topic
-          })
+        ({
+          text: topic,
+          data: topic
+        })
         )
         .concat({
           text: LocalizedString.lookup(tr('Create Subject'), locale),
@@ -502,22 +504,22 @@ const CreateAssignmentView = ({
   }
 
   const wrapCreateAssignmentFormTarget = (inner: React.ReactNode) =>
-    (tourRegistry ? (
-      <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-form" style={{ display: 'contents' }}>
-        {inner}
-      </TourTarget>
-    ) : (
-      inner
-    ));
+  (tourRegistry ? (
+    <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-form" style={{ display: 'contents' }}>
+      {inner}
+    </TourTarget>
+  ) : (
+    inner
+  ));
 
   const wrapCreateAssignmentRosterTarget = (inner: React.ReactNode) =>
-    (tourRegistry ? (
-      <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-roster" style={{ display: 'contents' }}>
-        {inner}
-      </TourTarget>
-    ) : (
-      inner
-    ));
+  (tourRegistry ? (
+    <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-roster" style={{ display: 'contents' }}>
+      {inner}
+    </TourTarget>
+  ) : (
+    inner
+  ));
 
   const assignButtonTourActive =
     !originalAssignment && activeTourStepId === 'teacher-create-assignment-assign';
@@ -770,7 +772,7 @@ const CreateAssignmentView = ({
                     {Object.keys(assignedPointsSet).length > 0 && (
 
                       <AssignmentInfoContent theme={theme} style={{ marginTop: '0.2em', width: '97%' }}>
-                        <StyledScrollArea style={{ height: '18em' }} horizontalScroll={false} theme={theme}>
+                        <StyledScrollArea style={{ height: '14em' }} horizontalScroll={false} theme={theme}>
                           <table>
                             <TableBody theme={theme}>
 
@@ -854,7 +856,7 @@ const CreateAssignmentView = ({
                   {Object.keys(assignedPointsSet).length > 0 && (
 
                     <AssignmentInfoContent theme={theme} style={{ marginTop: '0.2em', width: '97%' }}>
-                      <StyledScrollArea style={{ height: '18em' }} horizontalScroll={false} theme={theme}>
+                      <StyledScrollArea style={{ height: '14em' }} horizontalScroll={false} theme={theme}>
                         <table>
                           <TableBody theme={theme}>
 
