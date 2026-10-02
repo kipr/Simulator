@@ -208,12 +208,12 @@ const FilterLabel = styled('label', (props: ThemeProps) => ({
 const ClearFilterButton = styled('div', (props: ThemeProps) => ({
   padding: '6px 12px',
   borderRadius: '4px',
-  backgroundColor: '#2c2c2cff',
+  backgroundColor: props.theme.buttonColors.default.standard,
   cursor: 'pointer',
   fontSize: '0.9em',
   userSelect: 'none',
   ':hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: props.theme.buttonColors.default.hover,
   },
 }));
 const GradesListContainer = styled('div', (props: ThemeProps) => ({
@@ -228,10 +228,10 @@ const GradesListContainer = styled('div', (props: ThemeProps) => ({
   backgroundColor: 'lightpurple',
   height: '100%',
 }));
-const ExportButton = styled(ClearFilterButton, () => ({
-  backgroundColor: '#2a4d2e',
+const ExportButton = styled(ClearFilterButton, (props: ThemeProps) => ({
+  backgroundColor: props.theme.buttonColors.success.standard,
   ':hover': {
-    backgroundColor: 'rgba(76, 175, 80, 0.28)',
+    backgroundColor: props.theme.buttonColors.success.hover,
   },
 }));
 
@@ -245,7 +245,11 @@ const ExportToolbarEnd = styled('div', () => ({
 
 const ExportFiltersDetails = styled('details', (props: ThemeProps) => ({
   position: 'relative',
-  color: props.theme.color,
+  color: props.theme.buttonColors.default.textColor,
+  backgroundColor: props.theme.buttonColors.default.standard,
+  ':hover': {
+    backgroundColor: props.theme.buttonColors.default.hover,
+  },
 }));
 
 const ExportFiltersSummary = styled('summary', (props: ThemeProps) => ({
@@ -255,10 +259,9 @@ const ExportFiltersSummary = styled('summary', (props: ThemeProps) => ({
   cursor: 'pointer',
   userSelect: 'none',
   fontSize: '0.9em',
-  backgroundColor: '#2c2c2cff',
-  border: `1px solid ${props.theme.borderColor}`,
+  backgroundColor: props.theme.buttonColors.default.standard,
   ':hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: props.theme.buttonColors.default.hover,
   },
   '::-webkit-details-marker': {
     display: 'none',

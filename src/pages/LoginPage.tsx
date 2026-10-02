@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DARK, GREEN, ThemeProps } from '../components/constants/theme';
+import { connect } from 'react-redux';
+import { DARK, GREEN, LIGHT, ThemeProps } from '../components/constants/theme';
 import { StyleProps } from '../util/style';
 import { styled } from 'styletron-react';
 import { auth, Providers } from '../firebase/firebase';
@@ -28,12 +29,14 @@ import UserConsentCard from '../components/Login/UserConsentCard';
 import MainMenu from '../components/MainMenu';
 import DateOfBirthCard from '../components/Login/DateOfBirthCard';
 import ParentEmailCard from '../components/Login/ParentEmailCard';
+import { Settings } from '../components/constants/Settings';
 
 export interface LoginPagePublicProps extends ThemeProps, StyleProps {
   externalIndex?: number;
 }
 
 interface LoginPagePrivateProps {
+  settings: Settings;
 }
 
 interface LoginPageState {
@@ -44,6 +47,10 @@ interface LoginPageState {
   index: number;
   forgotPassword: boolean;
   logInFailedMessage: string;
+}
+
+interface ReduxState {
+  settings: Settings;
 }
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -476,9 +483,9 @@ class LoginPage extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { className, style } = props;
+    const { className, style, settings } = props;
     const { initialAuthLoaded, index, authenticating, loggedIn, userConsent, forgotPassword, logInFailedMessage } = state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
     if (!initialAuthLoaded) {
       // Auth initialization is fast, so no need to render anything in the meantime
@@ -653,4 +660,6 @@ class LoginPage extends React.Component<Props, State> {
   }
 }
 
-export default LoginPage;
+export default connect((state: ReduxState) => ({
+  settings: state.settings,
+}))(LoginPage) as React.ComponentType<LoginPagePublicProps>;

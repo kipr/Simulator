@@ -121,10 +121,11 @@ const InfoContainer = styled('div', (props: ThemeProps) => ({
   flex: '1 0',
   height: '100%',
 }));
+
 const ChallengeItemContainer = styled('div', (props: ThemeProps) => ({
   display: 'grid',
   backgroundColor: props.theme.backgroundColor,
-  color: props.theme.color,
+  color: props.theme.cardColors.alternateTextColor,
   alignContent: 'center',
   justifyItems: 'center',
   minWidth: '200px',

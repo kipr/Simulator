@@ -318,7 +318,7 @@ class Editor extends React.PureComponent<Props, State> {
           messages={messages}
           onCodeChange={onCodeChange}
           autocomplete={autocomplete}
-          theme="DARK"
+          theme={theme.themeName}
           editable={editable}
         />
       );

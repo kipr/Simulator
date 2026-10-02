@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
 
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { DARK, LIGHT, ThemeProps } from '../components/constants/theme';
 import MainMenu from '../components/MainMenu';
 import { ChallengeCard } from '../components/LimitedChallenge';
 
@@ -18,12 +18,14 @@ import { LimitedChallengeCompletionsAction } from '../state/reducer/limitedChall
 
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
 import tr from '@i18n';
+import { Settings } from '../components/constants/Settings';
 
 export interface LimitedChallengesPublicProps extends StyleProps, ThemeProps {
 }
 
 interface LimitedChallengesPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
   limitedChallenges: LimitedChallengesState;
   limitedChallengeCompletions: LimitedChallengeCompletions;
   loadCompletion: (challengeId: string) => void;
@@ -95,8 +97,7 @@ const ClosedChallengesButton = styled('button', (props: ThemeProps) => ({
   marginTop: '32px',
   transition: 'all 0.2s ease',
   ':hover': {
-    backgroundColor: props.theme.color,
-    color: props.theme.backgroundColor,
+    backgroundColor: props.theme.buttonColors.default.hover,
   },
 }));
 
@@ -139,8 +140,8 @@ class LimitedChallenges extends React.Component<Props> {
 
   render() {
     const { props } = this;
-    const { style, locale, limitedChallenges, limitedChallengeCompletions } = props;
-    const theme = DARK;
+    const { style, locale, limitedChallenges, limitedChallengeCompletions, settings } = props;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
     // Filter out challenges that are more than a week in the future and exclude closed challenges
     const challengeIds = Object.keys(limitedChallenges).filter(challengeId => {
@@ -203,6 +204,7 @@ class LimitedChallenges extends React.Component<Props> {
 export default connect(
   (state: ReduxState) => ({
     locale: state.i18n.locale,
+    settings: state.settings,
     limitedChallenges: state.limitedChallenges,
     limitedChallengeCompletions: state.limitedChallengeCompletions,
   }),

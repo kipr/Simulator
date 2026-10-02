@@ -4,7 +4,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../util/style';
 import { Spacer } from './constants/common';
 import { FontAwesome } from './FontAwesome';
-import { DARK, ThemeProps } from './constants/theme';
+import { LIGHT, DARK, ThemeProps } from './constants/theme';
 
 import { faSignOutAlt, faBars, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 
@@ -22,6 +22,7 @@ import ClassroomExtraMenu from './ClassroomExtraMenu';
 import InformationExtraMenu from './InformationExtraMenu';
 import TourTarget from './Tours/TourTarget';
 import { TourRegistry } from './../tours/TourRegistry';
+import { Settings } from 'components/constants/Settings';
 
 
 namespace SubMenu {
@@ -56,6 +57,7 @@ export interface MenuPublicProps extends StyleProps, ThemeProps {
 
 interface MenuPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
 }
 
 interface MenuState { subMenu: SubMenu; }
@@ -179,9 +181,9 @@ export class MainMenu extends React.Component<Props, State> {
   };
 
   render() {
-    const { className, style, locale, tourRegistry } = this.props;
+    const { className, style, locale, tourRegistry, settings } = this.props;
     const { subMenu } = this.state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
     const retakeTourItem_ = (<Item theme={theme} onClick={this.onRetakeTour_}><ItemIcon icon={faCircleInfo} /> {LocalizedString.lookup(tr('Retake Tour'), locale)}</Item>);
     return (
       <Container className={className} style={style} theme={theme}>
@@ -199,5 +201,6 @@ export class MainMenu extends React.Component<Props, State> {
 }
 
 export default connect((state: ReduxState) => ({
-  locale: state.i18n.locale
+  locale: state.i18n.locale,
+  settings: state.settings,
 }))(MainMenu) as React.ComponentType<MenuPublicProps>;

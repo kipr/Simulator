@@ -19,7 +19,7 @@ import Root from './pages/Root';
 import ChallengeRoot from './pages/ChallengeRoot';
 import { DocumentationWindow } from 'ivygate/dist/src';
 import AiWindow from './components/Ai/AiWindow';
-import { DARK } from './components/constants/theme';
+import { DARK, LIGHT } from './components/constants/theme';
 import CurriculumPage from './lms/CurriculumPage';
 import { UsersAction, I18nAction, ProjectsAction, SettingsAction } from './state/reducer';
 import db from './db';
@@ -45,6 +45,7 @@ export interface AppPublicProps {
 
 interface AppPrivateProps {
   users: Users;
+  settings: Settings;
   login: () => void;
   setMe: (me: string) => void;
   loadUser: (uid: string) => void;
@@ -195,31 +196,35 @@ class App extends React.Component<Props, State> {
 
     const { loading } = state;
 
+    const { settings } = props;
+
+    const theme = settings.darkMode ? DARK : LIGHT;
+
     if (loading) return <Loading />;
 
     return (
       <>
         <Routes>
-          <Route path="/" element={<Dashboard theme={DARK} />} />
-          <Route path="/tutorials" element={<Tutorials theme={DARK} />} />
-          <Route path="/leaderboard" element={<Leaderboard theme={DARK} />} />
-          <Route path="/limited-challenges" element={<LimitedChallenges theme={DARK} />} />
-          <Route path="/closed-challenges" element={<ClosedChallenges theme={DARK} />} />
-          <Route path="/limited-challenge/:challengeId/leaderboard" element={<LimitedChallengeLeaderboard theme={DARK} />} />
+          <Route path="/" element={<Dashboard theme={theme} />} />
+          <Route path="/tutorials" element={<Tutorials theme={theme} />} />
+          <Route path="/leaderboard" element={<Leaderboard theme={theme} />} />
+          <Route path="/limited-challenges" element={<LimitedChallenges theme={theme} />} />
+          <Route path="/closed-challenges" element={<ClosedChallenges theme={theme} />} />
+          <Route path="/limited-challenge/:challengeId/leaderboard" element={<LimitedChallengeLeaderboard theme={theme} />} />
           <Route path="/limited-challenge/:challengeId" element={<LimitedChallengeRoot />} />
           <Route path="/scene/:sceneId" element={<Root />} />
           <Route path="/challenge/:challengeId" element={<ChallengeRoot />} />
           <Route path="/curriculum" element={<CurriculumPage />} />
-          <Route path="/custom-challenges" element={<CustomChallengeCreator theme={DARK} />} />
-          <Route path="/classrooms" element={<ClassroomsDashboard theme={DARK} />} />
-          <Route path="/classrooms/:classroomId" element={<ClassroomLeaderboard theme={DARK} />} />
-          <Route path="/classrooms/:teacherId/teacherView" element={<ClassroomTeacherView theme={DARK} />} />
-          <Route path="/classrooms/:studentId/studentView/" element={<ClassroomStudentView theme={DARK} />} />
-          <Route path="/classrooms/:studentId/studentView/:classroomId" element={<ClassroomStudentView theme={DARK} />} />
+          <Route path="/custom-challenges" element={<CustomChallengeCreator theme={theme} />} />
+          <Route path="/classrooms" element={<ClassroomsDashboard theme={theme} />} />
+          <Route path="/classrooms/:classroomId" element={<ClassroomLeaderboard theme={theme} />} />
+          <Route path="/classrooms/:teacherId/teacherView" element={<ClassroomTeacherView theme={theme} />} />
+          <Route path="/classrooms/:studentId/studentView/" element={<ClassroomStudentView theme={theme} />} />
+          <Route path="/classrooms/:studentId/studentView/:classroomId" element={<ClassroomStudentView theme={theme} />} />
           <Route path="/classrooms/:studentId/curriculumPage" element={<CurriculumPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        <DocumentationWindow theme={DARK} documentationType={'default'} />
+        <DocumentationWindow theme={theme} documentationType={'default'} />
       </>
     );
   }
@@ -253,6 +258,7 @@ class App extends React.Component<Props, State> {
 export default connect((state: ReduxState) => {
   return {
     users: state.users,
+    settings: state.settings,
   };
 }, dispatch => ({
   login: () => {

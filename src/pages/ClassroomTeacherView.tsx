@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect, Provider } from 'react-redux';
-import { DEFAULT_SETTINGS } from '../components/constants/Settings';
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { Settings } from '../components/constants/Settings';
+import { LIGHT, DARK, ThemeProps } from '../components/constants/theme';
 import MainMenu from '../components/MainMenu';
 import { default as IvyGateClassroom } from "ivygate/dist/src/types/classroomTypes";
 import { StyleProps } from '../util/style';
@@ -42,6 +42,7 @@ import { Card } from '../components/interface/Card';
 import CreateAssignmentView from '../components/Classrooms/CreateAssignmentView';
 import { FontAwesome } from '../components/FontAwesome';
 import ScrollArea from '../components/interface/ScrollArea';
+
 
 export interface ClassroomTeacherViewRootRouteParams {
   classroomId: string;
@@ -94,6 +95,7 @@ export interface ClassroomTeacherViewPublicProps extends StyleProps, ThemeProps 
 
 interface ClassroomTeacherViewPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
   tour: TourDoc;
   tourLoaded: boolean;
   tourLoading: boolean;
@@ -175,6 +177,7 @@ const ClassroomsCardContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
   // margin: '20px 20px 0px 20px',
+  color: props.theme.cardColors.alternateTextColor,
 }));
 
 const ClassroomCardContainer = styled('div', (props: { collapsed: boolean }) => ({
@@ -218,7 +221,7 @@ const ClassroomCardIconBtn = styled('div', (props: ThemeProps & { $danger?: bool
   padding: '6px 8px',
   borderRadius: `${props.theme.itemPadding * 2}px`,
   backgroundColor: 'rgba(0, 0, 0, 0.55)',
-  color: props.theme.color,
+  color: '#ffffff',
   fontSize: '0.95em',
   lineHeight: 1,
   userSelect: 'none',
@@ -953,9 +956,9 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, locale } = props;
+    const { style, locale, settings } = props;
     const { assignmentToEdit, showAreYouSureDialog, deleteObject, showCreateClassroomDialog, createAssignmentVisible, renameClassroomTarget } = state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
     const showTour = props.tourLoaded && !props.tour.completed;
     const activeTourStepId =
       showTour ? state.teacherTourSteps[state.currentTourStepIndex ?? 0]?.id : undefined;
@@ -993,6 +996,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                                 customheight='150px'
                                 customwidth='200px'
                                 backgroundPosition={'center top'}
+                                backgroundColor={theme.iconColor}
                                 custommargin='10px'
                               />
                             </TourTarget>
@@ -1067,7 +1071,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                       onClose={this.onExitCreateClassroomDialog_}
                       onContinueTour={this.onContinueTour_}
                       onCloseClassroomDialog={this.onCloseClassroomDialog_}
-                      theme={DARK}
+                      theme={theme}
                       locale={locale}
                       tourRegistry={this.registry}
                     />
@@ -1102,6 +1106,7 @@ const DashboardWithNavigate = withNavigate(ClassroomTeacherView);
 export default connect(
   (state: ReduxState) => ({
     locale: state.i18n.locale,
+    settings: state.settings,
     uid: state.users.me,
     classroomList: state.classrooms.entities,
     selectedClassroom: state.classrooms.selectedClassroom,
