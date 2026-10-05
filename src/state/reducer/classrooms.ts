@@ -1302,6 +1302,59 @@ export const testMigration = async () => {
 
 };
 
+export const totalClassroomCopy = async () => {
+  try {
+    const value = await db.get<Classroom>(Selector.classroom(''));
+    const uuid = crypto.randomUUID();
+    const shortenedId = uuid.replace(/-/g, '').slice(-7);
+
+    const loadedClassroom = Object.values(value) as Classroom;
+
+
+    const l = loadedClassroom[0] as Classroom;
+
+    const e = Object.values(l);
+    const testClassroom: Classroom = {
+
+      classroomId: `${l.classroomId}-test`,
+      code: l.code,
+      type: 'classroom',
+      studentIds: l.studentIds,
+      classroomAssignments: l.classroomAssignments,
+      topics: l.topics ? l.topics : [],
+      challengePointsOverrides: l.challengePointsOverrides,
+      docId: shortenedId,
+      teacherDisplayName: 'Test Migration',
+      teacherId: 'A8xNiNn6NmcDJ85Pxz4R7U6MJog2'
+    };
+
+    await db.set(Selector.classroom(shortenedId), testClassroom);
+
+
+    const assignemntsValue = await db.get<Record<string, ClassroomAssignment>>(Selector.classroom('/assignments'));
+    const assignments = Object.values(assignemntsValue) ;
+
+    for (const assignment of assignments) {
+      const newAssignment: ClassroomAssignment = {
+        ...assignment,
+        docId: assignment.docId,
+        assignedTo: assignment.assignedTo
+      };
+
+      await db.set(
+        {
+          collection: `classrooms/${shortenedId}`,
+          id: 'assign',
+        },
+        newAssignment
+      );
+    }
+
+  } catch (error) {
+    console.error('Error copying classroom:', error);
+  }
+};
+
 export const reduceClassrooms = (
   state: ClassroomsState = { classroomVersion: 0, assignmentVersion: 0, entities: {}, selectedClassroom: null, currentStudentClassroom: null, assignments: {} },
   action: ClassroomsAction
