@@ -78,7 +78,7 @@ class Dashboard extends React.PureComponent<Props> {
     window.location.href = 'https://www.kipr.org/kipr/about-kipr';
   };
 
-  private registry = new TourRegistry();
+  private registry = new TourRegistry(TourDoc.IDS.DASHBOARD);
   private scrollRef: HTMLDivElement | null = null;
 
 

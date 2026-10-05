@@ -82,7 +82,7 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
       userId: ''
     };
   }
-  private registry = new TourRegistry();
+  private registry = new TourRegistry(TourDoc.IDS.CLASSROOM);
   private scrollRef: HTMLDivElement | null = null;
 
   async componentDidMount() {

@@ -1474,7 +1474,7 @@ class Root extends React.Component<Props, State> {
     // const showTour = true;
 
     if (showTour && !this.registry) {
-      this.registry = new TourRegistry();
+      this.registry = new TourRegistry(TourDoc.IDS.SIMULATOR);
     }
     if (!showTour && this.registry) {
       this.registry = undefined;

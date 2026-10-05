@@ -16,7 +16,7 @@ import { AsyncClassroom, Classroom, ClassroomAssignment } from '../state/State/C
 import { CreateClassroomDialog } from '../components/Dialog/CreateClassroomDialog';
 import Dict from '../util/objectOps/Dict';
 import { nativeScrollbarChrome } from '../util/nativeScrollbarChrome';
-import { ClassroomsAction, listChallengesByStudentId, deleteClassroom, convertClassroomAssignmentsToNewFormat, listOwned, load, convertStudentIdsToNewFormat, testMigration, loadClassroom } from 'state/reducer/classrooms';
+import { ClassroomsAction, listChallengesByStudentId, deleteClassroom, convertClassroomAssignmentsToNewFormat, listOwned, load, convertStudentIdsToNewFormat, testMigration, loadClassroom, totalClassroomCopy } from 'state/reducer/classrooms';
 import { auth } from '../firebase/firebase';
 import { User } from 'ivygate/dist/src/types/user';
 import Async from 'state/State/Async';
@@ -111,6 +111,7 @@ interface ClassroomTeacherViewPrivateProps {
   onConvertClassroomAssignmentsToNewFormat?: (classroom: Classroom) => void;
   onConvertStudentIdsToNewFormat?: (classroom: Classroom) => void;
   onTestMigration(): Promise<void>;
+  onTotalCopy(): Promise<void>;
 }
 
 interface ClassroomTeacherViewState {
@@ -321,7 +322,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     };
 
   }
-  registry = new TourRegistry();
+  registry = new TourRegistry(TourDoc.IDS.TEACHER_VIEW);
 
   async componentDidMount() {
     this.props.onListOwnedClassrooms();
@@ -1003,15 +1004,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                                 custommargin='10px'
                               />
                             </TourTarget>
-                            <Card
-                              onClick={this.props.onTestMigration}
-                              title={LocalizedString.lookup(tr('Test Migration'), locale)}
-                              theme={theme}
-                              customheight='150px'
-                              customwidth='200px'
-                              backgroundPosition={'center top'}
-                              custommargin='10px'
-                            />
+
                             <TourTarget
                               registry={this.registry}
                               targetKey="teacher-classroom-cards-list"
@@ -1125,6 +1118,9 @@ export default connect(
   (dispatch) => ({
     onTestMigration: async () => {
       await testMigration();
+    },
+    onTotalCopy: async () => {
+      await totalClassroomCopy();
     },
     onConvertClassroomAssignmentsToNewFormat: async (classroom: Classroom) =>
       await convertClassroomAssignmentsToNewFormat(classroom),
