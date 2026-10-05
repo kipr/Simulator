@@ -9,6 +9,7 @@ export namespace SettingsAction {
 
   export const updateSettings = construct<UpdateSettings>('settings/update-settings');
 
+
 }
 
 export type SettingsAction = SettingsAction.UpdateSettings;
@@ -26,6 +27,7 @@ export const reduceSettings = (state: Settings = initialSettings, action: Settin
 };
 
 export const initialSettings: Settings = {
+  showSettingsDialog: false,
   simulationSensorNoise: false,
   simulationRealisticSensors: false,
   editorAutoComplete: false,

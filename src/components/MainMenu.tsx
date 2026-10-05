@@ -23,6 +23,7 @@ import InformationExtraMenu from './InformationExtraMenu';
 import TourTarget from './Tours/TourTarget';
 import { TourRegistry } from './../tours/TourRegistry';
 import { Settings } from 'components/constants/Settings';
+import ExtraMenu from './interface/ExtraMenu';
 
 
 namespace SubMenu {
@@ -190,9 +191,18 @@ export class MainMenu extends React.Component<Props, State> {
         <Logo theme={theme} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string} onClick={this.onDashboardClick_} />
         <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
         {/* <Item theme={theme} onClick={this.onDashboardClick_}><ItemIcon icon='compass'/> Dashboard</Item> */}
-        {tourRegistry ? <TourTarget style={style} registry={tourRegistry} targetKey={'retake-tour-button'}>
-          {retakeTourItem_}
-        </TourTarget> : undefined}
+        <Item
+          theme={theme}
+          onClick={this.onExtraClick_}
+          style={{ position: 'relative' }}
+        >
+
+          <ItemIcon icon={faBars} style={{ padding: 0 }} />
+          {subMenu.type === SubMenu.Type.ExtraMenu ? (
+            <ExtraMenu theme={theme} tourRegistry={tourRegistry} />
+          ) : undefined}
+
+        </Item>
         <Item theme={theme} onClick={this.onLogoutClick_}><ItemIcon icon={faSignOutAlt} /> {LocalizedString.lookup(tr('Logout'), locale)}</Item>
 
       </Container>
