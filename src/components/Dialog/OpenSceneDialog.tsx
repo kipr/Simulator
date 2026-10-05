@@ -503,8 +503,8 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
                     currentRow === selectedRow &&
                     isEndOfRow &&
                     selectedScene && (
-                      renderSummary(selectedScene, folderName)
-                    )}
+                    renderSummary(selectedScene, folderName)
+                  )}
                 </React.Fragment>
               );
             })}

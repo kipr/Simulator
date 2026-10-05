@@ -231,7 +231,6 @@ const AssignmentsView = ({
   onAssignmentAction,
   setContextMenuVisible,
   contextMenuVisible,
-  containerRef,
   onDeleteAssignment,
   onGetAllAssignments,
   onUpdateClassroom,
@@ -246,7 +245,6 @@ const AssignmentsView = ({
   tourHighlightAssignmentTitle,
 }: Props) => {
   const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
-  const [assignements, setAssignments] = useState<ClassroomAssignment[] | null>(null);
   const [selectedAssignment, setSelectedAssignment] = useState<ClassroomAssignment | null>(null);
   const [assignmentInfoBlurbVisible, setAssignmentInfoBlurbVisible] = useState(false);
   const [assignedChallengesDialogVisible, setAssignedChallengesDialogVisible] = useState(false);
@@ -294,7 +292,6 @@ const AssignmentsView = ({
     }
     const updatedClassroom = { ...loadedClassroom, topics: Object.keys(newTopics) };
     if (loadedClassroom?.topics === undefined) {
-      console.log("AssignmentsView updateClassroom...");
       onUpdateClassroom(loadedClassroom.docId, updatedClassroom);
     }
     setTopics(newTopics);
@@ -725,7 +722,6 @@ const AssignmentsView = ({
   }
 
   function renderTeacherSubjectView() {
-
     return (
       <React.Fragment>
         {tourRegistry &&
