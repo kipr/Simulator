@@ -14,6 +14,7 @@ export interface ScrollAreaProps extends StyleProps, ThemeProps {
   innerStyle?: React.CSSProperties;
   horizontalScroll?: boolean;
   verticalScroll?: boolean;
+  scrollAreaRef?: (instance: ScrollArea | null) => void;
 }
 
 export interface ScrollAreaRef {
@@ -191,6 +192,10 @@ class ScrollArea extends React.PureComponent<Props, State> {
     };
   }
 
+  componentDidMount() {
+    this.props.scrollAreaRef?.(this);
+  }
+
   private onResize_ = (size: RawVector2, element: Element) => {
     switch (element) {
       case this.outerRef_: {
@@ -288,6 +293,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
   };
 
   componentWillUnmount() {
+    this.props.scrollAreaRef?.(null);
     this.listener_.disconnect();
 
     if (this.onMouseMoveHandle_ !== undefined) {
@@ -896,6 +902,19 @@ class ScrollArea extends React.PureComponent<Props, State> {
     );
   }
 
+  public get top(): number {
+    return Action.top(this.state.action);
+  }
+  public set top(top: number) {
+    const { action } = this.state;
+
+    this.setState({
+      action: Action.none(
+        clamp(0, top, this.maxTop),
+        action.left
+      )
+    });
+  }
   private get maxTop() {
     const verticalScrollEnabled =
       this.props.verticalScroll !== false;
@@ -943,16 +962,11 @@ class ScrollArea extends React.PureComponent<Props, State> {
     });
   };
 
-  set top(top: number) {
-    const { action } = this.state;
 
-    this.setState({
-      action: Action.none(
-        clamp(0, top, this.maxTop),
-        action.left
-      )
-    });
-  }
+
+  public scrollTo = (top: number) => {
+    this.top = top;
+  };
 
   set left(left: number) {
     const { action } = this.state;
@@ -964,6 +978,25 @@ class ScrollArea extends React.PureComponent<Props, State> {
       )
     });
   }
+
+  public scrollElementIntoView = (element: HTMLElement) => {
+    if (!this.outerRef_) return;
+
+    const outerRect = this.outerRef_.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+
+    const currentTop = Action.top(this.state.action);
+
+    const offset = 40;
+
+    const targetTop =
+      currentTop +
+      elementRect.top -
+      outerRect.top -
+      offset;
+
+    this.top = targetTop;
+  };
 
   render() {
     const {
