@@ -158,13 +158,13 @@ const AssignmentDetailsDialog = ({
                   {LocalizedString.lookup(status.label, locale)}
                 </StatusBadge>
                 {stamp && (
-                  <span style={{ fontSize: '0.72em', color: theme.color, opacity: 0.85, textAlign: 'right', maxWidth: '16em' }}>
+                  <span style={{ fontSize: '0.72em', color: theme.color, opacity: 0.85, textAlign: 'right', maxWidth: '17em' }}>
                     {LocalizedString.lookup(tr('Completed at'), locale)}:{' '}
                     {new Date(stamp).toLocaleString(locale)}
                   </span>
                 )}
                 {versus !== 'unknown' && (
-                  <span style={completionDuePillStyle[versus]}>
+                  <span style={completionDuePillStyle({ theme })[versus]}>
                     {LocalizedString.lookup(
                       versus === 'on-time'
                         ? tr('On time')

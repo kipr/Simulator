@@ -6,24 +6,12 @@ export const Spacer = styled('div', {
   flex: '1 1'
 });
 
-interface SummaryCardSVGProps extends ThemeProps {
-  darkMode: boolean;
-}
 
 export const SummaryCardSVG = ({
-  theme,
-}): React.ReactElement => {
+  theme
+}: ThemeProps): React.ReactElement => {
 
-  const {
-    backgroundStart,
-    backgroundMiddle,
-    backgroundEnd,
-    trace,
-    nodeFill,
-    nodeStroke,
-    dot,
-    depth,
-  } = theme.summaryCard;
+  const { summaryCard } = theme;
   return (
     <svg
       viewBox="0 0 620 167"
@@ -47,15 +35,15 @@ export const SummaryCardSVG = ({
         >
           <stop
             offset="0%"
-            stopColor={backgroundStart}
+            stopColor={summaryCard.backgroundStart}
           />
           <stop
             offset="55%"
-            stopColor={backgroundMiddle}
+            stopColor={summaryCard.backgroundMiddle}
           />
           <stop
             offset="100%"
-            stopColor={backgroundEnd}
+            stopColor={summaryCard.backgroundEnd}
           />
         </linearGradient>
 
@@ -68,20 +56,20 @@ export const SummaryCardSVG = ({
         >
           <stop
             offset="0%"
-            stopColor={trace}
+            stopColor={summaryCard.trace}
             stopOpacity="0.10"
           />
           <stop
             offset="65%"
-            stopColor={trace}
+            stopColor={summaryCard.trace}
             stopOpacity="0.02"
           />
           <stop
             offset="100%"
-            stopColor={trace}
+            stopColor={summaryCard.trace}
             stopOpacity="0"
           />
-        </linearGradient>
+        </linearGradient>q
 
         <pattern
           id="summaryDotPattern"
@@ -93,7 +81,7 @@ export const SummaryCardSVG = ({
             cx="3"
             cy="3"
             r="1.2"
-            fill={dot}
+            fill={summaryCard.dot}
             opacity="0.07"
           />
         </pattern>
@@ -117,7 +105,7 @@ export const SummaryCardSVG = ({
 
       <g
         fill="none"
-        stroke={trace}
+        stroke={summaryCard.trace}
         strokeWidth="1"
         opacity="0.07"
       >
@@ -128,7 +116,7 @@ export const SummaryCardSVG = ({
 
       <g
         fill="none"
-        stroke={trace}
+        stroke={summaryCard.trace}
         strokeWidth="1"
         opacity="0.055"
       >
@@ -138,7 +126,7 @@ export const SummaryCardSVG = ({
 
       <g
         fill="none"
-        stroke={trace}
+        stroke={summaryCard.trace}
         strokeWidth="1"
         opacity="0.07"
       >
@@ -147,8 +135,8 @@ export const SummaryCardSVG = ({
       </g>
 
       <g
-        fill={nodeFill}
-        stroke={nodeStroke}
+        fill={summaryCard.nodeFill}
+        stroke={summaryCard.nodeStroke}
         strokeWidth="1"
         opacity="0.15"
       >
@@ -181,7 +169,7 @@ export const SummaryCardSVG = ({
           L 0 167
           Z
         "
-        fill={depth}
+        fill={summaryCard.depth}
         opacity="0.07"
       />
     </svg>

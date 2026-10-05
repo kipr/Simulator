@@ -17,6 +17,16 @@ export interface ButtonColors {
   cancel: ButtonColor;
 }
 
+interface SummaryCardSVGProps {
+  backgroundStart: string;
+  backgroundMiddle: string;
+  backgroundEnd: string;
+  trace: string;
+  nodeFill: string;
+  nodeStroke: string;
+  dot: string;
+  depth: string;
+}
 export const LIGHTMODE_DEFAULT: ButtonColor = Object.freeze({
   disabled: '#808080',
   standard: '#e0e0e0',
@@ -118,6 +128,7 @@ export const BROWN: ButtonColor = Object.freeze({
   hover: '#ab8c49',
 });
 
+
 export interface Theme {
   themeName: string;
 
@@ -183,16 +194,7 @@ export interface Theme {
   darken: (frac: number) => string;
 
 
-  summaryCard: {
-    backgroundStart: string;
-    backgroundMiddle: string;
-    backgroundEnd: string;
-    trace: string;
-    nodeFill: string;
-    nodeStroke: string;
-    dot: string;
-    depth: string;
-  };
+  summaryCard: SummaryCardSVGProps;
 }
 
 export const COMMON: Theme = {
