@@ -16,7 +16,7 @@ import { AsyncClassroom, Classroom, ClassroomAssignment } from '../state/State/C
 import { CreateClassroomDialog } from '../components/Dialog/CreateClassroomDialog';
 import Dict from '../util/objectOps/Dict';
 import { nativeScrollbarChrome } from '../util/nativeScrollbarChrome';
-import { ClassroomsAction, listChallengesByStudentId, deleteClassroom, convertClassroomAssignmentsToNewFormat, listOwned, load, convertStudentIdsToNewFormat, testMigration, loadClassroom } from 'state/reducer/classrooms';
+import { ClassroomsAction, listChallengesByStudentId, deleteClassroom, convertClassroomAssignmentsToNewFormat, listOwned, load, convertStudentIdsToNewFormat, testMigration, loadClassroom, totalClassroomCopy } from 'state/reducer/classrooms';
 import { auth } from '../firebase/firebase';
 import { User } from 'ivygate/dist/src/types/user';
 import Async from 'state/State/Async';
@@ -111,6 +111,7 @@ interface ClassroomTeacherViewPrivateProps {
   onConvertClassroomAssignmentsToNewFormat?: (classroom: Classroom) => void;
   onConvertStudentIdsToNewFormat?: (classroom: Classroom) => void;
   onTestMigration(): Promise<void>;
+  onTotalCopy(): Promise<void>;
 }
 
 interface ClassroomTeacherViewState {
@@ -188,7 +189,7 @@ const ClassroomCardContainer = styled('div', (props: { collapsed: boolean }) => 
 }));
 const StyledScrollArea = styled(ScrollArea, (props: { collapsed: boolean }) => ({
   flex: 1,
-  height: '80%',
+  height: '87%',
 }));
 const CardWrapper = styled('div', (props: ThemeProps & { selected?: boolean }) => ({
   borderRadius: `${props.theme.itemPadding * 4}px`,
@@ -321,7 +322,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     };
 
   }
-  registry = new TourRegistry();
+  registry = new TourRegistry(TourDoc.IDS.TEACHER_VIEW);
 
   async componentDidMount() {
     this.props.onListOwnedClassrooms();
@@ -985,7 +986,10 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                 {this.state.cardContainerVisible
                   ? (
                     <ClassroomCardContainer collapsed={!this.state.cardContainerVisible}>
-                      <StyledScrollArea theme={theme} verticalScroll={false} horizontalScroll={true} collapsed={!this.state.cardContainerVisible}>
+                      <StyledScrollArea innerStyle={{
+                        width: 'max-content',
+                        minWidth: '100%',
+                      }} theme={theme} verticalScroll={false} horizontalScroll={true} collapsed={!this.state.cardContainerVisible}>
                         <TourTarget registry={this.registry} targetKey="teacher-classroom-cards-strip" style={{ display: 'contents' }}>
                           <ClassroomsCardContainer style={style} theme={theme}>
                             <TourTarget registry={this.registry} targetKey="teacher-create-classroom-card" style={{ display: 'contents' }}>
@@ -1114,6 +1118,9 @@ export default connect(
   (dispatch) => ({
     onTestMigration: async () => {
       await testMigration();
+    },
+    onTotalCopy: async () => {
+      await totalClassroomCopy();
     },
     onConvertClassroomAssignmentsToNewFormat: async (classroom: Classroom) =>
       await convertClassroomAssignmentsToNewFormat(classroom),

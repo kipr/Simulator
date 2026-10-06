@@ -9,7 +9,7 @@ import Scene, { AsyncScene } from "../../state/State/Scene";
 import { Dialog } from "./Dialog";
 import DeleteDialog from "./DeleteDialog";
 import { ThemeProps, GREEN } from "../constants/theme";
-import { Spacer } from '../constants/common';
+import { Spacer, SummaryCardSVG } from '../constants/common';
 import { ScenesAction } from "../../state/reducer";
 import ScrollArea from "../interface/ScrollArea";
 import { FontAwesome } from "../FontAwesome";
@@ -169,7 +169,8 @@ const SummaryPointer = styled('div', (props: { $column: string }) => ({
 const SummaryInfo = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
-  marginBottom: '5px'
+  marginBottom: '5px',
+  color: props.theme.color,
 }));
 
 const SummaryInfoTitle = styled('div', (props: ThemeProps) => ({
@@ -178,7 +179,8 @@ const SummaryInfoTitle = styled('div', (props: ThemeProps) => ({
   marginBottom: '5px',
   maxWidth: '50px',
   fontWeight: 'bold',
-  paddingRight: '7px'
+  paddingRight: '7px',
+  color: props.theme.color,
 }));
 
 const InfoText = styled('span', (props: ThemeProps) => ({
@@ -359,165 +361,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
               : (((selectedCardIndex - 1) % 3) + 1).toString()
           }
         >
-          <svg
-            viewBox="0 0 620 167"
-            preserveAspectRatio="none"
-            style={{
-              position: 'absolute',
-              inset: 0,
-              width: '100%',
-              height: '100%',
-              pointerEvents: 'none',
-              zIndex: 0
-            }}
-          >
-            <defs>
-              <linearGradient
-                id="summaryGreyGradient"
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="1"
-              >
-                <stop offset="0%" stopColor="#343434" />
-                <stop offset="55%" stopColor="#292929" />
-                <stop offset="100%" stopColor="#1d1d1d" />
-              </linearGradient>
-
-              <linearGradient
-                id="summaryHighlight"
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="0"
-              >
-                <stop
-                  offset="0%"
-                  stopColor="#ffffff"
-                  stopOpacity="0.10"
-                />
-                <stop
-                  offset="65%"
-                  stopColor="#ffffff"
-                  stopOpacity="0.02"
-                />
-                <stop
-                  offset="100%"
-                  stopColor="#ffffff"
-                  stopOpacity="0"
-                />
-              </linearGradient>
-
-              <pattern
-                id="summaryDotPattern"
-                width="12"
-                height="12"
-                patternUnits="userSpaceOnUse"
-              >
-                <circle
-                  cx="3"
-                  cy="3"
-                  r="1.2"
-                  fill="white"
-                  opacity="0.07"
-                />
-              </pattern>
-            </defs>
-
-            {/* Background */}
-            <rect
-              x="0"
-              y="0"
-              width="620"
-              height="167"
-              rx="8"
-              fill="url(#summaryGreyGradient)"
-            />
-
-            {/* Top highlight */}
-            <path
-              d="M 0 2 H 620"
-              fill="none"
-              stroke="url(#summaryHighlight)"
-              strokeWidth="2"
-            />
-
-            {/* Left circuit traces */}
-            <g
-              fill="none"
-              stroke="white"
-              strokeWidth="1"
-              opacity="0.07"
-            >
-              <path d="M 0 48 H 75 L 92 65 H 150" />
-              <path d="M 20 77 H 110 L 132 99 H 205" />
-              <path d="M 0 125 H 60 L 78 143 H 165" />
-            </g>
-
-            {/* Center traces */}
-            <g
-              fill="none"
-              stroke="white"
-              strokeWidth="1"
-              opacity="0.055"
-            >
-              <path d="M 230 25 H 285 L 305 45 H 365" />
-              <path d="M 270 120 H 330 L 350 140 H 420" />
-            </g>
-
-            {/* Right circuit traces */}
-            <g
-              fill="none"
-              stroke="white"
-              strokeWidth="1"
-              opacity="0.07"
-            >
-              <path d="M 420 48 H 485 L 505 68 H 590" />
-              <path d="M 465 91 H 520 L 542 113 H 620" />
-            </g>
-
-            {/* Circuit nodes */}
-            <g
-              fill="#343434"
-              stroke="white"
-              strokeWidth="1"
-              opacity="0.15"
-            >
-              <circle cx="150" cy="65" r="3" />
-              <circle cx="205" cy="99" r="3" />
-              <circle cx="365" cy="45" r="3" />
-              <circle cx="420" cy="140" r="3" />
-              <circle cx="590" cy="68" r="3" />
-            </g>
-
-            {/* Right-side dot matrix */}
-            <path
-              d="
-      M 470 100
-      Q 530 78 620 92
-      L 620 167
-      L 485 167
-      Q 455 140 470 100
-      Z
-    "
-              fill="url(#summaryDotPattern)"
-              opacity="0.75"
-            />
-
-            {/* Very subtle lower depth layer */}
-            <path
-              d="
-      M 0 140
-      Q 130 128 250 145
-      Q 390 160 620 130
-      L 620 167
-      L 0 167
-      Z
-    "
-              fill="#000000"
-              opacity="0.07"
-            />
-          </svg>
+          <SummaryCardSVG theme={theme} />
 
           <SummaryPointer
             $column={
@@ -546,7 +390,8 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
               style={{
                 fontWeight: 400,
                 textDecoration: 'underline',
-                marginBottom: '5px'
+                marginBottom: '5px',
+                color: theme.color
               }}
             >
               {selectedScene.description[this.props.locale]}
@@ -591,65 +436,6 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
                 )}
 
               </SummaryGrid>
-              // <div>
-              //   <SummaryInfo theme={theme}>
-              //     <div
-              //       style={{
-              //         fontWeight: 'bold',
-              //         paddingRight: '7px'
-              //       }}
-              //     >
-              //       Skill:
-              //     </div>
-
-            //     {selectedScene.summary.skill[this.props.locale]}
-            //   </SummaryInfo>
-
-            //   <SummaryInfo theme={theme}>
-            //     <div
-            //       style={{
-            //         fontWeight: 'bold',
-            //         paddingRight: '7px'
-            //       }}
-            //     >
-            //       Base:
-            //     </div>
-
-            //     {selectedScene.summary.baseMission[this.props.locale]}
-            //   </SummaryInfo>
-
-            //   <SummaryInfo theme={theme}>
-            //     <div
-            //       style={{
-            //         fontWeight: 'bold',
-            //         paddingRight: '7px'
-            //       }}
-            //     >
-            //       Bonus:
-            //     </div>
-
-            //     {selectedScene.summary.bonusMission[this.props.locale]}
-            //   </SummaryInfo>
-
-            //   {selectedScene.summary.advancedBonusMission && (
-            //     <SummaryInfo theme={theme}>
-            //       <div
-            //         style={{
-            //           fontWeight: 'bold',
-            //           paddingRight: '7px',
-            //           width: '15%'
-            //         }}
-            //       >
-            //         Advanced Bonus:
-            //       </div>
-
-            //       {
-            //         selectedScene.summary
-            //           .advancedBonusMission[this.props.locale]
-            //       }
-            //     </SummaryInfo>
-            //   )}
-            // </div>
             )}
           </div>
         </Summary>
@@ -659,11 +445,6 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
     const renderSceneCards = (folderName: string) => {
       const { theme } = this.props;
       const { selectedSceneId, selectedCardIndex } = this.state;
-
-      // const selectedScene =
-      //   selectedCardIndex !== null
-      //     ? folderScenes[folderName][selectedCardIndex - 1][1]
-      //     : null;
 
       const selectedScene: Scene | null =
         selectedCardIndex !== null
@@ -731,13 +512,13 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
         </StyledScrollArea>);
     };
     const sceneColumn_ = (
-      <div>
+      <div style={{ width: '100%' }}>
         {/* {this.createCreateYourOwnSceneName()} */}
         {
           sandbox_scenes.map(([sceneId, scene]) => this.createSceneName(sceneId, scene))
         }
         {Object.entries(folderScenes).map(([folderName, scenes]) => (
-          <div key={scenes.map(s => s[0]).join('-')}>
+          <div style={{ width: '100%' }} key={scenes.map(s => s[0]).join('-')}>
             <SceneName onClick={() => this.handleFolderSelect(folderName)} key={folderName} theme={theme} selected={this.state.folderSelected === folderName}>
               <FontAwesome icon={this.state.folderSelected === folderName ? faFolderOpen : faFolderClosed} style={{ marginRight: '5px' }} />
               <strong>{folderName}</strong>
@@ -786,7 +567,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
       <Container theme={theme}>
         <SceneColumn theme={theme} data-tour-clamp>
           {tourRegistry ? (
-            <TourTarget registry={tourRegistry} targetKey="open-scene-list">
+            <TourTarget style={{ width: '100%' }} registry={tourRegistry} targetKey="open-scene-list">
               {sceneColumn_}
             </TourTarget>
           ) : (
@@ -795,7 +576,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
         </SceneColumn>
         <InfoColumn>
           {tourRegistry ? (
-            <TourTarget registry={tourRegistry} targetKey="open-scene-info">
+            <TourTarget style={{ width: '100%' }} registry={tourRegistry} targetKey="open-scene-info">
               {infoColumn_}
             </TourTarget>
           ) : (

@@ -1,4 +1,5 @@
 export interface Settings {
+  showSettingsDialog?: boolean;
   simulationSensorNoise: boolean;
   simulationRealisticSensors: boolean;
   editorAutoComplete: boolean;
@@ -9,6 +10,7 @@ export interface Settings {
   interfaceMode: boolean;
 }
 export const DEFAULT_SETTINGS: Settings = {
+  showSettingsDialog: false,
   simulationSensorNoise: false,
   simulationRealisticSensors: false,
   editorAutoComplete: false,

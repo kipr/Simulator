@@ -39,6 +39,7 @@ import { Settings } from 'components/constants/Settings';
 import User, { AsyncUser } from 'state/State/User';
 import Dict from 'util/objectOps/Dict';
 import { Users } from 'state/State';
+import SettingsDialog from './components/Dialog/SettingsDialog';
 export interface AppPublicProps {
 
 }
@@ -107,8 +108,8 @@ class App extends React.Component<Props, State> {
 
     const storedSettings = localStorage.getItem('bbSettings');
     if (storedSettings) {
-
       const parsedSettings: Partial<Settings> = JSON.parse(storedSettings) as Partial<Settings>;
+      parsedSettings.showSettingsDialog = false; // Ensure the settings dialog is not shown on load
       this.props.setSettings(parsedSettings);
     }
     const lang: LocalizedString.Language = LocalizedString.validate(localStorage.getItem('bblocale'));
@@ -197,7 +198,6 @@ class App extends React.Component<Props, State> {
     const { loading } = state;
 
     const { settings } = props;
-
     const theme = settings.darkMode ? DARK : LIGHT;
 
     if (loading) return <Loading />;
@@ -225,6 +225,11 @@ class App extends React.Component<Props, State> {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <DocumentationWindow theme={theme} documentationType={'default'} />
+        {settings.showSettingsDialog &&
+          <SettingsDialog theme={theme}
+            onClose={() => props.setSettings({ showSettingsDialog: false })}
+            onSettingsChange={this.props.setSettings} />
+        }
       </>
     );
   }

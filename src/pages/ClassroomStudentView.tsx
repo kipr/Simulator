@@ -148,7 +148,7 @@ const PageContainer = styled('div', (props: ThemeProps) => ({
   width: '100%',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
-  height: 'calc(100vh - 1px)',
+  height: 'calc(100vh)',
   zIndex: 35
 }));
 
@@ -203,7 +203,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   fontWeight: 400,
   ':hover': {
     cursor: 'pointer',
-    backgroundColor:  props.theme.buttonColors.default.hover
+    backgroundColor: props.theme.buttonColors.default.hover
   },
   userSelect: 'none',
   transition: 'background-color 0.2s, opacity 0.2s'
@@ -244,7 +244,7 @@ export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
 
 class ClassroomStudentView extends React.Component<Props, State> {
   private unsubscribeChallenges: (() => void) | null = null;
-  private registry = new TourRegistry();
+  private registry = new TourRegistry(TourDoc.IDS.STUDENT_VIEW);
   private scrollRef: HTMLDivElement | null = null;
   constructor(props: Props) {
     super(props);

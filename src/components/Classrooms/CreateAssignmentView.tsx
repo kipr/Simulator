@@ -89,7 +89,7 @@ const AssignmentInputContainer = styled('div', (props: ThemeProps) => ({
   gap: '1.4em',
 
   width: '60%',
-  height: '85vh'
+  height: '83vh'
 }));
 
 const AssignmentInfoContainer = styled('div', (props: ThemeProps) => ({
@@ -103,7 +103,7 @@ const AssignmentInfoContainer = styled('div', (props: ThemeProps) => ({
   margin: '8px',
   gap: '1.4em',
   width: '40%',
-
+  height: '83vh'
 }));
 
 const PointsDueTourBlock = styled('div', {
@@ -138,7 +138,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   flexDirection: 'row',
   padding: '10px',
   opacity: props.disabled ? "0.5" : "1.0",
-  backgroundColor: '#2c2c2cff',
+  backgroundColor: props.theme.buttonColors.default.standard,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   ':last-child': {
     borderBottom: 'none'
@@ -149,7 +149,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
     props.onClick && !props.disabled
       ? {
         cursor: "pointer",
-        backgroundColor: `rgba(255, 255, 255, 0.1)`,
+        backgroundColor: props.theme.hoverOptionBackground,
       }
       : {},
   userSelect: 'none',
@@ -179,7 +179,7 @@ const DateTimeInput = styled(Input, (props: ThemeProps) => ({
 
 const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
   flex: 1,
-
+  outline: `2px solid ${theme.borderColor}`,
 }));
 
 const CheckboxRow = styled('div', (props: ThemeProps) => ({
@@ -190,8 +190,10 @@ const CheckboxRow = styled('div', (props: ThemeProps) => ({
   alignItems: 'center',
 }));
 
+
+// Move outline to outside of scrollable container
 const TableBody = styled('tbody', (props: ThemeProps) => ({
-  outline: `2px solid ${props.theme.borderColor}`,
+  // outline: `2px solid ${props.theme.borderColor}`,
   display: 'flex',
   flexDirection: 'column',
   gap: '0.5em',
@@ -770,7 +772,7 @@ const CreateAssignmentView = ({
                     {Object.keys(assignedPointsSet).length > 0 && (
 
                       <AssignmentInfoContent theme={theme} style={{ marginTop: '0.2em', width: '97%' }}>
-                        <StyledScrollArea style={{ height: '18em' }} horizontalScroll={false} theme={theme}>
+                        <StyledScrollArea style={{ height: '14em', marginRight: '5px' }} horizontalScroll={false} theme={theme}>
                           <table>
                             <TableBody theme={theme}>
 
@@ -854,7 +856,7 @@ const CreateAssignmentView = ({
                   {Object.keys(assignedPointsSet).length > 0 && (
 
                     <AssignmentInfoContent theme={theme} style={{ marginTop: '0.2em', width: '97%' }}>
-                      <StyledScrollArea style={{ height: '18em' }} horizontalScroll={false} theme={theme}>
+                      <StyledScrollArea style={{ height: '14em' }} horizontalScroll={false} theme={theme}>
                         <table>
                           <TableBody theme={theme}>
 

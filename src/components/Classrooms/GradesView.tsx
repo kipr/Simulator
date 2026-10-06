@@ -615,7 +615,7 @@ const GradesView = ({
             }}
           >
             {versusDue !== 'unknown' && (
-              <span style={completionDuePillStyle[versusDue]}>
+              <span style={completionDuePillStyle({ theme })[versusDue]}>
                 {LocalizedString.lookup(
                   versusDue === 'on-time'
                     ? tr('On time')
@@ -793,7 +793,10 @@ const GradesView = ({
         </div>
       ) : (
         <GradesListContainer theme={theme}>
-          <StyledScrollArea theme={theme} horizontalScroll={true}>
+          <StyledScrollArea theme={theme} horizontalScroll={true} innerStyle={{
+            width: 'max-content',
+            minWidth: '100%',
+          }} >
             <Table>
               <thead>
                 <tr>

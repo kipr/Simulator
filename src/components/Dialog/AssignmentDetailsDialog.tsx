@@ -58,7 +58,8 @@ const Button = styled('div', (props: ThemeProps) => ({
   flexDirection: 'row',
   padding: '10px',
   marginRight: '2.5em',
-  backgroundColor: '#2c2c2cff',
+  // backgroundColor: '#2c2c2cff',
+  backgroundColor: props.theme.buttonColors.default.standard,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   ':last-child': {
     borderBottom: 'none'
@@ -66,7 +67,7 @@ const Button = styled('div', (props: ThemeProps) => ({
   fontWeight: 400,
   ':hover': {
     cursor: 'pointer',
-    backgroundColor: `rgba(255, 255, 255, 0.1)`
+    backgroundColor: props.theme.buttonColors.default.hover
   },
   userSelect: 'none',
   transition: 'background-color 0.2s, opacity 0.2s'
@@ -157,13 +158,13 @@ const AssignmentDetailsDialog = ({
                   {LocalizedString.lookup(status.label, locale)}
                 </StatusBadge>
                 {stamp && (
-                  <span style={{ fontSize: '0.72em', color: theme.color, opacity: 0.85, textAlign: 'right', maxWidth: '16em' }}>
+                  <span style={{ fontSize: '0.72em', color: theme.color, opacity: 0.85, textAlign: 'right', maxWidth: '17em' }}>
                     {LocalizedString.lookup(tr('Completed at'), locale)}:{' '}
                     {new Date(stamp).toLocaleString(locale)}
                   </span>
                 )}
                 {versus !== 'unknown' && (
-                  <span style={completionDuePillStyle[versus]}>
+                  <span style={completionDuePillStyle({ theme })[versus]}>
                     {LocalizedString.lookup(
                       versus === 'on-time'
                         ? tr('On time')

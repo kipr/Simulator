@@ -283,7 +283,7 @@ const AssignmentSubmissionDetails = ({
                               const versus = completionVersusDueDate(row.completedAt, assignment.dueDate);
                               if (versus === 'unknown') return null;
                               return (
-                                <span style={completionDuePillStyle[versus]}>
+                                <span style={completionDuePillStyle({ theme })[versus]}>
                                   {LocalizedString.lookup(
                                     versus === 'on-time'
                                       ? tr('On time')

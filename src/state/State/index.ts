@@ -138,6 +138,7 @@ export namespace Users {
 }
 
 export interface Settings {
+  showSettingsDialog?: boolean;
   simulationSensorNoise: boolean;
   simulationRealisticSensors: boolean;
   editorAutoComplete: boolean;
