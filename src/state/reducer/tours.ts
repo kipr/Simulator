@@ -3,7 +3,10 @@ import construct from '../../util/redux/construct';
 import Selector from '../../db/Selector';
 import db from '../../db';
 import DbError from '../../db/Error';
-import store from '..';
+// import store from '..';
+import { Dispatch } from 'redux';
+import type { State as ReduxState } from '../index';
+
 export namespace ToursAction {
 
   export interface TourLoading {
@@ -44,43 +47,62 @@ export type ToursAction =
   | ToursAction.TourError
   | ToursAction.TourPatch;
 
-export async function fetchTourIfNeeded(uid: string, tourId: string): Promise<TourDoc> {
+export async function fetchTourIfNeeded(
+  uid: string,
+  tourId: string,
+  dispatch: Dispatch<ToursAction>,
+  state: ReduxState
+): Promise<TourDoc> {
 
-  const state = store.getState();
+  console.log('fetchTourIfNeeded state:', state);
+  console.log('tours:', state?.tours);
+  console.log('loaded:', state?.tours?.loaded);
+  console.log('loading:', state?.tours?.loading);
+
   if (state.tours.loaded[tourId] || state.tours.loading[tourId]) {
     return state.tours.byId[tourId] ?? TourDoc.DEFAULT;
   }
 
-  store.dispatch(ToursAction.tourLoading({ tourId }));
+  dispatch(ToursAction.tourLoading({ tourId }));
 
   try {
     const raw = await db.get<TourDoc>(Selector.userTour(tourId));
     const tour = TourDoc.withDefaults(raw);
-    const action = ToursAction.tourLoaded({ tourId, tour });
-    store.dispatch(action);
+
+    dispatch(ToursAction.tourLoaded({ tourId, tour }));
+
     return tour;
   } catch (error) {
     if (DbError.is(error) && error.code === DbError.CODE_NOT_FOUND) {
       console.log(`Tour with id ${tourId} not found for user ${uid}, loading default tour.`);
-      store.dispatch(ToursAction.tourLoaded({ tourId, tour: TourDoc.DEFAULT }));
+
+      dispatch(ToursAction.tourLoaded({
+        tourId,
+        tour: TourDoc.DEFAULT,
+      }));
+
       return TourDoc.DEFAULT;
     }
 
-    store.dispatch(ToursAction.tourError({ tourId, error: String(error) }));
+    dispatch(ToursAction.tourError({
+      tourId,
+      error: String(error),
+    }));
+
     throw error;
   }
 }
 
-export async function completeTour(storedTour: TourDoc, uid: string, tourId: string, patch?: Partial<TourDoc>): Promise<void> {
+export async function completeTour(storedTour: TourDoc, uid: string, tourId: string, dispatch: Dispatch<ToursAction>, patch?: Partial<TourDoc>): Promise<void> {
   const patchData: Partial<TourDoc> = { ...storedTour, completed: true, step: patch ? patch.step : undefined, updatedAt: new Date().toISOString(), ...patch };
   await db.set(Selector.userTour(tourId), patchData, true);
-  store.dispatch(ToursAction.tourPatch({ tourId, patch: patchData }));
+  dispatch(ToursAction.tourPatch({ tourId, patch: patchData }));
 }
 
-export async function retakeTour(storedTour: TourDoc, uid: string, tourId: string): Promise<void> {
+export async function retakeTour(storedTour: TourDoc, uid: string, tourId: string, dispatch: Dispatch<ToursAction>): Promise<void> {
   const patchData: Partial<TourDoc> = { ...storedTour, completed: false, step: 0, updatedAt: new Date().toISOString() };
   await db.set(Selector.userTour(tourId), patchData, true);
-  store.dispatch(ToursAction.tourPatch({ tourId, patch: patchData }));
+  dispatch(ToursAction.tourPatch({ tourId, patch: patchData }));
 }
 
 

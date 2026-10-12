@@ -42,6 +42,7 @@ import { Card } from '../components/interface/Card';
 import CreateAssignmentView from '../components/Classrooms/CreateAssignmentView';
 import { FontAwesome } from '../components/FontAwesome';
 import ScrollArea from '../components/interface/ScrollArea';
+import { Dispatch } from 'redux';
 
 
 export interface ClassroomTeacherViewRootRouteParams {
@@ -103,6 +104,8 @@ interface ClassroomTeacherViewPrivateProps {
   uid: string;
   selectedClassroom?: AsyncClassroom | null;
   classroomVersion: number;
+  state: ReduxState;
+  dispatch: Dispatch;
   onStudentInClassroom?: (studentId: LocalizedString) => void;
   onAddStudentToClassroom?: (classroomId: string, studentId: LocalizedString) => void;
   onUpdateClassroom?: (classroomId: string, classroom: AsyncClassroom) => void;
@@ -326,9 +329,9 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   async componentDidMount() {
     this.props.onListOwnedClassrooms();
-    const { uid } = this.props;
+    const { uid, dispatch, state } = this.props;
     if (uid) {
-      await fetchTourIfNeeded(this.props.uid, TourDoc.IDS.TEACHER_VIEW);
+      await fetchTourIfNeeded(uid, TourDoc.IDS.TEACHER_VIEW, dispatch, state);
     }
   }
 
@@ -688,12 +691,12 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
 
   private onCloseTour_ = () => {
-    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, { step: this.state.currentTourStepIndex });
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, this.props.dispatch);
     this.setState({ tourHighlightNewClassroomId: undefined, tourHighlightAssignmentTitle: undefined });
   };
 
   private onSkipTour_ = () => {
-    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, { dismissed: true });
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, this.props.dispatch);
     this.setState({ tourHighlightNewClassroomId: undefined, tourHighlightAssignmentTitle: undefined });
   };
 
@@ -795,7 +798,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
   };
 
   private onRetakeTour_ = () => {
-    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW);
+    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, this.props.dispatch);
     this.setState({ tourHighlightNewClassroomId: undefined });
   };
 
@@ -1101,6 +1104,7 @@ const DashboardWithNavigate = withNavigate(ClassroomTeacherView);
 
 export default connect(
   (state: ReduxState) => ({
+    state: state,
     locale: state.i18n.locale,
     settings: state.settings,
     uid: state.users.me,
@@ -1116,6 +1120,7 @@ export default connect(
 
   }),
   (dispatch) => ({
+    dispatch,
     onTestMigration: async () => {
       await testMigration();
     },

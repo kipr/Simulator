@@ -8,7 +8,7 @@ import MainMenu from '../components/MainMenu';
 
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
-import { State } from '../state';
+import { State as ReduxState } from '../state';
 
 import tr from '@i18n';
 import { WithNavigateProps, withNavigate } from '../util/withNavigate';
@@ -19,6 +19,7 @@ import { TourRegistry } from '../tours/TourRegistry';
 import GuidedTour from '../components/Tours/GuidedTour';
 import TourTarget from '../components/Tours/TourTarget';
 import { Settings } from 'components/constants/Settings';
+import { Dispatch } from 'redux';
 
 export interface DashboardPublicProps extends ThemeProps, StyleProps {
 }
@@ -32,6 +33,8 @@ interface DashboardPrivateProps {
   tourLoaded: boolean;
   tourLoading: boolean;
   tourError: string | null;
+  dispatch: Dispatch;
+  state: ReduxState;
 }
 
 type Props = DashboardPublicProps & DashboardPrivateProps & WithNavigateProps;
@@ -83,21 +86,21 @@ class Dashboard extends React.PureComponent<Props> {
 
 
   async componentDidMount() {
-    const { uid } = this.props;
+    const { uid, dispatch, state } = this.props;
     if (uid) {
-      await fetchTourIfNeeded(this.props.uid, TourDoc.IDS.DASHBOARD);
+      await fetchTourIfNeeded(uid, TourDoc.IDS.DASHBOARD, dispatch, state);
     }
   }
 
   private onCloseTour_ = () => {
-    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD);
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD, this.props.dispatch);
   };
 
   private onSkipTour_ = () => {
-    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD, { dismissed: true });
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD, this.props.dispatch, { dismissed: true });
   };
   private onRetakeTour_ = () => {
-    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD);
+    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD, this.props.dispatch);
   };
   render() {
     const { props } = this;
@@ -195,7 +198,8 @@ class Dashboard extends React.PureComponent<Props> {
   }
 }
 
-const Connected = connect((state: State) => ({
+const Connected = connect((state: ReduxState) => ({
+  state: state,
   uid: state.users.me,
   locale: state.i18n.locale,
   settings: state.settings,

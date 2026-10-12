@@ -17,6 +17,7 @@ import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/to
 import TourDoc, { getClassroomTourSteps, getTourSteps, TourStep } from '../tours/Tours';
 import GuidedTour from '../components/Tours/GuidedTour';
 import { Settings } from '../components/constants/Settings';
+import { Dispatch } from 'redux';
 
 export interface ClassroomsDashboardPublicProps extends ThemeProps, StyleProps {
 }
@@ -29,6 +30,8 @@ interface ClassroomsDashboardPrivateProps {
   tourLoaded: boolean;
   tourLoading: boolean;
   tourError: string | null;
+  dispatch: Dispatch;
+  state: ReduxState;
 }
 
 interface ClassroomsDashboardState {
@@ -86,9 +89,9 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
   private scrollRef: HTMLDivElement | null = null;
 
   async componentDidMount() {
-    const { uid } = this.props;
+    const { uid, dispatch, state } = this.props;
     if (uid) {
-      await fetchTourIfNeeded(this.props.uid, TourDoc.IDS.CLASSROOM);
+      await fetchTourIfNeeded(this.props.uid, TourDoc.IDS.CLASSROOM, dispatch, state);
     }
     this.getCurrentUser();
   }
@@ -108,15 +111,15 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
   }
 
   private onCloseTour_ = () => {
-    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM);
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM, this.props.dispatch);
   };
 
   private onSkipTour_ = () => {
-    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM, { dismissed: true });
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM, this.props.dispatch);
   };
 
   private onRetakeTour_ = () => {
-    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM);
+    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM, this.props.dispatch);
   };
   render() {
     const { props } = this;
@@ -172,6 +175,7 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
 }
 
 const Connected = connect((state: ReduxState) => ({
+  state: state,
   locale: state.i18n.locale,
   settings: state.settings,
   uid: state.users.me,
