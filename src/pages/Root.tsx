@@ -125,6 +125,7 @@ import {
   fetchTourIfNeeded,
   retakeTour,
 } from '../state/reducer/tours';
+import { Dispatch } from 'redux';
 
 
 export interface RootRouteParams {
@@ -149,7 +150,8 @@ interface RootPrivateProps {
   settings: Settings;
   toursById: Dict<TourDoc>;
   toursLoaded: Dict<boolean>;
-
+  dispatch: Dispatch;
+  state: ReduxState;
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
   onNodeChange: (id: string, node: Node) => void;
@@ -362,7 +364,7 @@ class Root extends React.Component<Props, State> {
     window.addEventListener('resize', this.onWindowResize_);
     // this.props.onLoadProjects();
 
-    await fetchTourIfNeeded(currentUser, TourDoc.IDS.SIMULATOR);
+    await fetchTourIfNeeded(currentUser, TourDoc.IDS.SIMULATOR, this.props.dispatch, this.props.state);
     space.sceneBinding.scriptManager.programStatus =
       this.state.simulatorState.type === SimulatorState.Type.Running
         ? 'running'
@@ -1279,6 +1281,7 @@ class Root extends React.Component<Props, State> {
       this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
       currentUser,
       this.state.tourId,
+      this.props.dispatch
     );
   };
 
@@ -1288,7 +1291,7 @@ class Root extends React.Component<Props, State> {
       this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
       currentUser,
       this.state.tourId,
-      { dismissed: true },
+      this.props.dispatch
     );
   };
 
@@ -1352,6 +1355,7 @@ class Root extends React.Component<Props, State> {
         this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
         currentUser,
         this.state.tourId,
+        this.props.dispatch
       );
     });
   };
@@ -1777,6 +1781,7 @@ const ConnectedRoot = connect(
     state: ReduxState,
     { params: { sceneId, challengeId } }: RootPublicProps,
   ) => {
+
     const builder = new Builder(state);
 
 
@@ -1813,9 +1818,11 @@ const ConnectedRoot = connect(
       toursLoaded: state.tours.loaded,
       toursLoading: state.tours.loading,
       toursError: state.tours.error,
+      state: state,
     };
   },
   (dispatch, { params: { sceneId } }: RootPublicProps) => ({
+    dispatch,
     onNodeAdd: (nodeId: string, node: Node) =>
       dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
     onNodeRemove: (nodeId: string) =>

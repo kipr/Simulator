@@ -28,6 +28,7 @@ import tr from '@i18n';
 import StudentTabs from '../components/Classrooms/StudentTabs';
 import Async from 'state/State/Async';
 import { Settings } from 'components/constants/Settings';
+import { Dispatch } from 'redux';
 
 namespace SubMenu {
   export enum Type {
@@ -97,6 +98,8 @@ interface ClassroomStudentViewPrivateProps {
   uid: string;
   toursById: Record<string, TourDoc>;
   toursLoaded: Record<string, boolean>;
+  state: ReduxState;
+  dispatch: Dispatch;
 }
 
 interface ClassroomStudentViewState {
@@ -271,11 +274,11 @@ class ClassroomStudentView extends React.Component<Props, State> {
     const currentUserId = auth.currentUser?.uid || '';
     const isInClassroom = await studentInClassroom(currentUserId);
     const currentUser = auth.currentUser.uid;
-    const { uid } = this.props;
+    const { uid, dispatch, state } = this.props;
 
     if (isInClassroom.classroom) {
       if (uid) {
-        await fetchTourIfNeeded(uid, TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM);
+        await fetchTourIfNeeded(uid, TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM, this.props.dispatch, state);
       }
 
       const loadedClasssroom = Async.latestValue(isInClassroom.classroom);
@@ -296,7 +299,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
       });
     } else {
       if (uid) {
-        await fetchTourIfNeeded(this.props.uid, TourDoc.IDS.STUDENT_VIEW);
+        await fetchTourIfNeeded(uid, TourDoc.IDS.STUDENT_VIEW, this.props.dispatch, state);
       }
       this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW, this.props.locale), tourId: TourDoc.IDS.STUDENT_VIEW });
     }
@@ -478,7 +481,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
     window.removeEventListener('click', this.onClickOutside_);
   };
   private onCloseTour_ = () => {
-    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId);
+    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId, this.props.dispatch);
     this.setState({
       tourStudentTabSync: undefined,
       tourExpandStudentAssignmentTopics: false,
@@ -489,7 +492,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
   };
 
   private onSkipTour_ = () => {
-    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId, { dismissed: true });
+    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId, this.props.dispatch);
     this.setState({
       tourStudentTabSync: undefined,
       tourExpandStudentAssignmentTopics: false,
@@ -537,7 +540,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
   };
 
   private onRetakeTour_ = () => {
-    void retakeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId);
+    void retakeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId, this.props.dispatch);
   };
 
   private studentTourTabIndexForStep_(step: TourStep | undefined): number | undefined {
@@ -706,6 +709,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
 
 export default connect(
   (state: ReduxState) => ({
+    state: state,
     toursById: state.tours.byId,
     toursLoaded: state.tours.loaded,
     toursLoading: state.tours.loading,
@@ -717,6 +721,7 @@ export default connect(
     uid: state.users.me,
   }),
   (dispatch) => ({
+    dispatch,
     onStudentAdded: (inviteCode: string, studentId: string, displayName: string) => {
       dispatch(ClassroomsAction.studentAdded({ classroomId: inviteCode, studentId, displayName }));
     },

@@ -7,10 +7,11 @@ import { TourRegistry } from '../../tours/TourRegistry';
 import TourTarget from '../Tours/TourTarget';
 import { FontAwesome } from '../FontAwesome';
 import tr from '@i18n';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
-import store, { State as ReduxState } from '../../state';
-import { retakeTour, SettingsAction } from 'state/reducer';
+import type { State as ReduxState } from '../../state';
+import { retakeTour } from '../../state/reducer/tours';
+import { SettingsAction } from '../../state/reducer/settings';
 import { Settings } from 'components/constants/Settings';
 import TourDoc from '../../tours/Tours';
 export interface ExtraMenuPublicProps extends StyleProps, ThemeProps {
@@ -87,7 +88,7 @@ const ExtraMenu = ({
   tourRegistry,
   setSettings,
 }: Props) => {
-
+  const dispatch = useDispatch();
   const settingsContent = (
     <Item theme={theme} disabled={false} onClick={() => setSettings({ showSettingsDialog: true })}>
       <ItemIcon icon={faGear} />
@@ -96,7 +97,7 @@ const ExtraMenu = ({
   );
 
   const retakeTourContent =
-    (<Item theme={theme} disabled={false} onClick={() => { void retakeTour(tour, uid, tourRegistry.getTourID()); }}>
+    (<Item theme={theme} disabled={false} onClick={() => { void retakeTour(tour, uid, tourRegistry.getTourID(), dispatch); }}>
       {LocalizedString.lookup(tr('Retake Tour'), locale)}
     </Item>);
   return (
@@ -124,7 +125,6 @@ export default connect((state: ReduxState, props: Props) => {
     tour: state.tours.byId[props.tourRegistry?.getTourID()] ?? TourDoc.DEFAULT,
   };
 }, dispatch => ({
-
   setSettings: (settings: Partial<Settings>) => dispatch(SettingsAction.updateSettings({ settings }))
 
 
