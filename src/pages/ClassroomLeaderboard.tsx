@@ -285,7 +285,7 @@ const SeparatorCell = styled('td', (props: ThemeProps) => ({
 const Table = styled('table', () => ({
   width: '100%',
   borderCollapse: 'collapse',
- // minHeight: '15em'
+  // minHeight: '15em'
 }));
 
 const TeacherLeaderboardTable = styled(Table, {
@@ -294,7 +294,7 @@ const TeacherLeaderboardTable = styled(Table, {
   tableLayout: 'auto',
   height: '100%',
   overflow: 'visible',
- // minHeight: '15em'
+  // minHeight: '15em'
 });
 
 const TableHeader = styled('th', (props: ThemeProps & { $challengeColumn?: boolean }) => ({
