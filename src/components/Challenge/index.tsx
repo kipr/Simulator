@@ -136,7 +136,7 @@ const StyledTabBar = styled(TabBar, ({ theme }: ThemeProps) => ({
 
 const Icon = styled(FontAwesome, {
   position: 'relative',
-  left: '8.7em',
+  right: '0.6em',
   bottom: '1.2em',
   zIndex: 10,
   transform: 'translateY(-50%)',
@@ -145,6 +145,8 @@ const Icon = styled(FontAwesome, {
   ':hover': {
     cursor: 'pointer',
   },
+  width: '10%',
+  alignSelf: 'end'
 });
 class Challenge extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -291,7 +293,7 @@ class Challenge extends React.Component<Props, State> {
     const content = gradeView ? renderGradeView() : renderDefaultView();
     return (
       <>
-        <ScrollArea theme={theme} horizontalScroll={gradeView ? false : null} innerStyle={gradeView ? { maxWidth: '100%', position: 'relative' } : undefined} style={{ flex: '0 0 auto', maxWidth: '100%' }}>
+        <ScrollArea theme={theme} horizontalScroll={gradeView ? false : null} verticalScroll={true}innerStyle={gradeView ? { maxWidth: '100%', position: 'relative' } : undefined} style={{ flex: '0 0 auto', maxWidth: '100%', height:'100%' }}>
           <Container theme={theme} style={style} className={className}>
             {latestChallenge.successGoals && latestChallenge.successGoals.length > 0 && (
               content

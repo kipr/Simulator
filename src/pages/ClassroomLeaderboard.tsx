@@ -285,7 +285,7 @@ const SeparatorCell = styled('td', (props: ThemeProps) => ({
 const Table = styled('table', () => ({
   width: '100%',
   borderCollapse: 'collapse',
-  minHeight: '15em'
+ // minHeight: '15em'
 }));
 
 const TeacherLeaderboardTable = styled(Table, {
@@ -294,7 +294,7 @@ const TeacherLeaderboardTable = styled(Table, {
   tableLayout: 'auto',
   height: '100%',
   overflow: 'visible',
-  minHeight: '15em'
+ // minHeight: '15em'
 });
 
 const TableHeader = styled('th', (props: ThemeProps & { $challengeColumn?: boolean }) => ({
@@ -580,18 +580,11 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       </LeaderboardTable>
     );
 
-    if (isTeacherView) {
-
-      return (
-        <StyledScrollArea theme={theme} horizontalScroll={true} style={{ minHeight: '15em' }}>
-          {tableContent}
-        </StyledScrollArea>
-
-      );
-    }
-
     return (
-      <StyledScrollArea theme={theme} horizontalScroll={true} style={{ minHeight: '15em' }}>
+      <StyledScrollArea theme={theme} horizontalScroll={true} innerStyle={{
+        width: 'max-content',
+        minWidth: '100%',
+      }}style={{ minHeight: '15em' }}>
         {tableContent}
       </StyledScrollArea>
     );
