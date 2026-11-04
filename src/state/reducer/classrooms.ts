@@ -514,37 +514,57 @@ export async function addStudentToClassroomAsyncRaw(
     ...Async.latestValue(foundClassroom).studentIds,
     [normalized]: studentEntry
   };
+  const previousStudentCount = Object.keys(Async.latestValue(foundClassroom).studentIds || {}).length;
 
-  await db.set(
-    { collection: 'classrooms', id: docId },
-    { studentIds: updatedStudentIds },
-    true
-  );
-
-  const updatedClassroom = {
-    ...Async.latestValue(foundClassroom),
-    studentIds: updatedStudentIds
-  };
-
-  const updatedValue = {
-    ...Async.latestValue(foundClassroom),
-    docId: docId || Async.latestValue(foundClassroom).docId,
-    studentIds: updatedStudentIds,
-  };
-  const asyncClassroom: AsyncClassroom = {
-    type: Async.Type.Loaded,
-    value: updatedValue,
-  };
-
-  if (docId) {
-    store.dispatch(
-      ClassroomsAction.setClassrooms({
-        classrooms: { [docId]: asyncClassroom },
-      })
+  try {
+    const response = await db.set(
+      { collection: 'classrooms', id: docId },
+      { studentIds: updatedStudentIds },
+      true
     );
-  }
 
-  return asyncClassroom;
+
+    const updatedClassroom = {
+      ...Async.latestValue(foundClassroom),
+      studentIds: updatedStudentIds
+    };
+
+    const updatedValue = {
+      ...Async.latestValue(foundClassroom),
+      docId: docId || Async.latestValue(foundClassroom).docId,
+      studentIds: updatedStudentIds,
+    };
+    const asyncClassroom: AsyncClassroom = {
+      type: Async.Type.Loaded,
+      value: updatedValue,
+    };
+
+    if (docId) {
+      store.dispatch(
+        ClassroomsAction.setClassrooms({
+          classrooms: { [docId]: asyncClassroom },
+        })
+      );
+    }
+
+    // if successfully added student to classroom, check assignments and add student to any assignments that are assigned to all students
+    if (asyncClassroom.value.studentIds && Object.keys(asyncClassroom.value.studentIds).length > previousStudentCount) {
+      const assignments = await getAssignments(docId);
+      for (const [assignmentKey, assignment] of Object.entries(assignments || {})) {
+        const assignmentStudentCount = assignment?.assignedTo ? Object.keys(assignment.assignedTo).length : 0;
+        if (assignmentStudentCount === previousStudentCount) {
+          // Add the new student to the assignment
+          const assignedTo = { ...assignment.assignedTo, [normalized]: studentEntry };
+          await setAssignment(asyncClassroom.value, assignment, assignedTo);
+        }
+
+      }
+
+    }
+    return asyncClassroom;
+  } catch (error) {
+    console.error('Error adding student to classroom:', error);
+  }
 }
 
 // Add student to classroom in database and update store (action)
@@ -1034,7 +1054,22 @@ const convertClassroomTopics = (classroom: Classroom): string[] => {
     console.error('Error converting classroom topics:', error);
   }
 };
+export const repollClassroomAssignmentTopics = async (classroom: Classroom) => {
 
+  try {
+    const retrievedAssignments = await getAssignments(classroom.docId);
+    const newTopics: string[] = [];
+    for (const assignment of Object.values(retrievedAssignments)) {
+      if (assignment && assignment.topic && !newTopics.includes(assignment.topic)) {
+        newTopics.push(assignment.topic);
+      }
+    }
+    classroom.topics = newTopics;
+    await updateClassroom(classroom.classroomId, classroom);
+  } catch (error) {
+    console.error('Error repolling classroom assignment topics:', error);
+  }
+};
 
 export const convertClassroomAssignmentsToNewFormat = async (
   classroom: Classroom
@@ -1301,7 +1336,23 @@ export const testMigration = async () => {
   }
 
 };
+export const totalClassroomCopyOld = async () => {
+  try {
+    const value = await db.get<Classroom>(Selector.classroom(''));
+    const uuid = crypto.randomUUID();
+    const shortenedId = uuid.replace(/-/g, '').slice(-7);
 
+    const loadedClassroom = Object.values(value) as Classroom;
+    const l = loadedClassroom[0] as Classroom;
+
+
+    await db.set(Selector.classroom(shortenedId), l);
+
+  } catch (error) {
+    console.error('Error copying old classroom:', error);
+  }
+
+};
 export const totalClassroomCopy = async () => {
   try {
     const value = await db.get<Classroom>(Selector.classroom(''));
@@ -1317,11 +1368,11 @@ export const totalClassroomCopy = async () => {
     const testClassroom: Classroom = {
 
       classroomId: `${l.classroomId}-test`,
-      code: l.code,
+      code: '0209',
       type: 'classroom',
       studentIds: l.studentIds,
       classroomAssignments: l.classroomAssignments,
-      topics: l.topics ? l.topics : [],
+      topics: l.topics ? l.topics : undefined,
       challengePointsOverrides: l.challengePointsOverrides,
       docId: shortenedId,
       teacherDisplayName: 'Test Migration',
@@ -1331,8 +1382,9 @@ export const totalClassroomCopy = async () => {
     await db.set(Selector.classroom(shortenedId), testClassroom);
 
 
-    const assignemntsValue = await db.get<Record<string, ClassroomAssignment>>(Selector.classroom('/assignments'));
-    const assignments = Object.values(assignemntsValue) ;
+    const assignemntsValue = await db.get<Record<string, ClassroomAssignment>>
+    (Selector.classroom('1502e38/assignments'));
+    const assignments = Object.values(assignemntsValue);
 
     for (const assignment of assignments) {
       const newAssignment: ClassroomAssignment = {
