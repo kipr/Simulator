@@ -513,7 +513,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
           codeValue &&
           want &&
           codeValue.localeCompare(want, undefined, { sensitivity: 'base' }) ===
-            0
+          0
         ) {
           return res.status(200).json({ id: doc.id, ...classroom });
         }
@@ -771,8 +771,9 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const { uid } = req.user;
       const { id } = req.params;
-      await colPath(uid).doc(id)
-        .delete();
+      const docRef = colPath(uid).doc(id);
+      await admin.firestore().recursiveDelete(docRef);
+
       return res.sendStatus(204);
     } catch (err) {
       console.error('DELETE /classrooms error:', err);
