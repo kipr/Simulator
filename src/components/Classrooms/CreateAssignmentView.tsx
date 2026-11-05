@@ -32,7 +32,7 @@ import Challenge, { AsyncChallenge } from '../../state/State/Challenge';
 
 export interface CreateAssignmentViewPublicProps extends ThemeProps, StyleProps {
   onClose: () => void;
-  onAssignComplete?: (students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>, assignment: ClassroomAssignment) => void;
+  onAssignComplete?: (assignment: ClassroomAssignment) => void;
 
   onEditComplete?: (students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>, assignment: ClassroomAssignment) => void;
   classroom: AsyncClassroom;
@@ -264,10 +264,8 @@ const CreateAssignmentView = ({
         .concat({
           text: LocalizedString.lookup(tr('Create Subject'), locale),
           data: 'Create Subject'
-        }, {
-          text: LocalizedString.lookup(tr('No Subject'), locale),
-          data: 'No Subject'
-        })
+        }
+        )
       : [
         {
           text: LocalizedString.lookup(tr('No Subject'), locale),
@@ -290,7 +288,7 @@ const CreateAssignmentView = ({
 
   function handleAssign(info: ClassroomAssignment, studentsOverride?: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) {
     const students = studentsOverride ?? selectedStudents;
-    onAssignComplete?.(students, info);
+    onAssignComplete?.(info);
     onCreateAssignment(loadedClassroom, info, students);
     onClose();
   }

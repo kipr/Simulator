@@ -16,7 +16,7 @@ import { AsyncClassroom, Classroom, ClassroomAssignment } from '../state/State/C
 import { CreateClassroomDialog } from '../components/Dialog/CreateClassroomDialog';
 import Dict from '../util/objectOps/Dict';
 import { nativeScrollbarChrome } from '../util/nativeScrollbarChrome';
-import { ClassroomsAction, listChallengesByStudentId, deleteClassroom, convertClassroomAssignmentsToNewFormat, listOwned, load, convertStudentIdsToNewFormat, testMigration, loadClassroom, totalClassroomCopy } from 'state/reducer/classrooms';
+import { ClassroomsAction, listChallengesByStudentId, deleteClassroom, convertClassroomAssignmentsToNewFormat, listOwned, load, convertStudentIdsToNewFormat, testMigration, loadClassroom, totalClassroomCopy, totalClassroomCopyOld, repollClassroomAssignmentTopics } from 'state/reducer/classrooms';
 import { auth } from '../firebase/firebase';
 import { User } from 'ivygate/dist/src/types/user';
 import Async from 'state/State/Async';
@@ -115,6 +115,9 @@ interface ClassroomTeacherViewPrivateProps {
   onConvertStudentIdsToNewFormat?: (classroom: Classroom) => void;
   onTestMigration(): Promise<void>;
   onTotalCopy(): Promise<void>;
+  onTotalCopyOld(): Promise<void>;
+  onRepollClassroomAssignments?: (classroom: Classroom) => Promise<void>;
+
 }
 
 interface ClassroomTeacherViewState {
@@ -350,13 +353,15 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       const { currentSelectedClassroom } = this.state;
       const { onConvertClassroomAssignmentsToNewFormat } = this.props;
       const loadedClassroom = currentSelectedClassroom ? Async.latestValue(currentSelectedClassroom) : null;
-
       if (loadedClassroom?.classroomAssignments && Object.keys(loadedClassroom.classroomAssignments).length > 0) {
         onConvertClassroomAssignmentsToNewFormat?.(loadedClassroom);
 
       }
+      // If topics isn't loaded, reload assignments to get topics
+      if (loadedClassroom?.topics === undefined && this.state.currentSelectedClassroom) {
+        this.props.onRepollClassroomAssignments?.(loadedClassroom);
 
-
+      }
 
     }
 
@@ -821,8 +826,9 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     return Object.entries(classroomList ?? {}).map(([id, asyncClassroom]) => {
       if (asyncClassroom.type === Async.Type.Loaded) {
         const classroom = asyncClassroom.value;
+
         const cardBody = (
-          <CardWrapper theme={theme} selected={Async.latestValue(this.state.currentSelectedClassroom)?.classroomId === classroom.classroomId} onClick={() => this.setState({ currentSelectedClassroom: asyncClassroom })}>
+          <CardWrapper theme={theme} selected={Async.latestValue(this.state.currentSelectedClassroom)?.classroomId === classroom.classroomId} onClick={() => { this.setState({ currentSelectedClassroom: asyncClassroom }); }}>
             <Card
               onClick={() => this.setState({ currentSelectedClassroom: asyncClassroom })}
               title={classroom.classroomId}
@@ -900,41 +906,45 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     }
   };
 
-  private onAssignComplete_ = (students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>, assignment: ClassroomAssignment) => {
+  private onAssignComplete_ = (assignment: ClassroomAssignment) => {
     const stepId = this.state.teacherTourSteps[this.state.currentTourStepIndex ?? 0]?.id;
     const currClass = Async.latestValue(this.state.currentSelectedClassroom);
     const topicsIsArray = Array.isArray(currClass?.topics);
     let updatedClassroom: AsyncClassroom;
-    if (topicsIsArray) {
-      if (!currClass.topics?.includes(assignment.topic)) {
+    if (currClass?.topics) {
+      if (topicsIsArray) {
+        if (!currClass.topics?.includes(assignment.topic)) {
 
-        if (currClass.topics) {
-          updatedClassroom = AsyncClassroom.loaded({
-            ...currClass,
-            topics: [...currClass?.topics, assignment.topic]
-          });
-        } else {
-          updatedClassroom = AsyncClassroom.loaded({
-            ...currClass,
-            topics: [assignment.topic]
-          });
+          if (currClass.topics) {
+            updatedClassroom = AsyncClassroom.loaded({
+              ...currClass,
+              topics: [...currClass?.topics, assignment.topic]
+            });
+          } else {
+            updatedClassroom = AsyncClassroom.loaded({
+              ...currClass,
+              topics: [assignment.topic]
+            });
+          }
+          this.props.onUpdateClassroom(currClass.docId, updatedClassroom);
         }
+      } else {
+
+        const newTopicsArray: string[] = [];
+        for (const topic of Object.keys(currClass?.topics)) {
+
+          newTopicsArray.push(topic);
+        }
+
+        updatedClassroom = AsyncClassroom.loaded({
+          ...currClass,
+          topics: [...newTopicsArray, assignment.topic]
+        });
         this.props.onUpdateClassroom(currClass.docId, updatedClassroom);
       }
-    } else {
 
-      const newTopicsArray: string[] = [];
-      for (const topic of Object.keys(currClass?.topics)) {
-
-        newTopicsArray.push(topic);
-      }
-
-      updatedClassroom = AsyncClassroom.loaded({
-        ...currClass,
-        topics: [...newTopicsArray, assignment.topic]
-      });
-      this.props.onUpdateClassroom(currClass.docId, updatedClassroom);
     }
+
     const advanceTeacherTourAfterPublish =
       this.props.tourLoaded &&
       !this.props.tour.completed &&
@@ -1007,7 +1017,6 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                                 custommargin='10px'
                               />
                             </TourTarget>
-
                             <TourTarget
                               registry={this.registry}
                               targetKey="teacher-classroom-cards-list"
@@ -1127,6 +1136,11 @@ export default connect(
     onTotalCopy: async () => {
       await totalClassroomCopy();
     },
+    onTotalCopyOld: async () => {
+      await totalClassroomCopyOld();
+    },
+    onRepollClassroomAssignments: async (classroom: Classroom) =>
+      await repollClassroomAssignmentTopics(classroom),
     onConvertClassroomAssignmentsToNewFormat: async (classroom: Classroom) =>
       await convertClassroomAssignmentsToNewFormat(classroom),
     onConvertStudentIdsToNewFormat: (classroom: Classroom) =>
