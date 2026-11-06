@@ -311,6 +311,14 @@ if (
               stderr,
             });
 
+            fs.unlink(`${path}`, (unlinkErr) => {
+              if (unlinkErr && unlinkErr.code !== 'ENOENT') {
+                return res.status(500).json({
+                  error: `Failed to delete temporary file: ${path}`,
+                });
+              }
+            });
+
             metrics.compilation.counter.inc({ status: 'error', language });
             metrics.compilation.duration.observe(
               { status: 'error', language },
