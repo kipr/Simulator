@@ -1181,7 +1181,18 @@ class SceneBinding {
     // Notice that we are passing mesh, not physicsMesh here
     this.addShapeOptions(mesh, objectNode, parameters);
     const options: PhysicShapeOptions = { type: PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], parameters };
+
+    // A collider from the model is one mesh shared by every object with that
+    // geometry, and Havok bakes in only the collider's own scale. Give it this
+    // object's scale while the shape is built.
+    const colliderScaling = physics_mesh && physics_mesh !== mesh ? physics_mesh.scaling.clone() : undefined;
+    if (colliderScaling) {
+      const s = mesh.absoluteScaling;
+      physics_mesh.scaling.multiplyInPlace(new Vector3(Math.abs(s.x), Math.abs(s.y), Math.abs(s.z)));
+    }
     const shape = new PhysicsShape(options, this.bScene);
+    if (colliderScaling) physics_mesh.scaling.copyFrom(colliderScaling);
+
     shape.material = {
       friction: objectNode.physics.friction ?? 5,
       restitution: objectNode.physics.restitution ?? 0.5,

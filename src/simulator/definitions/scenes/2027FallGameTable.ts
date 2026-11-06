@@ -106,7 +106,9 @@ const dynamic = (type: Node.Physics.Type, grams: number, friction: number, resti
 });
 
 // Masses are estimates.
-const POM_PHYSICS = dynamic('box', 10, 5);
+// Each pom_*.glb has a node named "collider", used as a convex hull. The
+// colliders are all the same shape, so any pom's will do.
+const POM_PHYSICS: Node.Physics = { ...dynamic('none', 10, 5), colliderId: 'collider' };
 const DUCK_PHYSICS = dynamic('box', 10, 1);
 const BIG_DUCK_PHYSICS = dynamic('box', 40, 1);
 const PICKLEBALL_PHYSICS = dynamic('sphere', 26, 1, 0.3);
@@ -350,34 +352,33 @@ export const FALL_27_TABLE_NODES: Dict<Node> = tableNodes;
 // pom_*.glb is 3 in across; the reference poms are 1.5 in.
 const POM_SCALE = RawVector3.create(0.5, 0.5, 0.5);
 
-// Each pyramid is three poms on the floor with one on top, centered on the tape
-// line. The reference packs them like spheres; these offsets keep the box
-// colliders from overlapping, so the pyramids start at rest.
-const PYRAMID_X = -53.59;
-const PYRAMID_OFFSETS: Vec3[] = [
-  [-1.7, 4.03, 1.42],
-  [2.13, 4.03, 0.84],
-  [-0.73, 4.03, -2.98],
-  [0, 7.84, -0.12],
-];
-const pyramid = (z: number): Vec3[] => PYRAMID_OFFSETS.map(([dx, y, dz]): Vec3 => [PYRAMID_X + dx, y, z + dz]);
+// [center, rotation]
+type Pose = [Vec3, RawQuaternion];
 
-// Poms under the cup at (-53.6, 0.15). Four box colliders don't fit inside the
-// cup as the reference's triangle plus one, so they sit two side by side, then
-// one, then one.
-const CUP_STACK: Vec3[] = [
-  [-55.51, 4.03, 0.15],
-  [-51.69, 4.03, 0.15],
-  [-53.6, 7.85, 0.15],
-  [-53.6, 11.67, 0.15],
+// Each pyramid is three poms on the floor with one on top, packed like spheres
+// as in the reference: offsets from the top pom's center, and rotations. The
+// pom colliders fit inside the poms, so touching poms start without overlapping.
+const PYRAMID: Pose[] = [
+  [[-1.69, -3.11, 1.42], q(0, -0.6457, 0, 0.7636)],
+  [[2.06, -3.11, 0.76], ID],
+  [[-0.38, -3.11, -2.16], q(-0.015, -0.0842, -0.2208, 0.9716)],
+  [[0, 0, 0], ID],
 ];
+const pyramid = ([x, y, z]: Vec3): Pose[] => PYRAMID.map(
+  ([[dx, dy, dz], rotation]): Pose => [[x + dx, y + dy, z + dz], rotation],
+);
 
-const POMS: Record<PomColor, Vec3[]> = {
-  gold: [...pyramid(-97.89), CUP_STACK[0]],
-  green: [...pyramid(-36.93), CUP_STACK[1]],
-  lavender: [...pyramid(-57.25), CUP_STACK[2]],
-  red: [...pyramid(-16.61), [-87.98, 4.03, -0.45]], // under the other cup
-  turquoise: [...pyramid(-77.57), CUP_STACK[3]],
+// Single-color pyramids on the tape line, by top pom.
+const linePyramid = (z: number) => pyramid([-53.59, 7.14, z]);
+// The pyramid under the cup at (-53.6, 0.15) mixes colors.
+const CUP_PYRAMID = pyramid([-53.49, 7.14, 0.23]);
+
+const POMS: Record<PomColor, Pose[]> = {
+  gold: [...linePyramid(-97.89), CUP_PYRAMID[1]],
+  green: [...linePyramid(-36.93), CUP_PYRAMID[0]],
+  lavender: [...linePyramid(-57.25), CUP_PYRAMID[2]],
+  red: [...linePyramid(-16.61), [[-87.98, 4.03, -0.45], ID]], // under the other cup
+  turquoise: [...linePyramid(-77.57), CUP_PYRAMID[3]],
 };
 
 const DUCKS: Record<DuckColor, Vec3> = {
@@ -440,12 +441,12 @@ const gamePieces: Dict<Node> = {
 };
 
 POM_COLORS.forEach(color => {
-  POMS[color].forEach((position, i) => {
+  POMS[color].forEach(([position, orientation], i) => {
     gamePieces[`fall27_pom_${color}_${i}`] = object(
       `${capitalize(color)} Pom #${i + 1}`,
       pomGeometryId(color),
       POM_PHYSICS,
-      fall27TableOrigin(position, ID, POM_SCALE),
+      fall27TableOrigin(position, orientation, POM_SCALE),
       true,
     );
   });
