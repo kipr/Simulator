@@ -306,6 +306,7 @@ const DEFAULT_SCENES: Scenes = {
   spring26TableSandbox: Async.loaded({ value: JBC_SCENES.SPRING_26_SANDBOX }),
   botballExplorer26Sandbox: Async.loaded({ value: JBC_SCENES.BOTBALL_EXPLORER_26_SANDBOX }),
   fall26TableSandbox: Async.loaded({ value: JBC_SCENES.FALL_26_SANDBOX }),
+  fall27TableSandbox: Async.loaded({ value: JBC_SCENES.FALL_27_SANDBOX }),
 
 
   jbc0: Async.loaded({ value: JBC_SCENES.JBC_0 }),
