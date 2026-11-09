@@ -26,7 +26,11 @@ namespace Node {
 
     /**
      * What shape will simulate the physics for the object:
-     * box, sphere, cylinder, mesh, or none.
+     * box, sphere, cylinder, mesh, torus, or none.
+     *
+     * `torus` is for rings: it builds a closed loop of capsules sized from the
+     * mesh's bounding box, so the ring stays hollow but collides like a convex
+     * shape. The ring must lie flat with its axis along local y.
      */
     type: Physics.Type;
 
@@ -63,10 +67,21 @@ namespace Node {
      */
     inertia?: number[];
 
+    /**
+     * Start the body asleep when the scene loads or resets, so the physics
+     * engine skips it until something touches it. A sleeping body doesn't
+     * fall, so only use this for objects that start at rest. Bodies placed
+     * by an edit (gizmo, position fields, visibility) always start awake.
+     *
+     * Static bodies need it too: adding an awake static body wakes the
+     * sleeping bodies that touch it.
+     */
+    startAsleep?: boolean;
+
   }
 
   export namespace Physics {
-    export type Type = 'box' | 'sphere' | 'cylinder' | 'mesh' | 'none';
+    export type Type = 'box' | 'sphere' | 'cylinder' | 'mesh' | 'torus' | 'none';
 
     export const diff = (prev: Physics, next: Physics): Patch<Physics> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
@@ -78,7 +93,8 @@ namespace Node {
         mass: Patch.diff(prev.mass, next.mass),
         friction: Patch.diff(prev.friction, next.friction),
         restitution: Patch.diff(prev.restitution, next.restitution),
-        inertia: Patch.diff(prev.inertia, next.inertia)
+        inertia: Patch.diff(prev.inertia, next.inertia),
+        startAsleep: Patch.diff(prev.startAsleep, next.startAsleep),
       });
     };
   }
@@ -129,6 +145,18 @@ namespace Node {
       editable: t.editable,
       visible: t.visible
     });
+
+    /**
+     * Whether the node sits at its starting pose, as it does when the scene
+     * loads or resets. A missing scale counts as no scaling.
+     */
+    export const isAtStartingOrigin = (node: Base): boolean => {
+      const { origin, startingOrigin } = node;
+      if (!origin || !startingOrigin) return false;
+      return !deepNeq(origin.position, startingOrigin.position) &&
+        !deepNeq(origin.orientation, startingOrigin.orientation) &&
+        !deepNeq(origin.scale ?? RawVector3.ONE, startingOrigin.scale ?? RawVector3.ONE);
+    };
 
     export const partialDiff = (prev: Base, next: Base): Patch.InnerPatch<Base> => ({
       name: Patch.diff(prev.name, next.name),

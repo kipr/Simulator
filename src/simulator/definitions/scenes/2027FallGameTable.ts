@@ -88,11 +88,15 @@ export const fall27TableOrigin = (
   };
 };
 
+// Everything starts asleep, so Havok skips the game pieces until the robot or
+// another moving piece touches them. Static parts need it too: an awake static
+// body wakes the sleeping pieces resting on it.
 const STATIC_MESH: Node.Physics = {
   type: 'mesh',
   motionType: PhysicsMotionType.STATIC,
   restitution: 0.2,
   friction: 1,
+  startAsleep: true,
 };
 
 const STATIC_BOX: Node.Physics = { ...STATIC_MESH, type: 'box' };
@@ -103,6 +107,7 @@ const dynamic = (type: Node.Physics.Type, grams: number, friction: number, resti
   mass: Mass.grams(grams),
   friction,
   restitution,
+  startAsleep: true,
 });
 
 // Masses are estimates.
@@ -112,9 +117,12 @@ const POM_PHYSICS: Node.Physics = { ...dynamic('none', 10, 5), colliderId: 'coll
 const DUCK_PHYSICS = dynamic('box', 10, 1);
 const BIG_DUCK_PHYSICS = dynamic('box', 40, 1);
 const PICKLEBALL_PHYSICS = dynamic('sphere', 26, 1, 0.3);
-// Rings sit around PVC posts and cups cover poms, so both need their real (hollow) shape.
-// Havok does not collide two dynamic mesh bodies, so stacked rings sink into each other.
-const RING_PHYSICS = dynamic('mesh', 5, 1);
+// Rings sit around PVC posts, so they need a hollow shape. A loop of capsules
+// keeps the hole and, unlike a mesh collider, is cheap and collides with other
+// rings.
+const RING_PHYSICS = dynamic('torus', 5, 1);
+// Cups cover poms, so they also need their real (hollow) shape. Havok does not
+// collide two dynamic mesh bodies, so cups pass through each other.
 const CUP_PHYSICS = dynamic('mesh', 10, 1);
 const BOTTLE_PHYSICS = dynamic('cylinder', 20, 1);
 
@@ -355,13 +363,15 @@ const POM_SCALE = RawVector3.create(0.5, 0.5, 0.5);
 // [center, rotation]
 type Pose = [Vec3, RawQuaternion];
 
-// Each pyramid is three poms on the floor with one on top, packed like spheres
-// as in the reference: offsets from the top pom's center, and rotations. The
-// pom colliders fit inside the poms, so touching poms start without overlapping.
+// Each pyramid is three poms on the floor with one on top, laid out as in the
+// reference: offsets from the top pom's center, and rotations. The pom
+// colliders fit inside the poms, so each pom is lowered onto its collider's
+// support (the tilted one sits lower). A pyramid of round colliders slumps
+// once woken, but it starts asleep and holds its shape until touched.
 const PYRAMID: Pose[] = [
-  [[-1.69, -3.11, 1.42], q(0, -0.6457, 0, 0.7636)],
-  [[2.06, -3.11, 0.76], ID],
-  [[-0.38, -3.11, -2.16], q(-0.015, -0.0842, -0.2208, 0.9716)],
+  [[-1.69, -2.26, 1.42], q(0, -0.6457, 0, 0.7636)],
+  [[2.06, -2.26, 0.76], ID],
+  [[-0.38, -2.51, -2.16], q(-0.015, -0.0842, -0.2208, 0.9716)],
   [[0, 0, 0], ID],
 ];
 const pyramid = ([x, y, z]: Vec3): Pose[] => PYRAMID.map(
@@ -369,9 +379,9 @@ const pyramid = ([x, y, z]: Vec3): Pose[] => PYRAMID.map(
 );
 
 // Single-color pyramids on the tape line, by top pom.
-const linePyramid = (z: number) => pyramid([-53.59, 7.14, z]);
+const linePyramid = (z: number) => pyramid([-53.59, 6.29, z]);
 // The pyramid under the cup at (-53.6, 0.15) mixes colors.
-const CUP_PYRAMID = pyramid([-53.49, 7.14, 0.23]);
+const CUP_PYRAMID = pyramid([-53.49, 6.29, 0.23]);
 
 const POMS: Record<PomColor, Pose[]> = {
   gold: [...linePyramid(-97.89), CUP_PYRAMID[1]],
@@ -389,26 +399,35 @@ const DUCKS: Record<DuckColor, Vec3> = {
   yellow: [-53.6, 3.98, 99.21],
 };
 
+// Pieces start asleep and don't fall until something touches them, so these
+// are poses where they already rest: heights are where they settle in the
+// simulator, which can differ from the reference model.
+
+// Stacked on the fitting at the foot of each post.
 const RINGS: Vec3[] = [
-  [-53.5, 8.84, -119.86],
-  [-53.5, 9.76, -119.86],
-  [-53.5, 10.67, -119.86],
-  [-119.86, 8.84, -62.71],
-  [-119.86, 9.76, -62.71],
-  [-119.86, 10.67, -62.71],
+  [-53.5, 6.71, -119.86],
+  [-53.5, 7.61, -119.86],
+  [-53.5, 8.52, -119.86],
+  [-119.86, 6.71, -62.71],
+  [-119.86, 7.61, -62.71],
+  [-119.86, 8.52, -62.71],
 ];
 
+// Balanced on top of PVC. Once woken, they roll off.
 const PICKLEBALLS: Vec3[] = [
-  [-14.45, 11.65, 23.02],
-  [-14.45, 11.65, 50.64],
-  [-53.5, 11.73, 119.86],
-  [-119.86, 11.65, 0.16],
+  [-14.45, 9.95, 23.02],
+  [-14.45, 9.95, 50.64],
+  [-53.5, 9.95, 119.86],
+  [-119.86, 9.95, 0.16],
 ];
 
+// Centered between the two PVC rails. The outer two still overlap the elbow
+// sockets by about 3 mm (the gap there is 6.0 cm, the bottles 6.4 cm), so they
+// pop out once woken.
 const BOTTLES: Vec3[] = [
-  [-92.4, 7.53, -114.53],
-  [-99.38, 7.53, -114.53],
-  [-106.37, 7.53, -114.53],
+  [-92.4, 7.53, -114.94],
+  [-99.38, 7.53, -114.94],
+  [-106.37, 7.53, -114.94],
 ];
 
 // Upside down (baked into cup_black.glb), each covering poms.
@@ -426,7 +445,7 @@ const gamePieces: Dict<Node> = {
     'Big Duck',
     'fall27_duckBig',
     BIG_DUCK_PHYSICS,
-    fall27TableOrigin([-107.28, 21.6, 67.37]),
+    fall27TableOrigin([-107.28, 21.74, 67.37]),
     true,
   ),
   fall27_botguy: {
