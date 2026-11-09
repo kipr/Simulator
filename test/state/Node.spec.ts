@@ -54,3 +54,41 @@ describe('Node.Physics.diff', () => {
     expect(patch.type).toBe(Patch.Type.InnerChange);
   });
 });
+
+describe('Node.clearStartAsleepIfStartMoved', () => {
+  const pom = (startX: number, startAsleep = true): Node.Obj => ({
+    type: 'object',
+    name: NAME,
+    geometryId: 'pom',
+    origin: frame(startX),
+    startingOrigin: frame(startX),
+    physics: { type: 'sphere', startAsleep },
+  });
+
+  it('clears startAsleep when the starting pose moves', () => {
+    const next = Node.clearStartAsleepIfStartMoved(pom(1), pom(2)) as Node.Obj;
+    expect(next.physics.startAsleep).toBe(false);
+  });
+
+  it('keeps startAsleep when only the current pose moves', () => {
+    // The robot pushing a piece changes its origin, not its starting pose.
+    const prev = pom(1);
+    const next = { ...prev, origin: frame(5) };
+    expect(Node.clearStartAsleepIfStartMoved(prev, next)).toBe(next);
+  });
+
+  it('compares starting poses by value', () => {
+    const next = pom(1);
+    expect(Node.clearStartAsleepIfStartMoved(pom(1), next)).toBe(next);
+  });
+
+  it('keeps startAsleep on a node being added', () => {
+    const next = pom(1);
+    expect(Node.clearStartAsleepIfStartMoved(undefined, next)).toBe(next);
+  });
+
+  it('leaves objects without startAsleep unchanged', () => {
+    const next = pom(2, false);
+    expect(Node.clearStartAsleepIfStartMoved(pom(1, false), next)).toBe(next);
+  });
+});

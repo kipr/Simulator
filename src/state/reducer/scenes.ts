@@ -678,10 +678,12 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
       }),
     };
     case 'scenes/set-node': return mutate(state, action.sceneId, scene => {
-      scene.nodes[action.nodeId] = action.node;
+      scene.nodes[action.nodeId] = Node.clearStartAsleepIfStartMoved(scene.nodes[action.nodeId], action.node);
     });
     case 'scenes/set-node-batch': return mutate(state, action.sceneId, scene => {
-      for (const { id, node } of action.nodeIds) scene.nodes[id] = node;
+      for (const { id, node } of action.nodeIds) {
+        scene.nodes[id] = Node.clearStartAsleepIfStartMoved(scene.nodes[id], node);
+      }
     });
     case 'scenes/add-geometry': return mutate(state, action.sceneId, scene => {
       scene.geometry[action.geometryId] = action.geometry;
@@ -709,10 +711,13 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
       scene.gravity = action.gravity;
     });
     case 'scenes/set-node-origin': return mutate(state, action.sceneId, scene => {
-      scene.nodes[action.nodeId].origin = action.origin;
-      if (action.updateStarting) {
-        scene.nodes[action.nodeId].startingOrigin = action.origin;
-      }
+      const prev = scene.nodes[action.nodeId];
+      const next = {
+        ...prev,
+        origin: action.origin,
+        ...(action.updateStarting ? { startingOrigin: action.origin } : {}),
+      };
+      scene.nodes[action.nodeId] = Node.clearStartAsleepIfStartMoved(prev, next);
     });
     case 'scenes/list-user-scenes': {
       void listUserScenes();

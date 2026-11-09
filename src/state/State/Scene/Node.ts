@@ -72,6 +72,9 @@ namespace Node {
      * engine skips it until something touches it. A sleeping body doesn't
      * fall, so only use this for objects that start at rest. Bodies placed
      * by an edit (gizmo, position fields, visibility) always start awake.
+     * Editing an object's starting pose clears this flag (see
+     * `Node.clearStartAsleepIfStartMoved`), since the new pose may not be at
+     * rest.
      *
      * Static bodies need it too: adding an awake static body wakes the
      * sleeping bodies that touch it.
@@ -153,9 +156,23 @@ namespace Node {
     export const isAtStartingOrigin = (node: Base): boolean => {
       const { origin, startingOrigin } = node;
       if (!origin || !startingOrigin) return false;
-      return !deepNeq(origin.position, startingOrigin.position) &&
-        !deepNeq(origin.orientation, startingOrigin.orientation) &&
-        !deepNeq(origin.scale ?? RawVector3.ONE, startingOrigin.scale ?? RawVector3.ONE);
+      return framesEqual(origin, startingOrigin);
+    };
+
+    /** Compares poses by value. A missing scale counts as no scaling. */
+    const framesEqual = (a: ReferenceFramewUnits, b: ReferenceFramewUnits): boolean =>
+      !deepNeq(a.position, b.position) &&
+      !deepNeq(a.orientation, b.orientation) &&
+      !deepNeq(a.scale ?? RawVector3.ONE, b.scale ?? RawVector3.ONE);
+
+    /**
+     * Whether `next` has a different starting pose than `prev`. A node with
+     * no starting pose before counts as unchanged, since it is being added.
+     */
+    export const startingOriginChanged = (prev: Base | undefined, next: Base): boolean => {
+      if (!prev?.startingOrigin) return false;
+      if (!next.startingOrigin) return true;
+      return !framesEqual(prev.startingOrigin, next.startingOrigin);
     };
 
     export const partialDiff = (prev: Base, next: Base): Patch.InnerPatch<Base> => ({
@@ -671,6 +688,18 @@ namespace Node {
       case 'robot': return Robot.from(node);
       case 'all': return All.from(node);
     }
+  };
+
+  /**
+   * Clear `physics.startAsleep` on an object whose starting pose `next`
+   * changes from `prev`. A user-placed pose may be in the air, and a body
+   * that starts asleep there would hang after every reset instead of falling.
+   * Template nodes keep their physics in the template, so they are unchanged.
+   */
+  export const clearStartAsleepIfStartMoved = (prev: Node | undefined, next: Node): Node => {
+    if (next.type !== 'object' || !next.physics?.startAsleep) return next;
+    if (!Base.startingOriginChanged(prev, next)) return next;
+    return { ...next, physics: { ...next.physics, startAsleep: false } };
   };
 
   /**
