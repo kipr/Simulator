@@ -23,8 +23,8 @@ const LIGHT_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(FALL_27_TABLE_CENTER.x, FALL_27_TABLE_CENTER.y + 120, FALL_27_TABLE_CENTER.z),
 };
 
-// Looking across the table from its x = 0 edge (table coordinates).
-const CAMERA_POSITION = fall27TablePoint([110, 152, 0]);
+// Looking across the table from its x = -121.92 edge (table coordinates).
+const CAMERA_POSITION = fall27TablePoint([-231.92, 152, 0]);
 
 const ROBOT: Node.Robot = {
   type: 'robot',
