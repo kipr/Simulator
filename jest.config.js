@@ -14,6 +14,6 @@ module.exports = {
   // But since babylonjs is published as modules, we need to tell jest to transform it (along with transforming our own code).
   // The pattern below will continue ignoring all other node_modules EXCEPT for babylonjs.
   transformIgnorePatterns: [
-    "/node_modules/(?!(@babylonjs/core)/)"
+    "/node_modules/(?!(@babylonjs/(core|loaders))/)"
   ]
 };
