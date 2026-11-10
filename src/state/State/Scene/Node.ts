@@ -121,6 +121,8 @@ namespace Node {
      * Can the user edit the object?
      */
     editable?: boolean;
+    /** Omit this node from the World list only; rendering and physics are unaffected. */
+    hiddenInWorldList?: boolean;
     /**
      * Is the object visible to the user?
      * NOTE: If an object is not visible, it cannot have physics enabled.
@@ -135,6 +137,7 @@ namespace Node {
       scriptIds: undefined,
       documentIds: undefined,
       editable: undefined,
+      hiddenInWorldList: undefined,
       visible: true
     };
 
@@ -146,6 +149,7 @@ namespace Node {
       scriptIds: t.scriptIds,
       documentIds: t.documentIds,
       editable: t.editable,
+      hiddenInWorldList: t.hiddenInWorldList,
       visible: t.visible
     });
 
@@ -181,6 +185,7 @@ namespace Node {
       scriptIds: Patch.diff(prev.scriptIds, next.scriptIds),
       documentIds: Patch.diff(prev.documentIds, next.documentIds),
       editable: Patch.diff(prev.editable, next.editable),
+      hiddenInWorldList: Patch.diff(prev.hiddenInWorldList, next.hiddenInWorldList),
       visible: Patch.diff(prev.visible, next.visible)
     });
   }

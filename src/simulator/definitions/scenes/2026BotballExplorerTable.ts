@@ -73,6 +73,7 @@ const component = (
   geometryId,
   physics,
   visible: true,
+  hiddenInWorldList: true,
   startingOrigin: tableOrigin(position, orientation, scale),
   origin: tableOrigin(position, orientation, scale),
 });

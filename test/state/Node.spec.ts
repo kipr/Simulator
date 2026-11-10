@@ -92,3 +92,23 @@ describe('Node.clearStartAsleepIfStartMoved', () => {
     expect(Node.clearStartAsleepIfStartMoved(pom(1, false), next)).toBe(next);
   });
 });
+
+
+describe('Node hiddenInWorldList metadata', () => {
+  it.each([undefined, false, true])('preserves %s through base conversions', hiddenInWorldList => {
+    const node: Node.Obj = { type: 'object', name: NAME, geometryId: 'pom', hiddenInWorldList };
+    expect(Node.Base.upcast(node).hiddenInWorldList).toBe(hiddenInWorldList);
+    expect(Node.Empty.from(node).hiddenInWorldList).toBe(hiddenInWorldList);
+  });
+
+  it.each([
+    [undefined, true], [false, true], [true, false], [true, undefined],
+  ])('patches %s to %s without changing simulation properties', (before, after) => {
+    const prev: Node.Obj = {
+      type: 'object', name: NAME, geometryId: 'pom', visible: true,
+      physics: { type: 'sphere' }, hiddenInWorldList: before,
+    };
+    const next = { ...prev, hiddenInWorldList: after };
+    expect(Patch.apply(Node.diff(prev, next), prev)).toEqual(next);
+  });
+});

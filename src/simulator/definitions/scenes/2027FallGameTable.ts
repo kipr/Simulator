@@ -351,7 +351,11 @@ TAPE.forEach(([inches, center, rotation], i) => {
   );
 });
 
-export const FALL_27_TABLE_NODES: Dict<Node> = tableNodes;
+// Keep fixed structure out of the World list while retaining the full simulation.
+export const FALL_27_TABLE_NODES: Dict<Node> = Dict.map(tableNodes, node => ({
+  ...node,
+  hiddenInWorldList: true,
+}));
 
 // ---------------------------------------------------------------------------
 // Game pieces
