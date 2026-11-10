@@ -10,6 +10,7 @@ import {
   Vector3wUnits,
 } from '../../../util/math/unitMath';
 import tr from '@i18n';
+import { MODELS } from '../models';
 
 const TABLE_POSITION = RawVector3.create(-105, 8, 74);
 const TABLE_ROTATION = RawQuaternion.create(0, Math.SQRT1_2, 0, Math.SQRT1_2);
@@ -100,37 +101,37 @@ const pipe = (
 export const BOTBALL_EXPLORER_TABLE_26_GEOMETRY: Dict<Geometry> = {
   botballExplorerTable26_2x4: {
     type: 'file',
-    uri: '/static/object_binaries/build_components/2x4.glb',
+    uri: MODELS.common.building.twoByFour,
     resetPosition: true,
   },
   botballExplorerTable26_loadingDock: {
     type: 'file',
-    uri: '/static/object_binaries/build_components/loading_dock.glb',
+    uri: MODELS.games[2026].loadingDock,
     resetPosition: true,
   },
   botballExplorerTable26_particleBoard: {
     type: 'file',
-    uri: '/static/object_binaries/build_components/particle_board.glb',
+    uri: MODELS.common.building.particleBoard,
     resetPosition: true,
   },
   botballExplorerTable26_mat: {
     type: 'file',
-    uri: '/static/object_binaries/build_components/mat.glb',
+    uri: MODELS.games[2026].explorerMat,
     resetPosition: true,
   },
   botballExplorerTable26_elbow: {
     type: 'file',
-    uri: '/static/object_binaries/build_components/elbow.glb',
+    uri: MODELS.common.building.pvcElbow,
     resetPosition: true,
   },
   botballExplorerTable26_tConnector: {
     type: 'file',
-    uri: '/static/object_binaries/build_components/t_connector.glb',
+    uri: MODELS.common.building.pvcTConnector,
     resetPosition: true,
   },
   botballExplorerTable26_pvc: {
     type: 'file',
-    uri: '/static/object_binaries/build_components/pipe.glb',
+    uri: MODELS.common.building.pvcPipe,
     resetPosition: true,
   },
 };
