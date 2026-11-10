@@ -228,8 +228,22 @@ if (
 
     const id = uuid.v4();
     const path = `/tmp/${id}.${ext}`;
+
+    // Delete the source file and compiler output. Errors are only logged,
+    // so cleanup never affects the response.
+    const cleanup = () =>
+      Promise.all(
+        [path, `${path}.js`].map((file) =>
+          fs.promises.rm(file, { force: true }).catch((e) => {
+            console.error(`Failed to delete temporary file ${file}:`, e);
+          }),
+        ),
+      );
+
     fs.writeFile(path, augmentedCode, (err) => {
       if (err) {
+        cleanup();
+
         const durationMs = Date.now() - startTime;
         const duration = durationMs / 1000;
 
@@ -311,6 +325,8 @@ if (
               stderr,
             });
 
+            cleanup();
+
             metrics.compilation.counter.inc({ status: 'error', language });
             metrics.compilation.duration.observe(
               { status: 'error', language },
@@ -324,53 +340,41 @@ if (
           }
 
           fs.readFile(`${path}.js`, (err, data) => {
+            cleanup();
+
             if (err) {
+              console.error(`Failed to read ${path}.js:`, err);
               return res.status(400).json({
-                error: `Failed to open ${path}.js for reading`,
+                error: 'Failed to read compiled output',
               });
             }
 
-            fs.unlink(`${path}.js`, (err) => {
-              if (err) {
-                return res.status(500).json({
-                  error: `Failed to delete ${path}.js`,
-                });
-              }
-              fs.unlink(`${path}`, (err) => {
-                if (err) {
-                  return res.status(500).json({
-                    error: `Failed to delete ${path}`,
-                  });
-                }
+            // Log successful compilation
+            logCompilation({
+              userId,
+              sessionId,
+              language,
+              code,
+              duration: durationMs,
+              status: 'success',
+              stdout,
+              stderr: stderr || null,
+            });
 
-                // Log successful compilation
-                logCompilation({
-                  userId,
-                  sessionId,
-                  language,
-                  code,
-                  duration: durationMs,
-                  status: 'success',
-                  stdout,
-                  stderr: stderr || null,
-                });
+            // Success! Track metrics
+            metrics.compilation.counter.inc({
+              status: 'success',
+              language,
+            });
+            metrics.compilation.duration.observe(
+              { status: 'success', language },
+              duration,
+            );
 
-                // Success! Track metrics
-                metrics.compilation.counter.inc({
-                  status: 'success',
-                  language,
-                });
-                metrics.compilation.duration.observe(
-                  { status: 'success', language },
-                  duration,
-                );
-
-                res.status(200).json({
-                  result: data.toString(),
-                  stdout,
-                  stderr,
-                });
-              });
+            res.status(200).json({
+              result: data.toString(),
+              stdout,
+              stderr,
             });
           });
         },
