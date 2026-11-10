@@ -85,7 +85,7 @@ const demo_videos: Record<string, string> = {
   'jbc7': '/static/demo_videos/JBC7.mp4',
   'jbc8': '/static/demo_videos/JBC8.mp4',
   'jbc9': '/static/demo_videos/JBC9.mp4',
-  'jbc10': '/static/demo_videos/JBC10.mp4',
+  'jbc10': '/static/demo_videos/JBC10Real.mp4',
   'jbc11': '/static/demo_videos/JBC11.mp4',
   'jbc12': '/static/demo_videos/JBC12.mp4',
   'jbc15': '/static/demo_videos/JBC15.mp4',
