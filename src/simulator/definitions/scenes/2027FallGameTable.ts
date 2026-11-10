@@ -403,14 +403,16 @@ const DUCKS: Record<DuckColor, Vec3> = {
 // are poses where they already rest: heights are where they settle in the
 // simulator, which can differ from the reference model.
 
-// Stacked on the fitting at the foot of each post.
+// Stacked on top of the upright fitting sockets at the foot of each post.
+// The socket tops are at y = 8.47 cm. Lowering the rings to the horizontal
+// tube's height embeds them in the sockets; waking the stack then ejects them.
 const RINGS: Vec3[] = [
-  [-53.5, 6.71, -119.86],
-  [-53.5, 7.61, -119.86],
-  [-53.5, 8.52, -119.86],
-  [-119.86, 6.71, -62.71],
-  [-119.86, 7.61, -62.71],
-  [-119.86, 8.52, -62.71],
+  [-53.5, 8.84, -119.86],
+  [-53.5, 9.76, -119.86],
+  [-53.5, 10.67, -119.86],
+  [-119.86, 8.84, -62.71],
+  [-119.86, 9.76, -62.71],
+  [-119.86, 10.67, -62.71],
 ];
 
 // Balanced on top of PVC. Once woken, they roll off.

@@ -168,6 +168,18 @@ class SceneBinding {
     this.gizmoManager_.rotationGizmoEnabled = true;
     this.gizmoManager_.scaleGizmoEnabled = false;
     this.gizmoManager_.usePointerToAttachGizmos = false;
+    // Selecting a resting piece must not remove its contacts and wake the
+    // pieces stacked against it. Suspend physics only when editing begins.
+    const beginGizmoDrag = () => {
+      const selectedNodeId = this.scene_.selectedNodeId;
+      if (!selectedNodeId) return;
+      const node = this.bScene_.getNodeById(selectedNodeId);
+      if (node instanceof AbstractMesh || node instanceof TransformNode) {
+        apply(node, m => this.removePhysicsFromObject(m));
+      }
+    };
+    this.gizmoManager_.gizmos.positionGizmo.onDragStartObservable.add(beginGizmoDrag);
+    this.gizmoManager_.gizmos.rotationGizmo.onDragStartObservable.add(beginGizmoDrag);
     // this.gizmoManager_.boundingBoxGizmoEnabled = true;
     // this.gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(1, 0, 0));
 
@@ -1453,13 +1465,10 @@ class SceneBinding {
         this.gizmoManager_.attachToNode(null);
       }
 
-      // Disable physics on the now selected node
+      // Keep contacts while selected; dragging suspends physics instead.
       if (next !== undefined) {
         const node = this.bScene_.getNodeById(next);
         if (node instanceof AbstractMesh || node instanceof TransformNode) {
-          if (this.gizmosEnabled_) {
-            apply(node, m => this.removePhysicsFromObject(m));
-          }
           node.metadata = { ...(node.metadata as SceneMeshMetadata), selected: true };
           if (this.gizmosEnabled_) {
             this.gizmoManager_.attachToNode(node);
