@@ -1,7 +1,7 @@
 import { RawVector3 } from '../../util/math/math';
 
-/** Number of capsules in a torus collider. 16 is smoother if 12 wobbles or snags. */
-export const TORUS_SEGMENTS = 12;
+/** Eight capsules keep the ring hollow while limiting compound collision work. */
+export const TORUS_SEGMENTS = 8;
 
 export interface CapsuleSegment {
   pointA: RawVector3;

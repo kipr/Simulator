@@ -19,7 +19,7 @@ describe('torusCapsuleSegments', () => {
     const segments = torusCapsuleSegments(RING, ZERO);
     for (const { pointA, pointB, radius } of segments) {
       expect(radius).toBeCloseTo(0.4566, 3);
-      expect(radial(pointA)).toBeCloseTo(2.3313, 3);
+      expect(radial(pointA)).toBeCloseTo(2.4374, 3);
       const midpoint = { x: (pointA.x + pointB.x) / 2, z: (pointA.z + pointB.z) / 2 };
       expect(radial(midpoint) - radius).toBeCloseTo(1.7953, 3);
     }
