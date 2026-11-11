@@ -11,11 +11,13 @@ import {
   Vector3wUnits,
 } from '../../../util/math/unitMath';
 import tr from '@i18n';
+import { MODELS } from '../models';
 
 /**
- * 2026-2027 Botball fall game table, built from the parts in
- * static/object_binaries/build_components. Positions come from the reference
- * model build_components/full_table.glb (not loaded by the simulator).
+ * 2026-2027 Botball fall game table, built from the building materials in
+ * MODELS.common.building and the game pieces in MODELS.games[2027]. Positions
+ * come from the reference model static/object_binaries/games/2027/full_table.glb
+ * (not loaded by the simulator).
  *
  * Coordinates below are centimeters in the reference model's frame: the table
  * covers x -121.92..0 and z -121.92..121.92, and the playing surface (top of
@@ -143,8 +145,6 @@ const object = (
   origin,
 });
 
-const BUILD_COMPONENTS = '/static/object_binaries/build_components';
-
 const POM_COLORS = ['gold', 'green', 'lavender', 'red', 'turquoise'] as const;
 type PomColor = typeof POM_COLORS[number];
 const DUCK_COLORS = ['blue', 'green', 'lavender', 'red', 'yellow'] as const;
@@ -152,37 +152,32 @@ type DuckColor = typeof DUCK_COLORS[number];
 
 const pomGeometryId = (color: PomColor) => `fall27_pom_${color}`;
 const duckGeometryId = (color: DuckColor) => `fall27_duck_${color}`;
-// The lavender duck model is named "purple".
-const DUCK_FILES: Record<DuckColor, string> = {
-  blue: 'duck_blue',
-  green: 'duck_green',
-  lavender: 'duck_purple',
-  red: 'duck_red',
-  yellow: 'duck_yellow',
-};
 
-const file = (name: string): Geometry => ({
+const BUILDING = MODELS.common.building;
+const PIECES = MODELS.games[2027];
+
+const file = (uri: string): Geometry => ({
   type: 'file',
-  uri: `${BUILD_COMPONENTS}/${name}.glb`,
+  uri,
   resetPosition: true,
 });
 
 // Every node using the same geometry is drawn as an instance of one mesh.
 export const FALL_27_TABLE_GEOMETRY: Dict<Geometry> = {
-  fall27_particleBoard: file('particle_board'),
-  fall27_frp: file('4x8_frp'),
-  fall27_corrugatedPlastic: file('corrugated_plastic'),
-  fall27_tape: file('8ft_black_tape'),
-  fall27_pvc: file('pipe'),
-  fall27_elbow: file('elbow'),
-  fall27_tConnector: file('t_connector'),
-  fall27_bottle: file('bottle'),
-  fall27_cup: file('cup_black'),
-  fall27_pickleball: file('pickleball'),
-  fall27_ring: file('ring'),
-  fall27_duckBig: file('duck_big'),
-  ...Object.fromEntries(POM_COLORS.map(color => [pomGeometryId(color), file(`pom_${color}`)])),
-  ...Object.fromEntries(DUCK_COLORS.map(color => [duckGeometryId(color), file(DUCK_FILES[color])])),
+  fall27_particleBoard: file(BUILDING.particleBoard),
+  fall27_frp: file(BUILDING.frp4x8),
+  fall27_corrugatedPlastic: file(BUILDING.corrugatedPlastic),
+  fall27_tape: file(BUILDING.tapeBlack8ft),
+  fall27_pvc: file(BUILDING.pvcPipe),
+  fall27_elbow: file(BUILDING.pvcElbow),
+  fall27_tConnector: file(BUILDING.pvcTConnector),
+  fall27_bottle: file(PIECES.bottle),
+  fall27_cup: file(PIECES.cupBlack),
+  fall27_pickleball: file(PIECES.pickleball),
+  fall27_ring: file(PIECES.ring),
+  fall27_duckBig: file(PIECES.duckBig),
+  ...Object.fromEntries(POM_COLORS.map(color => [pomGeometryId(color), file(PIECES.pom[color])])),
+  ...Object.fromEntries(DUCK_COLORS.map(color => [duckGeometryId(color), file(PIECES.duck[color])])),
 };
 
 // ---------------------------------------------------------------------------
@@ -198,7 +193,7 @@ const CORRUGATED_MESH_WIDTH_CM = 31.75; // along x once loaded
 const INCH_CM = 2.54;
 
 type Axis = 'x' | 'y' | 'z';
-// pipe.glb runs along z; these rotate it onto each axis.
+// pvc_pipe.glb runs along z; these rotate it onto each axis.
 const PVC_AXIS_ROTATION: Record<Axis, RawQuaternion> = {
   x: q(0, H, 0, H),
   y: q(-H, 0, 0, H),

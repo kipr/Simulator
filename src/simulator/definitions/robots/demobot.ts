@@ -7,6 +7,7 @@ import { RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
 
 import tr from '@i18n';
 import { Quaternion } from "@babylonjs/core";
+import { MODELS } from '../models';
 
 const { degrees } = Angle;
 const { grams } = Mass;
@@ -156,10 +157,10 @@ export const DEMOBOT: Robot = {
     }),
   },
   geometry: {
-    chassis_link: Geometry.remoteMesh({ uri: '/static/object_binaries/chassis.glb' }),
-    wheel_link: Geometry.remoteMesh({ uri: '/static/object_binaries/wheel.glb' }),
-    arm_link: Geometry.remoteMesh({ uri: '/static/object_binaries/arm.glb' }),
-    claw_link: Geometry.remoteMesh({ uri: '/static/object_binaries/claw.glb' }),
+    chassis_link: Geometry.remoteMesh({ uri: MODELS.robots.demobot.chassis }),
+    wheel_link: Geometry.remoteMesh({ uri: MODELS.robots.demobot.wheel }),
+    arm_link: Geometry.remoteMesh({ uri: MODELS.robots.demobot.arm }),
+    claw_link: Geometry.remoteMesh({ uri: MODELS.robots.demobot.claw }),
   },
   origin: {
     orientation: RotationwUnits.eulerDegrees(0, 0, 0),

@@ -3,6 +3,7 @@ import Geometry from "../../../state/State/Scene/Geometry";
 import Node from "../../../state/State/Scene/Node";
 import { Mass } from "../../../util";
 import { PhysicsMotionType } from "@babylonjs/core";
+import { MODELS } from '../models';
 
 // TODO: Consider deep-freezing all of these objects
 const botballExplorerTable26Template: Node.TemplatedNode<Node.Obj> = {
@@ -209,78 +210,78 @@ export const BB2026Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
 export const BB2026Geometries = Object.freeze<Dict<Geometry>>({
   'botballExplorerTable26': {
     type: 'file',
-    uri: '/static/object_binaries/2026_Botball_Explorer_Game_Table.glb',
+    uri: MODELS.games[2026].explorerTable,
   },
   'fallTable26': {
     type: 'file',
-    uri: '/static/object_binaries/2026_Fall_Table.glb',
+    uri: MODELS.games[2026].fallTable,
   },
   'springTable26': {
     type: 'file',
-    uri: '/static/object_binaries/2026_game_table_babylonjs.glb',
+    uri: MODELS.games[2026].springTable,
   },
   'basket': {
     type: 'file',
-    uri: '/static/object_binaries/Basket.glb'
+    uri: MODELS.games[2026].basket
   },
   'cubeBrown4In': {
     type: 'file',
-    uri: '/static/object_binaries/Cube_Brown_4in.glb'
+    uri: MODELS.games[2026].cube.brown4in
   },
   'cubeGreen2In': {
     type: 'file',
-    uri: '/static/object_binaries/Cube_Green_2in.glb'
+    uri: MODELS.games[2026].cube.green2in
   },
   'cubeGreen4In': {
     type: 'file',
-    uri: '/static/object_binaries/Cube_Green_4in.glb'
+    uri: MODELS.games[2026].cube.green4in
   },
   'cubeRed2In': {
     type: 'file',
-    uri: '/static/object_binaries/Cube_Red_2in.glb'
+    uri: MODELS.games[2026].cube.red2in
   },
   'cubeRed4In': {
     type: 'file',
-    uri: '/static/object_binaries/Cube_Red_4in.glb'
+    uri: MODELS.games[2026].cube.red4in
   },
   'cubeYellow2In': {
     type: 'file',
-    uri: '/static/object_binaries/Cube_Yellow_2in.glb'
+    uri: MODELS.games[2026].cube.yellow2in
   },
   'pallet': {
     type: 'file',
-    uri: '/static/object_binaries/Pallet.glb'
+    uri: MODELS.games[2026].pallet
   },
   'pomBlue2In': {
     type: 'file',
-    uri: '/static/object_binaries/Pom_Blue_2in.glb'
+    uri: MODELS.games[2026].pomBlue
   },
   'trafficCone': {
     type: 'file',
-    uri: '/static/object_binaries/Traffic_Cone.glb'
+    uri: MODELS.games[2026].trafficCone
   },
   'pvc2In': {
     type: 'file',
-    uri: '/static/object_binaries/PVC2in.glb'
+    uri: MODELS.games[2026].pvc.white
   },
   'slidingDoor': {
     type: 'file',
-    uri: '/static/object_binaries/Sliding_Door.glb'
+    uri: MODELS.games[2026].slidingDoor
   },
   'pvc2inBlue': {
     type: 'file',
-    uri: '/static/object_binaries/PVC2in_Blue.glb'
+    uri: MODELS.games[2026].pvc.blue
   },
   'pvc2inPink': {
     type: 'file',
-    uri: '/static/object_binaries/PVC2in_Pink.glb'
+    uri: MODELS.games[2026].pvc.pink
   },
   'dropper': {
     type: 'file',
-    uri: '/static/object_binaries/2026_Dropper.glb'
+    uri: MODELS.games[2026].dropper
   },
   'gate': {
     type: 'file',
-    uri: '/static/object_binaries/gate.glb'
+    uri: MODELS.games[2026].gate
   },
 });

@@ -22,6 +22,7 @@ const createAiRouter = require('./ai');
 const createLimitedChallengeCompletionsRouter = require('./limitedChallengeCompletions');
 const createClassroomsRouter = require('./classrooms');
 const createGuidedTourRouter = require('./guidedTour');
+const legacyModelPaths = new Map(Object.entries(require('./legacyModelPaths.json')));
 let config;
 try {
   config = getConfig();
@@ -486,6 +487,14 @@ app.post('/feedback', (req, res) => {
       });
       // TODO: write the feedback to a file if an error occurs?
     });
+});
+
+// Saved scenes store model URIs, so models that moved keep their old paths
+// as redirects.
+app.use('/static/object_binaries', (req, res, next) => {
+  const target = legacyModelPaths.get(req.path.slice(1));
+  if (!target) return next();
+  res.redirect(301, `${req.baseUrl}/${target}`);
 });
 
 app.use(
