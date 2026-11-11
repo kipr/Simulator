@@ -26,7 +26,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
   width: '100vw',
-  height: '100dvh', //OG: 100vh
+  height: '100dvh', // OG: 100vh
   boxSizing: 'border-box', // addition for padding don't push it pas the scren
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
@@ -126,7 +126,7 @@ const LoadingOverlay = ({ challenge, loading, onStartClick, locale, theme }: Loa
   return (
     <Container theme={theme}>
       <TitleContainer>
-      {LocalizedString.lookup(tr('CHALLENGE'), locale)}
+        {LocalizedString.lookup(tr('CHALLENGE'), locale)}
       </TitleContainer>
       <NameContainer>
         {LocalizedString.lookup(latestChallenge.name, locale)}
