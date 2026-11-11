@@ -143,6 +143,12 @@ class WorkerInstance implements AbstractRobot {
   private watchedVariables_: Dict<unknown> = {};
   get watchedVariables() { return this.watchedVariables_; }
 
+  private resetMotorSpeedGoals_() {
+    for (let port = 0; port < 4; ++port) {
+      this.sharedRegisters_.setRegister16b(Registers.REG_RW_MOT_0_SP_H + port * 2, 0);
+    }
+  }
+
   /**
    * Internal method to handle the 'stopped' event.
    * Resets specific registers and triggers the onStopped event if defined.
@@ -157,6 +163,7 @@ class WorkerInstance implements AbstractRobot {
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_DIRS, 0xFF);
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_DONE, 0);
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_SRV_ALLSTOP, 0xF0);
+    this.resetMotorSpeedGoals_();
 
     if (this.onStopped) {
       this.onStopped();
@@ -213,6 +220,7 @@ class WorkerInstance implements AbstractRobot {
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_MODES, 0x00);
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_DIRS, 0x00);
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_SRV_ALLSTOP, 0xF0);
+    this.resetMotorSpeedGoals_();
 
     // Send start message to worker
     // Clones message and transmits it to worker's global environment. 

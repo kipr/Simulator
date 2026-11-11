@@ -2,7 +2,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { TourRegistry } from "../../tours/TourRegistry";
 import { Rect, TOUR_SECTIONS_LABEL, TourPlacement, TourStep } from "../../tours/Tours";
-import { DARK, ThemeProps } from "../constants/theme";
+import { LIGHT, DARK, ThemeProps } from "../constants/theme";
 import { StyleProps } from "../../util/style";
 import { styled } from "styletron-react";
 import ComboBox from "../interface/ComboBox";
@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import LocalizedString from '../../util/LocalizedString';
 import tr from '@i18n';
+import { Settings } from 'components/constants/Settings';
 
 export interface GuidedTourPublicProps extends ThemeProps, StyleProps {
   isOpen: boolean;
@@ -52,6 +53,7 @@ export interface GuidedTourPublicProps extends ThemeProps, StyleProps {
 
 interface GuidedTourPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
 }
 
 interface GuidedTourState {
@@ -853,8 +855,8 @@ class GuidedTour extends React.PureComponent<Props, State> {
     if (!this.props.isOpen || !this.portalEl) return null;
     const { props, state } = this;
     const { subSteps } = state;
-    const { locale } = props;
-    const theme = DARK;
+    const { locale, settings } = props;
+    const theme = settings.darkMode ? DARK : LIGHT;
     const step = this.currentStep();
     if (!step) return null;
 
@@ -1082,5 +1084,6 @@ function btnStyle(disabled: boolean, primary: boolean): React.CSSProperties {
 }
 
 export default connect((state: ReduxState) => ({
-  locale: state.i18n.locale
+  locale: state.i18n.locale,
+  settings: state.settings,
 }))(GuidedTour) as React.ComponentType<GuidedTourPublicProps>;

@@ -26,7 +26,11 @@ namespace Node {
 
     /**
      * What shape will simulate the physics for the object:
-     * box, sphere, cylinder, mesh, or none.
+     * box, sphere, cylinder, mesh, torus, or none.
+     *
+     * `torus` is for rings: it builds a closed loop of capsules sized from the
+     * mesh's bounding box, so the ring stays hollow but collides like a convex
+     * shape. The ring must lie flat with its axis along local y.
      */
     type: Physics.Type;
 
@@ -63,10 +67,24 @@ namespace Node {
      */
     inertia?: number[];
 
+    /**
+     * Start the body asleep when the scene loads or resets, so the physics
+     * engine skips it until something touches it. A sleeping body doesn't
+     * fall, so only use this for objects that start at rest. Bodies placed
+     * by an edit (gizmo, position fields, visibility) always start awake.
+     * Editing an object's starting pose clears this flag (see
+     * `Node.clearStartAsleepIfStartMoved`), since the new pose may not be at
+     * rest.
+     *
+     * Static bodies need it too: adding an awake static body wakes the
+     * sleeping bodies that touch it.
+     */
+    startAsleep?: boolean;
+
   }
 
   export namespace Physics {
-    export type Type = 'box' | 'sphere' | 'cylinder' | 'mesh' | 'none';
+    export type Type = 'box' | 'sphere' | 'cylinder' | 'mesh' | 'torus' | 'none';
 
     export const diff = (prev: Physics, next: Physics): Patch<Physics> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
@@ -78,7 +96,8 @@ namespace Node {
         mass: Patch.diff(prev.mass, next.mass),
         friction: Patch.diff(prev.friction, next.friction),
         restitution: Patch.diff(prev.restitution, next.restitution),
-        inertia: Patch.diff(prev.inertia, next.inertia)
+        inertia: Patch.diff(prev.inertia, next.inertia),
+        startAsleep: Patch.diff(prev.startAsleep, next.startAsleep),
       });
     };
   }
@@ -102,6 +121,8 @@ namespace Node {
      * Can the user edit the object?
      */
     editable?: boolean;
+    /** Omit this node from the World list only; rendering and physics are unaffected. */
+    hiddenInWorldList?: boolean;
     /**
      * Is the object visible to the user?
      * NOTE: If an object is not visible, it cannot have physics enabled.
@@ -116,6 +137,7 @@ namespace Node {
       scriptIds: undefined,
       documentIds: undefined,
       editable: undefined,
+      hiddenInWorldList: undefined,
       visible: true
     };
 
@@ -127,8 +149,35 @@ namespace Node {
       scriptIds: t.scriptIds,
       documentIds: t.documentIds,
       editable: t.editable,
+      hiddenInWorldList: t.hiddenInWorldList,
       visible: t.visible
     });
+
+    /**
+     * Whether the node sits at its starting pose, as it does when the scene
+     * loads or resets. A missing scale counts as no scaling.
+     */
+    export const isAtStartingOrigin = (node: Base): boolean => {
+      const { origin, startingOrigin } = node;
+      if (!origin || !startingOrigin) return false;
+      return framesEqual(origin, startingOrigin);
+    };
+
+    /** Compares poses by value. A missing scale counts as no scaling. */
+    const framesEqual = (a: ReferenceFramewUnits, b: ReferenceFramewUnits): boolean =>
+      !deepNeq(a.position, b.position) &&
+      !deepNeq(a.orientation, b.orientation) &&
+      !deepNeq(a.scale ?? RawVector3.ONE, b.scale ?? RawVector3.ONE);
+
+    /**
+     * Whether `next` has a different starting pose than `prev`. A node with
+     * no starting pose before counts as unchanged, since it is being added.
+     */
+    export const startingOriginChanged = (prev: Base | undefined, next: Base): boolean => {
+      if (!prev?.startingOrigin) return false;
+      if (!next.startingOrigin) return true;
+      return !framesEqual(prev.startingOrigin, next.startingOrigin);
+    };
 
     export const partialDiff = (prev: Base, next: Base): Patch.InnerPatch<Base> => ({
       name: Patch.diff(prev.name, next.name),
@@ -136,6 +185,7 @@ namespace Node {
       scriptIds: Patch.diff(prev.scriptIds, next.scriptIds),
       documentIds: Patch.diff(prev.documentIds, next.documentIds),
       editable: Patch.diff(prev.editable, next.editable),
+      hiddenInWorldList: Patch.diff(prev.hiddenInWorldList, next.hiddenInWorldList),
       visible: Patch.diff(prev.visible, next.visible)
     });
   }
@@ -643,6 +693,18 @@ namespace Node {
       case 'robot': return Robot.from(node);
       case 'all': return All.from(node);
     }
+  };
+
+  /**
+   * Clear `physics.startAsleep` on an object whose starting pose `next`
+   * changes from `prev`. A user-placed pose may be in the air, and a body
+   * that starts asleep there would hang after every reset instead of falling.
+   * Template nodes keep their physics in the template, so they are unchanged.
+   */
+  export const clearStartAsleepIfStartMoved = (prev: Node | undefined, next: Node): Node => {
+    if (next.type !== 'object' || !next.physics?.startAsleep) return next;
+    if (!Base.startingOriginChanged(prev, next)) return next;
+    return { ...next, physics: { ...next.physics, startAsleep: false } };
   };
 
   /**

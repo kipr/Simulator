@@ -167,7 +167,7 @@ export class SharedRegistersRobot implements AbstractRobot {
       this.sharedResisters_.setRegister16b(RegisterState.REG_RW_MOT_0_PWM_H + i * 2, motor.direction === Motor.Direction.Backward ? -motor.pwm : motor.pwm);
       this.sharedResisters_.setRegister32b(RegisterState.REG_W_MOT_0_GOAL_B3 + i * 4, motor.positionGoal * SharedRegistersRobot.POSITION_GOAL_SCALING);
       this.sharedResisters_.setRegister16b(RegisterState.REG_RW_MOT_0_SP_H + i * 2, motor.speedGoal);
-      this.sharedResisters_.setRegister32b(RegisterState.REG_RW_MOT_0_B3 + i * 4, motor.position);
+      this.sharedResisters_.setRegister32b(RegisterState.REG_RW_MOT_0_B3 + i * 4, motor.position * SharedRegistersRobot.POSITION_GOAL_SCALING);
 
       this.sharedResisters_.setRegister16b(RegisterState.REG_W_PID_0_P_H + i * 12, Math.trunc(motor.kP * 1000));
       this.sharedResisters_.setRegister16b(RegisterState.REG_W_PID_0_PD_H + i * 12, 1000);

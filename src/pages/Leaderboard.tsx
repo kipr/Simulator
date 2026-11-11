@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { DARK, LIGHT, ThemeProps } from '../components/constants/theme';
 import MainMenu from '../components/MainMenu';
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
@@ -11,6 +11,7 @@ import { jsPDF } from "jspdf";
 import db from '../db';
 import { createRef } from 'react';
 import { LeaderboardEntry } from 'state/State/LimitedChallengeLeaderboard';
+import ScrollArea from '../components/interface/ScrollArea';
 
 let SELFIDENTIFIER: string;
 let currentUser: User;
@@ -97,16 +98,12 @@ const LeaderboardTitleContainer = styled('div', {
   zIndex: 1,
 });
 
-const StickyRankTh = styled('th', (props: ThemeProps) => ({
-  position: 'sticky',
-  top: 0,
-  left: 0,
-  width: '80px',
-  minWidth: '80px',
-  backgroundColor: props.theme.backgroundColor,
-  zIndex: 7,
-  whiteSpace: 'nowrap',
-
+const StickyRankTh = styled('th', ({ theme }: ThemeProps) => ({
+  position: 'relative',
+  transform: 'translate(var(--scroll-left), var(--scroll-top))',
+  zIndex: 10,
+  width: '5em',
+  backgroundColor: theme.backgroundColor,
 }));
 
 const StickyRankTd = styled('td', (props: ThemeProps & { rank: number, $highlight: boolean }) => ({
@@ -115,9 +112,9 @@ const StickyRankTd = styled('td', (props: ThemeProps & { rank: number, $highligh
   width: '80px',
   minWidth: '80px',
   textAlign: 'center',
-  backgroundColor: props.$highlight ? '#2c482f' : props.theme.backgroundColor,
+  backgroundColor: props.$highlight ? props.theme.leaderboardHighlightBackground : props.theme.backgroundColor,
   ':hover': {
-    backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 0.2)' : props.theme.backgroundColor,
+    backgroundColor: props.$highlight ? props.theme.leaderboardHighlightHoverBackground : props.theme.backgroundColor,
   },
   zIndex: 6,
   whiteSpace: 'nowrap',
@@ -131,15 +128,15 @@ const StickyRankTd = styled('td', (props: ThemeProps & { rank: number, $highligh
         : props.theme.color,
 }));
 
-const StickyNameTh = styled('th', (props: ThemeProps) => ({
-  position: 'sticky',
-  top: 0,
-  left: '80px',
-  width: '200px',
-  minWidth: '200px',
-  backgroundColor: props.theme.backgroundColor,
-  zIndex: 7,
-  whiteSpace: 'nowrap',
+const StickyNameTh = styled('th', ({ theme }: ThemeProps) => ({
+  position: 'relative',
+  transform: 'translate(var(--scroll-left), var(--scroll-top))',
+  zIndex: 10,
+  backgroundColor: theme.backgroundColor,
+}));
+
+const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
+  flex: 1,
 }));
 
 const StickyNameTd = styled('td', (props: ThemeProps & { $highlight: boolean }) => ({
@@ -147,9 +144,9 @@ const StickyNameTd = styled('td', (props: ThemeProps & { $highlight: boolean }) 
   left: '80px',
   width: '200px',
   minWidth: '200px',
-  backgroundColor: props.$highlight ? '#2c482f' : props.theme.backgroundColor,
+  backgroundColor: props.$highlight ? props.theme.leaderboardHighlightBackground : props.theme.backgroundColor,
   ':hover': {
-    backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 0.2)' : props.theme.backgroundColor,
+    backgroundColor: props.$highlight ? props.theme.leaderboardHighlightHoverBackground : props.theme.backgroundColor,
   },
   textAlign: 'center',
   zIndex: 6,
@@ -163,6 +160,29 @@ const Table = styled('table', () => ({
   height: '100%',
   overflow: 'visible'
 
+}));
+const TableHeader = styled('th', (props: ThemeProps & { $challengeColumn?: boolean }) => ({
+  padding: '12px 16px',
+  position: 'relative',
+
+  // Cancel vertical scrolling so the first row stays fixed.
+  transform: 'translateY(var(--scroll-top))',
+
+  zIndex: 5,
+  backgroundColor: props.theme.backgroundColor,
+  top: 0,
+  textAlign: 'center',
+  fontSize: '0.85em',
+  fontWeight: 'bold',
+  color: props.theme.color,
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+  ...(props.$challengeColumn ? {
+    minWidth: '72px',
+    maxWidth: '140px',
+    whiteSpace: 'normal',
+    verticalAlign: 'bottom',
+    // zIndex: 5,
+  } : {}),
 }));
 const LeaderboardScrollContainer = styled('div', {
   width: '100%',
@@ -189,22 +209,10 @@ const LeaderboardScrollContainer = styled('div', {
   },
 });
 
-const TableHeader = styled('th', (props: ThemeProps) => ({
-  padding: '12px 16px',
-  position: 'sticky',
-  top: 0,
-  textAlign: 'center',
-  fontSize: '0.85em',
-  fontWeight: 'bold',
-  color: props.theme.color,
-  borderBottom: `1px solid ${props.theme.borderColor}`,
-  backgroundColor: props.theme.backgroundColor,
-}));
-
 const TableRow = styled('tr', (props: ThemeProps & { $highlight?: boolean }) => ({
-  backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 0.15)' : 'transparent',
+  backgroundColor: props.$highlight ? props.theme.leaderboardHighlightBackground : 'transparent',
   ':hover': {
-    backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 0.2)' : 'rgba(255,255,255,0.05)',
+    backgroundColor: props.$highlight ? props.theme.leaderboardHighlightHoverBackground : 'rgba(255,255,255,0.05)',
   },
 }));
 
@@ -216,6 +224,14 @@ const TableCell = styled('td', (props: ThemeProps) => ({
   textAlign: 'center'
 }));
 
+const LeaderboardTable = styled(Table, {
+  width: 'max-content',
+  minWidth: '100%',
+  tableLayout: 'auto',
+  height: '100%',
+  overflow: 'visible',
+  minHeight: '15em'
+});
 
 const YourNameContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
@@ -223,7 +239,7 @@ const YourNameContainer = styled('div', (props: ThemeProps) => ({
   justifyContent: 'center',
   gap: '8px',
   padding: '12px 20px',
-  backgroundColor: 'rgba(76, 175, 80, 0.1)',
+  backgroundColor: props.theme.leaderboardHighlightBackground,
   borderBottom: `1px solid ${props.theme.borderColor}`,
 }));
 
@@ -269,7 +285,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   alignItems: 'center',
   flexDirection: 'row',
   padding: '10px',
-  backgroundColor: '#2c2c2cff',
+  backgroundColor: props.theme.buttonColors.default.standard,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   ':last-child': {
     borderBottom: 'none'
@@ -278,7 +294,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   fontWeight: 400,
   ':hover': {
     cursor: 'pointer',
-    backgroundColor: `rgba(255, 255, 255, 0.1)`
+    backgroundColor: props.theme.buttonColors.default.hover
   },
   userSelect: 'none',
   transition: 'background-color 0.2s, opacity 0.2s'
@@ -329,10 +345,11 @@ const LeaderboardViewToggleButton = styled('button', (props: ThemeProps & { $act
   backgroundColor: props.$active ? '#2196f3' : 'transparent',
   border: `1px solid ${props.$active ? '#2196f3' : props.theme.borderColor}`,
   borderRadius: '4px',
-  cursor: 'pointer',
+
   transition: 'all 0.2s',
   ':hover': {
-    backgroundColor: props.$active ? '#2196f3' : 'rgba(255,255,255,0.1)',
+    backgroundColor: props.$active ? '#2196f3' : null,
+    cursor: props.$active ? 'pointer' : 'default',
   },
 }));
 
@@ -369,36 +386,32 @@ class Leaderboard extends React.Component<Props, State> {
   }
 
   private myScoresRef = createRef<HTMLTableRowElement>();
-  private leaderboardScrollRef = createRef<HTMLDivElement>();
+  private scrollAreaRef: ScrollArea | null = null;
 
   private scrollToMyScores = () => {
-    const container = this.leaderboardScrollRef.current;
     const row = this.myScoresRef.current;
-    if (!container || !row) return;
+    if (!row || !this.scrollAreaRef) return;
 
-    // row position relative to the scroll container
-    const containerRect = container.getBoundingClientRect();
-    const rowRect = row.getBoundingClientRect();
-
-    const currentScrollTop = container.scrollTop;
-    const targetTop = currentScrollTop + (rowRect.top - containerRect.top) - 30;
-
-    container.scrollTo({ top: targetTop, behavior: 'smooth' });
+    this.scrollAreaRef.scrollElementIntoView(row);
   };
-
   // Get all challenge_completion collection
 
   private onLog = async () => {
     const res = await db.list('challenge_completion');
-    console.log("Raw leaderboard data: ", res);
     const groupData = res.groupData;
     const userData = res.userData;
 
     let users: Record<string, User> = {};
     const challenges: Record<string, Challenge> = {};
+    // Regex to match `custom-<UUID>`
 
+    const customChallengeRegex = /^custom-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     for (const [_, attemptedChallenges] of Object.entries(groupData)) {
       for (const [challengeId, challenge] of Object.entries(attemptedChallenges as ChallengeData[])) {
+        // TEMP: Ignore custom challenges
+        if (customChallengeRegex.test(challengeId)) {
+          continue;
+        }
         const challenge = {
           name: tr(challengeId),
           description: tr(challengeId),
@@ -435,6 +448,11 @@ class Leaderboard extends React.Component<Props, State> {
       };
 
       for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
+        // TEMP: Ignore custom challenges
+        if (customChallengeRegex.test(challengeId)) {
+          continue;
+        }
+
         const score: Score = {
           name: tr(challengeId),
           completed: challengeCompletion(challenge)
@@ -467,6 +485,11 @@ class Leaderboard extends React.Component<Props, State> {
       };
 
       for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
+        // TEMP: Ignore custom challenges
+        if (customChallengeRegex.test(challengeId)) {
+          continue;
+        }
+
         const score: Score = {
           name: tr(challengeId),
           completed: challengeCompletion(challenge)
@@ -711,8 +734,14 @@ class Leaderboard extends React.Component<Props, State> {
     // Show user context section only if user has a completion and is not in top N
     const showUserContextSection = userContext && !userInTopEntries;
     return (
-      <LeaderboardScrollContainer ref={this.leaderboardScrollRef}>
-        <Table>
+      <StyledScrollArea innerStyle={{
+        width: 'max-content',
+        minWidth: '100%',
+      }} theme={theme} horizontalScroll={true} style={{ minHeight: '15em' }} scrollAreaRef={(instance: ScrollArea | null) => {
+        this.scrollAreaRef = instance;
+      }}
+      >
+        <LeaderboardTable>
           <thead>
             <tr>
               <StickyRankTh theme={theme}>
@@ -722,10 +751,16 @@ class Leaderboard extends React.Component<Props, State> {
               <StickyNameTh theme={theme}>
                 {LocalizedString.lookup(tr('Name'), locale)}
               </StickyNameTh>
-              {challengeArray.map((entry, index) => {
-                return this.renderTableHeader(entry);
-              })}
 
+              {challengeArray.map(id => (
+                <TableHeader
+                  key={id}
+                  theme={theme}
+                  $challengeColumn={true}
+                >
+                  {LocalizedString.lookup(challenges[id].name, locale)}
+                </TableHeader>
+              ))}
             </tr>
           </thead>
           {this.state.showFullLeaderboard
@@ -759,9 +794,8 @@ class Leaderboard extends React.Component<Props, State> {
               )}
             </tbody>
           }
-        </Table>
-      </LeaderboardScrollContainer>
-
+        </LeaderboardTable>
+      </StyledScrollArea>
 
     );
   };
@@ -820,8 +854,9 @@ class Leaderboard extends React.Component<Props, State> {
             <LeaderboardViewToggle theme={theme}>
               <LeaderboardViewToggleButton
                 theme={theme}
-                onClick={this.handleToggleView}
+                onClick={this.state.loading ? undefined : this.handleToggleView}
                 style={{ marginRight: '16px' }}
+                $active={!this.state.loading}
               >
                 {this.state.showFullLeaderboard
                   ? LocalizedString.lookup(tr('Show Top Users'), locale)
@@ -857,8 +892,8 @@ class Leaderboard extends React.Component<Props, State> {
             <h1>{LocalizedString.lookup(tr('KIPR All Time Leaderboard'), props.locale)}</h1>
 
             <ButtonContainer>
-              <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr('Export My Scores!'), props.locale)}</Button>
-              <Button theme={DARK} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr('Scroll to My Scores!'), props.locale)}</Button>
+              <Button theme={theme} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr('Export My Scores!'), props.locale)}</Button>
+              <Button theme={theme} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr('Scroll to My Scores!'), props.locale)}</Button>
             </ButtonContainer>
 
           </LeaderboardTitleContainer>

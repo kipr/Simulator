@@ -43,6 +43,10 @@ export const JBC_1: Scene = {
   ...baseScene,
   name: tr('JBC 1'),
   description: tr('Junior Botball Challenge 1: Tag, You\'re It!'),
+  summary: {
+    skill: tr('Driving forwards and backwards over a set distance to drive in a straight line and ensure the robot starts from the same position every time.'),
+    baseMission: tr('Drive the robot to the can in circle 9, touch it (without knocking it down or moving it outside the number 9 circle), and return to the starting area (behind the black line).')
+  },
   scripts: {
     'notInStartBox': Script.ecmaScript('Not In Start Box', notInStartBox),
     'circleIntersects': Script.ecmaScript('Circle Intersects', circleIntersects),

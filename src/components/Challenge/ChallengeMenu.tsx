@@ -135,18 +135,24 @@ const Item = styled('div', (props: ThemeProps & ClickProps) => ({
   transition: 'background-color 0.2s, opacity 0.2s'
 }));
 
-const RunItem = withStyleDeep(Item, (props: ClickProps) => ({
-  backgroundColor: props.disabled ? GREEN.disabled : GREEN.standard,
-  ':hover': props.onClick && !props.disabled ? {
-    backgroundColor: GREEN.hover
-  } : {},
+const RunItem = withStyleDeep(Item, (props: ThemeProps & ClickProps) => ({
+  backgroundColor: props.disabled ? props.theme.buttonColors.success.disabled : props.theme.buttonColors.success.standard,
+  ":hover":
+    props.onClick && !props.disabled
+      ? {
+        backgroundColor: props.theme.buttonColors.success.hover,
+      }
+      : {},
 }));
 
-const StopItem = withStyleDeep(Item, (props: ClickProps) => ({
-  backgroundColor: props.disabled ? RED.disabled : RED.standard,
-  ':hover': props.onClick && !props.disabled ? {
-    backgroundColor: RED.hover
-  } : {},
+const StopItem = withStyleDeep(Item, (props: ThemeProps & ClickProps) => ({
+  backgroundColor: props.disabled ? props.theme.buttonColors.danger.disabled : props.theme.buttonColors.danger.standard,
+  ":hover":
+    props.onClick && !props.disabled
+      ? {
+        backgroundColor: props.theme.buttonColors.danger.hover,
+      }
+      : {},
 }));
 
 

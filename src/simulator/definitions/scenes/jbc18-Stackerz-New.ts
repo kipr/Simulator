@@ -42,6 +42,10 @@ export const JBC_18: Scene = {
   ...baseScene,
   name: tr('JBC 18'),
   description: tr('Junior Botball Challenge 18: Stackerz'),
+  summary: {
+    skill: tr('Precision manipulating.'),
+    baseMission: tr('The robot wills tack one can on top of the other.')
+  },
   scripts: {
     leftStartBox: Script.ecmaScript('Robot Left Start', leftStartBox),
     canStacked: Script.ecmaScript('Cans Stacked', canStacked),

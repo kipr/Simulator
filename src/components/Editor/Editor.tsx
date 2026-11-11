@@ -41,7 +41,7 @@ export interface EditorPublicProps extends StyleProps, ThemeProps {
 
   onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'graphical') => void;
   onCommonDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'graphical') => void;
-
+  editable?: boolean;
   mini?: boolean;
 }
 
@@ -295,6 +295,7 @@ class Editor extends React.PureComponent<Props, State> {
       messages,
       autocomplete,
       language,
+      editable,
       mini
     } = this.props;
 
@@ -317,8 +318,8 @@ class Editor extends React.PureComponent<Props, State> {
           messages={messages}
           onCodeChange={onCodeChange}
           autocomplete={autocomplete}
-          theme="DARK"
-          editable={true}
+          theme={theme.themeName}
+          editable={editable}
         />
       );
     }

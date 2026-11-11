@@ -58,6 +58,10 @@ export const JBC_10: Scene = {
   ...baseScene,
   name: tr('JBC 10'),
   description: tr('Junior Botball Challenge 10: Chopped'),
+  summary: {
+    skill: tr('Learning to use one servo and planning servo placement for a challenge.'),
+    baseMission: tr('Drive out and stop in front of circle 7, wait 3 seconds and chop/touch the can with the arm or claw.')
+  },
   scripts: {
     inStartBox: Script.ecmaScript('In Start Box', notInStartBox),
     waitToChop: Script.ecmaScript('Wait to Chop', waitToChop),

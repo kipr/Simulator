@@ -12,7 +12,22 @@ import LocalizedString from '../../../util/LocalizedString';
 import apply from '../Apply';
 import { createMaterial } from './createMaterials';
 import { preBuiltGeometries } from "../../definitions/nodes";
+import { MeshoptCompression } from "@babylonjs/core/Meshes/Compression/meshoptCompression";
+import { KhronosTextureContainer2 } from '@babylonjs/core/Misc/khronosTextureContainer2';
+MeshoptCompression.Configuration = {
+  decoder: {
+    url: "../../../static/meshopt_decoder.js",
+  },
+};
 
+KhronosTextureContainer2.URLConfig.jsDecoderModule =
+  '../../../static/babylon.ktx2Decoder.js';
+
+KhronosTextureContainer2.URLConfig.jsMSCTranscoder =
+  '../../../static/ktx2Transcoders/msc_basis_transcoder.js';
+
+KhronosTextureContainer2.URLConfig.wasmMSCTranscoder =
+  '../../../static/ktx2Transcoders/msc_basis_transcoder.wasm';
 export type FrameLike = TransformNode | AbstractMesh;
 
 export interface meshPair {
@@ -129,6 +144,10 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
           continue;
         }
         mesh.setParent(parentTNode);
+        // setParent preserves the world transform, including transforms on
+        // intermediate glTF nodes. Clear the resulting local translation only
+        // after reparenting so component geometry keeps its rotation and scale.
+        if (geometry.resetPosition) mesh.position.set(0, 0, 0);
       }
       break;
     }
@@ -161,12 +180,12 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
    * If so, we save significant resources by using instancing and we avoid building and storing multiple copies of the same geometry.
    * For more on instances see: https://doc.babylonjs.com/features/featuresDeepDive/mesh/copies/instances
    */
-  const match = bScene_.meshes.filter(m => {
+  const match = bScene_.meshes.find(m => {
     const md = m.metadata as { matPlayZoneOverlay?: boolean } | undefined;
     if (md?.matPlayZoneOverlay) return false;
     if (m.name.startsWith('matPlayZone')) return false;
-    return m.name.startsWith(node.geometryId);
-  })[0];
+    return m instanceof Mesh && m.name.startsWith(`${node.geometryId}:`);
+  });
   if (match && match instanceof Mesh) {
     ret.visual = match.createInstance(`${match.name}-instance`);
 
@@ -179,6 +198,10 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
   }
 
   ret = await buildGeometry(node.name[LocalizedString.EN_US], geometry, bScene_, node.faceUvs);
+  // Give the source mesh a stable geometry-based name. Subsequent nodes with
+  // this geometryId can then use Babylon's native Mesh instances regardless
+  // of names embedded in an imported GLB.
+  ret.visual.name = `${node.geometryId}:${ret.visual.name}`;
   if (ret.collider) {
     apply(ret.collider, m => m.isVisible = false);
     if (node.physics && !node.physics.colliderId) {

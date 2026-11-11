@@ -17,10 +17,12 @@ import AssignmentsView from './AssignmentsView';
 import HomeView from './HomeView';
 import GradesView from './GradesView';
 import ChallengeTabView from './ChallengeTabView';
+import ScrollArea from '../interface/ScrollArea';
 
 
 export interface TeacherTabsPublicProps extends ThemeProps, StyleProps {
   currentSelectedClassroom: AsyncClassroom | null;
+  assignComplete?: boolean;
   onAssignmentAction: (currentSelectedClassroom: AsyncClassroom, action: 'edit' | 'create', assingmentToEdit?: ClassroomAssignment) => void;
   tabIndex?: number;
   tourRegistry?: TourRegistry;
@@ -44,17 +46,21 @@ const Container = styled('div', ({ $theme }: { $theme: Theme }) => ({
 }));
 
 const Body = styled('div', {
+  justifyItems: 'center',
   flex: 1,
   minHeight: 0,
   minWidth: 0,
   overflow: 'hidden',
   display: 'flex',
+  justifyContent: 'center',
   flexDirection: 'row',
   '@screen and (max-width: 800px)': {
     flexDirection: 'column',
   },
 });
-
+const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
+  flex: 1,
+}));
 const TopBar = styled('div', ({ $theme }: { $theme: Theme }) => ({
   width: '100%',
   display: 'flex',
@@ -94,6 +100,7 @@ const TeacherTabs = ({
   currentSelectedClassroom,
   onAssignmentAction,
   tabIndex: tabIndexProp,
+  assignComplete,
   tourRegistry,
   activeTourStepId,
   tourHighlightAssignmentTitle,
@@ -158,6 +165,7 @@ const TeacherTabs = ({
           {tabIndex === 1 &&
             <AssignmentsView containerRef={containerRef} config={'Teacher'} theme={theme} currentSelectedClassroom={currentSelectedClassroom}
               onAssignmentAction={onAssignmentAction}
+              assignComplete={assignComplete}
               contextMenuVisible={assignmentsContextMenu.visible}
               setContextMenuVisible={setAssignmentsContextMenu}
               tourRegistry={tourRegistry}

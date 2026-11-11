@@ -34,6 +34,10 @@ export const JBC_19: Scene = {
   ...baseScene,
   name: tr('JBC 19'),
   description: tr('Junior Botball Challenge 19: Bump'),
+  summary: {
+    skill: tr('Precision robot driving using a digital touch sensor.'),
+    baseMission: tr('The robot leaves the starting area and touches the wall or a heavy object.')
+  },
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     bumpReam: Script.ecmaScript('Bump Ream', bumpReam),

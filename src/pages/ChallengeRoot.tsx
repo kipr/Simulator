@@ -17,7 +17,7 @@ import ExceptionDialog from '../components/Challenge/ExceptionDialog';
 import ChallengeMenu from '../components/Challenge/ChallengeMenu';
 
 import { DEFAULT_SETTINGS, Settings } from '../components/constants/Settings';
-import { DARK, Theme } from '../components/constants/theme';
+import { DARK, LIGHT, Theme } from '../components/constants/theme';
 
 import SettingsDialog from '../components/Dialog/SettingsDialog';
 import AboutDialog from '../components/Dialog/AboutDialog';
@@ -94,7 +94,7 @@ import {
 } from '../util/playAreaSuccessGoals';
 import { matPlayZonesFromScene } from '../util/jbcMatPlayArea';
 import { worldItemsFromScene } from '../util/jbcChallengeCatalog';
-import { scenePropsRequireSimulatorReload } from '../util/scenePropsRequireSimulatorReload';
+import { isSelectionOnlySceneUpdate, scenePropsRequireSimulatorReload } from '../util/scenePropsRequireSimulatorReload';
 
 
 import Motor from '../programming/AbstractRobot/Motor';
@@ -117,6 +117,7 @@ interface RootPrivateProps {
   challenge?: AsyncChallenge;
   challengeCompletion?: AsyncChallengeCompletion;
   locale: LocalizedString.Language;
+  settings: Settings;
 
   robots: Dict<Robot>;
 
@@ -292,6 +293,10 @@ class Root extends React.Component<Props, State> {
       );
     }
 
+    if (this.workingChallengeScene_) {
+      sceneToLoad = Scene.copyRobotStartingOrigins(this.workingChallengeScene_, sceneToLoad);
+    }
+
     const latestChallengeCompletion =
       Async.latestValue(store.getState().challengeCompletions[challengeId]) ??
       Async.latestValue(this.props.challengeCompletion);
@@ -367,14 +372,28 @@ class Root extends React.Component<Props, State> {
     reinstantiateCustomChallengeRuntimeScript(binding.scriptManager, scene);
   };
 
+  private incrementNonce_ = () => {
+    this.setState({
+      nonce: (this.state.nonce + 1) % 100000
+    });
+  };
+
   private onNodeChange_ = (nodeId: string, node: Node) => {
     if (!this.workingChallengeScene_) return;
     this.workingChallengeScene_ = Scene.setNode(this.workingChallengeScene_, nodeId, node);
-    const binding = Space.getInstance().sceneBinding;
-    if (binding) {
-      binding.applyNodeFromScript(nodeId, node);
-      binding.scriptManager.scene = Scene.setNode(binding.scriptManager.scene, nodeId, node);
+    const space = Space.getInstance();
+    const binding = space.sceneBinding;
+    if (!binding) return;
+
+    if (node.type === 'robot') {
+      space.replaceSceneState(this.workingChallengeScene_);
+      binding.syncNodeOriginsFromScene(this.workingChallengeScene_);
+      this.incrementNonce_();
+      return;
     }
+
+    binding.applyNodeFromScript(nodeId, node);
+    binding.scriptManager.scene = Scene.setNode(binding.scriptManager.scene, nodeId, node);
   };
 
   private onNodeAdd_ = this.onNodeChange_;
@@ -429,7 +448,8 @@ class Root extends React.Component<Props, State> {
   private onSelectNodeId_ = (nodeId?: string) => {
     if (this.state.modal.type !== Modal.Type.CustomChallengeSetup) return;
     if (!this.workingChallengeScene_) return;
-    this.workingChallengeScene = {
+    Space.getInstance().applySceneSelection(nodeId, undefined);
+    this.workingChallengeScene_ = {
       ...this.workingChallengeScene_,
       selectedNodeId: nodeId,
       selectedScriptId: undefined,
@@ -439,12 +459,14 @@ class Root extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const theme = this.props.settings.darkMode ? DARK : LIGHT;
+
     this.state = {
       layout: Layout.Side,
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
-      console: StyledText.text({ text: LocalizedString.lookup(tr('Welcome to the KIPR Simulator!\n'), props.locale), style: STDOUT_STYLE(DARK) }),
-      theme: DARK,
+      console: StyledText.text({ text: LocalizedString.lookup(tr('Welcome to the KIPR Simulator!\n'), props.locale), style: STDOUT_STYLE(theme) }),
+      theme: theme,
       messages: [],
       settings: DEFAULT_SETTINGS,
       feedback: DEFAULT_FEEDBACK,
@@ -736,12 +758,25 @@ class Root extends React.Component<Props, State> {
     if (this.props.params.challengeId !== prevProps.params.challengeId) {
       this.appliedCompletionSceneDiff_ = false;
       this.lastSyncedPropsScene_ = undefined;
+      this.workingChallengeScene_ = undefined;
     }
 
     const latestScene = Async.latestValue(this.props.scene);
     const prevLatestScene = Async.latestValue(prevProps.scene);
     const latestCompletion = Async.latestValue(this.props.challengeCompletion);
     const prevLatestCompletion = Async.latestValue(prevProps.challengeCompletion);
+
+    if (
+      latestScene &&
+      prevLatestScene &&
+      isSelectionOnlySceneUpdate(prevLatestScene, latestScene)
+    ) {
+      Space.getInstance().applySceneSelection(
+        latestScene.selectedNodeId,
+        latestScene.selectedScriptId,
+      );
+      return;
+    }
 
     if (
       latestScene &&
@@ -1447,10 +1482,14 @@ class Root extends React.Component<Props, State> {
       challengeStarted
     } = state;
 
+    const { settings } = this.props;
+    const theme = settings.darkMode ? DARK : LIGHT;
+
     const latestChallengeCompletion = Async.latestValue(challengeCompletion);
     if (challengeId && !challengeStarted) {
       return (
         <LoadingOverlay
+          theme={theme}
           onStartClick={this.onChallengeStartClick_}
           challenge={challenge}
           loading={!latestChallengeCompletion}
@@ -1479,14 +1518,9 @@ class Root extends React.Component<Props, State> {
       simulatorState,
       console,
       messages,
-      settings,
       feedback,
       windowInnerHeight,
     } = state;
-
-    const theme = DARK;
-
-
 
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
@@ -1661,7 +1695,7 @@ class Root extends React.Component<Props, State> {
           />
         )}
         <AiWindow
-          theme={DARK}
+          theme={theme}
           code={code}
           language={language}
           console={StyledText.toString(console)}
@@ -1686,6 +1720,7 @@ const ConnectedChallengeRoot = connect((state: ReduxState, { params: { challenge
     challenge: Dict.unique(builder.challenges),
     challengeCompletion: Dict.unique(builder.challengeCompletions),
     locale: state.i18n.locale,
+    settings: state.settings,
     robots: Dict.map(state.robots.robots, Async.latestValue),
   };
 }, (dispatch, { params: { challengeId } }: RootPublicProps) => ({

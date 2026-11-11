@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { LIGHT, DARK, ThemeProps } from '../components/constants/theme';
 import MainMenu from '../components/MainMenu';
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
@@ -26,6 +26,8 @@ import { isCustomChallengeId } from '../util/customChallengeFactory';
 import { isTeacherOwnedCustomChallenge } from '../util/customChallengeClassroomShare';
 import { ChallengesAction } from '../state/reducer/challenges';
 import { NATIVE_SCROLLBAR_CLASS, nativeScrollbarChrome } from '../util/nativeScrollbarChrome';
+import { Settings } from '../components/constants/Settings';
+import ScrollArea from '../components/interface/ScrollArea';
 
 const SELFIDENTIFIER = "My Scores!";
 
@@ -73,10 +75,12 @@ interface RouterProps {
     studentId?: string;
   }
 }
+
 interface ClassroomLeaderboardPrivateProps {
   onClearSelectedClassroom: () => void;
   onListUserChallenges: () => void;
   locale: LocalizedString.Language;
+  settings: Settings;
   classroom: AsyncClassroom;
 }
 
@@ -99,18 +103,11 @@ interface ClassroomLeaderboardState {
 type Props = ClassroomLeaderboardPublicProps & ClassroomLeaderboardPrivateProps & ChallengeProps & RouterProps;
 type State = ClassroomLeaderboardState;
 
-const PageContainer = styled('div', (props: ThemeProps) => ({
-  width: '100%',
-  height: '100%',
-  backgroundColor: props.theme.backgroundColor,
-  color: props.theme.color,
-}));
-
 const TeacherLeaderboardRoot = styled('div', {
   width: '100%',
   maxWidth: '100%',
   minWidth: 0,
-  overflow: 'hidden',
+  // overflow: 'hidden',
   boxSizing: 'border-box',
 });
 
@@ -133,12 +130,12 @@ const ClassroomLeaderboardContainer = styled("div", (props: ThemeProps & { $teac
 const TeacherLeaderboardPanel = styled('div', {
   width: '88%',
   maxWidth: '88%',
-  height: '75%',
-  maxHeight: '75%',
+  // height: '75%',
+  // maxHeight: '75%',
   alignSelf: 'center',
   display: 'flex',
   flexDirection: 'column',
-  minHeight: 0,
+  // minHeight: '21em',
   minWidth: 0,
   overflow: 'hidden',
   boxSizing: 'border-box',
@@ -153,68 +150,14 @@ const ClassroomLeaderboardTitleContainer = styled('div', (props: { $compact?: bo
   flexShrink: 0,
 }));
 
-const TableHeaderContainer = styled('div', {
-  display: 'inline-block',
-  transform: 'rotate(-45deg)',
-  transformOrigin: 'bottom left',
-  whiteSpace: 'nowrap',
-  width: '50px',
-});
 
-const UserHeaderContainer = styled('div', {
-  display: 'inline-block',
-  whiteSpace: 'nowrap',
-  width: '100px',
-});
-
-
-const StyledTableRow = styled('tr', (props: { key: string, self: string, ref: React.Ref<HTMLTableRowElement> }) => ({
-  borderBottom: '1px solid #ddd',
-  backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000',
-}));
-const TeacherLeaderboardTableWrap = styled('div', {
-  display: 'block',
-  width: 'max-content',
-  minWidth: '100%',
-});
-
-/** Vertical scroll only (many students). Matches GradesView / classroom card scroll styling. */
-const TeacherLeaderboardVerticalScroll = styled('div', {
-  flex: 1,
-  minHeight: 0,
-  minWidth: 0,
-  maxHeight: '100%',
-  width: '100%',
-  boxSizing: 'border-box',
-  overflowX: 'hidden',
-  overflowY: 'auto',
-  ...nativeScrollbarChrome,
-});
-
-/** Horizontal scroll only (many challenge columns). */
-const TeacherLeaderboardHorizontalScroll = styled('div', {
-  width: '100%',
-  boxSizing: 'border-box',
-  overflowX: 'auto',
-  overflowY: 'hidden',
-  ...nativeScrollbarChrome,
-});
-
-const LeaderboardScrollContainer = styled('div', {
-  width: '100%',
-  maxWidth: '100%',
-  boxSizing: 'border-box',
-  height: '85%',
-  overflow: 'auto',
-  ...nativeScrollbarChrome,
-});
 
 const Button = styled('button', (props: ThemeProps & ButtonProps) => ({
   padding: '12px 24px',
   fontSize: '1em',
   fontWeight: 'bold',
-  color: props.$disabled ? '#888' : '#fff',
-  backgroundColor: props.$disabled ? '#444' : (props.$primary ? '#4caf50' : '#2196f3'),
+  color: props.$disabled ? props.theme.buttonColors.default.disabledTextColor : props.theme.buttonColors.default.textColor,
+  backgroundColor: props.$disabled ? props.theme.buttonColors.default.disabled : (props.$primary ? props.theme.buttonColors.success.standard : props.theme.buttonColors.primary.standard),
   border: 'none',
   borderRadius: '4px',
   cursor: props.$disabled ? 'not-allowed' : 'pointer',
@@ -233,30 +176,10 @@ const ButtonContainer = styled('div', () => ({
   justifyContent: 'center',
 }));
 
-const StickyRankTh = styled('th', (props: ThemeProps) => ({
-  position: 'sticky',
-  top: 0,
-  left: 0,
-  width: '80px',
-  minWidth: '80px',
-  backgroundColor: props.theme.backgroundColor,
-  zIndex: 7,
-  whiteSpace: 'nowrap',
-
-}));
-const StickyNameTh = styled('th', (props: ThemeProps) => ({
-  position: 'sticky',
-  top: 0,
-  left: '80px',
-  width: '200px',
-  minWidth: '200px',
-  backgroundColor: props.theme.backgroundColor,
-  zIndex: 7,
-  whiteSpace: 'nowrap',
-}));
 const LeaderboardContainer = styled('div', (props: ThemeProps & { $teacherView?: boolean }) => ({
   width: props.$teacherView ? '100%' : '95%',
   maxWidth: props.$teacherView ? '100%' : '900px',
+  minWidth: '65em',
   backgroundColor: props.theme.backgroundColor,
   border: `1px solid ${props.theme.borderColor}`,
   borderRadius: '8px',
@@ -287,6 +210,10 @@ const LeaderboardTitle = styled('h2', (props: ThemeProps) => ({
   color: props.theme.color,
   margin: 0,
 }));
+const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
+  flex: 1,
+}));
+
 
 const YourNameContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
@@ -309,10 +236,12 @@ const YourNameValue = styled('span', (props: ThemeProps) => ({
   fontWeight: 'bold',
   color: '#4caf50',
 }));
+
 interface ButtonProps {
   $disabled?: boolean;
   $primary?: boolean;
 }
+
 const EmptyState = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -339,6 +268,7 @@ const ErrorState = styled('div', (props: ThemeProps) => ({
   padding: '48px',
   color: '#f44336',
 }));
+
 const SectionSeparator = styled('tr', (props: ThemeProps) => ({
   backgroundColor: 'rgba(255,255,255,0.02)',
 }));
@@ -355,30 +285,39 @@ const SeparatorCell = styled('td', (props: ThemeProps) => ({
 const Table = styled('table', () => ({
   width: '100%',
   borderCollapse: 'collapse',
+  // minHeight: '15em'
 }));
 
 const TeacherLeaderboardTable = styled(Table, {
   width: 'max-content',
   minWidth: '100%',
   tableLayout: 'auto',
+  height: '100%',
+  overflow: 'visible',
+  // minHeight: '15em'
 });
 
 const TableHeader = styled('th', (props: ThemeProps & { $challengeColumn?: boolean }) => ({
   padding: '12px 16px',
-  position: 'sticky',
+  position: 'relative',
+
+  // Cancel vertical scrolling so the first row stays fixed.
+  transform: 'translateY(var(--scroll-top))',
+
+  zIndex: 5,
+  backgroundColor: props.theme.backgroundColor,
   top: 0,
   textAlign: 'center',
   fontSize: '0.85em',
   fontWeight: 'bold',
   color: props.theme.color,
   borderBottom: `1px solid ${props.theme.borderColor}`,
-  backgroundColor: 'rgba(255,255,255,0.02)',
   ...(props.$challengeColumn ? {
     minWidth: '72px',
     maxWidth: '140px',
     whiteSpace: 'normal',
     verticalAlign: 'bottom',
-    zIndex: 5,
+    // zIndex: 5,
   } : {}),
 }));
 
@@ -408,24 +347,37 @@ const RankCell = styled(TableCell, (props: ThemeProps & { rank: number }) => ({
         : props.theme.color,
 }));
 
-const StickyRankCell = styled(RankCell, (props: ThemeProps & { $highlight?: boolean }) => ({
-  position: 'sticky',
-  left: 0,
-  zIndex: 4,
-  backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 1)' : props.theme.backgroundColor,
-  minWidth: '80px',
+const StickyRankTh = styled('th', ({ theme }: ThemeProps) => ({
+  position: 'relative',
+  transform: 'translate(var(--scroll-left), var(--scroll-top))',
+  zIndex: 10,
+  width: '5em',
+  backgroundColor: theme.backgroundColor,
 }));
 
-const StickyNameCell = styled(TableCell, (props: ThemeProps & { $highlight?: boolean }) => ({
-  position: 'sticky',
-  left: '80px',
-  zIndex: 4,
-  backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 1)' : props.theme.backgroundColor,
-  textAlign: 'left',
-  minWidth: '200px',
-  whiteSpace: 'nowrap',
+const StickyNameTh = styled('th', ({ theme }: ThemeProps) => ({
+  position: 'relative',
+  transform: 'translate(var(--scroll-left), var(--scroll-top))',
+  zIndex: 10,
+  backgroundColor: theme.backgroundColor,
 }));
 
+const StickyRankCell = styled('td', ({ theme }: ThemeProps) => ({
+  position: 'relative',
+  transform: 'translateX(var(--scroll-left))',
+  zIndex: 2,
+  width: '5em',
+  textAlign: 'center',
+  backgroundColor: theme.backgroundColor,
+}));
+
+const StickyNameCell = styled('td', ({ theme }: ThemeProps) => ({
+  position: 'relative',
+  transform: 'translateX(var(--scroll-left))',
+  zIndex: 2,
+  textAlign: 'center',
+  backgroundColor: theme.backgroundColor,
+}));
 const ChallengeScoreCell = styled(TableCell, {
   minWidth: '72px',
   whiteSpace: 'nowrap',
@@ -586,15 +538,19 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
             <StickyNameTh theme={theme}>
               {LocalizedString.lookup(tr('Name'), locale)}
             </StickyNameTh>
+
             {challengeArray.map(id => (
-              <TableHeader key={id} theme={theme} $challengeColumn={isTeacherView}>
+              <TableHeader
+                key={id}
+                theme={theme}
+                $challengeColumn={isTeacherView}
+              >
                 {LocalizedString.lookup(challenges[id].name, locale)}
               </TableHeader>
             ))}
-
           </tr>
         </thead>
-        <tbody>
+        <tbody style={{ maxHeight: '10em' }}>
           {tableEntries.map((entry, index) => {
             const rank = index + 1;
             const currentUid = auth.currentUser?.uid;
@@ -624,22 +580,13 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       </LeaderboardTable>
     );
 
-    if (isTeacherView) {
-      return (
-        <TeacherLeaderboardVerticalScroll className={NATIVE_SCROLLBAR_CLASS}>
-          <TeacherLeaderboardHorizontalScroll className={NATIVE_SCROLLBAR_CLASS}>
-            <TeacherLeaderboardTableWrap>
-              {tableContent}
-            </TeacherLeaderboardTableWrap>
-          </TeacherLeaderboardHorizontalScroll>
-        </TeacherLeaderboardVerticalScroll>
-      );
-    }
-
     return (
-      <LeaderboardScrollContainer>
+      <StyledScrollArea theme={theme} horizontalScroll={true} innerStyle={{
+        width: 'max-content',
+        minWidth: '100%',
+      }}style={{ minHeight: '15em' }}>
         {tableContent}
-      </LeaderboardScrollContainer>
+      </StyledScrollArea>
     );
   };
 
@@ -647,43 +594,56 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     const { theme, locale, view } = this.props;
     const { challenges } = this.state;
     const isTeacherView = view === 'teacherView';
-    const RankCellComponent = isTeacherView ? StickyRankCell : RankCell;
-    const NameCellComponent = isTeacherView ? StickyNameCell : TableCell;
     const ScoreCellComponent = isTeacherView ? ChallengeScoreCell : TableCell;
 
     return (
-      <TableRow key={`${entry.id}-${rank}`} theme={theme} $highlight={isCurrentUser}>
-        <RankCellComponent
+      <TableRow
+        key={`${entry.id}-${rank}`}
+        theme={theme}
+        $highlight={isCurrentUser}
+      >
+        <StickyRankCell
           theme={theme}
-          rank={rank}
           {...(isTeacherView ? { $highlight: isCurrentUser } : {})}
         >
           #{rank}
-        </RankCellComponent>
-        <NameCellComponent
+        </StickyRankCell>
+
+        <StickyNameCell
           theme={theme}
           {...(isTeacherView ? { $highlight: isCurrentUser } : {})}
         >
           {entry.name}
-          {isCurrentUser && ` (${LocalizedString.lookup(tr('You'), locale)})`}
-        </NameCellComponent>
-        {challengeArray.map((id) => {
+          {isCurrentUser &&
+            ` (${LocalizedString.lookup(tr('You'), locale)})`}
+        </StickyNameCell>
+
+        {challengeArray.map(id => {
           const userScore = entry.scores.find(
             score =>
               score.challengeId === id ||
               score.name['en-US'] === challenges[id].name['en-US']
           );
-          return (
-            <ScoreCellComponent key={id} theme={theme}>
-              {!userScore && '-'}
-              {userScore?.completed && (
-                <>
-                  <img src="/static/icons/favicon-32x32.png" alt="Favicon" />
 
-                </>
+          return (
+            <ScoreCellComponent
+              key={id}
+              theme={theme}
+            >
+              {!userScore && '-'}
+
+              {userScore?.completed && (
+                <img
+                  src="/static/icons/favicon-32x32.png"
+                  alt="Favicon"
+                />
               )}
+
               {userScore && !userScore.completed && (
-                <img src="/static/icons/botguy-bw-trans-32x32.png" alt="Favicon" />
+                <img
+                  src="/static/icons/botguy-bw-trans-32x32.png"
+                  alt="Favicon"
+                />
               )}
             </ScoreCellComponent>
           );
@@ -1282,37 +1242,39 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
             </YourNameValue>
           </YourNameContainer>
         )}
-        {this.renderLeaderboard()}
+        <div style={{ minHeight: '15em' }}>
+          {this.renderLeaderboard()}
+        </div>
       </LeaderboardContainer>
     );
   };
 
   render() {
     const { props, state } = this;
-    const { style, locale, view, currentStudentDisplayName, tourRegistry } = props;
+    const { style, locale, view, currentStudentDisplayName, tourRegistry, settings } = props;
     const { selected, showBadgeDialog, users } = state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
     const currentUser = this.getCurrentUser();
     const currentUserEmail = this.getCurrentUserEmail();
 
     const tourContent_ = (<ButtonContainer>
 
       <TourTarget registry={this.props.tourRegistry} targetKey='export-button'>
-        <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr("Export My Scores!"), locale)}</Button>
+        <Button theme={theme} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr("Export My Scores!"), locale)}</Button>
       </TourTarget>
       <TourTarget registry={this.props.tourRegistry} targetKey='scroll-to-my-scores-button'>
-        <Button theme={DARK} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr("Scroll to My Scores!"), locale)}</Button>
+        <Button theme={theme} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr("Scroll to My Scores!"), locale)}</Button>
       </TourTarget>
       <TourTarget registry={this.props.tourRegistry} targetKey='see-my-badges-button'>
-        <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> {LocalizedString.lookup(tr("See My Badges!"), locale)}</Button>
+        <Button theme={theme} onClick={() => this.onSeeMyBadges()}> {LocalizedString.lookup(tr("See My Badges!"), locale)}</Button>
       </TourTarget>
     </ButtonContainer>);
 
     const normalContent_ = (
       <ButtonContainer>
-        <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr("Export My Scores!"), locale)}</Button>
-        <Button theme={DARK} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr("Scroll to My Scores!"), locale)}</Button>
-        <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> {LocalizedString.lookup(tr("See My Badges!"), locale)}</Button>
+        <Button theme={theme} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr("Export My Scores!"), locale)}</Button>
+        <Button theme={theme} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr("Scroll to My Scores!"), locale)}</Button>
+        <Button theme={theme} onClick={() => this.onSeeMyBadges()}> {LocalizedString.lookup(tr("See My Badges!"), locale)}</Button>
       </ButtonContainer>
     );
     const isTeacherView = view === 'teacherView';
@@ -1352,7 +1314,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
               <ButtonContainer>
                 <TourTarget registry={tourRegistry} targetKey="export-all-general-scores">
                   <Button
-                    theme={DARK}
+                    theme={theme}
                     $disabled={!this.canExportClassroomScores()}
                     onClick={() => this.exportClassroomScores()}
                   >
@@ -1361,7 +1323,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
                 </TourTarget>
                 <TourTarget registry={tourRegistry} targetKey="export-all-detailed-scores">
                   <Button
-                    theme={DARK}
+                    theme={theme}
                     $disabled={!this.canExportClassroomScores()}
                     onClick={() => this.exportDetailedClassroomScores()}
                   >
@@ -1383,6 +1345,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 export default connect(
   (state: ReduxState) => ({
     locale: state.i18n.locale,
+    settings: state.settings,
     classroom: state.classrooms.selectedClassroom,
     challenges: state.challenges,
     currentStudentDisplayName: Async.latestValue(state.classrooms.currentStudentClassroom)

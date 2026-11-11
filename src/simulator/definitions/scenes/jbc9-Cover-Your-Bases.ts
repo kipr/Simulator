@@ -67,6 +67,10 @@ export const JBC_9: Scene = {
   ...baseScene,
   name: tr('JBC 9'),
   description: tr('Junior Botball Challenge 9: Cover Your Bases'),
+  summary: {
+    skill: tr('Precision robot driving and engineering effectors (blades, claws, etc.).'),
+    baseMission: tr('In a single run, the robot will manipulate at least 5 upright cans back into circles 1-7.'),
+  },
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     circleIntersectsUpright: Script.ecmaScript('Circle Intersects Upright', circleIntersectsUpright),

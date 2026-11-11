@@ -67,3 +67,22 @@ export function scenePropsRequireSimulatorReload(prev: Scene, next: Scene): bool
 
   return false;
 }
+
+/** True when Redux only changed which node/script is selected (plus ignored robot poses). */
+export function isSelectionOnlySceneUpdate(prev: Scene, next: Scene): boolean {
+  if (prev === next) return false;
+  if (
+    prev.selectedNodeId === next.selectedNodeId &&
+    prev.selectedScriptId === next.selectedScriptId
+  ) {
+    return false;
+  }
+  return !scenePropsRequireSimulatorReload(
+    {
+      ...prev,
+      selectedNodeId: next.selectedNodeId,
+      selectedScriptId: next.selectedScriptId,
+    },
+    next
+  );
+}

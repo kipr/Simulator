@@ -94,6 +94,10 @@ export const JBC_6: Scene = {
   ...baseScene,
   name: tr('JBC 6'),
   description: tr('Junior Botball Challenge 6: Figure Eight'),
+  summary: {
+    skill: tr('Precision robot driving and recognizing repeated actions.'),
+    baseMission: tr('The robot will weave in and out of the can a figure 8 pattern, going out, and returning to the start box.')
+  },
   scripts: {
     notInStartBox: Script.ecmaScript('Robot not in Start Box', notInStartBox),
     circleIntersects: Script.ecmaScript('Circle Intersects', circleIntersects),

@@ -17,7 +17,7 @@ import { SimulatorState } from '../components/Challenge/SimulatorState';
 import ExceptionDialog from '../components/Challenge/ExceptionDialog';
 
 import { DEFAULT_SETTINGS, Settings } from '../components/constants/Settings';
-import { DARK, Theme } from '../components/constants/theme';
+import { DARK, LIGHT, Theme } from '../components/constants/theme';
 import { DEFAULT_SCENE } from '../components/constants/defaultScene';
 import CustomChallengeSetupDialog from '../components/Dialog/CustomChallengeSetupDialog';
 
@@ -102,7 +102,7 @@ import tr from '@i18n';
 import MatPlayZonesSceneOverlay from '../components/CustomChallenges/MatPlayZonesSceneOverlay';
 import { sceneHasLinkedChallenge, isCustomChallengeId } from '../util/customChallengeFactory';
 import { isClassroomSharedReadOnlyScene } from '../util/customChallengeClassroomShare';
-import { scenePropsRequireSimulatorReload } from '../util/scenePropsRequireSimulatorReload';
+import { isSelectionOnlySceneUpdate, scenePropsRequireSimulatorReload } from '../util/scenePropsRequireSimulatorReload';
 import { prepareCustomChallengeSceneForSimulator } from '../util/customChallengeSceneScripts';
 import { applyChallengeEventValueChange } from '../util/challengeEventUpdates';
 import { conditionGoalsFromChallenge } from '../util/customChallengePredicates';
@@ -125,6 +125,7 @@ import {
   fetchTourIfNeeded,
   retakeTour,
 } from '../state/reducer/tours';
+import { Dispatch } from 'redux';
 
 
 export interface RootRouteParams {
@@ -149,7 +150,8 @@ interface RootPrivateProps {
   settings: Settings;
   toursById: Dict<TourDoc>;
   toursLoaded: Dict<boolean>;
-
+  dispatch: Dispatch;
+  state: ReduxState;
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
   onNodeChange: (id: string, node: Node) => void;
@@ -292,6 +294,7 @@ const STDERR_STYLE = (theme: Theme) => ({
   color: 'red',
 });
 
+
 class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
   private overlayLayoutRef: React.MutableRefObject<OverlayLayout>;
@@ -300,7 +303,6 @@ class Root extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-
     this.state = {
       layout: Layout.Side,
       activeLanguage: 'c',
@@ -325,7 +327,6 @@ class Root extends React.Component<Props, State> {
           tr('Welcome to the KIPR Simulator!\n'),
           props.locale,
         ),
-        style: STDOUT_STYLE(DARK),
       }),
       theme: DARK,
       messages: [],
@@ -341,7 +342,6 @@ class Root extends React.Component<Props, State> {
     this.editorRef = React.createRef();
     this.overlayLayoutRef = React.createRef();
     Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
-    console.log("simulatorRootTourSteps:", this.state.simulatorRootTourSteps);
   }
 
   async componentDidMount() {
@@ -364,14 +364,15 @@ class Root extends React.Component<Props, State> {
     window.addEventListener('resize', this.onWindowResize_);
     // this.props.onLoadProjects();
 
-    await fetchTourIfNeeded(currentUser, TourDoc.IDS.SIMULATOR);
-
+    await fetchTourIfNeeded(currentUser, TourDoc.IDS.SIMULATOR, this.props.dispatch, this.props.state);
     space.sceneBinding.scriptManager.programStatus =
       this.state.simulatorState.type === SimulatorState.Type.Running
         ? 'running'
         : 'stopped';
     this.applyCustomChallengeGizmoMode_();
     this.syncChallengeEventHandler_();
+
+
   }
 
   componentWillUnmount() {
@@ -388,6 +389,11 @@ class Root extends React.Component<Props, State> {
     prevProps: Readonly<Props>,
     prevState: Readonly<RootState>,
   ): void {
+    const sceneId = this.props.params.sceneId ?? this.props.params.challengeId;
+    if (this.props.scene !== prevProps.scene) {
+      Space.getInstance().scene =
+        Async.latestValue(this.props.scene) || Scene.EMPTY;
+    }
     if (
       prevState.modal !== this.state.modal ||
       prevProps.params.sceneId !== this.props.params.sceneId ||
@@ -396,7 +402,7 @@ class Root extends React.Component<Props, State> {
       this.applyCustomChallengeGizmoMode_();
     }
 
-    if (this.props.scene !== prevProps.scene) {
+    if (this.props.scene !== prevProps.scene && isCustomChallengeId(sceneId)) {
       const prevScene = Async.latestValue(prevProps.scene) || Scene.EMPTY;
       let latestScene = Async.latestValue(this.props.scene) || Scene.EMPTY;
       const sceneId = this.props.params.sceneId ?? this.props.params.challengeId;
@@ -456,7 +462,14 @@ class Root extends React.Component<Props, State> {
         (sceneIdChanged || scenePropsRequireSimulatorReload(prevScene, latestScene))
       ) {
         if (Space.getInstance().scene !== latestScene) {
-          Space.getInstance().scene = latestScene;
+          if (!sceneIdChanged && isSelectionOnlySceneUpdate(prevScene, latestScene)) {
+            Space.getInstance().applySceneSelection(
+              latestScene.selectedNodeId,
+              latestScene.selectedScriptId,
+            );
+          } else {
+            Space.getInstance().scene = latestScene;
+          }
         }
       }
     }
@@ -483,9 +496,6 @@ class Root extends React.Component<Props, State> {
           : 'stopped';
     }
 
-    if (this.props.projects !== prevProps.projects) {
-      console.log('Projects prop changed:', this.props.projects);
-    }
     if (this.props.locale !== prevProps.locale) {
       this.setState({ simulatorRootTourSteps: getSimulatorTourSteps(this.props.locale) });
     }
@@ -542,12 +552,14 @@ class Root extends React.Component<Props, State> {
       },
       () => {
         window.localStorage.setItem(`code-${activeLanguage}`, code);
-        this.props.onSetProjectCode(
-          projectDetails ? projectDetails.project : null,
-          projectDetails ? projectDetails.fileName : '',
-          projectDetails ? projectDetails.fileType : 'src',
-          code,
-        );
+        if (projectDetails.project) {
+          this.props.onSetProjectCode(
+            projectDetails.project,
+            projectDetails.fileName,
+            projectDetails.fileType,
+            code,
+          );
+        }
       },
     );
   };
@@ -581,7 +593,6 @@ class Root extends React.Component<Props, State> {
           this.state.console,
           StyledText.text({
             text,
-            style: STDOUT_STYLE(this.state.theme),
           }),
           300,
         ),
@@ -613,7 +624,6 @@ class Root extends React.Component<Props, State> {
           console,
           StyledText.text({
             text: LocalizedString.lookup(tr('Compiling...\n'), locale),
-            style: STDOUT_STYLE(this.state.theme),
           }),
         );
 
@@ -660,7 +670,6 @@ class Root extends React.Component<Props, State> {
                           tr('Compilation succeeded.\n'),
                           locale,
                         ),
-                      style: STDOUT_STYLE(this.state.theme),
                     }),
                   );
 
@@ -676,7 +685,6 @@ class Root extends React.Component<Props, State> {
                       nextConsole,
                       StyledText.text({
                         text: `${compileResult.stderr}\n`,
-                        style: STDERR_STYLE(this.state.theme),
                       }),
                     );
                   }
@@ -688,7 +696,6 @@ class Root extends React.Component<Props, State> {
                         tr('Compilation failed.\n'),
                         locale,
                       ),
-                      style: STDERR_STYLE(this.state.theme),
                     }),
                   );
                 }
@@ -714,7 +721,6 @@ class Root extends React.Component<Props, State> {
                       tr('Something went wrong during compilation.\n'),
                       locale,
                     ),
-                    style: STDERR_STYLE(this.state.theme),
                   }),
                 );
 
@@ -733,7 +739,6 @@ class Root extends React.Component<Props, State> {
           console,
           StyledText.text({
             text: LocalizedString.lookup(tr('Loading Python...\n'), locale),
-            style: STDOUT_STYLE(this.state.theme),
           }),
         );
 
@@ -1128,10 +1133,6 @@ class Root extends React.Component<Props, State> {
         },
       },
       () => {
-        console.log(
-          'Updated code state after file selection:',
-          this.state.code,
-        );
         window.localStorage.setItem(
           `code-${selectedProject.projectLanguage}`,
           fileContent,
@@ -1199,7 +1200,6 @@ class Root extends React.Component<Props, State> {
       userDataFiles: {},
       type: 'project',
     };
-    console.log('onProjectCreate_: ', project);
     this.props.onAddProject(project);
 
     this.setState({
@@ -1208,7 +1208,6 @@ class Root extends React.Component<Props, State> {
   };
 
   private onFileCreate_ = (fileName: string) => {
-    console.log('onFileCreate_ state: ', this.state);
     let fileN = fileName;
     const { projectDetails, activeLanguage } = this.state;
     switch (projectDetails.fileType) {
@@ -1282,6 +1281,7 @@ class Root extends React.Component<Props, State> {
       this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
       currentUser,
       this.state.tourId,
+      this.props.dispatch
     );
   };
 
@@ -1291,7 +1291,7 @@ class Root extends React.Component<Props, State> {
       this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
       currentUser,
       this.state.tourId,
-      { dismissed: true },
+      this.props.dispatch
     );
   };
 
@@ -1355,6 +1355,7 @@ class Root extends React.Component<Props, State> {
         this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
         currentUser,
         this.state.tourId,
+        this.props.dispatch
       );
     });
   };
@@ -1413,7 +1414,7 @@ class Root extends React.Component<Props, State> {
       simulatorRootTourSteps,
     } = state;
 
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
@@ -1477,7 +1478,7 @@ class Root extends React.Component<Props, State> {
     // const showTour = true;
 
     if (showTour && !this.registry) {
-      this.registry = new TourRegistry();
+      this.registry = new TourRegistry(TourDoc.IDS.SIMULATOR);
     }
     if (!showTour && this.registry) {
       this.registry = undefined;
@@ -1763,7 +1764,7 @@ class Root extends React.Component<Props, State> {
           />
         )}
         <AiWindow
-          theme={DARK}
+          theme={theme}
           code={code[activeLanguage]}
           language={activeLanguage}
           console={StyledText.toString(console)}
@@ -1774,15 +1775,17 @@ class Root extends React.Component<Props, State> {
   }
 }
 
+
 const ConnectedRoot = connect(
   (
     state: ReduxState,
     { params: { sceneId, challengeId } }: RootPublicProps,
   ) => {
+
     const builder = new Builder(state);
 
-    let sceneHasChallenge = true;
 
+    let sceneHasChallenge = true;
     if (challengeId) {
       const challenge = builder.challenge(challengeId);
       challenge.scene();
@@ -1801,7 +1804,6 @@ const ConnectedRoot = connect(
     }
 
     builder.dispatchLoads();
-
     return {
       scene: Dict.unique(builder.scenes),
       challenge: Dict.unique(builder.challenges),
@@ -1816,9 +1818,11 @@ const ConnectedRoot = connect(
       toursLoaded: state.tours.loaded,
       toursLoading: state.tours.loading,
       toursError: state.tours.error,
+      state: state,
     };
   },
   (dispatch, { params: { sceneId } }: RootPublicProps) => ({
+    dispatch,
     onNodeAdd: (nodeId: string, node: Node) =>
       dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
     onNodeRemove: (nodeId: string) =>

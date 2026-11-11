@@ -1,4 +1,6 @@
 import Dict from './objectOps/Dict';
+import { ThemeProps } from '../components/constants/theme';
+import PropTypes from 'prop-types';
 
 /** Raw completion from gradebook / Firestore (same shape as teacher submission view). */
 type ProgressLike = unknown;
@@ -101,26 +103,43 @@ const pillBase = {
   marginTop: '4px',
 };
 
-export const completionDuePillStyle: Record<
+export const completionDuePillStyle = (
+  props: ThemeProps
+): Record<
 Exclude<CompletionVersusDue, 'unknown'>,
-  typeof pillBase & { backgroundColor: string; color: string; border: string }
-> = {
+  typeof pillBase & {
+  backgroundColor: string;
+  color: string;
+  border: string;
+}
+> => ({
   'on-time': {
     ...pillBase,
     backgroundColor: 'rgba(76, 175, 80, 0.22)',
-    color: '#c8e6c9',
+    color: props.theme.themeName === 'DARK' ? '#c8e6c9' : '#2e7d32',
     border: '1px solid rgba(102, 187, 106, 0.85)',
   },
+
   late: {
     ...pillBase,
     backgroundColor: 'rgba(239, 83, 80, 0.18)',
-    color: '#ffccbc',
+    color: props.theme.themeName === 'DARK' ? '#ffccbc' : '#c62828',
     border: '1px solid rgba(229, 115, 115, 0.85)',
   },
+
   'no-deadline': {
     ...pillBase,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    color: 'rgba(255, 255, 255, 0.65)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    backgroundColor:
+      props.theme.themeName === 'DARK'
+        ? 'rgba(255, 255, 255, 0.06)'
+        : 'rgba(0, 0, 0, 0.06)',
+    color:
+      props.theme.themeName === 'DARK'
+        ? 'rgba(255, 255, 255, 0.65)'
+        : 'rgba(0, 0, 0, 0.65)',
+    border:
+      props.theme.themeName === 'DARK'
+        ? '1px solid rgba(255, 255, 255, 0.12)'
+        : '1px solid rgba(0, 0, 0, 0.12)',
   },
-};
+});

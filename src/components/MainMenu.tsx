@@ -4,7 +4,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../util/style';
 import { Spacer } from './constants/common';
 import { FontAwesome } from './FontAwesome';
-import { DARK, ThemeProps } from './constants/theme';
+import { LIGHT, DARK, ThemeProps } from './constants/theme';
 
 import { faSignOutAlt, faBars, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 
@@ -22,6 +22,8 @@ import ClassroomExtraMenu from './ClassroomExtraMenu';
 import InformationExtraMenu from './InformationExtraMenu';
 import TourTarget from './Tours/TourTarget';
 import { TourRegistry } from './../tours/TourRegistry';
+import { Settings } from 'components/constants/Settings';
+import ExtraMenu from './interface/ExtraMenu';
 
 
 namespace SubMenu {
@@ -56,6 +58,7 @@ export interface MenuPublicProps extends StyleProps, ThemeProps {
 
 interface MenuPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
 }
 
 interface MenuState { subMenu: SubMenu; }
@@ -179,18 +182,27 @@ export class MainMenu extends React.Component<Props, State> {
   };
 
   render() {
-    const { className, style, locale, tourRegistry } = this.props;
+    const { className, style, locale, tourRegistry, settings } = this.props;
     const { subMenu } = this.state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
     const retakeTourItem_ = (<Item theme={theme} onClick={this.onRetakeTour_}><ItemIcon icon={faCircleInfo} /> {LocalizedString.lookup(tr('Retake Tour'), locale)}</Item>);
     return (
       <Container className={className} style={style} theme={theme}>
         <Logo theme={theme} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string} onClick={this.onDashboardClick_} />
         <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
         {/* <Item theme={theme} onClick={this.onDashboardClick_}><ItemIcon icon='compass'/> Dashboard</Item> */}
-        {tourRegistry ? <TourTarget style={style} registry={tourRegistry} targetKey={'retake-tour-button'}>
-          {retakeTourItem_}
-        </TourTarget> : undefined}
+        <Item
+          theme={theme}
+          onClick={this.onExtraClick_}
+          style={{ position: 'relative' }}
+        >
+
+          <ItemIcon icon={faBars} style={{ padding: 0 }} />
+          {subMenu.type === SubMenu.Type.ExtraMenu ? (
+            <ExtraMenu theme={theme} tourRegistry={tourRegistry} />
+          ) : undefined}
+
+        </Item>
         <Item theme={theme} onClick={this.onLogoutClick_}><ItemIcon icon={faSignOutAlt} /> {LocalizedString.lookup(tr('Logout'), locale)}</Item>
 
       </Container>
@@ -199,5 +211,6 @@ export class MainMenu extends React.Component<Props, State> {
 }
 
 export default connect((state: ReduxState) => ({
-  locale: state.i18n.locale
+  locale: state.i18n.locale,
+  settings: state.settings,
 }))(MainMenu) as React.ComponentType<MenuPublicProps>;

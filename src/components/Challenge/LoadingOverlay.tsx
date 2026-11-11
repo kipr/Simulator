@@ -9,26 +9,30 @@ import LocalizedString from '../../util/LocalizedString';
 import { Spacer } from '../constants/common';
 import { Dialog } from '../Dialog/Dialog';
 import { Modal } from '../interface/Modal';
-import { DARK, LIGHT } from '../constants/theme';
+import { ThemeProps } from '../constants/theme';
 
 import tr from '@i18n';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 
-const Container = styled('div', {
+interface LoadingOverlayProps extends ThemeProps {
+  challenge: AsyncChallenge;
+  onStartClick: () => void;
+  loading: boolean;
+  locale: LocalizedString.Language;
+}
+
+const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
   width: '100vw',
   height: '100dvh', //OG: 100vh
   boxSizing: 'border-box', // addition for padding don't push it pas the scren
-  backgroundColor: DARK.backgroundColor,
-  color: DARK.color,
-  //padding: '1rem',
-  //fontSize: '2rem',
-
+  backgroundColor: props.theme.backgroundColor,
+  color: props.theme.color,
   padding: 'clamp(0.5rem, 2vw, 1.5rem)',
   fontSize: 'clamp(1rem, 2.5vw, 2rem)',
-});
+}));
 
 const TitleContainer = styled('div', {
   fontSize: '1em',
@@ -65,9 +69,9 @@ const Button = styled('div', {
   userSelect: 'none',
 });
 
-const StartButton = withStyleDeep(Button, {
-  backgroundColor: 'green',
-});
+const StartButton = styled(Button, (props: ThemeProps) => ({
+  backgroundColor: props.theme.buttonColors.success.standard,
+}));
 
 const LoadingButton = withStyleDeep(Button, {
   backgroundColor: 'grey',
@@ -100,12 +104,12 @@ const demo_videos: Record<string, string> = {
   'jbc24': '/static/demo_videos/JBC24.mp4'
 };
 
-const LoadingOverlay = ({ challenge, loading, onStartClick, locale }: { challenge: AsyncChallenge; onStartClick: () => void; loading: boolean; locale: LocalizedString.Language; }) => {
+const LoadingOverlay = ({ challenge, loading, onStartClick, locale, theme }: LoadingOverlayProps) => {
   const didChallengeFail: boolean = Async.isFailed(challenge);
 
   if (didChallengeFail) {
     return (
-      <Container>
+      <Container theme={theme}>
         <TitleContainer>
           {LocalizedString.lookup(tr('Failed to load challenge'), locale)}
         </TitleContainer>
@@ -120,9 +124,9 @@ const LoadingOverlay = ({ challenge, loading, onStartClick, locale }: { challeng
   const videoSrc = demo_videos[latestChallenge.sceneId];
 
   return (
-    <Container>
+    <Container theme={theme}>
       <TitleContainer>
-       {LocalizedString.lookup(tr('CHALLENGE'), locale)}
+      {LocalizedString.lookup(tr('CHALLENGE'), locale)}
       </TitleContainer>
       <NameContainer>
         {LocalizedString.lookup(latestChallenge.name, locale)}
@@ -144,7 +148,7 @@ const LoadingOverlay = ({ challenge, loading, onStartClick, locale }: { challeng
       <BottomBarContainer>
         <Spacer />
         {!loading
-          ? <StartButton onClick={onStartClick}><FontAwesomeIcon icon={faPlay} /> {LocalizedString.lookup(tr('Start'), locale)}</StartButton>
+          ? <StartButton theme={theme} onClick={onStartClick}><FontAwesomeIcon icon={faPlay} /> {LocalizedString.lookup(tr('Start'), locale)}</StartButton>
           : <LoadingButton>{LocalizedString.lookup(tr('Loading...'), locale)}</LoadingButton>
         }
       </BottomBarContainer>
@@ -155,4 +159,4 @@ const LoadingOverlay = ({ challenge, loading, onStartClick, locale }: { challeng
 
 export default connect((state: ReduxState) => ({
   locale: state.i18n.locale,
-}))(LoadingOverlay) as React.ComponentType<{ challenge: AsyncChallenge; onStartClick: () => void; loading: boolean; }>;
+}))(LoadingOverlay) as React.ComponentType<{ challenge: AsyncChallenge; onStartClick: () => void; loading: boolean; } & ThemeProps>;

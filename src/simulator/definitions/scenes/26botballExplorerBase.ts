@@ -5,21 +5,21 @@ import Camera from '../../../state/State/Scene/Camera';
 import Scene from '../../../state/State/Scene';
 import AbstractRobot from '../../../programming/AbstractRobot';
 import Author from '../../../db/Author';
+import {
+  BOTBALL_EXPLORER_TABLE_26_GEOMETRY,
+  BOTBALL_EXPLORER_TABLE_26_NODES,
+} from './2026BotballExplorerTable';
 
 import tr from '@i18n';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-13.6, -15, -4.5),
-  orientation: RotationwUnits.eulerDegrees(0, 90, 0),
-};
-
-const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(45, -6, 100),
-  orientation: RotationwUnits.eulerDegrees(0, 180, 0),
+  position: Vector3wUnits.centimeters(0, 0, 0),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(50, 90, 50)
+  position: Vector3wUnits.centimeters(-145, 113, 49),
+  orientation: RotationwUnits.eulerDegrees(0, -90, 0),
 };
 
 /**
@@ -30,33 +30,23 @@ const LIGHT_ORIGIN: ReferenceFramewUnits = {
 const ROBOT: Node.Robot = {
   type: 'robot',
   name: tr('Robot'),
-  robotId: 'demobot_no_reflectance',
+  robotId: 'demobot',
   state: AbstractRobot.Stateless.NIL,
+  editable: true,
   visible: true,
   startingOrigin: ROBOT_ORIGIN,
   origin: ROBOT_ORIGIN
 };
-
-const BOTBALL_EXPLORER_GAME_TABLE_2026: Node.FromBBTemplate = {
-  type: 'from-bb-template',
-  name: tr('2026 Botball Explorer Game Table'),
-  templateId: 'botballExplorerTable26',
-  visible: true,
-  editable: false,
-  startingOrigin: GAME_TABLE_ORIGIN,
-  origin: GAME_TABLE_ORIGIN
-};
-
 
 export function createBaseSceneSurface(): Scene {
   return {
     name: tr('Base Scene - 2026 Botball Explorer Game Table'),
     description: tr('A base scene. Intended to be augmented to create the full Botball Explorer game table'),
     author: Author.organization('kipr'),
-    geometry: {},
+    geometry: { ...BOTBALL_EXPLORER_TABLE_26_GEOMETRY },
     nodes: {
       'robot': ROBOT,
-      'botball_explorer_game_table_2026': BOTBALL_EXPLORER_GAME_TABLE_2026,
+      ...BOTBALL_EXPLORER_TABLE_26_NODES,
       'light0': {
         type: 'point-light',
         intensity: 0.8,
@@ -69,14 +59,14 @@ export function createBaseSceneSurface(): Scene {
     camera: Camera.arcRotate({
       radius: Distance.meters(5),
       target: {
-        x: Distance.meters(0),
-        y: Distance.meters(0.05),
-        z: Distance.meters(0),
+        x: Distance.meters(-0.95),
+        y: Distance.meters(0.13),
+        z: Distance.meters(-0.05),
       },
       position: {
-        x: Distance.meters(-0.75),
-        y: Distance.meters(0.75),
-        z: Distance.meters(-1.25),
+        x: Distance.meters(-0.95),
+        y: Distance.meters(1.33),
+        z: Distance.meters(-1.55),
       }
     }),
     gravity: {

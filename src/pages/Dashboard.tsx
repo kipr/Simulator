@@ -2,13 +2,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { styled } from 'styletron-react';
 
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { LIGHT, DARK, ThemeProps } from '../components/constants/theme';
 import { Card } from '../components/interface/Card';
 import MainMenu from '../components/MainMenu';
 
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
-import { State } from '../state';
+import { State as ReduxState } from '../state';
 
 import tr from '@i18n';
 import { WithNavigateProps, withNavigate } from '../util/withNavigate';
@@ -18,6 +18,8 @@ import { fetchTourIfNeeded, completeTour, retakeTour } from '../state/reducer/to
 import { TourRegistry } from '../tours/TourRegistry';
 import GuidedTour from '../components/Tours/GuidedTour';
 import TourTarget from '../components/Tours/TourTarget';
+import { Settings } from 'components/constants/Settings';
+import { Dispatch } from 'redux';
 
 export interface DashboardPublicProps extends ThemeProps, StyleProps {
 }
@@ -25,11 +27,14 @@ export interface DashboardPublicProps extends ThemeProps, StyleProps {
 interface DashboardPrivateProps {
 
   locale: LocalizedString.Language;
+  settings: Settings;
   uid: string;
   tour: TourDoc;
   tourLoaded: boolean;
   tourLoading: boolean;
   tourError: string | null;
+  dispatch: Dispatch;
+  state: ReduxState;
 }
 
 type Props = DashboardPublicProps & DashboardPrivateProps & WithNavigateProps;
@@ -69,37 +74,38 @@ const CardContainer = styled('div', (props: ThemeProps) => ({
   height: 'calc(100vh - 48px)',
   overflowY: 'auto',
   overflowX: 'hidden',
+  color: props.theme.cardColors.alternateTextColor,
 }));
 class Dashboard extends React.PureComponent<Props> {
   private onAboutClick_ = (event: React.MouseEvent) => {
     window.location.href = 'https://www.kipr.org/kipr/about-kipr';
   };
 
-  private registry = new TourRegistry();
+  private registry = new TourRegistry(TourDoc.IDS.DASHBOARD);
   private scrollRef: HTMLDivElement | null = null;
 
 
   async componentDidMount() {
-    const { uid } = this.props;
+    const { uid, dispatch, state } = this.props;
     if (uid) {
-      await fetchTourIfNeeded(this.props.uid, TourDoc.IDS.DASHBOARD);
+      await fetchTourIfNeeded(uid, TourDoc.IDS.DASHBOARD, dispatch, state);
     }
   }
 
   private onCloseTour_ = () => {
-    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD);
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD, this.props.dispatch);
   };
 
   private onSkipTour_ = () => {
-    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD, { dismissed: true });
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD, this.props.dispatch, { dismissed: true });
   };
   private onRetakeTour_ = () => {
-    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD);
+    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD, this.props.dispatch);
   };
   render() {
     const { props } = this;
-    const { className, style, locale, tour } = props;
-    const theme = DARK;
+    const { className, style, locale, tour, settings } = props;
+    const theme = settings.darkMode ? DARK : LIGHT;
     const dashboardTourSteps: TourStep[] = getTourSteps(TourDoc.IDS.DASHBOARD, locale);
     const showTour = props.tourLoaded && !tour.completed;
 
@@ -192,9 +198,11 @@ class Dashboard extends React.PureComponent<Props> {
   }
 }
 
-const Connected = connect((state: State) => ({
+const Connected = connect((state: ReduxState) => ({
+  state: state,
   uid: state.users.me,
   locale: state.i18n.locale,
+  settings: state.settings,
   tour: state.tours.byId[TourDoc.IDS.DASHBOARD] ?? TourDoc.DEFAULT,
   tourLoaded: !!state.tours.loaded[TourDoc.IDS.DASHBOARD],
   tourLoading: !!state.tours.loading[TourDoc.IDS.DASHBOARD],

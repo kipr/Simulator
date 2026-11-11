@@ -110,6 +110,10 @@ export const JBC_5: Scene = {
   ...baseScene,
   name: tr('JBC 5'),
   description: tr('Junior Botball Challenge 5: Odd Numbers'),
+  summary: {
+    skill: tr('Precision robot driving.'),
+    baseMission: tr('Drive over or touch all the odd-numbered circles without touching or driving over any even circles.')
+  },
   scripts: {
     notInStartBox: Script.ecmaScript('Not In Start Box', notInStartBox),
     oddNumberIntersects: Script.ecmaScript('Odd Number Intersects', oddNumberIntersects),

@@ -5,6 +5,7 @@ import {
   ArcRotateCamera, PointLight, SpotLight, DirectionalLight, PBRMaterial, EngineView,
   Scene as babylonScene, Node as babylonNode, Camera as babylCamera, Material as babylMaterial,
   Observer, BoundingBox, PhysicsShapeParameters, PhysicShapeOptions, PhysicsShape, PhysicsBody, PhysicsMotionType, Quaternion, HighlightLayer, Color3,
+  PhysicsShapeCapsule, PhysicsShapeContainer, PhysicsMaterial,
 } from '@babylonjs/core';
 
 // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
@@ -18,6 +19,7 @@ import Camera from "../../state/State/Scene/Camera";
 import Geometry from "../../state/State/Scene/Geometry";
 import Node from "../../state/State/Scene/Node";
 import Patch from "../../util/redux/Patch";
+import deepNeq from "../../util/redux/deepNeq";
 
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../util/math/unitMath";
 import { Distance, Mass, SetOps } from "../../util";
@@ -57,6 +59,7 @@ import { createDirectionalLight, createPointLight, createSpotLight } from './cre
 import { createCamera } from './createSceneObjects/createCameras';
 import { createObject, createEmpty } from './createSceneObjects/createObjects';
 import apply from './Apply';
+import { torusCapsuleSegments } from './torusCollider';
 
 export type FrameLike = TransformNode | AbstractMesh;
 
@@ -165,6 +168,18 @@ class SceneBinding {
     this.gizmoManager_.rotationGizmoEnabled = true;
     this.gizmoManager_.scaleGizmoEnabled = false;
     this.gizmoManager_.usePointerToAttachGizmos = false;
+    // Selecting a resting piece must not remove its contacts and wake the
+    // pieces stacked against it. Suspend physics only when editing begins.
+    const beginGizmoDrag = () => {
+      const selectedNodeId = this.scene_.selectedNodeId;
+      if (!selectedNodeId) return;
+      const node = this.bScene_.getNodeById(selectedNodeId);
+      if (node instanceof AbstractMesh || node instanceof TransformNode) {
+        apply(node, m => this.removePhysicsFromObject(m));
+      }
+    };
+    this.gizmoManager_.gizmos.positionGizmo.onDragStartObservable.add(beginGizmoDrag);
+    this.gizmoManager_.gizmos.rotationGizmo.onDragStartObservable.add(beginGizmoDrag);
     // this.gizmoManager_.boundingBoxGizmoEnabled = true;
     // this.gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(1, 0, 0));
 
@@ -582,7 +597,8 @@ class SceneBinding {
 
     if (!ret) return null;
 
-    this.updateNodePosition_(nodeToCreate, ret, id, nextScene);
+    const asleep = Node.Base.isAtStartingOrigin(nodeToCreate);
+    this.updateNodePosition_(nodeToCreate, ret, id, nextScene, asleep);
     ret.id = id;
 
     ret.metadata = { id } as SceneMeshMetadata;
@@ -590,14 +606,19 @@ class SceneBinding {
     if (ret instanceof AbstractMesh || ret instanceof TransformNode) {
       apply(ret, m => {
         m.metadata = { id } as SceneMeshMetadata;
-        this.restorePhysicsToObject(m, nodeToCreate as Node.Obj, null, nextScene);
+        this.restorePhysicsToObject(m, nodeToCreate as Node.Obj, null, nextScene, asleep);
       });
     }
 
     return ret;
   };
 
-  private updateNodePosition_ = (node: Node, bNode: babylonNode, nodeId: string, scene: Scene) => {
+  /**
+   * @param asleep Start the rebuilt physics body asleep if its node allows it
+   * (`Node.Physics.startAsleep`). Pass true only for poses where the object
+   * is at rest: scene load and reset.
+   */
+  private updateNodePosition_ = (node: Node, bNode: babylonNode, nodeId: string, scene: Scene, asleep = false) => {
     // if (node.origin && bNode instanceof TransformNode || bNode instanceof AbstractMesh) {
     if (node.origin && bNode instanceof AbstractMesh) {
       this.removePhysicsFromObject(bNode);
@@ -620,7 +641,7 @@ class SceneBinding {
 
       bNode.scaling.set(scale.x, scale.y, scale.z);
 
-      this.restorePhysicsToObject(bNode, node as Node.Obj, nodeId, scene);
+      this.restorePhysicsToObject(bNode, node as Node.Obj, nodeId, scene, asleep);
     }
   };
 
@@ -687,7 +708,11 @@ class SceneBinding {
 
     // TODO: Handle changes to faceUvs when we fully support it
     if (node.inner.origin.type === Patch.Type.OuterChange) {
-      this.updateNodePosition_(node.next, bNode, id, nextScene);
+      // A reset moves the node back to an unchanged starting pose. Editing the
+      // position changes the starting pose too, and the object should fall.
+      const reset = Node.Base.isAtStartingOrigin(node.next) &&
+        !deepNeq(node.prev.startingOrigin, node.next.startingOrigin);
+      this.updateNodePosition_(node.next, bNode, id, nextScene, reset);
     }
 
     if (node.inner.physics.type === Patch.Type.OuterChange) {
@@ -1064,25 +1089,7 @@ class SceneBinding {
   * @param parameters The object in which the calculated parameters are stored.
   */
   private addShapeOptions(mesh: AbstractMesh, objectNode: Node.Obj | Node.FromSpaceTemplate | Node.FromBBTemplate, parameters: PhysicsShapeParameters) {
-    // const parameters = params;
-    mesh.computeWorldMatrix(true);
-    const bb = mesh.getRawBoundingInfo().boundingBox;
-    const extents = new Vector3();
-    extents.copyFrom(bb.extendSize);
-    extents.scaleInPlace(2);
-    extents.multiplyInPlace(mesh.absoluteScaling);
-    // In case we had any negative scaling, we need to take the absolute value of the extents.
-    extents.x = Math.abs(extents.x);
-    extents.y = Math.abs(extents.y);
-    extents.z = Math.abs(extents.z);
-
-    const min = new Vector3();
-    min.copyFrom(bb.minimum);
-    min.multiplyInPlace(mesh.absoluteScaling);
-
-    const center = new Vector3();
-    center.copyFrom(bb.center);
-    center.multiplyInPlace(mesh.absoluteScaling);
+    const { extents, min, center } = this.scaledBounds_(mesh);
     parameters.center = center;
 
     switch (objectNode.physics?.type) {
@@ -1109,6 +1116,10 @@ class SceneBinding {
         // Nothing to do, we set the mesh in `restorePhysicsToObject`
         break;
       }
+      case 'torus': {
+        // Built from capsules in `restorePhysicsToObject`
+        break;
+      }
       case 'none': {
         // Nothing to do
         break;
@@ -1118,10 +1129,77 @@ class SceneBinding {
     return parameters;
   }
 
+  /**
+   * The mesh's bounding box in body-local space, with the mesh's scale applied.
+   * Adapted from `_addSizeOptions()` in the BabylonJS `PhysicsAggregate` class.
+   */
+  private scaledBounds_(mesh: AbstractMesh) {
+    mesh.computeWorldMatrix(true);
+    const bb = mesh.getRawBoundingInfo().boundingBox;
+    const extents = new Vector3();
+    extents.copyFrom(bb.extendSize);
+    extents.scaleInPlace(2);
+    extents.multiplyInPlace(mesh.absoluteScaling);
+    // In case we had any negative scaling, we need to take the absolute value of the extents.
+    extents.x = Math.abs(extents.x);
+    extents.y = Math.abs(extents.y);
+    extents.z = Math.abs(extents.z);
+
+    const min = new Vector3();
+    min.copyFrom(bb.minimum);
+    min.multiplyInPlace(mesh.absoluteScaling);
+
+    const center = new Vector3();
+    center.copyFrom(bb.center);
+    center.multiplyInPlace(mesh.absoluteScaling);
+
+    return { extents, min, center };
+  }
+
+  /**
+   * Child shapes of the containers we build, such as torus capsules. In
+   * Babylon 6.18, disposing a `PhysicsShapeContainer` doesn't dispose its
+   * children, so `removePhysicsFromObject` disposes them from here.
+   */
+  private containerChildren_ = new WeakMap<PhysicsShape, PhysicsShape[]>();
+
+  /**
+   * Build a ring collider: a closed loop of capsules sized from the mesh's
+   * bounding box. Returns `null` if the mesh isn't ring-shaped around local y.
+   */
+  private createTorusShape_(mesh: AbstractMesh, material: PhysicsMaterial): PhysicsShapeContainer | null {
+    const { extents, center } = this.scaledBounds_(mesh);
+    const segments = torusCapsuleSegments(extents, center);
+    if (!segments) return null;
+
+    const container = new PhysicsShapeContainer(this.bScene_);
+    const children = segments.map(({ pointA, pointB, radius }) => {
+      const capsule = new PhysicsShapeCapsule(
+        new Vector3(pointA.x, pointA.y, pointA.z),
+        new Vector3(pointB.x, pointB.y, pointB.z),
+        radius,
+        this.bScene_,
+      );
+      // Contacts use the leaf shapes' materials, not the container's.
+      capsule.material = material;
+      container.addChild(capsule);
+      return capsule;
+    });
+    container.material = material;
+    this.containerChildren_.set(container, children);
+    return container;
+  }
+
+  /**
+   * @param asleep Start the body asleep if `objectNode.physics.startAsleep`
+   * allows it. Leave false when the object may not be at rest, such as after
+   * a gizmo drag, so it falls.
+   */
   private restorePhysicsToObject = (mesh: AbstractMesh,
     objectNode: Node.Obj | Node.FromSpaceTemplate | Node.FromBBTemplate,
     nodeId: string,
-    scene: Scene): void => {
+    scene: Scene,
+    asleep = false): void => {
     // Physics should only be added to physics-enabled, visible, non-selected objects
     if (
       !objectNode.physics ||
@@ -1155,7 +1233,7 @@ class SceneBinding {
     const body = new PhysicsBody(
       mesh,
       objectNode.physics?.motionType ?? PhysicsMotionType.DYNAMIC,
-      false,
+      asleep && !!objectNode.physics.startAsleep,
       this.bScene);
     body.setMassProperties({
       mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
@@ -1177,15 +1255,41 @@ class SceneBinding {
      * object, including the mesh itself.
      * See: https://doc.babylonjs.com/features/featuresDeepDive/physics/shapes
      */
-    const parameters: PhysicsShapeParameters = { mesh: physics_mesh as Mesh };
-    // Notice that we are passing mesh, not physicsMesh here
-    this.addShapeOptions(mesh, objectNode, parameters);
-    const options: PhysicShapeOptions = { type: PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], parameters };
-    const shape = new PhysicsShape(options, this.bScene);
-    shape.material = {
+    const material: PhysicsMaterial = {
       friction: objectNode.physics.friction ?? 5,
       restitution: objectNode.physics.restitution ?? 0.5,
     };
+
+    let shape: PhysicsShape | null = null;
+    let shapeType = PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type];
+    if (objectNode.physics.type === 'torus') {
+      // Sized from the visual mesh; a torus doesn't use an authored collider.
+      shape = this.createTorusShape_(mesh, material);
+      if (!shape) {
+        console.warn(`${mesh.name}: torus physics needs a ring lying flat around local y; using a convex hull instead`);
+        shapeType = PhysicsShapeType.CONVEX_HULL;
+      }
+    }
+
+    if (!shape) {
+      const parameters: PhysicsShapeParameters = { mesh: physics_mesh as Mesh };
+      // Notice that we are passing mesh, not physicsMesh here
+      this.addShapeOptions(mesh, objectNode, parameters);
+      const options: PhysicShapeOptions = { type: shapeType, parameters };
+
+      // A collider from the model is one mesh shared by every object with that
+      // geometry, and Havok bakes in only the collider's own scale. Give it this
+      // object's scale while the shape is built.
+      const colliderScaling = physics_mesh && physics_mesh !== mesh ? physics_mesh.scaling.clone() : undefined;
+      if (colliderScaling) {
+        const s = mesh.absoluteScaling;
+        physics_mesh.scaling.multiplyInPlace(new Vector3(Math.abs(s.x), Math.abs(s.y), Math.abs(s.z)));
+      }
+      shape = new PhysicsShape(options, this.bScene);
+      if (colliderScaling) physics_mesh.scaling.copyFrom(colliderScaling);
+
+      shape.material = material;
+    }
 
     // Tell the PhysicsBody we created earlier to use this shape
     body.shape = shape;
@@ -1210,7 +1314,12 @@ class SceneBinding {
       this.physicsViewer_.hideBody(mesh.physicsBody);
     }
 
-    mesh.physicsBody.shape?.dispose();
+    const shape = mesh.physicsBody.shape;
+    if (shape) {
+      for (const child of this.containerChildren_.get(shape) ?? []) child.dispose();
+      this.containerChildren_.delete(shape);
+      shape.dispose();
+    }
     mesh.physicsBody.dispose();
     mesh.physicsBody = null;
 
@@ -1356,13 +1465,10 @@ class SceneBinding {
         this.gizmoManager_.attachToNode(null);
       }
 
-      // Disable physics on the now selected node
+      // Keep contacts while selected; dragging suspends physics instead.
       if (next !== undefined) {
         const node = this.bScene_.getNodeById(next);
         if (node instanceof AbstractMesh || node instanceof TransformNode) {
-          if (this.gizmosEnabled_) {
-            apply(node, m => this.removePhysicsFromObject(m));
-          }
           node.metadata = { ...(node.metadata as SceneMeshMetadata), selected: true };
           if (this.gizmosEnabled_) {
             this.gizmoManager_.attachToNode(node);
@@ -1524,10 +1630,13 @@ class SceneBinding {
       const objNode = this.resolveObjectNode_(node);
       if (!objNode) continue;
 
-      const bNode = this.findSceneMeshForNode_(nodeId);
+      const cached = this.nodes_[nodeId];
+      const bNode = cached instanceof AbstractMesh
+        ? cached
+        : this.findSceneMeshForNode_(nodeId);
       if (!(bNode instanceof AbstractMesh)) continue;
 
-      this.updateNodePosition_(objNode, bNode, nodeId, scene);
+      this.updateNodePosition_(objNode, bNode, nodeId, scene, Node.Base.isAtStartingOrigin(node));
     }
   }
 
@@ -1651,6 +1760,8 @@ const PHYSICS_SHAPE_TYPE_MAPPINGS: { [key in Node.Physics.Type]: number } = {
   'sphere': PhysicsShapeType.SPHERE,
   'cylinder': PhysicsShapeType.CYLINDER,
   'mesh': PhysicsShapeType.MESH,
+  // Built by hand in `restorePhysicsToObject`; this entry isn't used to build it.
+  'torus': PhysicsShapeType.CONTAINER,
   'none': PhysicsShapeType.CONVEX_HULL,
 };
 

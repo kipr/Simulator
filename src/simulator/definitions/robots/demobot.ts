@@ -7,6 +7,7 @@ import { RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
 
 import tr from '@i18n';
 import { Quaternion } from "@babylonjs/core";
+import { MODELS } from '../models';
 
 const { degrees } = Angle;
 const { grams } = Mass;
@@ -34,7 +35,8 @@ export const DEMOBOT: Robot = {
       parentId: 'chassis',
       mass: grams(300),
       origin: {
-        position: Vector3wUnits.meters(-0.06, -0.019, 0),
+        // Note: The x position has been slightly adjusted from zero to improve balance.
+        position: Vector3wUnits.meters(0.004, -0.019, -0.06),
       },
     }),
     left_wheel: Node.motor({
@@ -42,11 +44,10 @@ export const DEMOBOT: Robot = {
       parentAxis: RawVector3.NEGATIVE_Y,
       childAxis: RawVector3.NEGATIVE_Z,
       parentPerpAxis: RawVector3.NEGATIVE_Z,
-      childPerpAxis: RawVector3.NEGATIVE_X,
-      childRotationQuaternion: Quaternion.FromEulerAngles(0, 0, Math.PI / -2),
+      childPerpAxis: RawVector3.X,
+      childRotationQuaternion: Quaternion.FromEulerAngles(0, 0, Math.PI / 2),
       motorPort: 0,
       parentId: 'chassis',
-      plug: Node.Motor.Plug.Inverted
     }),
     left_wheel_link: Node.link({
       parentId: 'left_wheel',
@@ -156,10 +157,10 @@ export const DEMOBOT: Robot = {
     }),
   },
   geometry: {
-    chassis_link: Geometry.remoteMesh({ uri: '/static/object_binaries/chassis.glb' }),
-    wheel_link: Geometry.remoteMesh({ uri: '/static/object_binaries/wheel.glb' }),
-    arm_link: Geometry.remoteMesh({ uri: '/static/object_binaries/arm.glb' }),
-    claw_link: Geometry.remoteMesh({ uri: '/static/object_binaries/claw.glb' }),
+    chassis_link: Geometry.remoteMesh({ uri: MODELS.robots.demobot.chassis }),
+    wheel_link: Geometry.remoteMesh({ uri: MODELS.robots.demobot.wheel }),
+    arm_link: Geometry.remoteMesh({ uri: MODELS.robots.demobot.arm }),
+    claw_link: Geometry.remoteMesh({ uri: MODELS.robots.demobot.claw }),
   },
   origin: {
     orientation: RotationwUnits.eulerDegrees(0, 0, 0),

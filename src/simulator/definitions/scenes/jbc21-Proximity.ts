@@ -62,6 +62,11 @@ export const JBC_21: Scene = {
   ...baseScene,
   name: tr('JBC 21'),
   description: tr('Junior Botball Challenge 21: Proximity'),
+  summary: {
+    skill: tr('Learn how to use the rangefinder (ET) sensor to sense an object and stop before hitting the object.'),
+    baseMission: tr('On two separate runs, the robot has to sense the wall (ream of paper) that has been randomly placed on the mat, drive out to it, and stopping with approximately 4 1/4 inches of the wall without touching it.'),
+
+  },
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     stopAtReam: Script.ecmaScript('Stop at Ream', stopAtReam),
