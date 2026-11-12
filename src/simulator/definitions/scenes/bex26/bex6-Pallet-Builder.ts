@@ -64,6 +64,11 @@ const cubesOnPallet = `
     }
   ];
 
+  const pallet = {
+    id: 'MIDDLE_PALLET',
+    faces: palletFaces
+  };
+
   // Cubes physically touching the pallet.
   const directPalletCubes = new Set();
 
@@ -73,6 +78,7 @@ const cubesOnPallet = `
 
 
   function getCube(cubeId) {
+    if (cubeId === pallet.id) return pallet;
     return allCubes.find(cube => cube.id === cubeId);
   }
 
@@ -87,14 +93,21 @@ const cubesOnPallet = `
   }
 
 
+  // Recomputed from live positions every time. Intersection start/end events
+  // alone are not enough: cubes can stay in contact while sliding off, which
+  // fires no new event.
   function updateChallengeState() {
     /*
-     * Start with cubes directly touching the pallet.
+     * Start with cubes resting on the pallet's upper surface (touching
+     * its side doesn't count).
      *
      * Then repeatedly find cubes stacked on cubes that are
      * already known to be supported by the pallet.
      */
-    const supportedCubes = new Set(directPalletCubes);
+    const supportedCubes = new Set();
+    directPalletCubes.forEach(cubeId => {
+      if (isCubeOnTopOf(cubeId, pallet.id)) supportedCubes.add(cubeId);
+    });
 
     let changed = true;
 
@@ -197,6 +210,11 @@ const cubesOnPallet = `
         [otherCube.id]
       );
     }
+  });
+
+  // Re-check while cubes stay in contact (setChallengeEventValue ignores unchanged values).
+  scene.addOnRenderListener(() => {
+    if (directPalletCubes.size > 0) updateChallengeState();
   });
 `;
 export const BEX_6: Scene = {

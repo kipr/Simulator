@@ -33,8 +33,8 @@ const cubesStacked = `
       faces: lowYellowCubeFaces
     }
   ]
+  // "A:B" means A and B are currently intersecting (maintained by intersection listeners).
   const cubeIntersections = new Set();
-  const finalStacked = new Set();
   ${getLowestFaceScript}
   ${getHighestFaceScript}
   ${isCubeOnTopOfScript}
@@ -52,13 +52,15 @@ const cubesStacked = `
     return allCubes.find(cube => cube.id === cubeId);
   }
 
+  // Recomputed from live positions every time. Intersection start/end events
+  // alone are not enough: cubes can stay in contact while sliding off or
+  // swapping order, which fires no new event.
   function updateChallengeState() {
+    const finalStacked = new Set();
     cubeIntersections.forEach(key => {
       const [cubeA, cubeB] = key.split(':');
       if(isCubeOnTopOf(cubeA, cubeB)){
-        console.log(cubeA, 'is on top of', cubeB);
         finalStacked.add(stackedKey(cubeA, cubeB));
-
       }
       else if(isCubeOnTopOf(cubeB, cubeA)){
         finalStacked.add(stackedKey(cubeB, cubeA));
@@ -78,7 +80,6 @@ const cubesStacked = `
     for (let i=index + 1; i < allCubes.length; i++) {
       const otherCube = allCubes[i];
       scene.addOnIntersectionListener(cube.id, (type, otherNodeId) => {
-      console.log("cube.id: ", cube.id, "otherNodeId: ", otherNodeId, "type: ", type);
         const key = intersectionKey(cube.id, otherNodeId);
 
         if(type === 'start'){
@@ -86,12 +87,15 @@ const cubesStacked = `
         }
         else if(type === 'end'){
           cubeIntersections.delete(key);
-          finalStacked.has(stackedKey(cube.id, otherNodeId)) ? finalStacked.delete(stackedKey(cube.id, otherNodeId)) : null;
-          finalStacked.has(stackedKey(otherNodeId, cube.id)) ? finalStacked.delete(stackedKey(otherNodeId, cube.id)) : null;
         }
         updateChallengeState();
-      }, otherCube.id); 
+      }, otherCube.id);
     }
+  });
+
+  // Re-check while cubes stay in contact (setChallengeEventValue ignores unchanged values).
+  scene.addOnRenderListener(() => {
+    if (cubeIntersections.size > 0) updateChallengeState();
   });
 `;
 

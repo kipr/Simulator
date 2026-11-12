@@ -29,35 +29,49 @@ const largeRedCube = {
 
 const allCubes = [...smallRedCubes, largeRedCube];
 
-const activeIntersections = new Set();
+// Small cubes currently touching the large cube.
 const largeCubeIntersections = new Set();
+// "A:B" means small cubes A and B are currently touching.
+const smallCubeIntersections = new Set();
 
 ${getLowestFaceScript}
 ${getHighestFaceScript}
 ${isCubeOnTopOfScript}
 
+function intersectionKey(a, b) {
+  return [a, b].sort().join(':');
+}
 
+function getCube(cubeId) {
+  return allCubes.find(cube => cube.id === cubeId);
+}
 
-  function getCube(cubeId) {
-    return allCubes.find(cube => cube.id === cubeId);
-  }
-
-
-
+// Recomputed from live positions every time. Intersection start/end events
+// alone are not enough: cubes can stay in contact while sliding off, which
+// fires no new event.
 function updateChallengeState() {
-   
-   const supportedCubes = new Set(largeCubeIntersections);
-   let changed = true;
+  // Touching the large cube only counts when resting on its top.
+  const supportedCubes = new Set();
+  largeCubeIntersections.forEach(cubeId => {
+    if (isCubeOnTopOf(cubeId, largeRedCube.id)) supportedCubes.add(cubeId);
+  });
 
-   while(changed) {
-     changed = false;
-     activeIntersections.forEach(cubeId => {
-       if(!supportedCubes.has(cubeId) && isCubeOnTopOf(cubeId, largeRedCube.id)){
-         supportedCubes.add(cubeId);
-         changed = true;
-       }
-     });
-   }
+  // A small cube stacked on a supported small cube is supported too.
+  let changed = true;
+  while (changed) {
+    changed = false;
+    smallCubeIntersections.forEach(key => {
+      const [cubeA, cubeB] = key.split(':');
+      if (supportedCubes.has(cubeB) && !supportedCubes.has(cubeA) && isCubeOnTopOf(cubeA, cubeB)) {
+        supportedCubes.add(cubeA);
+        changed = true;
+      }
+      if (supportedCubes.has(cubeA) && !supportedCubes.has(cubeB) && isCubeOnTopOf(cubeB, cubeA)) {
+        supportedCubes.add(cubeB);
+        changed = true;
+      }
+    });
+  }
 
   scene.setChallengeEventValue('smallRedOnLargeRed', supportedCubes.size >= 1);
   scene.setChallengeEventValue('bonus', supportedCubes.size >= 2);
@@ -74,10 +88,16 @@ smallRedCubes.forEach((cube,index) => {
   for (let i=index + 1; i < smallRedCubes.length; i++) {
     const otherCube = smallRedCubes[i];
     scene.addOnIntersectionListener(cube.id, (type, otherNodeId) => {
-      type === 'start' ? activeIntersections.add(otherNodeId) : activeIntersections.delete(otherNodeId);
+      const key = intersectionKey(cube.id, otherNodeId);
+      type === 'start' ? smallCubeIntersections.add(key) : smallCubeIntersections.delete(key);
       updateChallengeState();
     }, [otherCube.id]);
   }
+});
+
+// Re-check while cubes stay in contact (setChallengeEventValue ignores unchanged values).
+scene.addOnRenderListener(() => {
+  if (largeCubeIntersections.size > 0) updateChallengeState();
 });
 `;
 

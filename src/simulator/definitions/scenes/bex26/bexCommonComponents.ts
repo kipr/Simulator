@@ -80,7 +80,6 @@ export const isCubeOnTopOfScript =
     if (!lowestPosition || !highestPosition) {
       return false;
     }
-    console.log("isCubeONTopOfScript: ", lowestPosition.y>highestPosition.y);
     return lowestPosition.y > highestPosition.y;
   }
 `;
