@@ -55,9 +55,6 @@ const cubesStacked = `
   // "A:B" means A and B are currently intersecting.
   const cubeIntersections = new Set();
 
-  // "A - B" means A is on top of B.
-  const cubeOnTopOf = new Set();
-
   ${getLowestFaceScript}
   ${getHighestFaceScript}
   ${isCubeOnTopOfScript}
@@ -70,22 +67,34 @@ const cubesStacked = `
     return allCubes.find(cube => cube.id === cubeId);
   }
 
+  // Recomputed from live positions every time. Intersection start/end events
+  // alone are not enough: cubes can stay in contact while sliding off or
+  // swapping order, which fires no new event.
   function updateChallengeState() {
+    // Cubes resting on another cube, and cubes with another cube resting on them.
+    const restingOnCube = new Set();
+    const supportingCube = new Set();
     cubeIntersections.forEach(key => {
-      const [cubeA, cubeB] = key.split(':')
+      const [cubeA, cubeB] = key.split(':');
 
       if(isCubeOnTopOf(cubeA, cubeB)){
-        cubeOnTopOf.add(cubeA + '-' + cubeB);
+        restingOnCube.add(cubeA);
+        supportingCube.add(cubeB);
       }
       else if(isCubeOnTopOf(cubeB, cubeA)){
-        cubeOnTopOf.add(cubeB + '-' + cubeA);
+        restingOnCube.add(cubeB);
+        supportingCube.add(cubeA);
       }
 
     });
 
+    // A three-high stack needs a middle cube that both rests on a cube and
+    // supports one. Counting on-top-of pairs is not enough: one cube bridging
+    // two cubes on the ground also forms two pairs.
+    const hasThreeHighStack = [...restingOnCube].some(cube => supportingCube.has(cube));
 
-    scene.setChallengeEventValue('bonus', cubeOnTopOf.size >= 1);
-    scene.setChallengeEventValue('advancedBonus', cubeOnTopOf.size === 2);
+    scene.setChallengeEventValue('bonus', restingOnCube.size >= 1);
+    scene.setChallengeEventValue('advancedBonus', hasThreeHighStack);
   }
 
 
@@ -101,16 +110,15 @@ const cubesStacked = `
         }
         else if(type === 'end'){
           cubeIntersections.delete(key);
-          for (const item of cubeOnTopOf) {
-            if (item.startsWith(cube.id+'-') || item.startsWith(otherNodeId+'-')) {
-              cubeOnTopOf.delete(item);
-            }
-          }
-          
         }
         updateChallengeState();
       }, [otherCube.id]);
     }
+  });
+
+  // Re-check while cubes stay in contact (setChallengeEventValue ignores unchanged values).
+  scene.addOnRenderListener(() => {
+    if (cubeIntersections.size > 0) updateChallengeState();
   });
 
 

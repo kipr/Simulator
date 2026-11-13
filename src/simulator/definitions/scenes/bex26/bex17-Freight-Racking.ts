@@ -46,11 +46,20 @@ const cubesStacked = `
   }
  
    function getCube(cubeId) {
+    if (cubeId === largeBrownCube.id) return largeBrownCube;
     return allSmallCubes.find(cube => cube.id === cubeId);
   }
+
+  // Recomputed from live positions every time. Intersection start/end events
+  // alone are not enough: cubes can stay in contact while sliding off, which
+  // fires no new event.
   function updateChallengeState() {
 
-    const supportedCubes = new Set(largeCubeIntersections);
+    // Touching the large cube only counts when resting on its top.
+    const supportedCubes = new Set();
+    largeCubeIntersections.forEach(cubeId => {
+      if (isCubeOnTopOf(cubeId, largeBrownCube.id)) supportedCubes.add(cubeId);
+    });
     let changed = true;
 
     while(changed) {
@@ -94,6 +103,11 @@ const cubesStacked = `
       updateChallengeState();
       }, [otherCube.id]);
     }
+  });
+
+  // Re-check while cubes stay in contact (setChallengeEventValue ignores unchanged values).
+  scene.addOnRenderListener(() => {
+    if (largeCubeIntersections.size > 0) updateChallengeState();
   });
 
 

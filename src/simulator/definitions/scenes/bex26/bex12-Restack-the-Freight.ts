@@ -48,24 +48,17 @@ const cubesStacked = `
     return allCubes.find(cube => cube.id === cubeId);
   }
 
+  // TODO: the BEX 12 challenge defines no events yet, so nothing is reported.
+  // When adding them, recompute from live positions here and also call this
+  // from scene.addOnRenderListener (see bex3-Mixed-Freight.ts).
   function updateChallengeState() {
-  
-    let changed = true;
-
-    while(changed){
-      changed = false;
-
-      cubeIntersections.forEach(key => {
-        const [cubeA, cubeB] = key.split(':')
-
-        if(isCubeOnTopOf(cubeA, cubeB)){
-          //console.log(cubeA, 'is on top of', cubeB);
-          changed = true;
-        }
-      });
-    }
-
-    console.log('cubeIntersections', cubeIntersections);
+    const stacked = new Set();
+    cubeIntersections.forEach(key => {
+      const [cubeA, cubeB] = key.split(':');
+      if (isCubeOnTopOf(cubeA, cubeB)) stacked.add(cubeA + '-' + cubeB);
+      else if (isCubeOnTopOf(cubeB, cubeA)) stacked.add(cubeB + '-' + cubeA);
+    });
+    return stacked;
   }
 
 
@@ -81,7 +74,6 @@ const cubesStacked = `
         else if(type === 'end'){
           cubeIntersections.delete(key);
         }
-        console.log("cubeIntersections", cubeIntersections);
         updateChallengeState();
       }, [otherCube.id]);
     }

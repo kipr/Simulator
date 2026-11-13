@@ -33,95 +33,69 @@ const cubesStacked = `
     },
   ];
 
-  const allCubes = [...smallRedCubes, { id: 'RED_4INCH_CUBE', faces: largeRedCubeFaces }];
-  let largeRedCubeOnPallet = true;
-  let palletOnLoadingDock = false;
-  const activeIntersections = new Set();
+  const allCubes = [
+    ...smallRedCubes,
+    { id: 'RED_4INCH_CUBE', faces: largeRedCubeFaces },
+    { id: 'RED_4INCH_CUBE_PALLET', faces: palletFaces },
+  ];
 
-  function checkLargeCubeOnPallet() {
-    const largeCubeLowestFace = getLowestFace(largeRedCubeFaces);
-    const palletHighestFace = getHighestFace(palletFaces);
-    if (!largeCubeLowestFace || !palletHighestFace) {
-      return;
-    }
-
-    const largeCubeLowestY = scene.getNodeWorldCm(largeCubeLowestFace).y;
-    const palletHighestY = scene.getNodeWorldCm(palletHighestFace).y;
-
-    const isLargeRedCubeonPallet = largeCubeLowestY > palletHighestY;
-    largeRedCubeOnPallet = isLargeRedCubeonPallet;
-  }
-
-  function checkPalletOnLoadingDock() {
-    const palletHighestFace = getHighestFace(palletFaces);
-    const loadingDockTopFace = 'loadingDockTop';
-    if (!palletHighestFace || !loadingDockTopFace) {
-      return;
-    }
-
-    const palletHighestY = scene.getNodeWorldCm(palletHighestFace).y;
-    const loadingDockTopY = scene.getNodeWorldCm(loadingDockTopFace).y;
-
-    const isPalletOnLoadingDock = palletHighestY > loadingDockTopY;
-    palletOnLoadingDock = isPalletOnLoadingDock;
-  }
-
-  function checkLargeCubeAndPalletOnLoadingDock() {
-    if(largeRedCubeOnPallet && palletOnLoadingDock){
-      scene.setChallengeEventValue('largeCubeAndPalletOnLoadingDock', true);
-    }
-    else{
-      scene.setChallengeEventValue('largeCubeAndPalletOnLoadingDock', false);
-    }
-  }
+  // Contact state, maintained by intersection listeners.
+  let largeCubeTouchingPallet = false;
+  let palletTouchingLoadingDock = false;
+  const smallCubesTouchingLargeCube = new Set();
 
  function getCube(cubeId) {
     return allCubes.find(cube => cube.id === cubeId);
   }
 
-  //Bonus true if small red cube is on large red cube and large red cube is on pallet and pallet is on loading dock
-  function checkBonus() {
-    if(activeIntersections.size > 0 && largeRedCubeOnPallet && palletOnLoadingDock){
-      scene.setChallengeEventValue('bonus', true);
-    }
-    else{
-      scene.setChallengeEventValue('bonus', false);
-    }
-  
+  function isLargeCubeOnPallet() {
+    return largeCubeTouchingPallet && isCubeOnTopOf('RED_4INCH_CUBE', 'RED_4INCH_CUBE_PALLET');
+  }
+
+  function isPalletOnLoadingDock() {
+    if (!palletTouchingLoadingDock) return false;
+
+    const palletHighestFace = getHighestFace(palletFaces);
+    if (!palletHighestFace) return false;
+
+    const palletHighest = scene.getNodeWorldCm(palletHighestFace);
+    const loadingDockTop = scene.getNodeWorldCm('loadingDockTop');
+    if (!palletHighest || !loadingDockTop) return false;
+
+    return palletHighest.y > loadingDockTop.y;
+  }
+
+  // Recomputed from live positions every time. Intersection start/end events
+  // alone are not enough: pieces can stay in contact while sliding off, which
+  // fires no new event.
+  function updateChallengeState() {
+    const delivered = isLargeCubeOnPallet() && isPalletOnLoadingDock();
+    const smallCubeOnLargeCube = [...smallCubesTouchingLargeCube].some(cubeId => isCubeOnTopOf(cubeId, 'RED_4INCH_CUBE'));
+
+    scene.setChallengeEventValue('largeCubeAndPalletOnLoadingDock', delivered);
+    // Bonus: a small red cube is on the large red cube while the base mission is met.
+    scene.setChallengeEventValue('bonus', delivered && smallCubeOnLargeCube);
   }
 
   scene.addOnIntersectionListener('RED_4INCH_CUBE', (type, otherNodeId) => {
-  const stackCheck = isCubeOnTopOf(otherNodeId, 'RED_4INCH_CUBE');
-     if (type === 'start') {
-      stackCheck ? activeIntersections.add(otherNodeId) : activeIntersections.delete(otherNodeId);
-      
-    } else if (type === 'end') {
-      activeIntersections.has(otherNodeId) ? activeIntersections.delete(otherNodeId) : null;
-    }
-    checkBonus();
+    type === 'start' ? smallCubesTouchingLargeCube.add(otherNodeId) : smallCubesTouchingLargeCube.delete(otherNodeId);
+    updateChallengeState();
   }, ['HIGH_2INCH_RED_CUBE', 'LOW_2INCH_RED_CUBE']);
 
   scene.addOnIntersectionListener('RED_4INCH_CUBE_PALLET', (type, otherNodeId) => {
-  if(type === 'start'){
-      checkLargeCubeOnPallet();
-    }
-    else if(type === 'end'){
-      largeRedCubeOnPallet = false;  
-    }
-    checkLargeCubeAndPalletOnLoadingDock();
-    checkBonus();
-  }, ['RED_4INCH_CUBE']);    
+    largeCubeTouchingPallet = type === 'start';
+    updateChallengeState();
+  }, ['RED_4INCH_CUBE']);
 
   scene.addOnIntersectionListener('loadingDockTop', (type, otherNodeId) => {
-    if(type === 'start'){
-      checkPalletOnLoadingDock();
-    }
-    else if(type === 'end'){
-      palletOnLoadingDock = false;  
-    }
-    checkLargeCubeAndPalletOnLoadingDock();
-    checkBonus();
+    palletTouchingLoadingDock = type === 'start';
+    updateChallengeState();
   }, ['RED_4INCH_CUBE_PALLET']);
+
+  // Re-check while pieces stay in contact (setChallengeEventValue ignores unchanged values).
+  scene.addOnRenderListener(() => {
+    if (largeCubeTouchingPallet && palletTouchingLoadingDock) updateChallengeState();
+  });
 `;
 
 export const BEX_8: Scene = {
