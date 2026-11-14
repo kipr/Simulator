@@ -74,7 +74,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "axios": "^1.8.2",
     "babylonjs-gltf2interface": "6.18.0",
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.9",
     "colorjs.io": "^0.4.2",
     "css-loader": "^3.5.3",
     "discord.js": "^13.6.0",
