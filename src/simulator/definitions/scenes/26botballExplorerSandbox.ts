@@ -2,16 +2,14 @@ import Scene from '../../../state/State/Scene';
 import Node from '../../../state/State/Scene/Node';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
 import Dict from '../../../util/objectOps/Dict';
-import { createBaseSceneSurface } from './26botballExplorerBase';
+import { MAT_CENTER, createBaseSceneSurface } from './26botballExplorerBase';
 import { sprintf } from 'sprintf-js';
 
 import tr from '@i18n';
 import Geometry from '../../../state/State/Scene/Geometry';
 import { Distance } from '../../../util/math/Value';
-
 const baseScene = createBaseSceneSurface();
 
-const MAT_CENTER = Vector3wUnits.centimeters(-110.18, -7.59, 39.111);
 
 const LOW_2INCH_RED_CUBE_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.add(Vector3wUnits.centimeters(83.3, -7, 22.77), MAT_CENTER),
@@ -41,11 +39,11 @@ export const HIGH_2INCH_RED_CUBE: Node = {
   origin: HIGH_2INCH_RED_CUBE_ORIGIN
 };
 const POM_ORIENTATION: RotationwUnits = RotationwUnits.eulerDegrees(0, 0, 0);
-const LO_X_1 = -43;
-const LO_Y = -15;
+const LO_X_1 = -42.75;
+const LO_Y = -18;
 export const POM_Z_GAP = 6 * 2.61;
 export const POM_X_GAP = 6 * 2.61;
-export const LO_Z_1 = 29.4;
+export const LO_Z_1 = 29;
 
 
 export const LO_ORANGE_POMS: Dict<Node> = {};
@@ -67,7 +65,7 @@ for (let i = 0; i < 6; i++) {
 export const LO_BLUE_POMS: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(LO_X_1 - POM_X_GAP * i, LO_Y, 61.8),
+    position: Vector3wUnits.centimeters(LO_X_1 - POM_X_GAP * i, LO_Y, 61.2),
 
     orientation: POM_ORIENTATION
   };
