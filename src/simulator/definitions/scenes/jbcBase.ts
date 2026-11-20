@@ -72,6 +72,7 @@ export function wallOrigin(x: number, y: number, z: number, orientation?: Rotati
 export function wallBase(id: string, name: string, origin: ReferenceFramewUnits): Node {
   return {
     type: 'object',
+    hiddenInWorldList: true,
     geometryId: id,
     name: tr(name),
     startingOrigin: origin,
@@ -96,6 +97,7 @@ export function wallBase(id: string, name: string, origin: ReferenceFramewUnits)
 export function wallImg(id: string, name: string, origin: ReferenceFramewUnits, uri: string): Node {
   return {
     type: 'object',
+    hiddenInWorldList: true,
     geometryId: id,
     name: tr(name),
     startingOrigin: origin,

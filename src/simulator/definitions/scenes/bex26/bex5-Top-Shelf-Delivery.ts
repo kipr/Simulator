@@ -3,8 +3,8 @@ import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { LOW_2INCH_RED_CUBE, HIGH_2INCH_RED_CUBE, RED_4INCH_CUBE, RED_4INCH_CUBE_PALLET, offsetGamePiece } from '../26botballExplorerSandbox';
-import { smallCubeEnd_geom, largeCubeEnd_geom, createCubeEndNode, getLowestFaceScript, getHighestFaceScript, isCubeOnTopOfScript } from './bexCommonComponents';
+import { LOW_2INCH_RED_CUBE, HIGH_2INCH_RED_CUBE, RED_4INCH_CUBE, RED_4INCH_CUBE_PALLET } from '../26botballExplorerSandbox';
+import { smallCubeEnd_geom, largeCubeEnd_geom, createCubeEndNode, getLowestFaceScript, getHighestFaceScript, isCubeOnTopOfScript, offsetChallengeNode } from './bexCommonComponents';
 import Dict from '../../../../util/objectOps/Dict';
 
 const cubesStacked = `
@@ -29,35 +29,49 @@ const largeRedCube = {
 
 const allCubes = [...smallRedCubes, largeRedCube];
 
-const activeIntersections = new Set();
+// Small cubes currently touching the large cube.
 const largeCubeIntersections = new Set();
+// "A:B" means small cubes A and B are currently touching.
+const smallCubeIntersections = new Set();
 
 ${getLowestFaceScript}
 ${getHighestFaceScript}
 ${isCubeOnTopOfScript}
 
+function intersectionKey(a, b) {
+  return [a, b].sort().join(':');
+}
 
+function getCube(cubeId) {
+  return allCubes.find(cube => cube.id === cubeId);
+}
 
-  function getCube(cubeId) {
-    return allCubes.find(cube => cube.id === cubeId);
-  }
-
-
-
+// Recomputed from live positions every time. Intersection start/end events
+// alone are not enough: cubes can stay in contact while sliding off, which
+// fires no new event.
 function updateChallengeState() {
-   
-   const supportedCubes = new Set(largeCubeIntersections);
-   let changed = true;
+  // Touching the large cube only counts when resting on its top.
+  const supportedCubes = new Set();
+  largeCubeIntersections.forEach(cubeId => {
+    if (isCubeOnTopOf(cubeId, largeRedCube.id)) supportedCubes.add(cubeId);
+  });
 
-   while(changed) {
-     changed = false;
-     activeIntersections.forEach(cubeId => {
-       if(!supportedCubes.has(cubeId) && isCubeOnTopOf(cubeId, largeRedCube.id)){
-         supportedCubes.add(cubeId);
-         changed = true;
-       }
-     });
-   }
+  // A small cube stacked on a supported small cube is supported too.
+  let changed = true;
+  while (changed) {
+    changed = false;
+    smallCubeIntersections.forEach(key => {
+      const [cubeA, cubeB] = key.split(':');
+      if (supportedCubes.has(cubeB) && !supportedCubes.has(cubeA) && isCubeOnTopOf(cubeA, cubeB)) {
+        supportedCubes.add(cubeA);
+        changed = true;
+      }
+      if (supportedCubes.has(cubeA) && !supportedCubes.has(cubeB) && isCubeOnTopOf(cubeB, cubeA)) {
+        supportedCubes.add(cubeB);
+        changed = true;
+      }
+    });
+  }
 
   scene.setChallengeEventValue('smallRedOnLargeRed', supportedCubes.size >= 1);
   scene.setChallengeEventValue('bonus', supportedCubes.size >= 2);
@@ -74,10 +88,16 @@ smallRedCubes.forEach((cube,index) => {
   for (let i=index + 1; i < smallRedCubes.length; i++) {
     const otherCube = smallRedCubes[i];
     scene.addOnIntersectionListener(cube.id, (type, otherNodeId) => {
-      type === 'start' ? activeIntersections.add(otherNodeId) : activeIntersections.delete(otherNodeId);
+      const key = intersectionKey(cube.id, otherNodeId);
+      type === 'start' ? smallCubeIntersections.add(key) : smallCubeIntersections.delete(key);
       updateChallengeState();
     }, [otherCube.id]);
   }
+});
+
+// Re-check while cubes stay in contact (setChallengeEventValue ignores unchanged values).
+scene.addOnRenderListener(() => {
+  if (largeCubeIntersections.size > 0) updateChallengeState();
 });
 `;
 
@@ -88,6 +108,11 @@ export const BEX_5: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 5'),
   description: tr('Botball Explorer Mission 5: Top Shelf Delivery'),
+  summary: {
+    skill: tr('Object manipulation, vertical placement, and end-effector design.'),
+    baseMission: tr('A Small Red Cube is on top of the Large Red Cube.'),
+    bonusMission: tr('Both Small Red Cubes are on top of the Large Red Cube.'),
+  },
   scripts: {
     cubesStacked: Script.ecmaScript('Cubes Stacked', cubesStacked),
   },
@@ -122,6 +147,6 @@ export const BEX_5: Scene = {
       largeRedCubeFront: createCubeEndNode(tr('4-inch Red Cube Front'), 'RED_4INCH_CUBE', 'front', 'largeCubeEnd_geom', Color.rgb(255, 0, 0)),
       largeRedCubeRight: createCubeEndNode(tr('4-inch Red Cube Right'), 'RED_4INCH_CUBE', 'right', 'largeCubeEnd_geom', Color.rgb(255, 0, 0)),
 
-    }, offsetGamePiece)
+    }, offsetChallengeNode)
   }
 };

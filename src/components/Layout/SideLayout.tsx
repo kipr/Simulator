@@ -280,6 +280,7 @@ State
             language={editorTarget.language}
             onCodeChange={editorTarget.onCodeChange}
             messages={messages}
+            editable={true}
             autocomplete={settings.editorAutoComplete}
             onDocumentationGoToFuzzy={onDocumentationGoToFuzzy}
           />

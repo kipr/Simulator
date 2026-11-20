@@ -52,6 +52,10 @@ export const JBC_24: Scene = {
   ...baseScene,
   name: tr('JBC 24'),
   description: tr('Junior Botball Challenge 24: Walk the Line'),
+  summary: {
+    skill: tr('Learning to use the reflectance sensor and a bang-bang algorithm to follow a black line.'),
+    baseMission: tr('The robot will follow the black line using the reflectance sensor to the purple Line B on the mat.')
+  },
   scripts: {
     lineFollow: Script.ecmaScript('Line Follow', lineFollow),
   },

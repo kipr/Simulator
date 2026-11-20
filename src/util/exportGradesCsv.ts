@@ -88,18 +88,18 @@ export function buildGradesExportCsv(p: BuildGradesExportCsvParams): string {
   ]);
 
   const rows: string[] = [header];
-
   const studentsIncluded =
     studentIdsFilter.length === 0 ? students : students.filter(s => studentIdsFilter.includes(s.id));
-
   for (const student of studentsIncluded) {
     const progress = grades?.[student.id] ?? null;
     for (const assignment of assignments) {
       const narrowed = narrowAssignmentToChallengeKeys(assignment, challengeKeysFilter);
+
       const list = narrowed.challenges ? Object.values(narrowed.challenges) : [];
+
       if (list.length === 0) continue;
 
-      const assigned = !!(student.assignments && student.assignments[assignment.title]);
+      const assigned = !!assignment.assignedTo?.[student.id];
       if (!assigned) continue;
 
       for (const entry of list) {
@@ -131,7 +131,6 @@ export function buildGradesExportCsv(p: BuildGradesExportCsvParams): string {
       }
     }
   }
-
   return rows.join('\r\n');
 }
 

@@ -5,7 +5,7 @@ import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
-
+import tr from '@i18n';
 const baseScene = createBaseSceneSurfaceA();
 
 const notInStartBox = `
@@ -77,6 +77,10 @@ export const JBC_12: Scene = {
   name: { [LocalizedString.EN_US]: 'JBC 12' },
   description: {
     [LocalizedString.EN_US]: 'Junior Botball Challenge 12: Add it Up',
+  },
+  summary: {
+    skill: tr('Learning to use one servo and planning servo placement for a challenge.'),
+    baseMission: tr('Drive out and touch the numbered circles with the claw.')
   },
   scripts: {
     inStartBox: Script.ecmaScript("Not In Start Box", notInStartBox),

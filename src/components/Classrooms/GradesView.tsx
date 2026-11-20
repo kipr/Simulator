@@ -1,5 +1,5 @@
 
-import { ThemeProps } from '../constants/theme';
+import { Theme, ThemeProps } from '../constants/theme';
 import { StyleProps } from '../../util/style';
 import LocalizedString from '../../util/LocalizedString';
 import * as React from 'react';
@@ -13,7 +13,7 @@ import { AsyncClassroom, Classroom, ClassroomAssignment } from '../../state/Stat
 import Dict from '../../util/objectOps/Dict';
 import { useEffect, useMemo, useState } from 'react';
 import Async from 'state/State/Async';
-import { ClassroomsAction, getGradebook } from '../../state/reducer/classrooms';
+import { ClassroomsAction, getAssignments, getGradebook, load, loadAssignments } from '../../state/reducer/classrooms';
 import AssignmentSubmissionDetails from '../Dialog/AssignmentSubmissionDetails';
 import ChallengeCompletion from '../../state/State/ChallengeCompletion';
 import Input from '../interface/Input';
@@ -30,6 +30,7 @@ import {
 } from '../../util/exportGradesCsv';
 import { nativeScrollbarChrome } from '../../util/nativeScrollbarChrome';
 import { useTeacherViewOverlayEffect } from './TeacherViewOverlayContext';
+import ScrollArea from '../interface/ScrollArea';
 
 
 export interface GradesViewPublicProps extends ThemeProps, StyleProps {
@@ -41,6 +42,9 @@ export interface GradesViewPublicProps extends ThemeProps, StyleProps {
 
 export interface GradesViewPrivateProps extends ThemeProps {
   locale: LocalizedString.Language;
+  classroomAssignments: Dict<Dict<ClassroomAssignment>>;
+  classroomList: Dict<AsyncClassroom>;
+  classroomVersion: number;
   onGetGradebook: (classroomDocId: string) => void;
   onSetChallengePointsOverride: (payload: {
     classroom: Classroom;
@@ -49,9 +53,21 @@ export interface GradesViewPrivateProps extends ThemeProps {
     sceneId: string;
     overridePoints: number | null;
   }) => void;
+  onReloadClassroom: (currentClassroom: AsyncClassroom) => void;
 }
 
 type Props = GradesViewPublicProps & GradesViewPrivateProps;
+
+interface StudentAssignmentRowProps {
+  student: { id: string, displayName: string };
+  theme: Theme;
+  displayAssignmentPairs: { orig: ClassroomAssignment, narrowed: ClassroomAssignment }[];
+  renderGradeCell: (
+    student: { id: string, displayName: string },
+    orig: ClassroomAssignment,
+    narrowed: ClassroomAssignment
+  ) => React.ReactNode;
+}
 
 function parseLocalDateBoundary(dateStr: string, endOfDay: boolean): number {
   const parts = dateStr.split('-').map(Number);
@@ -104,7 +120,9 @@ const ScrollContainer = styled('div', () => ({
   height: '80%',
   ...nativeScrollbarChrome,
 }));
-
+const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
+  flex: 1,
+}));
 const Table = styled('table', () => ({
   width: '100%',
   borderCollapse: 'collapse',
@@ -190,19 +208,30 @@ const FilterLabel = styled('label', (props: ThemeProps) => ({
 const ClearFilterButton = styled('div', (props: ThemeProps) => ({
   padding: '6px 12px',
   borderRadius: '4px',
-  backgroundColor: '#2c2c2cff',
+  backgroundColor: props.theme.buttonColors.default.standard,
   cursor: 'pointer',
   fontSize: '0.9em',
   userSelect: 'none',
   ':hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: props.theme.buttonColors.default.hover,
   },
 }));
-
-const ExportButton = styled(ClearFilterButton, () => ({
-  backgroundColor: '#2a4d2e',
+const GradesListContainer = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  borderColor: props.theme.borderColor,
+  borderWidth: '4px',
+  borderStyle: 'solid',
+  borderRadius: `${props.theme.itemPadding * 2}px`,
+  padding: '8px',
+  margin: '8px',
+  backgroundColor: 'lightpurple',
+  height: '100%',
+}));
+const ExportButton = styled(ClearFilterButton, (props: ThemeProps) => ({
+  backgroundColor: props.theme.buttonColors.success.standard,
   ':hover': {
-    backgroundColor: 'rgba(76, 175, 80, 0.28)',
+    backgroundColor: props.theme.buttonColors.success.hover,
   },
 }));
 
@@ -216,7 +245,11 @@ const ExportToolbarEnd = styled('div', () => ({
 
 const ExportFiltersDetails = styled('details', (props: ThemeProps) => ({
   position: 'relative',
-  color: props.theme.color,
+  color: props.theme.buttonColors.default.textColor,
+  backgroundColor: props.theme.buttonColors.default.standard,
+  ':hover': {
+    backgroundColor: props.theme.buttonColors.default.hover,
+  },
 }));
 
 const ExportFiltersSummary = styled('summary', (props: ThemeProps) => ({
@@ -226,10 +259,9 @@ const ExportFiltersSummary = styled('summary', (props: ThemeProps) => ({
   cursor: 'pointer',
   userSelect: 'none',
   fontSize: '0.9em',
-  backgroundColor: '#2c2c2cff',
-  border: `1px solid ${props.theme.borderColor}`,
+  backgroundColor: props.theme.buttonColors.default.standard,
   ':hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: props.theme.buttonColors.default.hover,
   },
   '::-webkit-details-marker': {
     display: 'none',
@@ -282,23 +314,44 @@ const MultiSelect = styled('select', (props: ThemeProps) => ({
   fontSize: '0.85em',
 }));
 
+const StudentAssignmentRow = React.memo(
+  ({
+    student,
+    theme,
+    displayAssignmentPairs,
+    renderGradeCell
+  }: StudentAssignmentRowProps) => {
+    return (
+      <TableRow theme={theme}>
+        <TableCell theme={theme}>{student.displayName}</TableCell>
+
+        {displayAssignmentPairs.map(({ orig, narrowed }) =>
+          renderGradeCell(student, orig, narrowed)
+        )}
+      </TableRow>
+    );
+  }
+);
+
+
+
 const GradesView = ({
   theme,
   locale,
+  classroomAssignments,
+  classroomList,
+  classroomVersion,
   currentSelectedClassroom,
   contextMenuVisible,
   setContextMenuVisible,
   onAssignmentAction,
   onGetGradebook,
-  onSetChallengePointsOverride
+  onSetChallengePointsOverride,
+  onReloadClassroom
 }: Props) => {
   const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
   const [selectedAssignment, setSelectedAssignment] = useState<ClassroomAssignment | null>(null);
   const loadedClassroom = Async.latestValue(currentSelectedClassroom);
-
-  const [classroomAssignments, setClassroomAssignments] = useState<ClassroomAssignment[]>(
-    loadedClassroom ? Object.values(loadedClassroom.classroomAssignments ?? {}) : []
-  );
 
   const sortedStudents = useMemo(() => {
     const s = loadedClassroom?.studentIds;
@@ -323,6 +376,14 @@ const GradesView = ({
 
   useTeacherViewOverlayEffect(seeSubmissionDialogVisible);
 
+  const selectedDocId =
+    Async.latestValue(currentSelectedClassroom)?.docId;
+
+  const currClassroom =
+    selectedDocId
+      ? classroomList[selectedDocId] ?? currentSelectedClassroom
+      : currentSelectedClassroom;
+
   useEffect(() => {
     setStudentIdsFilter([]);
     setChallengeKeysFilter([]);
@@ -333,17 +394,13 @@ const GradesView = ({
     setStudentIdsFilter(prev => prev.filter(id => valid.has(id)));
   }, [rosterStudentIdsKey, sortedStudents]);
 
-  useEffect(() => {
-    if (loadedClassroom?.classroomAssignments) {
-      setClassroomAssignments(Object.values(loadedClassroom.classroomAssignments));
-    } else {
-      setClassroomAssignments([]);
-    }
+  React.useEffect(() => {
+    onReloadClassroom(currClassroom);
   }, [loadedClassroom]);
 
   const sortedAssignments = useMemo(
     () =>
-      [...classroomAssignments].sort((a, b) => {
+      [...(classroomAssignments[loadedClassroom?.docId || ''] ? Object.values(classroomAssignments[loadedClassroom?.docId || '']) : [])].sort((a, b) => {
         const getTime = (dueDate?: string) => {
           if (!dueDate || dueDate === 'No Due Date') return Infinity;
           return new Date(dueDate).getTime();
@@ -385,6 +442,7 @@ const GradesView = ({
     [visibleAssignments, challengeKeysFilter]
   );
 
+
   const challengeExportOptions = useMemo(() => {
     const opts: { key: string; label: string }[] = [];
     for (const a of visibleAssignments) {
@@ -424,6 +482,7 @@ const GradesView = ({
       grades,
       locale,
     });
+
     const safe = loadedClassroom.classroomId.replace(/[^\w\-.]+/g, '_').slice(0, 80);
     downloadCsvFile(
       `grades-${safe}-${new Date().toISOString()
@@ -432,6 +491,8 @@ const GradesView = ({
       csv
     );
   };
+
+
 
   useEffect(() => {
     const docId = loadedClassroom?.docId;
@@ -495,68 +556,111 @@ const GradesView = ({
   }
 
 
-  function renderGradeCell(
-    student: { id: string; displayName: string; assignments?: Dict<ClassroomAssignment> },
-    orig: ClassroomAssignment,
-    narrowed: ClassroomAssignment
-  ) {
-    const isAssigned = !!(
-      student.assignments &&
-      Object.prototype.hasOwnProperty.call(student.assignments, orig.title)
-    );
-    const progressForStudent = grades ? grades[student.id] : null;
-    const cellKey = `${student.id}-${orig.title}`;
+  const renderGradeCell = React.useCallback(
+    (
+      student: {
+        id: string;
+        displayName: string;
+      },
+      orig: ClassroomAssignment,
+      narrowed: ClassroomAssignment
+    ) => {
+      const isAssigned =
+        classroomAssignments[loadedClassroom?.docId || '']
+          ?.[orig.docId]
+          ?.assignedTo
+          ?.[student.id] !== undefined;
 
-    if (!isAssigned) {
+      const progressForStudent =
+        grades ? grades[student.id] : null;
+
+      const cellKey = `${student.id}-${orig.title}`;
+
+      if (!isAssigned) {
+        return (
+          <TableCell key={cellKey} theme={theme}>
+            —
+          </TableCell>
+        );
+      }
+
+      const { completed, total } =
+        countCompletedAssignmentChallenges(
+          narrowed,
+          progressForStudent
+        );
+
+      const versusDue = progressForStudent
+        ? assignmentCompletionVersusDueDate(
+          narrowed,
+          progressForStudent
+        )
+        : 'unknown';
+
+      const progressLabel =
+        total === 0
+          ? '—'
+          : completed === total
+            ? '✓'
+            : `${completed}/${total}`;
+
       return (
         <TableCell key={cellKey} theme={theme}>
-          —
-        </TableCell>
-      );
-    }
-
-    const { completed, total } = countCompletedAssignmentChallenges(narrowed, progressForStudent);
-    const versusDue =
-      progressForStudent ? assignmentCompletionVersusDueDate(narrowed, progressForStudent) : 'unknown';
-
-    const progressLabel =
-      total === 0 ? '—' : completed === total ? '✓' : `${completed}/${total}`;
-
-    return (
-      <TableCell key={cellKey} theme={theme}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-          {versusDue !== 'unknown' && (
-            <span style={completionDuePillStyle[versusDue]}>
-              {LocalizedString.lookup(
-                versusDue === 'on-time'
-                  ? tr('On time')
-                  : versusDue === 'late'
-                    ? tr('Late')
-                    : tr('No deadline'),
-                locale
-              )}
-            </span>
-          )}
           <div
-            onClick={() => {
-              setSeeSubmissionDialogVisible(true);
-              setSelectedStudentId(student.id);
-              setSelectedAssignment(orig);
-            }}
             style={{
-              fontSize: '0.75em',
-              color: theme.color,
-              textDecoration: 'underline',
-              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 6,
             }}
           >
-            {LocalizedString.lookup(tr('See Details'), locale)}
+            {versusDue !== 'unknown' && (
+              <span style={completionDuePillStyle({ theme })[versusDue]}>
+                {LocalizedString.lookup(
+                  versusDue === 'on-time'
+                    ? tr('On time')
+                    : versusDue === 'late'
+                      ? tr('Late')
+                      : tr('No deadline'),
+                  locale
+                )}
+              </span>
+            )}
+
+            <div
+              onClick={() => {
+                setSeeSubmissionDialogVisible(true);
+                setSelectedStudentId(student.id);
+                setSelectedAssignment(orig);
+              }}
+              style={{
+                fontSize: '1em',
+                color: theme.color,
+                textDecoration: 'underline',
+                cursor: 'pointer',
+              }}
+            >
+              {LocalizedString.lookup(
+                tr('See Details'),
+                locale
+              )}
+            </div>
+
+            <span style={{ fontWeight: 700 }}>
+              {progressLabel}
+            </span>
           </div>
-          <span style={{ fontWeight: 700 }}>{progressLabel}</span>
-        </div>
-      </TableCell>
-    );
-  }
+        </TableCell>
+      );
+    },
+    [
+      classroomAssignments,
+      loadedClassroom?.docId,
+      grades,
+      theme,
+      locale,
+    ]
+  );
 
   function renderRow(student: { id: string; displayName: string; assignments?: Dict<ClassroomAssignment> }) {
     return (
@@ -688,48 +792,64 @@ const GradesView = ({
           )}
         </div>
       ) : (
-        <ScrollContainer>
-          <Table>
-            <thead>
-              <tr>
-                <TableHeader theme={theme}>
-                  {LocalizedString.lookup(tr('Student Name'), locale)}
-                </TableHeader>
-                {loadedClassroom &&
-                  displayAssignmentPairs.map(({ orig }) => (
-                    <TableHeader key={`hdr-${orig.title}`} theme={theme}>
-                      <div
-                        style={{
-                          fontWeight: 'normal',
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                        }}
-                      >
-                        {orig.dueDate !== 'No Due Date'
-                          ? `${LocalizedString.lookup(tr('Due'), locale)} ${new Date(orig.dueDate || '').toLocaleDateString(locale)}`
-                          : LocalizedString.lookup(tr('No Due Date'), locale)}
-                        <Icon
-                          style={{ height: '1em', padding: '0 0.5em' }}
-                          icon={faEllipsisVertical}
-                          onClick={(e: React.MouseEvent) => {
-                            e.stopPropagation();
-                            setSelectedAssignment(orig);
-                            setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
-                            setContextMenuVisible({ visible: true, x: e.clientX, y: e.clientY });
+        <GradesListContainer theme={theme}>
+          <StyledScrollArea theme={theme} horizontalScroll={true} innerStyle={{
+            width: 'max-content',
+            minWidth: '100%',
+          }} >
+            <Table>
+              <thead>
+                <tr>
+                  <TableHeader theme={theme}>
+                    {LocalizedString.lookup(tr('Student Name'), locale)}
+                  </TableHeader>
+                  {loadedClassroom &&
+                    displayAssignmentPairs.map(({ orig }) => (
+                      <TableHeader key={`hdr-${orig.title}`} theme={theme}>
+                        <div
+                          style={{
+                            fontWeight: 'normal',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
                           }}
-                        />
-                      </div>
-                      <br />
-                      {LocalizedString.lookup(tr(`${orig.title}`), locale)}
-                    </TableHeader>
-                  ))}
-              </tr>
-            </thead>
-            <tbody>{visibleStudents.map(student => renderRow(student))}</tbody>
-          </Table>
-        </ScrollContainer>
+                        >
+                          {orig.dueDate !== 'No Due Date'
+                            ? `${LocalizedString.lookup(tr('Due'), locale)} ${new Date(orig.dueDate || '').toLocaleDateString(locale)}`
+                            : LocalizedString.lookup(tr('No Due Date'), locale)}
+                          <Icon
+                            style={{ height: '1em', padding: '0 0.5em' }}
+                            icon={faEllipsisVertical}
+                            onClick={(e: React.MouseEvent) => {
+                              e.stopPropagation();
+                              setSelectedAssignment(orig);
+                              setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
+                              setContextMenuVisible({ visible: true, x: e.clientX, y: e.clientY });
+                            }}
+                          />
+                        </div>
+                        <br />
+                        {LocalizedString.lookup(tr(`${orig.title}`), locale)}
+                      </TableHeader>
+                    ))}
+                </tr>
+              </thead>
+              {/* <tbody>{visibleStudents.map(student => renderRow(student))}</tbody> */}
+              <tbody>
+                {visibleStudents.map(student => (
+                  <StudentAssignmentRow
+                    key={student.id}
+                    theme={theme}
+                    student={student}
+                    displayAssignmentPairs={displayAssignmentPairs}
+                    renderGradeCell={renderGradeCell}
+                  />
+                ))}
+              </tbody>
+            </Table>
+          </StyledScrollArea>
+        </GradesListContainer>
       )}
       {contextMenuVisible && renderContextMenu(contextMenu.x, contextMenu.y)}
       {seeSubmissionDialogVisible && selectedAssignment && loadedClassroom && (
@@ -759,8 +879,14 @@ export default connect((state: State) => {
 
   return {
     locale: state.i18n.locale,
+    classroomAssignments: state.classrooms.assignments,
+    classroomList: state.classrooms.entities,
+    classroomVersion: state.classrooms.classroomVersion,
   };
 }, (dispatch) => ({
+  onReloadClassroom: async (currentClassroom: AsyncClassroom) => {
+    await loadAssignments(Async.latestValue(currentClassroom)?.docId || "");
+  },
   onGetGradebook: (classroomDocId: string) => dispatch(ClassroomsAction.getGradebook({ classroomDocId })),
   onSetChallengePointsOverride: (payload: {
     classroom: Classroom;

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
 
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { DARK, LIGHT, ThemeProps } from '../components/constants/theme';
 import MainMenu from '../components/MainMenu';
 import { CountdownTimer } from '../components/LimitedChallenge';
 
@@ -18,6 +18,7 @@ import { withParams } from '../util/withParams';
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
 import tr from '@i18n';
 import db from '../db';
+import { Settings } from '../components/constants/Settings';
 
 export interface LimitedChallengeLeaderboardRouteParams {
   [key: string]: string | undefined;
@@ -30,6 +31,7 @@ export interface LimitedChallengeLeaderboardPublicProps extends StyleProps, Them
 
 interface LimitedChallengeLeaderboardPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
   challenge?: AsyncLimitedChallenge;
   currentUserUid?: string;
 }
@@ -164,8 +166,8 @@ const Button = styled('button', (props: ThemeProps & ButtonProps) => ({
   padding: '12px 24px',
   fontSize: '1em',
   fontWeight: 'bold',
-  color: props.$disabled ? '#888' : '#fff',
-  backgroundColor: props.$disabled ? '#444' : (props.$primary ? '#4caf50' : '#2196f3'),
+  color: props.$disabled ? props.theme.buttonColors.default.disabledTextColor : props.theme.buttonColors.default.textColor,
+  backgroundColor: props.$disabled ? props.theme.buttonColors.default.disabled : (props.$primary ? props.theme.buttonColors.success.standard : props.theme.buttonColors.primary.standard),
   border: 'none',
   borderRadius: '4px',
   cursor: props.$disabled ? 'not-allowed' : 'pointer',
@@ -585,7 +587,8 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
   };
 
   private renderLeaderboardRow = (entry: LeaderboardEntry, rank: number, isCurrentUser: boolean) => {
-    const theme = DARK;
+    const { settings } = this.props;
+    const theme = settings.darkMode ? DARK : LIGHT;
     return (
       <TableRow key={`${entry.uid}-${rank}`} theme={theme} $highlight={isCurrentUser}>
         <RankCell theme={theme} rank={rank}>#{rank}</RankCell>
@@ -600,9 +603,9 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
   };
 
   private renderLeaderboard = () => {
-    const { locale, currentUserUid } = this.props;
+    const { locale, currentUserUid, settings } = this.props;
     const { topEntries, userContext, loading, error } = this.state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
     if (loading) {
       return (
@@ -685,9 +688,9 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, locale, currentUserUid } = props;
+    const { style, locale, currentUserUid, settings } = props;
     const { sortField, status } = state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
     const challengeBrief = this.getChallengeBrief();
     const name = challengeBrief ? LocalizedString.lookup(challengeBrief.name, locale) : '';
@@ -807,6 +810,7 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
 const ConnectedLimitedChallengeLeaderboard = connect(
   (state: ReduxState, { params: { challengeId } }: LimitedChallengeLeaderboardPublicProps) => ({
     locale: state.i18n.locale,
+    settings: state.settings,
     challenge: state.limitedChallenges[challengeId],
     currentUserUid: state.users.me,
   })

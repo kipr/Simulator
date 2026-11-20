@@ -13,7 +13,7 @@ import Dict from '../../util/objectOps/Dict';
 import { useEffect, useState } from 'react';
 import ScrollArea from '../interface/ScrollArea';
 import Async from 'state/State/Async';
-import { ClassroomsAction, getGradebook } from '../../state/reducer/classrooms';
+import { ClassroomsAction, getGradebook, loadClassroom } from '../../state/reducer/classrooms';
 import ClassroomCodeDialog from '../Dialog/ClassroomCodeDialog';
 import AssignmentDetailsDialog from '../Dialog/AssignmentDetailsDialog';
 import db from '../../db';
@@ -28,7 +28,10 @@ export interface HomeViewPublicProps extends ThemeProps, StyleProps {
 export interface HomeViewPrivateProps extends ThemeProps {
   locale: LocalizedString.Language;
   classroomList: Dict<AsyncClassroom>;
+  classroomAssignments: Dict<Dict<ClassroomAssignment>>;
+  classroomVersion: number;
   onLoadClassroom: (classroomId: string) => void;
+  onGetAllAssignments: (classroom: Classroom) => void;
 }
 
 type Props = HomeViewPublicProps & HomeViewPrivateProps;
@@ -104,7 +107,10 @@ const HomeView = ({
   locale,
   currentClassroom,
   classroomList,
+  classroomVersion,
   onLoadClassroom,
+  classroomAssignments,
+  onGetAllAssignments,
   config
 }: Props) => {
 
@@ -118,6 +124,11 @@ const HomeView = ({
   useTeacherViewOverlayEffect(
     config === 'Teacher' && (classroomCodeDialogVisible || assignmentDetailsDialogVisible),
   );
+
+  useEffect(() => {
+    if (!loadedClassroom) return;
+    onGetAllAssignments(loadedClassroom);
+  }, [loadedClassroom]);
 
   useEffect(() => {
     if (config !== 'Student') {
@@ -150,25 +161,25 @@ const HomeView = ({
   const currentUserId = db.tokenManager?.auth().currentUser?.uid ?? '';
 
   function renderOrderedAssignments() {
-    let assignments = stateClassroom?.classroomAssignments ? Object.values(stateClassroom.classroomAssignments) : [];
+    let assignments = classroomAssignments[stateClassroom?.docId || ''] ? Object.values(classroomAssignments[stateClassroom?.docId || '']) : [];
     if (config === 'Student') {
       assignments = assignments.filter(a => assignmentListsUserInAssignedTo(a, currentUserId));
-    } else if (config === 'Teacher') {
-      assignments = assignments.filter(a => assignmentHasAnyAssignee(a));
     }
+
     const sortedAssignments = assignments.sort((a, b) => {
       const aCreated = a.createdAt ? new Date(a.createdAt).getTime() : Infinity;
       const bCreated = b.createdAt ? new Date(b.createdAt).getTime() : Infinity;
 
       return bCreated - aCreated; // Sort in descending order (newest first)
     });
+
     if (assignments) {
       return sortedAssignments.map(assignment => (
-        <AssignmentItem theme={theme} key={assignment.title}>
-          <div style={{ display: 'flex', flexDirection: 'row' }} onClick={() => {
-            setSelectedAssignment(assignment);
-            setAssignmentDetailsDialogVisible(true);
-          }}>
+        <AssignmentItem onClick={() => {
+          setSelectedAssignment(assignment);
+          setAssignmentDetailsDialogVisible(true);
+        }} theme={theme} key={assignment.title}>
+          <div style={{ display: 'flex', flexDirection: 'row' }} >
             <h2>{LocalizedString.lookup(tr('New Assignment Posted'), locale)}: {assignment.title}</h2>
           </div>
 
@@ -182,18 +193,18 @@ const HomeView = ({
   }
 
   function renderUpcomingAssignments() {
-    let assignments = stateClassroom?.classroomAssignments ? Object.values(stateClassroom.classroomAssignments) : [];
+    let assignments = classroomAssignments[stateClassroom?.docId || ''] ? Object.values(classroomAssignments[stateClassroom?.docId || '']) : [];
     if (config === 'Student') {
       assignments = assignments.filter(a => assignmentListsUserInAssignedTo(a, currentUserId));
-    } else if (config === 'Teacher') {
-      assignments = assignments.filter(a => assignmentHasAnyAssignee(a));
     }
+
     const upcomingAssignments = assignments.filter(assignment => {
       if (!assignment.dueDate) return false;
       const dueDate = new Date(assignment.dueDate).getTime();
       const now = Date.now();
       return dueDate > now;
     });
+
 
     const sortedAssignments = upcomingAssignments.sort((a, b) => {
       const aDue = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
@@ -204,7 +215,10 @@ const HomeView = ({
 
     if (upcomingAssignments.length > 0) {
       return sortedAssignments.map(assignment => (
-        <AssignmentItem theme={theme} key={assignment.title}>
+        <AssignmentItem theme={theme} key={assignment.title} onClick={() => {
+          setSelectedAssignment(assignment);
+          setAssignmentDetailsDialogVisible(true);
+        }}>
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             <h2>{LocalizedString.lookup(tr('Upcoming Assignment'), locale)}: {assignment.title}</h2>
           </div>
@@ -238,7 +252,7 @@ const HomeView = ({
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '90%' }}>
               <InfoBubble style={{ width: '100%' }} theme={theme}>
-                {renderOrderedAssignments()}
+                {stateClassroom.classroomAssignments && config === 'Teacher' ? <h2>Updating...</h2> : renderOrderedAssignments()}
               </InfoBubble>
 
             </div>
@@ -267,7 +281,13 @@ export default connect((state: State) => {
   return {
     locale: state.i18n.locale,
     classroomList: state.classrooms.entities,
+    classroomAssignments: state.classrooms.assignments,
+    classroomVersion: state.classrooms.classroomVersion,
   };
 }, (dispatch, ownProps) => ({
-  onLoadClassroom: (classroomId: string) => dispatch(ClassroomsAction.loadClassroom({ classroomId })),
+  onGetAllAssignments: (classroom: Classroom) => {
+    dispatch(ClassroomsAction.getAssignments({ classroomDocId: classroom.docId }));
+  },
+  onLoadClassroom: (docId: string) =>
+    loadClassroom(docId),
 }))(HomeView) as React.ComponentType<HomeViewPublicProps>; 

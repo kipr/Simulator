@@ -3,6 +3,7 @@ import Geometry from "../../../state/State/Scene/Geometry";
 import Node from "../../../state/State/Scene/Node";
 import { Mass } from "../../../util";
 import { PhysicsMotionType } from "@babylonjs/core";
+import { MODELS } from '../models';
 
 // TODO: Consider deep-freezing all of these objects
 
@@ -249,86 +250,86 @@ export const BB2025Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
 export const BB2025Geometries = Object.freeze<Dict<Geometry>>({
   'game_table_2025': {
     type: 'file',
-    uri: '/static/object_binaries/2025_game_table.glb',
+    uri: MODELS.games[2025].springTable,
   },
   'drink_blue': {
     type: 'file',
-    uri: '/static/object_binaries/drink_blue.glb',
+    uri: MODELS.games[2025].drink.blue,
   },
   'drink_green': {
     type: 'file',
-    uri: '/static/object_binaries/drink_green.glb',
+    uri: MODELS.games[2025].drink.green,
   },
   'drink_pink': {
     type: 'file',
-    uri: '/static/object_binaries/drink_pink.glb',
+    uri: MODELS.games[2025].drink.pink,
   },
   'pom_blue': {
     type: 'file',
-    uri: '/static/object_binaries/pom_blue.glb',
+    uri: MODELS.games[2025].pom.blue,
   },
   'pom_orange': {
     type: 'file',
-    uri: '/static/object_binaries/Pom_Orange_2in.glb',
+    uri: MODELS.games[2025].pom.orange,
   },
   'pom_red': {
     type: 'file',
-    uri: '/static/object_binaries/pom_red.glb',
+    uri: MODELS.games[2025].pom.red,
   },
   'pom_yellow': {
     type: 'file',
-    uri: '/static/object_binaries/pom_yellow.glb',
+    uri: MODELS.games[2025].pom.yellow,
   },
   'fry': {
     type: 'file',
-    uri: '/static/object_binaries/french_fry.glb',
+    uri: MODELS.games[2025].food.frenchFry,
   },
   'hamburger': {
     type: 'file',
-    uri: '/static/object_binaries/hamburger.glb',
+    uri: MODELS.games[2025].food.hamburger,
   },
   'hotdog': {
     type: 'file',
-    uri: '/static/object_binaries/hot_dog.glb',
+    uri: MODELS.games[2025].food.hotDog,
   },
   'taco': {
     type: 'file',
-    uri: '/static/object_binaries/taco.glb',
+    uri: MODELS.games[2025].food.taco,
   },
   'cup_blue': {
     type: 'file',
-    uri: '/static/object_binaries/cup_blue.glb',
+    uri: MODELS.games[2025].cup.blue,
   },
   'cup_green': {
     type: 'file',
-    uri: '/static/object_binaries/cup_green.glb',
+    uri: MODELS.games[2025].cup.green,
   },
   'cup_pink': {
     type: 'file',
-    uri: '/static/object_binaries/cup_pink.glb',
+    uri: MODELS.games[2025].cup.pink,
   },
   'bottle': {
     type: 'file',
-    uri: '/static/object_binaries/bottle.glb',
+    uri: MODELS.games[2025].bottle,
   },
   'tomato': {
     type: 'file',
-    uri: '/static/object_binaries/tomato.glb',
+    uri: MODELS.games[2025].food.tomato,
   },
   'pickle': {
     type: 'file',
-    uri: '/static/object_binaries/pickle.glb',
+    uri: MODELS.games[2025].food.pickle,
   },
   'potato': {
     type: 'file',
-    uri: '/static/object_binaries/potato.glb',
+    uri: MODELS.games[2025].food.potato,
   },
   'tray': {
     type: 'file',
-    uri: '/static/object_binaries/tray.glb',
+    uri: MODELS.games[2025].tray,
   },
   'botguy_gamepiece': {
     type: 'file',
-    uri: '/static/object_binaries/botguy.glb',
+    uri: MODELS.games[2025].botguyGamepiece,
   },
 });

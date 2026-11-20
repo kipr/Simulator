@@ -8,6 +8,7 @@ import { PhysicsMotionType } from "@babylonjs/core";
 
 import { BB2025Templates, BB2025Geometries } from "./2025gameTableTemplates";
 import { BB2026Templates, BB2026Geometries } from "./2026gameTableTemplates";
+import { MODELS } from '../models';
 
 // TODO: Consider deep-freezing all of these objects
 
@@ -479,47 +480,47 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   },
   'container': {
     type: 'file',
-    uri: '/static/object_binaries/container_with_lid.glb'
+    uri: MODELS.challenges.moon.containerWithLid
   },
   'botguy': {
     type: 'file',
-    uri: '/static/object_binaries/ogBotguy2.glb'
+    uri: MODELS.common.botguy
   },
   'solarpanel': {
     type: 'file',
-    uri: '/static/object_binaries/basic_solar_panel.glb'
+    uri: MODELS.challenges.moon.solarPanel
   },
   'walkway': {
     type: 'file',
-    uri: '/static/object_binaries/basic_walkway.glb'
+    uri: MODELS.challenges.moon.walkway
   },
   'commstower': {
     type: 'file',
-    uri: '/static/object_binaries/comm_dish.glb'
+    uri: MODELS.challenges.moon.commDish
   },
   'habitat': {
     type: 'file',
-    uri: '/static/object_binaries/basic_hab.glb'
+    uri: MODELS.challenges.moon.habitat
   },
   'research_habitat': {
     type: 'file',
-    uri: '/static/object_binaries/manipulator_hab2.glb'
+    uri: MODELS.challenges.moon.researchHabitat
   },
   'control_habitat': {
     type: 'file',
-    uri: '/static/object_binaries/com_hab.glb'
+    uri: MODELS.challenges.moon.controlHabitat
   },
   'jbc_cup_blue': {
     type: 'file',
-    uri: '/static/object_binaries/jbc_cup_blue.glb'
+    uri: MODELS.challenges.jbc.cup.blue
   },
   'jbc_cup_green': {
     type: 'file',
-    uri: '/static/object_binaries/jbc_cup_green.glb'
+    uri: MODELS.challenges.jbc.cup.green
   },
   'jbc_cup_pink': {
     type: 'file',
-    uri: '/static/object_binaries/jbc_cup_pink.glb'
+    uri: MODELS.challenges.jbc.cup.pink
   },
   ...BB2025Geometries,
   ...BB2026Geometries,

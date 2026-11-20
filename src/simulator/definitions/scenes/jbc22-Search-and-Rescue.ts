@@ -35,6 +35,10 @@ export const JBC_22: Scene = {
   ...baseScene,
   name: tr('JBC 22'),
   description: tr('Junior Botball Challenge 22: Search and Rescue'),
+  summary: {
+    skill: tr('Learn to use a sensor to find a can, precision driving, and engineering an effector to pick up a can.'),
+    baseMission: tr('The robot will sense the can using the rangefinder, pick it up, and bring it back to the starting box.')
+  },
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     enterStartBox: Script.ecmaScript('Enter Start Box', enterStartBox),

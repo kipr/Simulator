@@ -13,12 +13,20 @@ import {
 import tr from '@i18n';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(5, -8, -95),
-  orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+  position: Vector3wUnits.centimeters(0, 0, 0),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+};
+
+export const MAT_CENTER = Vector3wUnits.centimeters(-110.2, -8, 39.1);
+
+const MAT_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(-110.2, -8, 39.1),
+  orientation: RotationwUnits.eulerDegrees(0, -90, 0),
 };
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(54, 105, 50)
+  position: Vector3wUnits.centimeters(-145, 113, 49),
+  orientation: RotationwUnits.eulerDegrees(0, -90, 0),
 };
 
 /**
@@ -54,18 +62,28 @@ export function createBaseSceneSurface(): Scene {
         origin: LIGHT_ORIGIN,
         visible: true
       },
+      'bexMat': {
+        type: 'from-jbc-template',
+        templateId: '2026_bex_mat',
+        name: tr('BEX mat'),
+        startingOrigin: MAT_ORIGIN,
+        origin: MAT_ORIGIN,
+        visible: true,
+        editable: false,
+        hiddenInWorldList: true
+      },
     },
     camera: Camera.arcRotate({
       radius: Distance.meters(5),
       target: {
-        x: Distance.meters(0),
-        y: Distance.meters(0.05),
-        z: Distance.meters(0),
+        x: Distance.meters(-0.95),
+        y: Distance.meters(0.13),
+        z: Distance.meters(-0.05),
       },
       position: {
-        x: Distance.meters(-1.5),
-        y: Distance.meters(1.25),
-        z: Distance.meters(0),
+        x: Distance.meters(-0.95),
+        y: Distance.meters(1.33),
+        z: Distance.meters(-1.55),
       }
     }),
     gravity: {

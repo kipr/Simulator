@@ -15,6 +15,8 @@ jobs:
       with:
         path: simulator
         submodules: recursive
+        # Tests load .glb meshes, which are stored in Git LFS
+        lfs: true
     - name: Install Simulator system dependencies
       run: sudo apt-get update && sudo apt-get install -y wget git cmake build-essential swig zlib1g-dev doxygen default-jre pkg-config
     - name: Install Simulator dependencies

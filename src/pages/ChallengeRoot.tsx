@@ -17,7 +17,7 @@ import ExceptionDialog from '../components/Challenge/ExceptionDialog';
 import ChallengeMenu from '../components/Challenge/ChallengeMenu';
 
 import { DEFAULT_SETTINGS, Settings } from '../components/constants/Settings';
-import { DARK, Theme } from '../components/constants/theme';
+import { DARK, LIGHT, Theme } from '../components/constants/theme';
 
 import SettingsDialog from '../components/Dialog/SettingsDialog';
 import AboutDialog from '../components/Dialog/AboutDialog';
@@ -117,6 +117,7 @@ interface RootPrivateProps {
   challenge?: AsyncChallenge;
   challengeCompletion?: AsyncChallengeCompletion;
   locale: LocalizedString.Language;
+  settings: Settings;
 
   robots: Dict<Robot>;
 
@@ -458,12 +459,14 @@ class Root extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const theme = this.props.settings.darkMode ? DARK : LIGHT;
+
     this.state = {
       layout: Layout.Side,
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
-      console: StyledText.text({ text: LocalizedString.lookup(tr('Welcome to the KIPR Simulator!\n'), props.locale), style: STDOUT_STYLE(DARK) }),
-      theme: DARK,
+      console: StyledText.text({ text: LocalizedString.lookup(tr('Welcome to the KIPR Simulator!\n'), props.locale), style: STDOUT_STYLE(theme) }),
+      theme: theme,
       messages: [],
       settings: DEFAULT_SETTINGS,
       feedback: DEFAULT_FEEDBACK,
@@ -1479,10 +1482,14 @@ class Root extends React.Component<Props, State> {
       challengeStarted
     } = state;
 
+    const { settings } = this.props;
+    const theme = settings.darkMode ? DARK : LIGHT;
+
     const latestChallengeCompletion = Async.latestValue(challengeCompletion);
     if (challengeId && !challengeStarted) {
       return (
         <LoadingOverlay
+          theme={theme}
           onStartClick={this.onChallengeStartClick_}
           challenge={challenge}
           loading={!latestChallengeCompletion}
@@ -1511,14 +1518,9 @@ class Root extends React.Component<Props, State> {
       simulatorState,
       console,
       messages,
-      settings,
       feedback,
       windowInnerHeight,
     } = state;
-
-    const theme = DARK;
-
-
 
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
@@ -1693,7 +1695,7 @@ class Root extends React.Component<Props, State> {
           />
         )}
         <AiWindow
-          theme={DARK}
+          theme={theme}
           code={code}
           language={language}
           console={StyledText.toString(console)}
@@ -1718,6 +1720,7 @@ const ConnectedChallengeRoot = connect((state: ReduxState, { params: { challenge
     challenge: Dict.unique(builder.challenges),
     challengeCompletion: Dict.unique(builder.challengeCompletions),
     locale: state.i18n.locale,
+    settings: state.settings,
     robots: Dict.map(state.robots.robots, Async.latestValue),
   };
 }, (dispatch, { params: { challengeId } }: RootPublicProps) => ({

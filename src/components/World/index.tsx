@@ -494,6 +494,7 @@ class World extends React.PureComponent<Props, State> {
     const workingScene = Async.latestValue(scene);
     for (const nodeId of Dict.keySet(workingScene.nodes)) {
       const node = workingScene.nodes[nodeId];
+      if (node.hiddenInWorldList === true) continue;
       const hasReset = workingScene.nodes[nodeId].startingOrigin !== undefined;
       itemList.push(
         EditableList.Item.standard(

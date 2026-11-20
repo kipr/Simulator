@@ -9,12 +9,12 @@ import Scene, { AsyncScene } from "../../state/State/Scene";
 import { Dialog } from "./Dialog";
 import DeleteDialog from "./DeleteDialog";
 import { ThemeProps, GREEN } from "../constants/theme";
-import { Spacer } from '../constants/common';
+import { Spacer, SummaryCardSVG } from '../constants/common';
 import { ScenesAction } from "../../state/reducer";
 import ScrollArea from "../interface/ScrollArea";
 import { FontAwesome } from "../FontAwesome";
 
-import { faCheck, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faChevronLeft, faChevronRight, faFolderClosed, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';
 import Author from '../../db/Author';
 import { auth } from '../../firebase/firebase';
@@ -48,13 +48,15 @@ interface OpenSceneDialogPrivateProps {
 }
 
 type Props = OpenSceneDialogPublicProps & OpenSceneDialogPrivateProps & WithNavigateProps;
-
+type FolderScenes = Record<string, Array<[string, Scene]>>;
 interface SelectSceneDialogState {
   selectedSceneId: string | null;
   showCreateYourOwnInstructions: boolean;
   selectedDeleteSceneIds: string[];
   deleteSceneIds: string[] | null;
   folderSelected: string | null;
+  showSceneSummary: boolean;
+  selectedCardIndex: number | null;
 }
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -119,10 +121,11 @@ const InfoContainer = styled('div', (props: ThemeProps) => ({
   flex: '1 0',
   height: '100%',
 }));
+
 const ChallengeItemContainer = styled('div', (props: ThemeProps) => ({
   display: 'grid',
   backgroundColor: props.theme.backgroundColor,
-  color: props.theme.color,
+  color: props.theme.cardColors.alternateTextColor,
   alignContent: 'center',
   justifyItems: 'center',
   minWidth: '200px',
@@ -131,6 +134,55 @@ const ChallengeItemContainer = styled('div', (props: ThemeProps) => ({
   rowGap: '15px',
   gridTemplateColumns: "repeat(3, 1fr)",
 }));
+
+
+const SummaryGrid = styled('div', (props: ThemeProps) => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr 8fr',
+  gap: '15px',
+}));
+
+const Summary = styled('div', (props: ThemeProps & { $column: string }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  gridColumn: '1/-1',
+  position: "relative",
+  marginTop: "10px",
+  padding: '24px',
+  border: `2px solid ${props.theme.borderColor}`,
+  borderRadius: '10px',
+  width: '98%'
+}));
+
+const SummaryPointer = styled('div', (props: { $column: string }) => ({
+  position: 'absolute',
+  top: '-20px',
+
+  width: '40px',
+  height: '20px',
+
+  // Centers the pointer under column 1, 2, or 3
+  left: `calc(((${props.$column} - 0.5) * (100% / 3)) - 20px)`,
+}));
+
+const SummaryInfo = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  marginBottom: '5px',
+  color: props.theme.color,
+}));
+
+const SummaryInfoTitle = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  marginBottom: '5px',
+  maxWidth: '50px',
+  fontWeight: 'bold',
+  paddingRight: '7px',
+  color: props.theme.color,
+}));
+
 const InfoText = styled('span', (props: ThemeProps) => ({
   userSelect: 'none',
   padding: `${props.theme.itemPadding * 2}px`,
@@ -142,6 +194,15 @@ const InstructionsBody = styled('div', (props: ThemeProps) => ({
   userSelect: 'none',
 }));
 
+const FolderTitle = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  fontSize: '1.2em',
+  fontWeight: 600,
+  padding: `${props.theme.itemPadding * 2}px`,
+  // borderBottom: `1px solid ${props.theme.borderColor}`,
+  userSelect: 'none',
+}));
 const DialogBarRow = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
@@ -181,6 +242,8 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
       selectedDeleteSceneIds: [],
       deleteSceneIds: null,
       folderSelected: null,
+      showSceneSummary: null,
+      selectedCardIndex: null,
     };
   }
 
@@ -189,32 +252,32 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
   }
 
   componentDidUpdate(prevProps: Readonly<Props>) {
-    if (this.props.scenes !== prevProps.scenes) {
-      const { selectedSceneId, deleteSceneIds, selectedDeleteSceneIds } = this.state;
-      const nextSelectedDeleteSceneIds = selectedDeleteSceneIds.filter(sceneId =>
-        Object.prototype.hasOwnProperty.call(this.props.scenes, sceneId)
-      );
-      if (
-        selectedSceneId !== null &&
-        selectedSceneId !== CREATE_YOUR_OWN_SCENE_OPTION_ID &&
-        !Object.prototype.hasOwnProperty.call(this.props.scenes, selectedSceneId)
-      ) {
-        this.setState({ selectedSceneId: null, selectedDeleteSceneIds: nextSelectedDeleteSceneIds });
-        return;
-      }
-      const nextDeleteSceneIds = deleteSceneIds?.filter(sceneId =>
-        Object.prototype.hasOwnProperty.call(this.props.scenes, sceneId)
-      ) ?? null;
-      if (
-        nextSelectedDeleteSceneIds.length !== selectedDeleteSceneIds.length ||
-        (deleteSceneIds !== null && (nextDeleteSceneIds === null || nextDeleteSceneIds.length !== deleteSceneIds.length))
-      ) {
-        this.setState({
-          selectedDeleteSceneIds: nextSelectedDeleteSceneIds,
-          deleteSceneIds: nextDeleteSceneIds && nextDeleteSceneIds.length > 0 ? nextDeleteSceneIds : null,
-        });
-      }
-    }
+    // if (this.props.scenes !== prevProps.scenes) {
+    //   const { selectedSceneId, deleteSceneIds, selectedDeleteSceneIds } = this.state;
+    //   const nextSelectedDeleteSceneIds = selectedDeleteSceneIds.filter(sceneId =>
+    //     Object.prototype.hasOwnProperty.call(this.props.scenes, sceneId)
+    //   );
+    //   if (
+    //     selectedSceneId !== null &&
+    //     selectedSceneId !== CREATE_YOUR_OWN_SCENE_OPTION_ID &&
+    //     !Object.prototype.hasOwnProperty.call(this.props.scenes, selectedSceneId)
+    //   ) {
+    //     this.setState({ selectedSceneId: null, selectedDeleteSceneIds: nextSelectedDeleteSceneIds });
+    //     return;
+    //   }
+    //   const nextDeleteSceneIds = deleteSceneIds?.filter(sceneId =>
+    //     Object.prototype.hasOwnProperty.call(this.props.scenes, sceneId)
+    //   ) ?? null;
+    //   if (
+    //     nextSelectedDeleteSceneIds.length !== selectedDeleteSceneIds.length ||
+    //     (deleteSceneIds !== null && (nextDeleteSceneIds === null || nextDeleteSceneIds.length !== deleteSceneIds.length))
+    //   ) {
+    //     this.setState({
+    //       selectedDeleteSceneIds: nextSelectedDeleteSceneIds,
+    //       deleteSceneIds: nextDeleteSceneIds && nextDeleteSceneIds.length > 0 ? nextDeleteSceneIds : null,
+    //     });
+    //   }
+    // }
   }
 
   render() {
@@ -224,7 +287,8 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
       showCreateYourOwnInstructions,
       selectedDeleteSceneIds,
       deleteSceneIds,
-      folderSelected
+      folderSelected,
+      selectedCardIndex
     } = this.state;
 
     const dialogName = showCreateYourOwnInstructions
@@ -278,51 +342,205 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
     const archived_scenes = loadedScenesArray.filter(([sceneId, scene]) => ARCHIVED_SCENES.includes(sceneId));
     const sandbox_scenes = loadedScenesArray.filter(([sceneId, scene]) => sceneId.includes('Sandbox') && !ARCHIVED_SCENES.includes(sceneId));
     const remainderScenes = loadedScenesArray.filter(([sceneId, scene]) => !sceneId.startsWith('jbc') && !sceneId.startsWith('bex'));
-    const folderScenes = {
+    const folderScenes: FolderScenes = {
       'JBC Challenges': jbc_scenes,
-      'Botball Explorer 2026 Challenges': bex_scenes,
+      'Botball Explorer 2026 Missions': bex_scenes,
       'Archived Scenes': archived_scenes,
     };
 
+    const renderSummary = (selectedScene: Scene, folderName: string) => {
+      const { theme, locale } = this.props;
+
+
+      return (
+        <Summary
+          theme={this.props.theme}
+          $column={
+            folderName === 'JBC Challenges'
+              ? ((selectedCardIndex % 3) + 1).toString()
+              : (((selectedCardIndex - 1) % 3) + 1).toString()
+          }
+        >
+          <SummaryCardSVG theme={theme} />
+
+          <SummaryPointer
+            $column={
+              folderName === 'JBC Challenges'
+                ? ((selectedCardIndex % 3) + 1).toString()
+                : (((selectedCardIndex - 1) % 3) + 1).toString()
+            }
+          >
+            <svg viewBox="0 0 40 20">
+              <path
+                d="M 0 20 C 10 20, 10 0, 20 0 C 30 0, 30 20, 40 20"
+                fill="none"
+                stroke={this.props.theme.borderColor}
+                strokeWidth="2"
+              />
+            </svg>
+          </SummaryPointer>
+
+          <div
+            style={{
+              position: 'relative',
+              zIndex: 1
+            }}
+          >
+            <div
+              style={{
+                fontWeight: 400,
+                textDecoration: 'underline',
+                marginBottom: '5px',
+                color: theme.color
+              }}
+            >
+              {selectedScene.description[this.props.locale]}
+            </div>
+
+            {selectedScene.summary && (
+
+              <SummaryGrid theme={theme}>
+                <SummaryInfoTitle theme={theme}>
+                  Skill:
+                </SummaryInfoTitle>
+                <SummaryInfo theme={theme}>
+
+                  {selectedScene.summary.skill[this.props.locale]}
+                </SummaryInfo>
+                <SummaryInfoTitle theme={theme}>
+                  Base:
+                </SummaryInfoTitle>
+                <SummaryInfo theme={theme}>
+
+                  {selectedScene.summary.baseMission[this.props.locale]}
+                </SummaryInfo>
+                {selectedScene.summary.bonusMission && (
+                  <>
+                    <SummaryInfoTitle theme={theme}>
+                      Bonus:
+                    </SummaryInfoTitle>
+                    <SummaryInfo theme={theme}>
+                      {selectedScene.summary.bonusMission[this.props.locale]}
+                    </SummaryInfo>
+                  </>
+                )}
+                {selectedScene.summary.advancedBonusMission && (
+                  <>
+                    <SummaryInfoTitle theme={theme}>
+                      Advanced Bonus:
+                    </SummaryInfoTitle>
+                    <SummaryInfo theme={theme}>
+                      {selectedScene.summary.advancedBonusMission[this.props.locale]}
+                    </SummaryInfo>
+                  </>
+                )}
+
+              </SummaryGrid>
+            )}
+          </div>
+        </Summary>
+      );
+
+    };
+    const renderSceneCards = (folderName: string) => {
+      const { theme } = this.props;
+      const { selectedSceneId, selectedCardIndex } = this.state;
+
+      const selectedScene: Scene | null =
+        selectedCardIndex !== null
+          ? folderName === 'JBC Challenges' ? folderScenes[folderName][selectedCardIndex][1] : folderScenes[folderName][selectedCardIndex - 1][1] : null;
+      return (
+        <StyledScrollArea theme={theme}>
+          <FolderTitle theme={theme}>{folderName}</FolderTitle>
+          <ChallengeItemContainer theme={theme}>
+            {folderScenes[folderName].map(([sceneId, scene], index) => {
+              let cardIndex: number;
+              const gridIndex = index + 1;
+              if (folderName === 'JBC Challenges') {
+                const match = /\d+/.exec(scene.name[this.props.locale]);
+                cardIndex = match ? Number(match[0]) : index;
+              } else {
+                cardIndex = index + 1;
+              }
+              const selectedRow =
+                selectedCardIndex !== null
+                  ? folderName === 'JBC Challenges'
+                    ? Math.floor(selectedCardIndex / 3) + 1
+                    : Math.ceil(selectedCardIndex / 3)
+                  : null;
+
+              const currentRow =
+                Math.floor(index / 3) + 1;
+
+              const isEndOfRow =
+                gridIndex % 3 === 0 ||
+                gridIndex === folderScenes[folderName].length;
+              return (
+                <React.Fragment key={sceneId}>
+                  <ChallengeCard
+                    cardContent={{
+                      title: scene.name,
+                      description: scene.description
+                    }}
+                    backgroundImage={`url(../../../static/icons/bot_guy_numbers/${cardIndex}.svg)`}
+                    theme={theme}
+                    customheight="150px"
+                    customwidth="150px"
+                    selected={
+                      selectedSceneId === sceneId
+                    }
+                    onClick={() =>
+                      this.onSceneClick(
+                        sceneId,
+                        true,
+                        folderScenes[folderName],
+                        folderName === 'JBC Challenges' ? index : index + 1
+                      )
+                    }
+                  />
+
+                  {selectedCardIndex !== null &&
+                    currentRow === selectedRow &&
+                    isEndOfRow &&
+                    selectedScene && (
+                    renderSummary(selectedScene, folderName)
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </ChallengeItemContainer>
+        </StyledScrollArea>);
+    };
     const sceneColumn_ = (
-      <div>
+      <div style={{ width: '100%' }}>
         {/* {this.createCreateYourOwnSceneName()} */}
         {
           sandbox_scenes.map(([sceneId, scene]) => this.createSceneName(sceneId, scene))
         }
         {Object.entries(folderScenes).map(([folderName, scenes]) => (
-          <div key={scenes.map(s => s[0]).join('-')}>
-            <SceneName onClick={() => this.handleFolderSelect(folderName)} key={folderName} theme={theme} selected={false}>
+          <div style={{ width: '100%' }} key={scenes.map(s => s[0]).join('-')}>
+            <SceneName onClick={() => this.handleFolderSelect(folderName)} key={folderName} theme={theme} selected={this.state.folderSelected === folderName}>
+              <FontAwesome icon={this.state.folderSelected === folderName ? faFolderOpen : faFolderClosed} style={{ marginRight: '5px' }} />
               <strong>{folderName}</strong>
 
             </SceneName>
-            {folderSelected === folderName && (
-              <div style={{ paddingLeft: '20px' }}>
-                {scenes.map(s => this.createSceneName(s[0], s[1]))}
-              </div>
-            )}
+
           </div>
         ))}
       </div>
     );
 
-    const infoColumn_ = (<InfoContainer theme={theme}>
-      {selectedSceneId === null
-        ? this.createNoSceneInfo()
-        : this.createSelectedSceneInfo(scenes)}
-      {/* <StyledScrollArea theme={theme}>
-        <ChallengeItemContainer theme={theme}>
-          {jbc_scenes.map(([sceneId, scene]) => (
-            // <div key={sceneId}>
-            //   {sceneId}
-            //   <img style={{ maxWidth: '9em' }} src='../../static/assets/challenge-0.png' />
+    const infoColumn_ = (
 
-            // </div>
-            <ChallengeCard cardContent={{ title: scene.name, description: scene.description }} key={sceneId} onClick={() => { }} theme={theme} customheight='150px' customwidth='150px' />
-          ))}
-        </ChallengeItemContainer>
-      </StyledScrollArea> */}
-    </InfoContainer>);
+      <InfoContainer theme={theme}>
+        {folderSelected ? renderSceneCards(folderSelected) : selectedSceneId === null
+          ? this.createNoSceneInfo()
+          : this.createSelectedSceneInfo(scenes)}
+
+      </InfoContainer>
+    );
+
+
 
     const canDeleteSelected = selectedDeleteSceneIds.length > 0;
     const scenePickerBar_ = (
@@ -349,7 +567,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
       <Container theme={theme}>
         <SceneColumn theme={theme} data-tour-clamp>
           {tourRegistry ? (
-            <TourTarget registry={tourRegistry} targetKey="open-scene-list">
+            <TourTarget style={{ width: '100%' }} registry={tourRegistry} targetKey="open-scene-list">
               {sceneColumn_}
             </TourTarget>
           ) : (
@@ -358,7 +576,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
         </SceneColumn>
         <InfoColumn>
           {tourRegistry ? (
-            <TourTarget registry={tourRegistry} targetKey="open-scene-info">
+            <TourTarget style={{ width: '100%' }} registry={tourRegistry} targetKey="open-scene-info">
               {infoColumn_}
             </TourTarget>
           ) : (
@@ -536,6 +754,8 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
   private handleFolderSelect = (folderName: string) => {
     this.setState(prevState => ({
       folderSelected: prevState.folderSelected === folderName ? null : folderName,
+      selectedSceneId: null,
+      selectedCardIndex: null,
     }));
   };
   private createSceneName = (sceneId: string, scene: Scene) => {
@@ -600,13 +820,24 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
     return <InfoText theme={this.props.theme}>{LocalizedString.lookup(tr('Select a scene to see more details'), this.props.locale)}</InfoText>;
   };
 
-  private onSceneClick = (sceneId: string) => {
-    this.setState({
-      selectedSceneId: sceneId,
-      showCreateYourOwnInstructions: false,
-    }, () => {
-      this.props.continueTour?.();
-    });
+  private onSceneClick = (sceneId: string, challengeCard?: boolean, scenes?: [string, Scene][], index?: number) => {
+
+    if (challengeCard) {
+      this.setState(prevState => (
+        {
+          selectedSceneId: prevState.selectedSceneId === sceneId ? null : sceneId,
+          selectedCardIndex: prevState.selectedCardIndex === index ? null : index,
+          showCreateYourOwnInstructions: false,
+        }));
+    } else {
+      this.setState({
+        selectedSceneId: sceneId,
+        showCreateYourOwnInstructions: false,
+        folderSelected: null
+      }, () => {
+        this.props.continueTour?.();
+      });
+    }
   };
 }
 

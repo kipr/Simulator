@@ -25,12 +25,16 @@ const TabContainer = styled(
     backgroundColor: props.selected
       ? `rgba(255, 255, 255, 0.1)`
       : `rgba(0, 0, 0, 0.1)`,
-    opacity: props.selected ? 1 : 0.2,
+    opacity: props.selected ? 1 : 0.6,
     transition: "background-color 0.2s, opacity 0.2s",
     padding: `calc(${props.theme.itemPadding * 2}px + 0.5em)`,
     ":last-child": {
       borderRight: "none",
       borderBottom: "none",
+      borderTopRightRadius: props.selected ? `${props.theme.itemPadding * 2}px` : null,
+    },
+    ":first-child": {
+      borderTopLeftRadius: props.selected ? `${props.theme.itemPadding * 2}px` : null,
     },
     textAlign: "center",
     userSelect: "none",

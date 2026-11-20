@@ -46,11 +46,20 @@ const cubesStacked = `
   }
  
    function getCube(cubeId) {
+    if (cubeId === largeBrownCube.id) return largeBrownCube;
     return allSmallCubes.find(cube => cube.id === cubeId);
   }
+
+  // Recomputed from live positions every time. Intersection start/end events
+  // alone are not enough: cubes can stay in contact while sliding off, which
+  // fires no new event.
   function updateChallengeState() {
 
-    const supportedCubes = new Set(largeCubeIntersections);
+    // Touching the large cube only counts when resting on its top.
+    const supportedCubes = new Set();
+    largeCubeIntersections.forEach(cubeId => {
+      if (isCubeOnTopOf(cubeId, largeBrownCube.id)) supportedCubes.add(cubeId);
+    });
     let changed = true;
 
     while(changed) {
@@ -96,6 +105,11 @@ const cubesStacked = `
     }
   });
 
+  // Re-check while cubes stay in contact (setChallengeEventValue ignores unchanged values).
+  scene.addOnRenderListener(() => {
+    if (largeCubeIntersections.size > 0) updateChallengeState();
+  });
+
 
       
 `;
@@ -104,6 +118,11 @@ export const BEX_17: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 17'),
   description: tr('Botball Explorer Mission 17: Freight Racking'),
+  summary: {
+    skill: tr('Articulating a small cube onto a tall platform.'),
+    baseMission: tr('At least one cube originating from the Unstraight Cube are is on top of the Large Brown Cube.'),
+    bonusMission: tr('Two or more cubes originating from the Unstraight Cube area are on top of the Large Brown Cube.')
+  },
   scripts: {
     cubesStacked: Script.ecmaScript('Cubes Stacked', cubesStacked),
   },

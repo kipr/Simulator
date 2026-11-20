@@ -70,6 +70,10 @@ export const JBC_2: Scene = {
   ...baseScene,
   name: tr('JBC 2'),
   description: tr('Junior Botball Challenge 2: Ring Around the Can'),
+  summary: {
+    skill: tr('Learning to turn.'),
+    baseMission: tr('Drive out and around the can in circle 6 and return to the start area.')
+  },
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     circleIntersects: Script.ecmaScript('Circle Intersects', circleIntersects),

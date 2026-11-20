@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
-import { DARK, Theme, ThemeProps } from '../components/constants/theme';
+import { DARK, LIGHT, Theme, ThemeProps } from '../components/constants/theme';
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
 import { State as ReduxState } from '../state';
@@ -27,6 +27,8 @@ import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/to
 import tr from '@i18n';
 import StudentTabs from '../components/Classrooms/StudentTabs';
 import Async from 'state/State/Async';
+import { Settings } from 'components/constants/Settings';
+import { Dispatch } from 'redux';
 
 namespace SubMenu {
   export enum Type {
@@ -91,10 +93,13 @@ export interface ClassroomStudentViewPublicProps extends StyleProps, ThemeProps 
 
 interface ClassroomStudentViewPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
   currentStudentClassroom: AsyncClassroom | null;
   uid: string;
   toursById: Record<string, TourDoc>;
   toursLoaded: Record<string, boolean>;
+  state: ReduxState;
+  dispatch: Dispatch;
 }
 
 interface ClassroomStudentViewState {
@@ -146,7 +151,7 @@ const PageContainer = styled('div', (props: ThemeProps) => ({
   width: '100%',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
-  height: 'calc(100vh - 1px)',
+  height: 'calc(100vh)',
   zIndex: 35
 }));
 
@@ -172,6 +177,8 @@ const ClassroomHeaderContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'row',
   gap: '3em',
   height: '88vh',
+  width: '100%',
+  justifyContent: 'center',
 }));
 
 const MyClassroomContainer = styled('div', (props: ThemeProps) => ({
@@ -180,7 +187,7 @@ const MyClassroomContainer = styled('div', (props: ThemeProps) => ({
   alignItems: 'center',
   flex: 1,
   minHeight: '80vh',
-  width: '100vw'
+  maxWidth: '95vw'
 
 }));
 
@@ -190,7 +197,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   alignItems: 'center',
   flexDirection: 'row',
   padding: '10px',
-  backgroundColor: '#2c2c2cff',
+  backgroundColor: props.theme.buttonColors.default.standard,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   ':last-child': {
     borderBottom: 'none'
@@ -199,7 +206,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   fontWeight: 400,
   ':hover': {
     cursor: 'pointer',
-    backgroundColor: `rgba(255, 255, 255, 0.1)`
+    backgroundColor: props.theme.buttonColors.default.hover
   },
   userSelect: 'none',
   transition: 'background-color 0.2s, opacity 0.2s'
@@ -240,7 +247,7 @@ export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
 
 class ClassroomStudentView extends React.Component<Props, State> {
   private unsubscribeChallenges: (() => void) | null = null;
-  private registry = new TourRegistry();
+  private registry = new TourRegistry(TourDoc.IDS.STUDENT_VIEW);
   private scrollRef: HTMLDivElement | null = null;
   constructor(props: Props) {
     super(props);
@@ -267,11 +274,11 @@ class ClassroomStudentView extends React.Component<Props, State> {
     const currentUserId = auth.currentUser?.uid || '';
     const isInClassroom = await studentInClassroom(currentUserId);
     const currentUser = auth.currentUser.uid;
-    const { uid } = this.props;
+    const { uid, dispatch, state } = this.props;
 
     if (isInClassroom.classroom) {
       if (uid) {
-        await fetchTourIfNeeded(uid, TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM);
+        await fetchTourIfNeeded(uid, TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM, this.props.dispatch, state);
       }
 
       const loadedClasssroom = Async.latestValue(isInClassroom.classroom);
@@ -292,7 +299,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
       });
     } else {
       if (uid) {
-        await fetchTourIfNeeded(this.props.uid, TourDoc.IDS.STUDENT_VIEW);
+        await fetchTourIfNeeded(uid, TourDoc.IDS.STUDENT_VIEW, this.props.dispatch, state);
       }
       this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW, this.props.locale), tourId: TourDoc.IDS.STUDENT_VIEW });
     }
@@ -433,7 +440,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
             <p>{LocalizedString.lookup(tr("You are not enrolled in any classroom."), locale)}</p>
 
             <TourTarget registry={this.registry} targetKey='join-classroom-button' style={{ marginLeft: '1em' }}>
-              <Button style={{ marginLeft: '1em' }} theme={DARK} onClick={this.onJoinClassroomDialog_}>
+              <Button style={{ marginLeft: '1em' }} theme={theme} onClick={this.onJoinClassroomDialog_}>
                 {LocalizedString.lookup(tr("Join Class"), locale)}
               </Button>
             </TourTarget>
@@ -474,7 +481,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
     window.removeEventListener('click', this.onClickOutside_);
   };
   private onCloseTour_ = () => {
-    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId);
+    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId, this.props.dispatch);
     this.setState({
       tourStudentTabSync: undefined,
       tourExpandStudentAssignmentTopics: false,
@@ -485,7 +492,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
   };
 
   private onSkipTour_ = () => {
-    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId, { dismissed: true });
+    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId, this.props.dispatch);
     this.setState({
       tourStudentTabSync: undefined,
       tourExpandStudentAssignmentTopics: false,
@@ -533,7 +540,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
   };
 
   private onRetakeTour_ = () => {
-    void retakeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId);
+    void retakeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId, this.props.dispatch);
   };
 
   private studentTourTabIndexForStep_(step: TourStep | undefined): number | undefined {
@@ -618,9 +625,9 @@ class ClassroomStudentView extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, locale, toursById, toursLoaded } = props;
+    const { style, locale, toursById, toursLoaded, settings } = props;
     const { tourId, showLeaveClassroomDialog, showJoinClassroomDialog, currentClassroom, subMenu, studentViewTourSteps } = state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
     const activeTour = tourId ? (toursById[tourId] ?? TourDoc.DEFAULT) : TourDoc.DEFAULT;
     const activeTourLoaded = !!(tourId && toursLoaded[tourId]);
     const showTour = !!tourId && activeTourLoaded && !activeTour.completed;
@@ -659,7 +666,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
                     currentClassroom={Async.latestValue(this.classroomForLeave_())}
                     locale={locale}
                     onLeaveClassDialogClose={this.onCloseLeaveClassroomDialog_}
-                    theme={DARK}
+                    theme={theme}
 
                   />
                 )}
@@ -669,7 +676,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
                     onContinueTour={this.onContinueTour_}
                     locale={locale}
                     onJoinClassDialogClose={this.onCloseJoinClassroomDialog_}
-                    theme={DARK}
+                    theme={theme}
                     tourRegistry={this.registry}
 
                   />
@@ -702,6 +709,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
 
 export default connect(
   (state: ReduxState) => ({
+    state: state,
     toursById: state.tours.byId,
     toursLoaded: state.tours.loaded,
     toursLoading: state.tours.loading,
@@ -709,9 +717,11 @@ export default connect(
     classroomList: state.classrooms.entities,
     currentStudentClassroom: state.classrooms.currentStudentClassroom,
     locale: state.i18n.locale,
+    settings: state.settings,
     uid: state.users.me,
   }),
   (dispatch) => ({
+    dispatch,
     onStudentAdded: (inviteCode: string, studentId: string, displayName: string) => {
       dispatch(ClassroomsAction.studentAdded({ classroomId: inviteCode, studentId, displayName }));
     },

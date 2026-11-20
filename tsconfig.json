@@ -6,6 +6,7 @@
     "jsx": "react",
     "target": "es6",
     "moduleResolution": "node",
+    "types": ["node", "jest", "gapi"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "baseUrl": "src",
@@ -14,11 +15,6 @@
       "state/*": ["state/*"]
     }
   },
-  "types": [
-    "babylonjs",
-    "babylonjs-loaders",
-    "babylonjs-gltf2interface"
-  ],
   "include": [
     "src/**/**/*"
 , "test/util/sequentialize.test.ts"  ],

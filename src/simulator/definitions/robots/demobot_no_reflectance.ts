@@ -1,6 +1,7 @@
 import Robot from "../../../state/State/Robot";
 import Geometry from "../../../state/State/Robot/Geometry";
 import { DEMOBOT } from "./demobot";
+import { MODELS } from '../models';
 
 /**
  * Special demobot with no collision box over the reflectance sensor.
@@ -11,6 +12,6 @@ export const DEMOBOT_NO_REFLECTANCE: Robot = {
   ...DEMOBOT,
   geometry: {
     ...DEMOBOT.geometry,
-    chassis_link: Geometry.remoteMesh({ uri: '/static/object_binaries/chassis_no_reflectance.glb' }),
+    chassis_link: Geometry.remoteMesh({ uri: MODELS.robots.demobot.chassisNoReflectance }),
   },
 };

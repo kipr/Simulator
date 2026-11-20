@@ -41,6 +41,19 @@ module.exports = {
   },
   overrides: [
     {
+      files: ['**/*.mjs'],
+      env: {
+        node: true,
+      },
+      parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: 'module',
+      },
+      rules: {
+        'indent': ['error', 4, { 'SwitchCase': 1 }],
+      },
+    },
+    {
       // Specific override for TypeScript files
       files: ['**/*.ts', '**/*.tsx'],
       parser: '@typescript-eslint/parser',

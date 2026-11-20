@@ -9,6 +9,7 @@ import { Color } from '../../../state/State/Scene/Color';
 
 import tr from '@i18n';
 import { PhysicsMotionType } from '@babylonjs/core';
+import { MODELS } from '../models';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(100, 4, 100),
@@ -61,7 +62,7 @@ export function createBaseSceneSurface(): Scene {
     geometry: {
       'game_table_2025': {
         type: 'file',
-        uri: '/static/object_binaries/2025_game_table.glb'
+        uri: MODELS.games[2025].springTable
       },
       'fry_floor': {
         type: 'box',

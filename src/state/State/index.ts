@@ -53,7 +53,7 @@ export namespace Projects {
 export type Classrooms = ClassroomsState;
 
 export namespace Classrooms {
-  export const EMPTY: Classrooms = { entities: {}, selectedClassroom: null, currentStudentClassroom: null };
+  export const EMPTY: Classrooms = { classroomVersion: 0, assignmentVersion: 0, assignments: {}, entities: {}, selectedClassroom: null, currentStudentClassroom: null };
 }
 
 export type Scenes = Dict<AsyncScene>;
@@ -138,11 +138,12 @@ export namespace Users {
 }
 
 export interface Settings {
+  showSettingsDialog?: boolean;
   simulationSensorNoise: boolean;
   simulationRealisticSensors: boolean;
   editorAutoComplete: boolean;
   showScripts: boolean;
-  ideEditorDarkMode: boolean;
+  darkMode: boolean;
   classroomView: boolean;
   consoleLayout: "horizontal" | "vertical";
   interfaceMode: boolean; // false = simple, true = advanced

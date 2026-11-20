@@ -66,6 +66,10 @@ export const JBC_11: Scene = {
   ...baseScene,
   name: tr('JBC 11'),
   description: tr('Junior Botball Challenge 11: Making Waves'),
+  summary: {
+    skill: tr('Learning to use the servo motor.'),
+    baseMission: tr('Drive out to circle 12, stop, and wave (move the servo up and down). Repeat with circles 3, 6, and 9.'),
+  },
   scripts: {
     inStartBox: Script.ecmaScript('In Start Box', notInStartBox),
     waitToChop: Script.ecmaScript('Wave', wave),

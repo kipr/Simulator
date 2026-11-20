@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
-import { DARK, ThemeProps } from '../constants/theme';
+import { DARK, LIGHT, ThemeProps } from '../constants/theme';
 import { ChallengeCard } from '../LimitedChallenge';
 import { StyleProps } from '../../util/style';
 import LocalizedString from '../../util/LocalizedString';
@@ -14,12 +14,14 @@ import { LimitedChallengeCompletionsAction } from '../../state/reducer/limitedCh
 import { withNavigate, WithNavigateProps } from '../../util/withNavigate';
 import tr from '@i18n';
 import ClassroomLimitedChallengeLeaderboard from './ClassroomLimitedChallengeLeaderboard';
+import { Settings } from '../constants/Settings';
 
 export interface ClassroomLimitedChallengesPublicProps extends StyleProps, ThemeProps {
 }
 
 interface ClassroomLimitedChallengesPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
   limitedChallenges: ClassroomLimitedChallengesState;
   limitedChallengeCompletions: LimitedChallengeCompletions;
   loadCompletion: (challengeId: string) => void;
@@ -155,8 +157,8 @@ class ClassroomLimitedChallenges extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const { limitedChallenge } = state;
-    const { style, locale, limitedChallenges, limitedChallengeCompletions } = props;
-    const theme = DARK;
+    const { style, locale, limitedChallenges, limitedChallengeCompletions, settings } = props;
+    const theme = settings.darkMode ? DARK : LIGHT;
 
     // Filter out challenges that are more than a week in the future and exclude closed challenges
     const challengeIds = Object.keys(limitedChallenges).filter(challengeId => {
@@ -226,6 +228,7 @@ class ClassroomLimitedChallenges extends React.Component<Props, State> {
 export default connect(
   (state: ReduxState) => ({
     locale: state.i18n.locale,
+    settings: state.settings,
     limitedChallenges: state.limitedChallenges,
     limitedChallengeCompletions: state.limitedChallengeCompletions,
   }),

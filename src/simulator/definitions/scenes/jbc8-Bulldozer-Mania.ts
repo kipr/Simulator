@@ -55,6 +55,10 @@ export const JBC_8: Scene = {
   ...baseScene,
   name: tr('JBC 8'),
   description: tr('Junior Botball Challenge 8: Bulldozer Mania'),
+  summary: {
+    skill: tr('Precision robot driving and engineering effectors (blades, claws, etc.).'),
+    baseMission: tr('In a single run, the robot will manipulate at least 5 upright cans behind the starting line.'),
+  },
   scripts: {
     uprightStartBoxCans: Script.ecmaScript('Upright Start Box Cans', uprightStartBoxCans),
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),

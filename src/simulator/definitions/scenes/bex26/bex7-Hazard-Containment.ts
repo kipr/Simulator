@@ -6,6 +6,7 @@ import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
 import { LO_BLUE_POMS, LO_ORANGE_POMS, offsetGamePiece } from '../26botballExplorerSandbox';
 import Dict from '../../../../util/objectOps/Dict';
+import { RotationwUnits } from '../../../../util/math/unitMath';
 
 const baseScene = createBaseSceneSurface();
 
@@ -115,6 +116,11 @@ export const BEX_7: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 7'),
   description: tr('Botball Explorer Mission 7: Hazard Containment'),
+  summary: {
+    skill: tr('Lifting poms and moving them into enclosures.'),
+    baseMission: tr('One Blue Pom and One Orange Poom are fully within the same PVC enclosure.'),
+    bonusMission: tr('A second PVC enclosure contains at least one Blue Pom and one Orange Pom, each fully within the enclosure. The Base and Bonus must use different enclosures.'),
+  },
   scripts: {
 
     pomEnteredPVC: Script.ecmaScript('Pom Entered PVC', pomEnteredPVC),
@@ -151,10 +157,11 @@ export const BEX_7: Scene = {
       name: tr('PVC Enclosure Left'),
       origin: {
         position: {
-          x: Distance.centimeters(72.73),
-          y: Distance.centimeters(-16.15),
-          z: Distance.centimeters(90.43),
+          x: Distance.centimeters(-185.43),
+          y: Distance.centimeters(-8.15),
+          z: Distance.centimeters(67.73),
         },
+        orientation: RotationwUnits.eulerDegrees(0, -90, 0),
       },
       material: {
         type: 'basic',
@@ -170,10 +177,11 @@ export const BEX_7: Scene = {
       name: tr('PVC Enclosure Middle'),
       origin: {
         position: {
-          x: Distance.centimeters(-0.62),
-          y: Distance.centimeters(-16.15),
-          z: Distance.centimeters(90.43),
+          x: Distance.centimeters(-185.43),
+          y: Distance.centimeters(-8.15),
+          z: Distance.centimeters(-5.62),
         },
+        orientation: RotationwUnits.eulerDegrees(0, -90, 0),
       },
       material: {
         type: 'basic',
@@ -190,10 +198,11 @@ export const BEX_7: Scene = {
       name: tr('PVC Enclosure Right'),
       origin: {
         position: {
-          x: Distance.centimeters(-78.95),
-          y: Distance.centimeters(-16.15),
-          z: Distance.centimeters(90.43),
+          x: Distance.centimeters(-185.43),
+          y: Distance.centimeters(-8.15),
+          z: Distance.centimeters(-83.95),
         },
+        orientation: RotationwUnits.eulerDegrees(0, -90, 0),
       },
       material: {
         type: 'basic',

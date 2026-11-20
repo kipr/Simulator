@@ -3,8 +3,8 @@ import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { TOP_YELLOW_2IN_CUBE, LOW_YELLOW_2IN_CUBE, TOP_GREEN_2IN_CUBE, LOW_GREEN_2IN_CUBE, offsetGamePiece } from '../26botballExplorerSandbox';
-import { createCubeEndNode, smallCubeEnd_geom, getLowestFaceScript, getHighestFaceScript, isCubeOnTopOfScript } from './bexCommonComponents';
+import { TOP_YELLOW_2IN_CUBE, LOW_YELLOW_2IN_CUBE, TOP_GREEN_2IN_CUBE, LOW_GREEN_2IN_CUBE } from '../26botballExplorerSandbox';
+import { createCubeEndNode, smallCubeEnd_geom, getLowestFaceScript, getHighestFaceScript, isCubeOnTopOfScript, offsetChallengeNode } from './bexCommonComponents';
 import Dict from '../../../../util/objectOps/Dict';
 const baseScene = createBaseSceneSurface();
 
@@ -33,8 +33,8 @@ const cubesStacked = `
       faces: lowYellowCubeFaces
     }
   ]
+  // "A:B" means A and B are currently intersecting (maintained by intersection listeners).
   const cubeIntersections = new Set();
-  const finalStacked = new Set();
   ${getLowestFaceScript}
   ${getHighestFaceScript}
   ${isCubeOnTopOfScript}
@@ -52,13 +52,15 @@ const cubesStacked = `
     return allCubes.find(cube => cube.id === cubeId);
   }
 
+  // Recomputed from live positions every time. Intersection start/end events
+  // alone are not enough: cubes can stay in contact while sliding off or
+  // swapping order, which fires no new event.
   function updateChallengeState() {
+    const finalStacked = new Set();
     cubeIntersections.forEach(key => {
       const [cubeA, cubeB] = key.split(':');
       if(isCubeOnTopOf(cubeA, cubeB)){
-        console.log(cubeA, 'is on top of', cubeB);
         finalStacked.add(stackedKey(cubeA, cubeB));
-
       }
       else if(isCubeOnTopOf(cubeB, cubeA)){
         finalStacked.add(stackedKey(cubeB, cubeA));
@@ -78,7 +80,6 @@ const cubesStacked = `
     for (let i=index + 1; i < allCubes.length; i++) {
       const otherCube = allCubes[i];
       scene.addOnIntersectionListener(cube.id, (type, otherNodeId) => {
-      console.log("cube.id: ", cube.id, "otherNodeId: ", otherNodeId, "type: ", type);
         const key = intersectionKey(cube.id, otherNodeId);
 
         if(type === 'start'){
@@ -86,12 +87,15 @@ const cubesStacked = `
         }
         else if(type === 'end'){
           cubeIntersections.delete(key);
-          finalStacked.has(stackedKey(cube.id, otherNodeId)) ? finalStacked.delete(stackedKey(cube.id, otherNodeId)) : null;
-          finalStacked.has(stackedKey(otherNodeId, cube.id)) ? finalStacked.delete(stackedKey(otherNodeId, cube.id)) : null;
         }
         updateChallengeState();
-      }, otherCube.id); 
+      }, otherCube.id);
     }
+  });
+
+  // Re-check while cubes stay in contact (setChallengeEventValue ignores unchanged values).
+  scene.addOnRenderListener(() => {
+    if (cubeIntersections.size > 0) updateChallengeState();
   });
 `;
 
@@ -99,6 +103,12 @@ export const BEX_3: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 3'),
   description: tr('Botball Explorer Mission 3: Mixed Freight'),
+  summary: {
+    skill: tr('Object manipulation, placement accuracy, and stacking.'),
+    baseMission: tr('Create one stack consisting of a Green Cube on top of a Yellow Cube, or a Yellow Cube on top of a Green Cube.'),
+    bonusMission: tr('Create a second stack consisting of a Green Cube and a Yellow Cube.'),
+    advancedBonusMission: tr('Create 2 stacks: 1) Green Cube on top of a Yellow Cube, and 2)Yellow Cube on top of a Green Cube (opposite color arrangements).')
+  },
   scripts: {
     cubesStacked: Script.ecmaScript('Top Green Cube Stacked', cubesStacked),
   },
@@ -142,6 +152,6 @@ export const BEX_3: Scene = {
       lYellowFront: createCubeEndNode(tr('Low Yellow Cube Front'), 'LOW_YELLOW_2IN_CUBE', 'front', 'smallCubeEnd_geom', Color.rgb(255, 115, 0)),
       lYellowBack: createCubeEndNode(tr('Low Yellow Cube Back'), 'LOW_YELLOW_2IN_CUBE', 'back', 'smallCubeEnd_geom', Color.rgb(229, 97, 255)),
 
-    }, offsetGamePiece)
+    }, offsetChallengeNode)
   }
 };

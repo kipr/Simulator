@@ -83,7 +83,7 @@ const ConfirmButton = styled('button', (props: ThemeProps & ClickProps) => ({
   fontSize: '1em',
   fontWeight: 'bold',
   color: props.$disabled ? '#888' : '#fff',
-  backgroundColor: props.theme.yesButtonColor.standard,
+  backgroundColor: props.theme.buttonColors.success.standard,
   border: 'none',
   borderRadius: '4px',
   cursor: props.$disabled ? 'not-allowed' : 'pointer',

@@ -4,8 +4,8 @@ import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import tr from '@i18n';
 import { createBaseSceneSurface } from '../26botballExplorerBase';
-import { startBoxA, startBoxB, startBox_geom, getHighestFaceScript, getLowestFaceScript, isCubeOnTopOfScript, createCubeEndNode, blackLineNodes, pallet_geom, BLACK_LINE_GEOMETRY, smallCubeEnd_geom } from './bexCommonComponents';
-import { MIDDLE_PALLET, TOP_GREEN_2IN_CUBE, LOW_GREEN_2IN_CUBE, TOP_YELLOW_2IN_CUBE, LOW_YELLOW_2IN_CUBE, offsetGamePiece } from '../26botballExplorerSandbox';
+import { startBoxA, startBoxB, startBox_geom, getHighestFaceScript, getLowestFaceScript, isCubeOnTopOfScript, createCubeEndNode, blackLineNodes, pallet_geom, BLACK_LINE_GEOMETRY, smallCubeEnd_geom, offsetChallengeNode } from './bexCommonComponents';
+import { MIDDLE_PALLET, TOP_GREEN_2IN_CUBE, LOW_GREEN_2IN_CUBE, TOP_YELLOW_2IN_CUBE, LOW_YELLOW_2IN_CUBE } from '../26botballExplorerSandbox';
 import { RotationwUnits } from '../../../../util/math/unitMath';
 import Dict from '../../../../util/objectOps/Dict';
 
@@ -64,6 +64,11 @@ const cubesOnPallet = `
     }
   ];
 
+  const pallet = {
+    id: 'MIDDLE_PALLET',
+    faces: palletFaces
+  };
+
   // Cubes physically touching the pallet.
   const directPalletCubes = new Set();
 
@@ -73,6 +78,7 @@ const cubesOnPallet = `
 
 
   function getCube(cubeId) {
+    if (cubeId === pallet.id) return pallet;
     return allCubes.find(cube => cube.id === cubeId);
   }
 
@@ -87,14 +93,21 @@ const cubesOnPallet = `
   }
 
 
+  // Recomputed from live positions every time. Intersection start/end events
+  // alone are not enough: cubes can stay in contact while sliding off, which
+  // fires no new event.
   function updateChallengeState() {
     /*
-     * Start with cubes directly touching the pallet.
+     * Start with cubes resting on the pallet's upper surface (touching
+     * its side doesn't count).
      *
      * Then repeatedly find cubes stacked on cubes that are
      * already known to be supported by the pallet.
      */
-    const supportedCubes = new Set(directPalletCubes);
+    const supportedCubes = new Set();
+    directPalletCubes.forEach(cubeId => {
+      if (isCubeOnTopOf(cubeId, pallet.id)) supportedCubes.add(cubeId);
+    });
 
     let changed = true;
 
@@ -198,11 +211,21 @@ const cubesOnPallet = `
       );
     }
   });
+
+  // Re-check while cubes stay in contact (setChallengeEventValue ignores unchanged values).
+  scene.addOnRenderListener(() => {
+    if (directPalletCubes.size > 0) updateChallengeState();
+  });
 `;
 export const BEX_6: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 6'),
   description: tr('Botball Explorer Mission 6: Pallet Builder'),
+  summary: {
+    skill: tr('Multi-object manipulation, spatial reasoning, cargo management, and palletized transport.'),
+    baseMission: tr('Place a 4 Green and Yellow Cubes onto a single pallet. A cube is on the pallet if touching the upper surface or ontop of another cube that is on the pallet.'),
+    bonusMission: tr('The pallet is fully within a starting box and is not touching any black line.')
+  },
   scripts: {
 
     palletInStartBox: Script.ecmaScript('Pallet In Start Box', palletInStartBox),
@@ -291,6 +314,6 @@ export const BEX_6: Scene = {
       lYellowRight: createCubeEndNode(tr('Low Yellow Cube Right'), 'LOW_YELLOW_2IN_CUBE', 'right', 'smallCubeEnd_geom', Color.rgb(229, 97, 255)),
       lYellowFront: createCubeEndNode(tr('Low Yellow Cube Front'), 'LOW_YELLOW_2IN_CUBE', 'front', 'smallCubeEnd_geom', Color.rgb(229, 97, 255)),
       lYellowBack: createCubeEndNode(tr('Low Yellow Cube Back'), 'LOW_YELLOW_2IN_CUBE', 'back', 'smallCubeEnd_geom', Color.rgb(229, 97, 255)),
-    }, offsetGamePiece)
+    }, offsetChallengeNode)
   }
 };

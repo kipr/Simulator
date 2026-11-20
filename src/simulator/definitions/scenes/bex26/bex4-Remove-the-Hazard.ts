@@ -61,6 +61,11 @@ export const BEX_4: Scene = {
   ...baseScene,
   name: tr('Botball Explorer 4'),
   description: tr('Botball Explorer Mission 4: Remove the Hazard'),
+  summary: {
+    skill: tr('Object displacement, maniulation, and simultaneous task completion.'),
+    baseMission: tr('An Orange Pom is off the black line.'),
+    bonusMission: tr('An Orange Pom and a Blue Pom simultaneously off the black line.'),
+  },
   scripts: {
     pomLeftBlackLine: Script.ecmaScript('Pom Left Black Line', pomLeftBlackLine),
   },

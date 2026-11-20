@@ -19,7 +19,7 @@ import Root from './pages/Root';
 import ChallengeRoot from './pages/ChallengeRoot';
 import { DocumentationWindow } from 'ivygate/dist/src';
 import AiWindow from './components/Ai/AiWindow';
-import { DARK } from './components/constants/theme';
+import { DARK, LIGHT } from './components/constants/theme';
 import CurriculumPage from './lms/CurriculumPage';
 import { UsersAction, I18nAction, ProjectsAction, SettingsAction } from './state/reducer';
 import db from './db';
@@ -39,12 +39,14 @@ import { Settings } from 'components/constants/Settings';
 import User, { AsyncUser } from 'state/State/User';
 import Dict from 'util/objectOps/Dict';
 import { Users } from 'state/State';
+import SettingsDialog from './components/Dialog/SettingsDialog';
 export interface AppPublicProps {
 
 }
 
 interface AppPrivateProps {
   users: Users;
+  settings: Settings;
   login: () => void;
   setMe: (me: string) => void;
   loadUser: (uid: string) => void;
@@ -106,8 +108,8 @@ class App extends React.Component<Props, State> {
 
     const storedSettings = localStorage.getItem('bbSettings');
     if (storedSettings) {
-
       const parsedSettings: Partial<Settings> = JSON.parse(storedSettings) as Partial<Settings>;
+      parsedSettings.showSettingsDialog = false; // Ensure the settings dialog is not shown on load
       this.props.setSettings(parsedSettings);
     }
     const lang: LocalizedString.Language = LocalizedString.validate(localStorage.getItem('bblocale'));
@@ -158,7 +160,6 @@ class App extends React.Component<Props, State> {
 
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
       if (user) {
-        console.log('User detected.');
         this.props.loadUser(user.uid);
         this.props.setMe(user.uid);
         // Ensure user has obtained consent before continuing
@@ -166,16 +167,13 @@ class App extends React.Component<Props, State> {
           .then(userConsent => {
             const consentStatus = LegalAcceptance.getConsentStatus(userConsent?.legalAcceptance);
             if (consentStatus === 'valid') {
-              console.log('Consent verified');
               this.setState({ loading: false });
             } else {
-              console.log('Consent not verified, status is', consentStatus);
               this.props.login();
             }
           })
           .catch(error => {
             if (DbError.is(error) && error.code === DbError.CODE_NOT_FOUND) {
-              console.log('Consent info does not exist');
               this.props.login();
             }
 
@@ -189,19 +187,6 @@ class App extends React.Component<Props, State> {
     });
   }
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
-
-    const uid = auth.currentUser?.uid;
-    if (!uid) return;
-
-    const prev = prevProps.users.users?.[uid];
-    const next = this.props.users.users?.[uid];
-
-    if (prev !== next && next?.type === 5) {
-      console.log("User state changed:", next);
-    }
-  }
-
   componentWillUnmount(): void {
     this.onAuthStateChangedSubscription_();
     this.onAuthStateChangedSubscription_ = null;
@@ -212,31 +197,39 @@ class App extends React.Component<Props, State> {
 
     const { loading } = state;
 
+    const { settings } = props;
+    const theme = settings.darkMode ? DARK : LIGHT;
+
     if (loading) return <Loading />;
 
     return (
       <>
         <Routes>
-          <Route path="/" element={<Dashboard theme={DARK} />} />
-          <Route path="/tutorials" element={<Tutorials theme={DARK} />} />
-          <Route path="/leaderboard" element={<Leaderboard theme={DARK} />} />
-          <Route path="/limited-challenges" element={<LimitedChallenges theme={DARK} />} />
-          <Route path="/closed-challenges" element={<ClosedChallenges theme={DARK} />} />
-          <Route path="/limited-challenge/:challengeId/leaderboard" element={<LimitedChallengeLeaderboard theme={DARK} />} />
+          <Route path="/" element={<Dashboard theme={theme} />} />
+          <Route path="/tutorials" element={<Tutorials theme={theme} />} />
+          <Route path="/leaderboard" element={<Leaderboard theme={theme} />} />
+          <Route path="/limited-challenges" element={<LimitedChallenges theme={theme} />} />
+          <Route path="/closed-challenges" element={<ClosedChallenges theme={theme} />} />
+          <Route path="/limited-challenge/:challengeId/leaderboard" element={<LimitedChallengeLeaderboard theme={theme} />} />
           <Route path="/limited-challenge/:challengeId" element={<LimitedChallengeRoot />} />
           <Route path="/scene/:sceneId" element={<Root />} />
           <Route path="/challenge/:challengeId" element={<ChallengeRoot />} />
           <Route path="/curriculum" element={<CurriculumPage />} />
-          <Route path="/custom-challenges" element={<CustomChallengeCreator theme={DARK} />} />
-          <Route path="/classrooms" element={<ClassroomsDashboard theme={DARK} />} />
-          <Route path="/classrooms/:classroomId" element={<ClassroomLeaderboard theme={DARK} />} />
-          <Route path="/classrooms/:teacherId/teacherView" element={<ClassroomTeacherView theme={DARK} />} />
-          <Route path="/classrooms/:studentId/studentView/" element={<ClassroomStudentView theme={DARK} />} />
-          <Route path="/classrooms/:studentId/studentView/:classroomId" element={<ClassroomStudentView theme={DARK} />} />
+          <Route path="/custom-challenges" element={<CustomChallengeCreator theme={theme} />} />
+          <Route path="/classrooms" element={<ClassroomsDashboard theme={theme} />} />
+          <Route path="/classrooms/:classroomId" element={<ClassroomLeaderboard theme={theme} />} />
+          <Route path="/classrooms/:teacherId/teacherView" element={<ClassroomTeacherView theme={theme} />} />
+          <Route path="/classrooms/:studentId/studentView/" element={<ClassroomStudentView theme={theme} />} />
+          <Route path="/classrooms/:studentId/studentView/:classroomId" element={<ClassroomStudentView theme={theme} />} />
           <Route path="/classrooms/:studentId/curriculumPage" element={<CurriculumPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        <DocumentationWindow theme={DARK} documentationType={'default'} />
+        <DocumentationWindow theme={theme} documentationType={'default'} />
+        {settings.showSettingsDialog &&
+          <SettingsDialog theme={theme}
+            onClose={() => props.setSettings({ showSettingsDialog: false })}
+            onSettingsChange={this.props.setSettings} />
+        }
       </>
     );
   }
@@ -270,10 +263,10 @@ class App extends React.Component<Props, State> {
 export default connect((state: ReduxState) => {
   return {
     users: state.users,
+    settings: state.settings,
   };
 }, dispatch => ({
   login: () => {
-    console.log('Redirecting to login page', window.location.pathname);
     window.location.href = `/login${window.location.pathname === '/login' ? '' : `?from=${window.location.pathname}`}`;
   },
   setMe: (me: string) => dispatch(UsersAction.setMe({ me })),

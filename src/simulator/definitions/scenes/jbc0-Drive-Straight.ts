@@ -71,6 +71,10 @@ export const JBC_0: Scene = {
   ...baseScene,
   name: tr('JBC 0'),
   description: tr('Junior Botball Challenge 0: Drive Straight'),
+  summary: {
+    skill: tr('Driving forwards, backwards, and adjusting motor speeds'),
+    baseMission: tr('Drive the length of Mat B, straddling the blue/purple dashed line without either wheel crossing or touching the line.'),
+  },
   scripts: {
     notInStartBox: Script.ecmaScript('Not In Start Box', notInStartBox),
     inStartBox: Script.ecmaScript('In Start Box', inStartBox),

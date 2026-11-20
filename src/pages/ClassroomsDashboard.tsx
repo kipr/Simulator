@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { styled } from 'styletron-react';
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { DARK, LIGHT, ThemeProps } from '../components/constants/theme';
 import { Card } from '../components/interface/Card';
 import MainMenu from '../components/MainMenu';
 import { StyleProps } from '../util/style';
@@ -16,17 +16,22 @@ import { TourRegistry } from '../tours/TourRegistry';
 import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/tours';
 import TourDoc, { getClassroomTourSteps, getTourSteps, TourStep } from '../tours/Tours';
 import GuidedTour from '../components/Tours/GuidedTour';
+import { Settings } from '../components/constants/Settings';
+import { Dispatch } from 'redux';
 
 export interface ClassroomsDashboardPublicProps extends ThemeProps, StyleProps {
 }
 
 interface ClassroomsDashboardPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
   uid: string;
   tour: TourDoc;
   tourLoaded: boolean;
   tourLoading: boolean;
   tourError: string | null;
+  dispatch: Dispatch;
+  state: ReduxState;
 }
 
 interface ClassroomsDashboardState {
@@ -66,7 +71,8 @@ const CardContainer = styled('div', (props: ThemeProps) => ({
   paddingBottom: `calc(${cardContainerMargin()} + 50px)`,
   backgroundColor: props.theme.backgroundColor,
   width: `calc(100vw - 210px)`,
-  marginTop: '5em',
+  // marginTop: '5em',
+  color: props.theme.cardColors.alternateTextColor,
 }));
 
 
@@ -79,13 +85,13 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
       userId: ''
     };
   }
-  private registry = new TourRegistry();
+  private registry = new TourRegistry(TourDoc.IDS.CLASSROOM);
   private scrollRef: HTMLDivElement | null = null;
 
   async componentDidMount() {
-    const { uid } = this.props;
+    const { uid, dispatch, state } = this.props;
     if (uid) {
-      await fetchTourIfNeeded(this.props.uid, TourDoc.IDS.CLASSROOM);
+      await fetchTourIfNeeded(this.props.uid, TourDoc.IDS.CLASSROOM, dispatch, state);
     }
     this.getCurrentUser();
   }
@@ -105,21 +111,21 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
   }
 
   private onCloseTour_ = () => {
-    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM);
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM, this.props.dispatch);
   };
 
   private onSkipTour_ = () => {
-    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM, { dismissed: true });
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM, this.props.dispatch);
   };
 
   private onRetakeTour_ = () => {
-    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM);
+    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM, this.props.dispatch);
   };
   render() {
     const { props } = this;
     const { userId } = this.state;
-    const { className, style, locale } = props;
-    const theme = DARK;
+    const { className, style, locale, settings } = props;
+    const theme = settings.darkMode ? DARK : LIGHT;
     const showTour = props.tourLoaded && !props.tour.completed;
     const classroomTourSteps: TourStep[] = getClassroomTourSteps(locale);
     return (
@@ -169,7 +175,9 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
 }
 
 const Connected = connect((state: ReduxState) => ({
+  state: state,
   locale: state.i18n.locale,
+  settings: state.settings,
   uid: state.users.me,
   tour: state.tours.byId[TourDoc.IDS.CLASSROOM] ?? TourDoc.DEFAULT,
   tourLoaded: !!state.tours.loaded[TourDoc.IDS.CLASSROOM],

@@ -10,9 +10,10 @@ import {
   Vector3wUnits,
 } from '../../../util/math/unitMath';
 import tr from '@i18n';
+import { MODELS } from '../models';
 
-const TABLE_POSITION = RawVector3.create(79, 0, 10);
-const TABLE_ROTATION = RawQuaternion.create(0, 1, 0, 0);
+const TABLE_POSITION = RawVector3.create(-105, 8, 74);
+const TABLE_ROTATION = RawQuaternion.create(0, Math.SQRT1_2, 0, Math.SQRT1_2);
 const IDENTITY_ROTATION = RawQuaternion.IDENTITY;
 
 // Babylon world units in this simulator are centimeters. Preserve the layout
@@ -37,9 +38,9 @@ const tableOrigin = (
   scale: RawVector3 = RawVector3.ONE,
 ): ReferenceFramewUnits => ({
   position: Vector3wUnits.centimeters(
-    TABLE_POSITION.x - position.x,
+    TABLE_POSITION.x + position.z,
     TABLE_POSITION.y + position.y,
-    TABLE_POSITION.z - position.z,
+    TABLE_POSITION.z - position.x,
   ),
   orientation: RotationwUnits.fromRawQuaternion(
     normalizeQuaternion(multiplyQuaternions(TABLE_ROTATION, orientation)),
@@ -73,6 +74,7 @@ const component = (
   geometryId,
   physics,
   visible: true,
+  hiddenInWorldList: true,
   startingOrigin: tableOrigin(position, orientation, scale),
   origin: tableOrigin(position, orientation, scale),
 });
@@ -99,37 +101,37 @@ const pipe = (
 export const BOTBALL_EXPLORER_TABLE_26_GEOMETRY: Dict<Geometry> = {
   botballExplorerTable26_2x4: {
     type: 'file',
-    uri: '/static/object_binaries/build_components/2x4.glb',
+    uri: MODELS.common.building.twoByFour,
     resetPosition: true,
   },
   botballExplorerTable26_loadingDock: {
     type: 'file',
-    uri: '/static/object_binaries/build_components/loading_dock.glb',
+    uri: MODELS.games[2026].loadingDock,
     resetPosition: true,
   },
   botballExplorerTable26_particleBoard: {
     type: 'file',
-    uri: '/static/object_binaries/build_components/particle_board.glb',
+    uri: MODELS.common.building.particleBoard,
     resetPosition: true,
   },
   botballExplorerTable26_mat: {
     type: 'file',
-    uri: '/static/object_binaries/build_components/mat.glb',
+    uri: MODELS.games[2026].explorerMat,
     resetPosition: true,
   },
   botballExplorerTable26_elbow: {
     type: 'file',
-    uri: '/static/object_binaries/build_components/elbow.glb',
+    uri: MODELS.common.building.pvcElbow,
     resetPosition: true,
   },
   botballExplorerTable26_tConnector: {
     type: 'file',
-    uri: '/static/object_binaries/build_components/t_connector.glb',
+    uri: MODELS.common.building.pvcTConnector,
     resetPosition: true,
   },
   botballExplorerTable26_pvc: {
     type: 'file',
-    uri: '/static/object_binaries/build_components/pipe.glb',
+    uri: MODELS.common.building.pvcPipe,
     resetPosition: true,
   },
 };

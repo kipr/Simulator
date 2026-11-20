@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect, Provider } from 'react-redux';
-import { DEFAULT_SETTINGS } from '../components/constants/Settings';
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { Settings } from '../components/constants/Settings';
+import { LIGHT, DARK, ThemeProps } from '../components/constants/theme';
 import MainMenu from '../components/MainMenu';
 import { default as IvyGateClassroom } from "ivygate/dist/src/types/classroomTypes";
 import { StyleProps } from '../util/style';
@@ -16,7 +16,7 @@ import { AsyncClassroom, Classroom, ClassroomAssignment } from '../state/State/C
 import { CreateClassroomDialog } from '../components/Dialog/CreateClassroomDialog';
 import Dict from '../util/objectOps/Dict';
 import { nativeScrollbarChrome } from '../util/nativeScrollbarChrome';
-import { ClassroomsAction, listChallengesByStudentId, deleteClassroom } from 'state/reducer/classrooms';
+import { ClassroomsAction, listChallengesByStudentId, deleteClassroom, convertClassroomAssignmentsToNewFormat, listOwned, load, convertStudentIdsToNewFormat, testMigration, loadClassroom, totalClassroomCopy, totalClassroomCopyOld, repollClassroomAssignmentTopics } from 'state/reducer/classrooms';
 import { auth } from '../firebase/firebase';
 import { User } from 'ivygate/dist/src/types/user';
 import Async from 'state/State/Async';
@@ -41,6 +41,9 @@ import { TeacherViewOverlayProvider } from '../components/Classrooms/TeacherView
 import { Card } from '../components/interface/Card';
 import CreateAssignmentView from '../components/Classrooms/CreateAssignmentView';
 import { FontAwesome } from '../components/FontAwesome';
+import ScrollArea from '../components/interface/ScrollArea';
+import { Dispatch } from 'redux';
+
 
 export interface ClassroomTeacherViewRootRouteParams {
   classroomId: string;
@@ -93,15 +96,28 @@ export interface ClassroomTeacherViewPublicProps extends StyleProps, ThemeProps 
 
 interface ClassroomTeacherViewPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
   tour: TourDoc;
   tourLoaded: boolean;
   tourLoading: boolean;
   tourError: string | null;
   uid: string;
   selectedClassroom?: AsyncClassroom | null;
+  classroomVersion: number;
+  state: ReduxState;
+  dispatch: Dispatch;
   onStudentInClassroom?: (studentId: LocalizedString) => void;
   onAddStudentToClassroom?: (classroomId: string, studentId: LocalizedString) => void;
+  onUpdateClassroom?: (classroomId: string, classroom: AsyncClassroom) => void;
   deleteClassroom?: (classroomId: string, classroom: Classroom) => void;
+  onReloadClassroom?: (docId: string) => void;
+  onConvertClassroomAssignmentsToNewFormat?: (classroom: Classroom) => void;
+  onConvertStudentIdsToNewFormat?: (classroom: Classroom) => void;
+  onTestMigration(): Promise<void>;
+  onTotalCopy(): Promise<void>;
+  onTotalCopyOld(): Promise<void>;
+  onRepollClassroomAssignments?: (classroom: Classroom) => Promise<void>;
+
 }
 
 interface ClassroomTeacherViewState {
@@ -121,6 +137,7 @@ interface ClassroomTeacherViewState {
   continueTour?: boolean;
   currentSelectedClassroom?: AsyncClassroom | null;
   createAssignmentVisible?: boolean;
+  assignComplete: boolean;
   teacherTabIndex?: number;
   assignmentToEdit?: ClassroomAssignment | null;
   cardContainerVisible?: boolean;
@@ -161,30 +178,25 @@ const ClassroomsContainer = styled("div", (props: ThemeProps) => ({
   overflowY: 'auto',
 }));
 
-const ClassroomsTitleContainer = styled('div', (props: ThemeProps) => ({
-  alignItems: 'center',
-  justifyContent: 'center',
-  display: 'flex',
-  flexDirection: 'column',
-  margin: '20px',
-
-}));
-
 const ClassroomsCardContainer = styled('div', (props: ThemeProps) => ({
   alignItems: 'center',
   justifyContent: 'flex-start',
   display: 'flex',
   flexDirection: 'row',
-  margin: '20px 20px 0px 20px',
+  // margin: '20px 20px 0px 20px',
+  color: props.theme.cardColors.alternateTextColor,
 }));
 
-const ClassroomCardScrollContainer = styled('div', (props: { collapsed: boolean }) => ({
+const ClassroomCardContainer = styled('div', (props: { collapsed: boolean }) => ({
   width: '100%',
   overflow: 'auto',
   height: props.collapsed ? '3%' : '33%',
-  ...nativeScrollbarChrome,
-}));
 
+}));
+const StyledScrollArea = styled(ScrollArea, (props: { collapsed: boolean }) => ({
+  flex: 1,
+  height: '87%',
+}));
 const CardWrapper = styled('div', (props: ThemeProps & { selected?: boolean }) => ({
   borderRadius: `${props.theme.itemPadding * 4}px`,
   cursor: 'pointer',
@@ -216,7 +228,7 @@ const ClassroomCardIconBtn = styled('div', (props: ThemeProps & { $danger?: bool
   padding: '6px 8px',
   borderRadius: `${props.theme.itemPadding * 2}px`,
   backgroundColor: 'rgba(0, 0, 0, 0.55)',
-  color: props.theme.color,
+  color: '#ffffff',
   fontSize: '0.95em',
   lineHeight: 1,
   userSelect: 'none',
@@ -302,7 +314,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       showCreateClassroomDialog: false,
       isStudentInClassroom: null as boolean | null,
       currentSelectedClassroom: null,
-
+      assignComplete: null,
       showJoinClassroomDialog: false,
       showClassroomLeaderboardSelector: false,
       showSelectedClassroomLeaderboard: false,
@@ -316,17 +328,42 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     };
 
   }
-  registry = new TourRegistry();
+  registry = new TourRegistry(TourDoc.IDS.TEACHER_VIEW);
 
   async componentDidMount() {
     this.props.onListOwnedClassrooms();
-    const { uid } = this.props;
+    const { uid, dispatch, state } = this.props;
     if (uid) {
-      await fetchTourIfNeeded(this.props.uid, TourDoc.IDS.TEACHER_VIEW);
+      await fetchTourIfNeeded(uid, TourDoc.IDS.TEACHER_VIEW, dispatch, state);
     }
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
+    if (prevProps.classroomVersion !== this.props.classroomVersion) {
+      const { currentSelectedClassroom } = this.state;
+      if (currentSelectedClassroom) {
+        const loaded = Async.latestValue(currentSelectedClassroom);
+
+        this.props.onReloadClassroom?.(loaded.docId);
+
+      }
+
+    }
+    if (prevState.currentSelectedClassroom !== this.state.currentSelectedClassroom) {
+      const { currentSelectedClassroom } = this.state;
+      const { onConvertClassroomAssignmentsToNewFormat } = this.props;
+      const loadedClassroom = currentSelectedClassroom ? Async.latestValue(currentSelectedClassroom) : null;
+      if (loadedClassroom?.classroomAssignments && Object.keys(loadedClassroom.classroomAssignments).length > 0) {
+        onConvertClassroomAssignmentsToNewFormat?.(loadedClassroom);
+
+      }
+      // If topics isn't loaded, reload assignments to get topics
+      if (loadedClassroom?.topics === undefined && this.state.currentSelectedClassroom) {
+        this.props.onRepollClassroomAssignments?.(loadedClassroom);
+
+      }
+
+    }
 
     if (prevProps.selectedClassroom !== this.props.selectedClassroom && this.props.selectedClassroom) {
       this.setState({ currentSelectedClassroom: this.props.selectedClassroom || null });
@@ -468,6 +505,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       code: classroomInviteCode,
       studentIds: {},
       docId: '',
+      topics: ['No Subject'],
       type: 'classroom',
       teacherDisplayName: teacherDisplayName
     });
@@ -658,12 +696,12 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
 
   private onCloseTour_ = () => {
-    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, { step: this.state.currentTourStepIndex });
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, this.props.dispatch);
     this.setState({ tourHighlightNewClassroomId: undefined, tourHighlightAssignmentTitle: undefined });
   };
 
   private onSkipTour_ = () => {
-    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, { dismissed: true });
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, this.props.dispatch);
     this.setState({ tourHighlightNewClassroomId: undefined, tourHighlightAssignmentTitle: undefined });
   };
 
@@ -765,7 +803,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
   };
 
   private onRetakeTour_ = () => {
-    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW);
+    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, this.props.dispatch);
     this.setState({ tourHighlightNewClassroomId: undefined });
   };
 
@@ -788,8 +826,9 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     return Object.entries(classroomList ?? {}).map(([id, asyncClassroom]) => {
       if (asyncClassroom.type === Async.Type.Loaded) {
         const classroom = asyncClassroom.value;
+
         const cardBody = (
-          <CardWrapper theme={theme} selected={Async.latestValue(this.state.currentSelectedClassroom)?.classroomId === classroom.classroomId} onClick={() => this.setState({ currentSelectedClassroom: asyncClassroom })}>
+          <CardWrapper theme={theme} selected={Async.latestValue(this.state.currentSelectedClassroom)?.classroomId === classroom.classroomId} onClick={() => { this.setState({ currentSelectedClassroom: asyncClassroom }); }}>
             <Card
               onClick={() => this.setState({ currentSelectedClassroom: asyncClassroom })}
               title={classroom.classroomId}
@@ -856,19 +895,56 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   };
 
-  private handleAssignemntAction = (currentSelectedClassroom: AsyncClassroom | null, action: 'edit' | 'create', assignmentToEdit?: ClassroomAssignment) => {
+  private handleAssignmentAction = (currentSelectedClassroom: AsyncClassroom | null, action: 'edit' | 'create', assignmentToEdit?: ClassroomAssignment) => {
     if (!currentSelectedClassroom) {
       return;
     }
     if (assignmentToEdit && action === 'edit') {
       this.setState({ createAssignmentVisible: true, assignmentToEdit: assignmentToEdit });
     } else if (action === 'create') {
-      this.setState({ createAssignmentVisible: true, assignmentToEdit: undefined });
+      this.setState({ createAssignmentVisible: true, assignComplete: false, assignmentToEdit: undefined });
     }
   };
 
-  private onAssignComplete_ = (students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>, assignment: ClassroomAssignment) => {
+  private onAssignComplete_ = (assignment: ClassroomAssignment) => {
     const stepId = this.state.teacherTourSteps[this.state.currentTourStepIndex ?? 0]?.id;
+    const currClass = Async.latestValue(this.state.currentSelectedClassroom);
+    const topicsIsArray = Array.isArray(currClass?.topics);
+    let updatedClassroom: AsyncClassroom;
+    if (currClass?.topics) {
+      if (topicsIsArray) {
+        if (!currClass.topics?.includes(assignment.topic)) {
+
+          if (currClass.topics) {
+            updatedClassroom = AsyncClassroom.loaded({
+              ...currClass,
+              topics: [...currClass?.topics, assignment.topic]
+            });
+          } else {
+            updatedClassroom = AsyncClassroom.loaded({
+              ...currClass,
+              topics: [assignment.topic]
+            });
+          }
+          this.props.onUpdateClassroom(currClass.docId, updatedClassroom);
+        }
+      } else {
+
+        const newTopicsArray: string[] = [];
+        for (const topic of Object.keys(currClass?.topics)) {
+
+          newTopicsArray.push(topic);
+        }
+
+        updatedClassroom = AsyncClassroom.loaded({
+          ...currClass,
+          topics: [...newTopicsArray, assignment.topic]
+        });
+        this.props.onUpdateClassroom(currClass.docId, updatedClassroom);
+      }
+
+    }
+
     const advanceTeacherTourAfterPublish =
       this.props.tourLoaded &&
       !this.props.tour.completed &&
@@ -876,6 +952,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
     this.setState(
       {
+        assignComplete: true,
         teacherTabIndex: 1,
         ...(advanceTeacherTourAfterPublish ? { tourHighlightAssignmentTitle: assignment.title } : {}),
       },
@@ -893,9 +970,9 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, locale } = props;
+    const { style, locale, settings } = props;
     const { assignmentToEdit, showAreYouSureDialog, deleteObject, showCreateClassroomDialog, createAssignmentVisible, renameClassroomTarget } = state;
-    const theme = DARK;
+    const theme = settings.darkMode ? DARK : LIGHT;
     const showTour = props.tourLoaded && !props.tour.completed;
     const activeTourStepId =
       showTour ? state.teacherTourSteps[state.currentTourStepIndex ?? 0]?.id : undefined;
@@ -920,34 +997,43 @@ class ClassroomTeacherView extends React.Component<Props, State> {
               <ClassroomsContainer style={style} theme={theme}>
 
                 {this.state.cardContainerVisible
-                  ? (<ClassroomCardScrollContainer collapsed={!this.state.cardContainerVisible}>
+                  ? (
+                    <ClassroomCardContainer collapsed={!this.state.cardContainerVisible}>
+                      <StyledScrollArea innerStyle={{
+                        width: 'max-content',
+                        minWidth: '100%',
+                      }} theme={theme} verticalScroll={false} horizontalScroll={true} collapsed={!this.state.cardContainerVisible}>
+                        <TourTarget registry={this.registry} targetKey="teacher-classroom-cards-strip" style={{ display: 'contents' }}>
+                          <ClassroomsCardContainer style={style} theme={theme}>
+                            <TourTarget registry={this.registry} targetKey="teacher-create-classroom-card" style={{ display: 'contents' }}>
+                              <Card
+                                onClick={() => this.setState({ showCreateClassroomDialog: true })}
+                                title={LocalizedString.lookup(tr('Create New Classroom'), locale)}
+                                theme={theme}
+                                customheight='150px'
+                                customwidth='200px'
+                                backgroundPosition={'center top'}
+                                backgroundColor={theme.iconColor}
+                                custommargin='10px'
+                              />
+                            </TourTarget>
+                            <TourTarget
+                              registry={this.registry}
+                              targetKey="teacher-classroom-cards-list"
+                              style={{ display: 'contents' }}
+                            >
+                              {this.exisitingClassroomCards()}
+                            </TourTarget>
+                          </ClassroomsCardContainer>
+                        </TourTarget>
 
-                    <TourTarget registry={this.registry} targetKey="teacher-classroom-cards-strip" style={{ display: 'contents' }}>
-                      <ClassroomsCardContainer style={style} theme={theme}>
-                        <TourTarget registry={this.registry} targetKey="teacher-create-classroom-card" style={{ display: 'contents' }}>
-                          <Card
-                            onClick={() => this.setState({ showCreateClassroomDialog: true })}
-                            title={LocalizedString.lookup(tr('Create New Classroom'), locale)}
-                            theme={theme}
-                            customheight='150px'
-                            customwidth='200px'
-                            backgroundPosition={'center top'}
-                            custommargin='10px'
-                          />
-                        </TourTarget>
-                        <TourTarget
-                          registry={this.registry}
-                          targetKey="teacher-classroom-cards-list"
-                          style={{ display: 'contents' }}
-                        >
-                          {this.exisitingClassroomCards()}
-                        </TourTarget>
-                      </ClassroomsCardContainer>
-                    </TourTarget>
-                    <StickyButtonWrap>
-                      <Icon icon={this.state.cardContainerVisible ? faAngleUp : faAngleDown} onClick={() => this.setState({ cardContainerVisible: !this.state.cardContainerVisible })} />
-                    </StickyButtonWrap>
-                  </ClassroomCardScrollContainer>) : (
+                      </StyledScrollArea>
+                      <StickyButtonWrap>
+                        <Icon icon={this.state.cardContainerVisible ? faAngleUp : faAngleDown} onClick={() => this.setState({ cardContainerVisible: !this.state.cardContainerVisible })} />
+                      </StickyButtonWrap>
+                    </ClassroomCardContainer>
+                  )
+                  : (
                     <div style={{ height: '3%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                       <div>{LocalizedString.lookup(tr('See Classroom Cards'), locale)}</div>
                       <Icon icon={faAngleDown} onClick={() => this.setState({ cardContainerVisible: true })} style={{ marginLeft: '10px' }} />
@@ -955,7 +1041,11 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                   )}
 
 
-                <TeacherTabs theme={theme} tabIndex={this.state.teacherTabIndex ?? 0} currentSelectedClassroom={this.state.currentSelectedClassroom} onAssignmentAction={this.handleAssignemntAction} tourRegistry={this.registry}
+                <TeacherTabs theme={theme}
+                  tabIndex={this.state.teacherTabIndex ?? 0}
+                  currentSelectedClassroom={this.state.currentSelectedClassroom}
+                  onAssignmentAction={this.handleAssignmentAction}
+                  tourRegistry={this.registry}
                   activeTourStepId={activeTourStepId}
                   tourHighlightAssignmentTitle={this.state.tourHighlightAssignmentTitle}
                 />
@@ -989,7 +1079,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                       onClose={this.onExitCreateClassroomDialog_}
                       onContinueTour={this.onContinueTour_}
                       onCloseClassroomDialog={this.onCloseClassroomDialog_}
-                      theme={DARK}
+                      theme={theme}
                       locale={locale}
                       tourRegistry={this.registry}
                     />
@@ -1023,10 +1113,13 @@ const DashboardWithNavigate = withNavigate(ClassroomTeacherView);
 
 export default connect(
   (state: ReduxState) => ({
+    state: state,
     locale: state.i18n.locale,
+    settings: state.settings,
     uid: state.users.me,
     classroomList: state.classrooms.entities,
     selectedClassroom: state.classrooms.selectedClassroom,
+    classroomVersion: state.classrooms.classroomVersion,
     challenges: state.challenges,
     challengeCompletions: state.challengeCompletions,
     tour: state.tours.byId[TourDoc.IDS.TEACHER_VIEW] ?? TourDoc.DEFAULT,
@@ -1036,19 +1129,38 @@ export default connect(
 
   }),
   (dispatch) => ({
+    dispatch,
+    onTestMigration: async () => {
+      await testMigration();
+    },
+    onTotalCopy: async () => {
+      await totalClassroomCopy();
+    },
+    onTotalCopyOld: async () => {
+      await totalClassroomCopyOld();
+    },
+    onRepollClassroomAssignments: async (classroom: Classroom) =>
+      await repollClassroomAssignmentTopics(classroom),
+    onConvertClassroomAssignmentsToNewFormat: async (classroom: Classroom) =>
+      await convertClassroomAssignmentsToNewFormat(classroom),
+    onConvertStudentIdsToNewFormat: (classroom: Classroom) =>
+      convertStudentIdsToNewFormat(classroom),
     onGetAssignments: (classroomDocId: string) =>
       dispatch(ClassroomsAction.getAssignments({ classroomDocId })),
     onCreateClassroom: (classroom: Classroom) =>
       dispatch(ClassroomsAction.createClassroom({ classroom })),
     onListOwnedClassrooms: () =>
-      dispatch(ClassroomsAction.listOwnedClassrooms({})),
+      listOwned(),
+    onReloadClassroom: (docId: string) =>
+      loadClassroom(docId),
     onListChallengesByStudentId: (studentId: string) =>
       dispatch(ClassroomsAction.listChallengesByStudentId({ studentId })),
     onShowClassroomLeaderboard: (classroom: AsyncClassroom) =>
       dispatch(ClassroomsAction.showClassroomLeaderboard({ classroom })),
     onDeleteClassroom: (classroomId: string, classroom: Classroom) =>
       dispatch(ClassroomsAction.deleteClassroom({ classroomId, classroom })),
-
+    onUpdateClassroom: (classroomId: string, classroom: AsyncClassroom) =>
+      dispatch(ClassroomsAction.setClassroom({ classroomId, classroom })),
     onRemoveStudentFromClassroom: (studentId: string, currentClassroom: AsyncClassroom) =>
       dispatch(ClassroomsAction.removeStudentFromClassroom({ studentId, currentClassroom })),
   })

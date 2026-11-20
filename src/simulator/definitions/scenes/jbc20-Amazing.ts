@@ -115,6 +115,10 @@ export const JBC_20: Scene = {
   ...baseScene,
   name: tr('JBC 20'),
   description: tr('Junior Botball Challenge 20: A\'mazing'),
+  summary: {
+    skill: tr('Learn to use sensors to solve a simple maze with known turns (right turns).'),
+    baseMission: tr('Complete the maze using sensors')
+  },
   scripts: {
     inStartBox: Script.ecmaScript('In Start Box', inStartBox),
     bumpReams: Script.ecmaScript('Bump Reams', bumpReams),
