@@ -19,13 +19,29 @@ describe('predefined World list visibility', () => {
     }
   });
 
-  it.each([BOTBALL_EXPLORER_26_SANDBOX, FALL_27_SANDBOX, BEX_1])('inherits hidden structure while keeping robots and other nodes listed', scene => {
-    const structure = scene === FALL_27_SANDBOX ? FALL_27_TABLE_NODES : BOTBALL_EXPLORER_TABLE_26_NODES;
-    for (const id of Object.keys(structure)) {
+  it.each([
+    {
+      name: 'Botball Explorer sandbox',
+      scene: BOTBALL_EXPLORER_26_SANDBOX,
+      structureIds: [...Object.keys(BOTBALL_EXPLORER_TABLE_26_NODES), 'bexMat'],
+    },
+    {
+      name: 'Fall sandbox',
+      scene: FALL_27_SANDBOX,
+      structureIds: Object.keys(FALL_27_TABLE_NODES),
+    },
+    {
+      name: 'Botball Explorer 1',
+      scene: BEX_1,
+      structureIds: [...Object.keys(BOTBALL_EXPLORER_TABLE_26_NODES), 'bexMat'],
+    },
+  ])('$name inherits hidden structure while keeping robots and other nodes listed', ({ scene, structureIds }) => {
+    for (const id of structureIds) {
       expect(scene.nodes[id].hiddenInWorldList).toBe(true);
+      expect(scene.nodes[id].visible).toBe(true);
     }
     for (const [id, node] of Object.entries(scene.nodes)) {
-      if (!(id in structure)) expect(node.hiddenInWorldList).not.toBe(true);
+      if (!structureIds.includes(id)) expect(node.hiddenInWorldList).not.toBe(true);
     }
     expect(scene.nodes.robot.hiddenInWorldList).not.toBe(true);
   });

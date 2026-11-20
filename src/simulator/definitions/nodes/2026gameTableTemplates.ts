@@ -1,7 +1,7 @@
 import Dict from "../../../util/objectOps/Dict";
 import Geometry from "../../../state/State/Scene/Geometry";
 import Node from "../../../state/State/Scene/Node";
-import { Mass } from "../../../util";
+import { Distance, Mass } from "../../../util";
 import { PhysicsMotionType } from "@babylonjs/core";
 import { MODELS } from '../models';
 
@@ -14,6 +14,24 @@ const botballExplorerTable26Template: Node.TemplatedNode<Node.Obj> = {
     motionType: PhysicsMotionType.STATIC,
     restitution: .2,
     friction: 1,
+  },
+};
+const bexMatTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'bex_mat',
+  physics: {
+    type: 'box',
+    motionType: PhysicsMotionType.STATIC,
+    restitution: .3,
+    friction: 1,
+  },
+  material: {
+    type: 'basic',
+    matte: true,
+    color: {
+      type: "texture",
+      uri: "/static/textures/2026_bex_mat.webp"
+    },
   },
 };
 const fallTable26Template: Node.TemplatedNode<Node.Obj> = {
@@ -186,6 +204,7 @@ const gateTemplate: Node.TemplatedNode<Node.Obj> = {
 
 export const BB2026Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'botballExplorerTable26': botballExplorerTable26Template,
+  '2026_bex_mat': bexMatTemplate,
   'fallTable26': fallTable26Template,
   'springTable26': springTable26Template,
   'basket': basketTemplate,
@@ -283,5 +302,13 @@ export const BB2026Geometries = Object.freeze<Dict<Geometry>>({
   'gate': {
     type: 'file',
     uri: MODELS.games[2026].gate
+  },
+  'bex_mat': {
+    type: 'box',
+    size: {
+      x: Distance.feet(4),
+      y: Distance.centimeters(1),
+      z: Distance.feet(8),
+    }
   },
 });

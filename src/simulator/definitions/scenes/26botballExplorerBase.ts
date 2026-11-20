@@ -17,6 +17,13 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
   orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
+export const MAT_CENTER = Vector3wUnits.centimeters(-110.2, -8, 39.1);
+
+const MAT_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(-110.2, -8, 39.1),
+  orientation: RotationwUnits.eulerDegrees(0, -90, 0),
+};
+
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(-145, 113, 49),
   orientation: RotationwUnits.eulerDegrees(0, -90, 0),
@@ -54,6 +61,16 @@ export function createBaseSceneSurface(): Scene {
         startingOrigin: LIGHT_ORIGIN,
         origin: LIGHT_ORIGIN,
         visible: true
+      },
+      'bexMat': {
+        type: 'from-jbc-template',
+        templateId: '2026_bex_mat',
+        name: tr('BEX mat'),
+        startingOrigin: MAT_ORIGIN,
+        origin: MAT_ORIGIN,
+        visible: true,
+        editable: false,
+        hiddenInWorldList: true
       },
     },
     camera: Camera.arcRotate({

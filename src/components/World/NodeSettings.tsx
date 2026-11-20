@@ -315,25 +315,16 @@ class NodeSettings extends React.PureComponent<Props, State> {
     });
   };
 
-  private onMaterialBasicFieldTypeChange_ = (field: keyof Omit<Material.Basic, 'type'>) => (index: number, option: ComboBox.Option) => {
+  private onMaterialBasicFieldTypeChange_ = (field: keyof Omit<Material.Basic, 'type' | 'matte'>) => (index: number, option: ComboBox.Option) => {
     const { node, onNodeChange } = this.props;
     if (node.type !== 'object') throw new Error('Node is not an object');
     const material = node.material as Material.Basic;
 
     const nextMaterial = { ...material };
 
-    // Some fields are Source3 (3 channel) and others are Source1 (1 channel).
-    // TypeScript isn't happy assigning the union of these, so some type assertion is used.
     switch (option.data as string) {
       case 'unset': {
         nextMaterial[field] = undefined;
-        break;
-      }
-      case 'color1': {
-        (nextMaterial[field] as Material.Source1) = {
-          type: 'color1',
-          color: 0,
-        };
         break;
       }
       case 'color3': {
@@ -463,7 +454,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     });
   };
 
-  private onMaterialBasicSource3ChannelChange_ = (field: keyof Omit<Material.Basic, 'type'>, channel: keyof Color.Rgb) => (value: Value) => {
+  private onMaterialBasicSource3ChannelChange_ = (field: keyof Omit<Material.Basic, 'type' | 'matte'>, channel: keyof Color.Rgb) => (value: Value) => {
     if (value.type !== Value.Type.Unitless) throw new Error('Value must be unitless');
 
     const { node, onNodeChange } = this.props;
@@ -535,7 +526,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     });
   };
 
-  private onMaterialBasicFieldTextureUriChange_ = (field: keyof Omit<Material.Basic, 'type'>) => (event: React.SyntheticEvent<HTMLInputElement>) => {
+  private onMaterialBasicFieldTextureUriChange_ = (field: keyof Omit<Material.Basic, 'type' | 'matte'>) => (event: React.SyntheticEvent<HTMLInputElement>) => {
     const { node, onNodeChange } = this.props;
 
     if (node.type !== 'object' && node.type !== 'from-space-template' && node.type !== 'from-bb-template') throw new Error('Node is not an object');

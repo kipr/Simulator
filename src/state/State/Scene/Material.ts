@@ -134,6 +134,8 @@ namespace Material {
   export interface Basic {
     type: 'basic';
     color?: Material.Source3;
+    /** Use diffuse color only, without specular highlights or texture-based bump/emission. */
+    matte?: boolean;
   }
 
   export namespace Basic {
@@ -141,10 +143,12 @@ namespace Material {
 
     export const diff = (prev: Basic, next: Basic): Patch<Basic> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
+      if (prev.matte !== next.matte) return Patch.outerChange(prev, next);
 
       return Patch.innerChange(prev, next, {
         type: Patch.none(prev.type),
-        color: Source3.diff(prev.color, next.color)
+        color: Source3.diff(prev.color, next.color),
+        matte: Patch.none(prev.matte)
       });
     };
   }

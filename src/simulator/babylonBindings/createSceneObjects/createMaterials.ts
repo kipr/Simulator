@@ -12,6 +12,7 @@ export const createMaterial = (id: string, material: Material, bScene_: babylonS
   switch (material.type) {
     case 'basic': {
       const basic = new StandardMaterial(id, bScene_);
+      if (material.matte) basic.specularColor = Color3.Black();
       const { color } = material;
       if (color) {
         switch (color.type) {
@@ -35,8 +36,10 @@ export const createMaterial = (id: string, material: Material, bScene_: babylonS
                 myDynamicTexture.drawText(color.uri, 130, 600, "18px Arial", "white", "gray", true);
                 basic.diffuseTexture = myDynamicTexture;
               } else {
-                basic.bumpTexture = new Texture(color.uri, bScene_, false, false);
-                basic.emissiveTexture = new Texture(color.uri, bScene_, false, false);
+                if (!material.matte) {
+                  basic.bumpTexture = new Texture(color.uri, bScene_, false, false);
+                  basic.emissiveTexture = new Texture(color.uri, bScene_, false, false);
+                }
                 basic.diffuseTexture = new Texture(color.uri, bScene_, false, false);
                 basic.diffuseTexture.coordinatesMode = Texture.FIXED_EQUIRECTANGULAR_MODE;
                 basic.backFaceCulling = false;
