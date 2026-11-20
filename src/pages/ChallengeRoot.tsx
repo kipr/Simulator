@@ -1491,6 +1491,7 @@ class Root extends React.Component<Props, State> {
         <LoadingOverlay
           theme={theme}
           onStartClick={this.onChallengeStartClick_}
+          onBackClick={this.onEndChallengeClick_}
           challenge={challenge}
           loading={!latestChallengeCompletion}
         />

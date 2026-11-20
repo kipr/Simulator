@@ -256,8 +256,8 @@ export function isWorldSceneItemNode(nodeId: string, node: Node): boolean {
 
 /** Item entry for the World panel / sandbox scene (not the full JBC challenge catalog). */
 export type WorldSceneItem = Pick<
-JbcCatalogItem,
-'key' | 'nodeId' | 'displayName' | 'templateId'
+  JbcCatalogItem,
+  'key' | 'nodeId' | 'displayName' | 'templateId'
 >;
 
 function nodeDisplayName(node: Node, nodeId: string): string {
@@ -728,4 +728,9 @@ export const JBC_CATALOG_GEOMETRIES = geometryCatalog;
 
 export function getJbcChallengeDefinition(challengeId: ChallengeName): Challenge {
   return JBC_CHALLENGES[challengeId];
+}
+
+// Test function to export info regarding each challenge
+export function getJbcChallengeScene(challengeId: ChallengeName): Scene | undefined {
+  return JBC_CHALLENGE_SCENES[challengeId];
 }
