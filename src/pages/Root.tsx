@@ -1972,7 +1972,7 @@ const ConnectedRoot = connect(
     unfailScene: (sceneId: string) =>
       dispatch(ScenesAction.unfailScene({ sceneId })),
     goToLogin: () => {
-      window.location.href = `/login?from=${window.location.pathname}`;
+      window.location.href = `/login?from=${encodeURIComponent(window.location.pathname)}`;
     },
     onScriptChange: (scriptId: string, script: Script) => {
       dispatch(ScenesAction.setScript({ sceneId, scriptId, script }));

@@ -1765,7 +1765,7 @@ const ConnectedChallengeRoot = connect((state: ReduxState, { params: { challenge
   onDocumentationSetLanguage: (language: 'c' | 'python') => dispatch(DocumentationAction.setLanguage({ language })),
   onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => dispatch(DocumentationAction.goToFuzzy({ query, language })),
   goToLogin: () => {
-    window.location.href = `/login?from=${window.location.pathname}`;
+    window.location.href = `/login?from=${encodeURIComponent(window.location.pathname)}`;
   },
   onAiClick: () => dispatch(AiAction.TOGGLE),
   onAskTutorClick: (params: SendMessageParams) => sendMessage(dispatch, params),
