@@ -177,17 +177,6 @@ module.exports = {
               name: 'img/[hash].[ext]',
             },
           },
-          {
-            loader: 'image-webpack-loader',
-            options: {
-              mozjpeg: { progressive: true },
-              optipng: { optimizationLevel: 7 },
-              gifsicle: { interlaced: false },
-              pngquant: { quality: [0.65, 0.9], speed: 4 },
-              // disable optimization while debugging
-              disable: process.env.NODE_ENV === 'development',
-            },
-          },
         ],
       },
       {

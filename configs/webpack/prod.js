@@ -1,5 +1,6 @@
 // configs/webpack/prod.js
 const { merge } = require('webpack-merge');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const commonConfig = require('./common');
 
@@ -26,6 +27,18 @@ module.exports = merge(commonConfig, {
         // Exclude the emitted monaco chunk from minification.
         // Works for names like: monaco.<hash>.js, monaco~app.<hash>.js, etc.
         exclude: [/monaco.*\.(js|mjs)$/],
+      }),
+      new ImageMinimizerPlugin({
+        test: /\.(jpe?g|png)$/i,
+        minimizer: {
+          implementation: ImageMinimizerPlugin.sharpMinify,
+          options: {
+            encodeOptions: {
+              jpeg: { quality: 82, progressive: true },
+              png: { compressionLevel: 9 },
+            },
+          },
+        },
       }),
     ],
   },
