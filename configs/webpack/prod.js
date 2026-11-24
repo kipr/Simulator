@@ -21,12 +21,14 @@ module.exports = merge(commonConfig, {
         dts({
           entryRoot: commonConfig.context,
           outDirs: resolve(commonConfig.output.path, 'types'),
-          include: ['**/*'],
+          // Leading "./" anchors the glob to the compiler context; a bare "**/*" also matches node_modules.
+          include: ['./**/*'],
           afterBootstrap(context) {
             runtime = context;
           },
           afterDiagnostic() {
-            const { program, host } = runtime;
+            const program = runtime.getProgram();
+            const host = runtime.getHost();
             const errors = [
               ...program.getOptionsDiagnostics(),
               ...program.getSyntacticDiagnostics(),
