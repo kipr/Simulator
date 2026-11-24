@@ -221,7 +221,7 @@ const staticBotguyGamepieceTemplate: Node.TemplatedNode<Node.Obj> = {
     motionType: PhysicsMotionType.STATIC,
   }
 };
-export const BB2025Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
+export const BB2025Templates: Readonly<Dict<Node.TemplatedNode<Node>>> = Object.freeze({
   'game_table_2025': gameTable2025Template,
   'drink_blue': drinkBlueTemplate,
   'drink_green': drinkGreenTemplate,

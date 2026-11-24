@@ -1,11 +1,46 @@
 // configs/webpack/prod.js
+const { resolve } = require('path');
 const { merge } = require('webpack-merge');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const ts = require('typescript');
+const dts = require('unplugin-dts/webpack');
 const commonConfig = require('./common');
 
 module.exports = merge(commonConfig, {
   mode: 'production',
+  plugins: [
+    {
+      apply(compiler) {
+        // unplugin-dts logs its combined diagnostics before calling afterDiagnostic.
+        compiler.hooks.infrastructureLog.tap('SimulatorDeclarations', (origin, type) => {
+          if (origin === 'unplugin:dts' && type === 'error') return true;
+        });
+
+        let runtime;
+        dts({
+          entryRoot: commonConfig.context,
+          outDirs: resolve(commonConfig.output.path, 'types'),
+          include: ['**/*'],
+          afterBootstrap(context) {
+            runtime = context;
+          },
+          afterDiagnostic() {
+            const { program, host } = runtime;
+            const errors = [
+              ...program.getOptionsDiagnostics(),
+              ...program.getSyntacticDiagnostics(),
+              ...program.getDeclarationDiagnostics(),
+            ].filter(({ category }) => category === ts.DiagnosticCategory.Error);
+
+            if (errors.length) {
+              throw new Error(ts.formatDiagnosticsWithColorAndContext(errors, host));
+            }
+          },
+        }).apply(compiler);
+      },
+    },
+  ],
 
   optimization: {
     // 1) Split Monaco into a dedicated chunk so we can exclude it from Terser

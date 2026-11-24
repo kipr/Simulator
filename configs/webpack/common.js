@@ -2,7 +2,6 @@
 const { resolve, join } = require('path');
 const { readFileSync } = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const NpmDtsPlugin = require('npm-dts-webpack-plugin');
 const { DefinePlugin, IgnorePlugin } = require('webpack');
 const process = require('process');
 
@@ -55,8 +54,8 @@ module.exports = {
     login: './components/Login/index.tsx',
     plugin: './lms/plugin/index.tsx',
     parentalConsent: './components/ParentalConsent/index.tsx',
-    'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
-    'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker.js',
+    'editor.worker': require.resolve('monaco-editor/esm/vs/editor/editor.worker.js'),
+    'ts.worker': require.resolve('monaco-editor/esm/vs/language/typescript/ts.worker.js'),
   },
   output: {
     filename: (pathData) => {
@@ -221,12 +220,6 @@ module.exports = {
         libkiprCCCommonDocumentation,
       ),
       IDE_I18N: JSON.stringify(i18n),
-    }),
-    new NpmDtsPlugin({
-      root: resolve(__dirname, '../../'),
-      logLevel: 'error',
-      force: true,
-      output: resolve(__dirname, '../../dist/simulator.d.ts'),
     }),
   ],
   performance: {

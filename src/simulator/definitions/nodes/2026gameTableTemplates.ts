@@ -202,7 +202,7 @@ const gateTemplate: Node.TemplatedNode<Node.Obj> = {
   }
 };
 
-export const BB2026Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
+export const BB2026Templates: Readonly<Dict<Node.TemplatedNode<Node>>> = Object.freeze({
   'botballExplorerTable26': botballExplorerTable26Template,
   '2026_bex_mat': bexMatTemplate,
   'fallTable26': fallTable26Template,

@@ -11,7 +11,7 @@ Simulates a botball/JBC style demobot with a built-in IDE.
 
 ## Requirements
 - [Git Large File Storage](https://git-lfs.github.com/)
-- [Node.js v16 or higher](https://nodejs.org/)
+- [Node.js v20.9 or higher](https://nodejs.org/)
 - [yarn](https://classic.yarnpkg.com/)
 - [CMake](https://cmake.org/)
 - [SWIG 4+](https://swig.org/)
@@ -146,6 +146,8 @@ node express.js
 ```
 
 See [Configuration](#configuration) for environment variables. The server will not run unless the required environment variables are set.
+
+`yarn build` generates per-file TypeScript declarations under `dist/types/`, replacing the old `dist/simulator.d.ts` bundle. It checks for declaration emit errors, not full application type errors; run `yarn tsc --noEmit` for a full type check. Watch mode does not generate declarations; editors can use the TypeScript source directly.
 
 ## Configuration
 

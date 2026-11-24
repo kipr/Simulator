@@ -374,7 +374,7 @@ const jbcCupPinkTemplate: Node.TemplatedNode<Node.Obj> = {
   physics: JBC_CUP_PHYSICS
 };
 
-export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
+export const preBuiltTemplates: Readonly<Dict<Node.TemplatedNode<Node>>> = Object.freeze({
   'can': canTemplate,
   'circle': circleTemplate,
   'sciencepad': sciencePadTemplate,
