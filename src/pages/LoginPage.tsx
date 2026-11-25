@@ -31,6 +31,8 @@ import DateOfBirthCard from '../components/Login/DateOfBirthCard';
 import ParentEmailCard from '../components/Login/ParentEmailCard';
 import { Settings } from '../components/constants/Settings';
 
+import { getSafeReturnURL } from '../util/getSafeReturnURL';
+
 export interface LoginPagePublicProps extends ThemeProps, StyleProps {
   externalIndex?: number;
 }
@@ -570,14 +572,14 @@ class LoginPage extends React.Component<Props, State> {
       }
 
       const consentStatus = LegalAcceptance.getConsentStatus(userConsent.legalAcceptance);
-
+      
       if (consentStatus === 'valid') {
         // Consent obtained, proceed!
         setTimeout(() => {
-          const { search } = window.location;
-          const q = qs.parse(search.length > 0 ? search.substring(1) : '');
-          const { from } = q;
-          window.location.href = from ? from.toString() : '/';
+          const { search, origin } = window.location;
+          const { from } = qs.parse(search.slice(1));
+
+          window.location.href = getSafeReturnURL(from, origin);
         });
 
         return null;

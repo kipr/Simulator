@@ -267,7 +267,7 @@ export default connect((state: ReduxState) => {
   };
 }, dispatch => ({
   login: () => {
-    window.location.href = `/login${window.location.pathname === '/login' ? '' : `?from=${window.location.pathname}`}`;
+    window.location.href = `/login${window.location.pathname === '/login' ? '' : `?from=${encodeURIComponent(window.location.pathname)}`}`;
   },
   setMe: (me: string) => dispatch(UsersAction.setMe({ me })),
   loadUser: (uid: string) => dispatch(UsersAction.loadOrEmptyUser({ userId: uid })),
