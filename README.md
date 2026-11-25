@@ -53,14 +53,13 @@ It is recommended to use [WSL2](https://docs.microsoft.com/en-us/windows/wsl/abo
 ### Clone this repository and its submodules:
 
 ```bash
-git clone --recurse-submodules https://github.com/kipr/Simulator
+git clone --recurse-submodules --shallow-submodules https://github.com/kipr/Simulator
 ```
 
 Or, if you've already cloned the repository without `--recurse-submodules`, you can initialize the submodules separately:
 
 ```bash
-git submodule update --init
-cd dependencies/kipr-scratch/libwallaby && git submodule update --init
+git submodule update --init --recursive --depth 1
 ```
 
 ### Pull large files

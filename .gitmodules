@@ -1,12 +1,16 @@
 [submodule "libwallaby"]
 	path = dependencies/libwallaby
 	url = https://github.com/kipr/libwallaby
+	shallow = true
 [submodule "cpython"]
 	path = dependencies/cpython
 	url = https://github.com/python/cpython
+	shallow = true
 [submodule "dependencies/emsdk"]
 	path = dependencies/emsdk
 	url = https://github.com/emscripten-core/emsdk
+	shallow = true
 [submodule "dependencies/kipr-scratch"]
 	path = dependencies/kipr-scratch
 	url = https://github.com/kipr/kipr-scratch
+	shallow = true
